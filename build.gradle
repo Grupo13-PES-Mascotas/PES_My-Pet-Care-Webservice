@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'org.asciidoctor.jvm.convert' version '3.1.0'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'org.pesmypetcare'
@@ -40,5 +41,18 @@ test {
 
 asciidoctor {
     inputs.dir snippetsDir
+    dependsOn test
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
     dependsOn test
 }
