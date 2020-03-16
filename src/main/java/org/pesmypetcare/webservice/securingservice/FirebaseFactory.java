@@ -15,7 +15,9 @@ public class FirebaseFactory {
     private FirebaseApp firebaseApp;
 
     public static FirebaseFactory getInstance() {
-        if (instance == null) { instance = new FirebaseFactory(); }
+        if (instance == null) {
+            instance = new FirebaseFactory();
+        }
         return instance;
     }
 
@@ -26,14 +28,14 @@ public class FirebaseFactory {
     private FirebaseFactory() {
         InputStream serviceAccount = getServiceAccount();
         FirebaseOptions options = getFirebaseOptions(serviceAccount);
-        closeInputStream(serviceAccount);
         firebaseApp = FirebaseApp.initializeApp(options);
     }
 
     private InputStream getServiceAccount() {
         InputStream serviceAccount = null;
         try {
-            serviceAccount = Files.newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json"));
+            serviceAccount = Files
+                .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,6 +52,7 @@ public class FirebaseFactory {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        closeInputStream(serviceAccount);
         return options;
     }
 
