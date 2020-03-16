@@ -23,7 +23,9 @@ jobs:
         java-version: 1.8
     
     - name: Decrypt release secret
-      run: ./.github/scripts/decrypt_key.sh
+      run: |
+        chmod +x ./.github/scripts/decrypt_key.sh
+        ./.github/scripts/decrypt_key.sh
       env:
         FIREBASE_PASSPHRASE: ${{ secrets.FIREBASE_PASSPHRASE }}
     
