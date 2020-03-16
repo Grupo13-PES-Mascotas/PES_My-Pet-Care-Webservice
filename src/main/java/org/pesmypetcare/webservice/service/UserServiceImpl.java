@@ -1,8 +1,8 @@
 package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.dao.UserDao;
+import org.pesmypetcare.webservice.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

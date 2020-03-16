@@ -1,16 +1,22 @@
 package org.pesmypetcare.webservice.entity;
 
 public class User {
-    private int id;
+    private String id;
     private String username;
     private String email;
     private String password;
 
-    public int getId() {
+    public User (String id, String username, String email, String passwd) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = passwd;
+    }
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

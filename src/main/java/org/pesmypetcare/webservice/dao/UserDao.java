@@ -1,6 +1,6 @@
 package org.pesmypetcare.webservice.dao;
 
-import org.springframework.security.core.userdetails.User;
+import org.pesmypetcare.webservice.entity.User;
 
 import java.util.List;
 

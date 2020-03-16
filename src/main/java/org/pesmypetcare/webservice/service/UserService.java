@@ -1,12 +1,14 @@
 package org.pesmypetcare.webservice.service;
 
-import org.springframework.security.core.userdetails.User;
+
+
+import org.pesmypetcare.webservice.entity.User;
 
 import java.util.List;
 
 public interface UserService {
-    public List<User> findAll();
-    public User findById(int id);
-    public void save(User user);
-    public void deleteById(int id);
+    List<User> findAll();
+    User findById(int id);
+    void save(User user);
+    void deleteById(int id);
 }
