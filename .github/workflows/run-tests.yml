@@ -24,11 +24,10 @@ jobs:
     
     - name: Decrypt release secret
       run: |
-        ls -la ./.github/scripts/
         chmod +x ./.github/scripts/decrypt_key.sh
         ./.github/scripts/decrypt_key.sh
       env:
-        RELEASE_PASSPHRASE: ${{ secrets.FIREBASE_PASSPHRASE }}
+        FIREBASE_PASSPHRASE: ${{ secrets.FIREBASE_PASSPHRASE }}
     
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
