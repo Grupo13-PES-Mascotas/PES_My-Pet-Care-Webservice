@@ -16,10 +16,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     //other exception handlers
 
     @ExceptionHandler(FirebaseAuthException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(
+    protected ResponseEntity<Object> handleAuthenticationException(
         FirebaseAuthException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getErrorCode());
+        apiError.setMessage(FirebaseExceptionHandler.getErrorMessage(ex.getErrorCode()));
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage("Invalid argument");
         return buildResponseEntity(apiError);
     }
 
