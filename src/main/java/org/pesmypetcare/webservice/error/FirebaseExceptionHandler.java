@@ -1,6 +1,10 @@
 package org.pesmypetcare.webservice.error;
 
 public class FirebaseExceptionHandler {
+    protected FirebaseExceptionHandler() {
+        throw new UnsupportedOperationException();
+    }
+
     public static String getErrorMessage(String errorCode) {
         String message;
         switch (errorCode) {
@@ -27,6 +31,7 @@ public class FirebaseExceptionHandler {
                 break;
             default:
                 message = "Unexpected error";
+                break;
         }
         return message;
     }
