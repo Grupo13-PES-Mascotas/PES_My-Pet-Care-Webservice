@@ -26,41 +26,28 @@ public class FirebaseFactory {
     }
 
     private FirebaseFactory() {
-        InputStream serviceAccount = getServiceAccount();
-        FirebaseOptions options = getFirebaseOptions(serviceAccount);
+        GoogleCredentials googleCredentials = getServiceAccount();
+        FirebaseOptions options = getFirebaseOptions(googleCredentials);
         firebaseApp = FirebaseApp.initializeApp(options);
     }
 
-    private InputStream getServiceAccount() {
-        InputStream serviceAccount = null;
+    private GoogleCredentials getServiceAccount() {
+        GoogleCredentials googleCredentials = null;
         try {
-            serviceAccount = Files
+            InputStream serviceAccount = Files
                 .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return serviceAccount;
-    }
-
-    private FirebaseOptions getFirebaseOptions(InputStream serviceAccount) {
-        FirebaseOptions options = null;
-        try {
-            options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
-                .build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        closeInputStream(serviceAccount);
-        return options;
-    }
-
-    private void closeInputStream(InputStream serviceAccount) {
-        try {
+            googleCredentials = GoogleCredentials.fromStream(serviceAccount);
             serviceAccount.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return googleCredentials;
+    }
+
+    private FirebaseOptions getFirebaseOptions(GoogleCredentials googleCredentials) {
+        return new FirebaseOptions.Builder()
+            .setCredentials(googleCredentials)
+            .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
+            .build();
     }
 }
