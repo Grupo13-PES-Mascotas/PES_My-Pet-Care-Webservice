@@ -22,11 +22,11 @@ public class UserRestController {
     }
 
     @GetMapping("/users/{userId}")
-    public User getUser(@PathVariable int userId){
+    public User getUser(@PathVariable int userId) {
         User user = userService.findById(userId);
 
         if (user == null) {
-            throw new RuntimeException("User id not found -"+userId);
+            throw new RuntimeException("User id not found: " + userId);
         }
         return user;
     }

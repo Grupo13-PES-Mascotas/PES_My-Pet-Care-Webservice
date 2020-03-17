@@ -14,15 +14,15 @@ public class FirebaseFactory {
     private static FirebaseFactory instance;
     private FirebaseApp firebaseApp;
 
+    public FirebaseAuth getFirebaseAuth() {
+        return FirebaseAuth.getInstance(firebaseApp);
+    }
+
     public static FirebaseFactory getInstance() {
         if (instance == null) {
             instance = new FirebaseFactory();
         }
         return instance;
-    }
-
-    public FirebaseAuth getFirebaseAuth() {
-        return FirebaseAuth.getInstance(firebaseApp);
     }
 
     private FirebaseFactory() {
