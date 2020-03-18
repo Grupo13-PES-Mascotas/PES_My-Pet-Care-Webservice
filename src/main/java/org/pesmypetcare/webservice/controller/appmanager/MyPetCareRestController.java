@@ -18,10 +18,6 @@ public class MyPetCareRestController {
     public void signUp(@RequestBody UserEntity user, @RequestParam String password)
         throws FirebaseAuthException {
         userService.saveAuth(user, password);
-        storeUser(user);
-    }
-
-    private void storeUser(UserEntity user) {
         userService.save(user);
     }
 }
