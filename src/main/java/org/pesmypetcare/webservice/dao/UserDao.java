@@ -1,12 +1,14 @@
 package org.pesmypetcare.webservice.dao;
 
-import org.pesmypetcare.webservice.entity.User;
+import com.google.firebase.auth.FirebaseAuthException;
+import org.pesmypetcare.webservice.entity.UserEntity;
 
 import java.util.List;
 
 public interface UserDao {
-    List<User> findAll();
-    User findById(int id);
-    void save(User user);
+    List<UserEntity> findAll();
+    UserEntity findById(int id);
+    void save(UserEntity userEntity);
     void deleteById(int id);
+    void saveAuth(UserEntity userEntity, String password) throws FirebaseAuthException;
 }

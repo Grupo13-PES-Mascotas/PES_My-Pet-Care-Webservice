@@ -1,7 +1,8 @@
 package org.pesmypetcare.webservice.service;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.dao.UserDao;
-import org.pesmypetcare.webservice.entity.User;
+import org.pesmypetcare.webservice.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,22 +14,27 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<User> findAll() {
+    public List<UserEntity> findAll() {
         return userDao.findAll();
     }
 
     @Override
-    public User findById(int id) {
+    public UserEntity findById(int id) {
         return userDao.findById(id);
     }
 
     @Override
-    public void save(User user) {
-        userDao.save(user);
+    public void save(UserEntity userEntity) {
+        userDao.save(userEntity);
     }
 
     @Override
     public void deleteById(int id) {
         userDao.deleteById(id);
+    }
+
+    @Override
+    public void saveAuth(UserEntity user, String password) throws FirebaseAuthException {
+        userDao.saveAuth(user, password);
     }
 }

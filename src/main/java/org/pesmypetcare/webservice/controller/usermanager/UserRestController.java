@@ -1,6 +1,6 @@
 package org.pesmypetcare.webservice.controller.usermanager;
 
-import org.pesmypetcare.webservice.entity.User;
+import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +17,17 @@ public class UserRestController {
     private UserService userService;
 
     @GetMapping("/users")
-    public List<User> findAll() {
+    public List<UserEntity> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/users/{userId}")
-    public User getUser(@PathVariable int userId) {
-        User user = userService.findById(userId);
+    public UserEntity getUser(@PathVariable int userId) {
+        UserEntity userEntity = userService.findById(userId);
 
-        if (user == null) {
-            throw new RuntimeException("User id not found: " + userId);
+        if (userEntity == null) {
+            throw new RuntimeException("UserEntity id not found: " + userId);
         }
-        return user;
+        return userEntity;
     }
 }

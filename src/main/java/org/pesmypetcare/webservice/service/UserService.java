@@ -2,13 +2,15 @@ package org.pesmypetcare.webservice.service;
 
 
 
-import org.pesmypetcare.webservice.entity.User;
+import com.google.firebase.auth.FirebaseAuthException;
+import org.pesmypetcare.webservice.entity.UserEntity;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> findAll();
-    User findById(int id);
-    void save(User user);
+    List<UserEntity> findAll();
+    UserEntity findById(int id);
+    void save(UserEntity userEntity);
     void deleteById(int id);
+    void saveAuth(UserEntity user, String password) throws FirebaseAuthException;
 }
