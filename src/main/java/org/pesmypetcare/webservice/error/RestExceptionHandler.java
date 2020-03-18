@@ -13,13 +13,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //other exception handlers
-
     @ExceptionHandler(FirebaseAuthException.class)
     protected ResponseEntity<Object> handleAuthenticationException(
         FirebaseAuthException ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(FirebaseExceptionHandler.getErrorMessage(ex.getErrorCode()));
+        apiError.setMessage(new FirebaseExceptionHandler().getErrorMessage(ex.getErrorCode()));
         return buildResponseEntity(apiError);
     }
 
