@@ -40,14 +40,14 @@ class MyPetCareRestControllerTest {
     }
 
     @BeforeAll
-    static void setUp() {
+    public static void setUp() {
         jsonUser1 = "{\n"
             + "  \"username\": \"user1\",\n"
             + "  \"email\": \"user@mail.com\"\n"
             + "}";
         jsonUser2 = "{\n"
-            + "  \"username\": \"user2\",\n" +
-            "  \"email\": \"user@mail.com\"\n"
+            + "  \"username\": \"user2\",\n"
+            + "  \"email\": \"user@mail.com\"\n"
             + "}";
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());

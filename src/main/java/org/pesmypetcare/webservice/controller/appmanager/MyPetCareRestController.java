@@ -19,7 +19,7 @@ public class MyPetCareRestController {
      * @param user The entity that contains the username and the email for the new account
      * @param password The password for the new account
      * @throws FirebaseAuthException If a user tries to create an account with an existing username or
-        * email, or with an invalid email
+     * email, or with an invalid email
      */
     @PostMapping("/signup")
     public void signUp(@RequestBody UserEntity user, @RequestParam String password)
