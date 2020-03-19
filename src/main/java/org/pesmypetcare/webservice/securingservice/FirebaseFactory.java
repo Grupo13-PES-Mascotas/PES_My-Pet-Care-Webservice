@@ -17,9 +17,15 @@ public class FirebaseFactory {
     private FirebaseApp firebaseApp;
     private GoogleCredentials googleCredentials;
 
+    private FirebaseFactory() {
+        setGoogleCredentials();
+        FirebaseOptions options = getFirebaseOptions(googleCredentials);
+        firebaseApp = FirebaseApp.initializeApp(options);
+    }
+
     /**
      * Gets the instance of the factory.
-     * @return The instance of the factory.
+     * @return The instance of the factory
      */
     public static FirebaseFactory getInstance() {
         if (instance == null) {
@@ -30,7 +36,7 @@ public class FirebaseFactory {
 
     /**
      * Gets the instance to manages user authentication.
-     * @return The instance that handles user authentication.
+     * @return The instance that handles user authentication
      */
     public FirebaseAuth getFirebaseAuth() {
         return FirebaseAuth.getInstance(firebaseApp);
@@ -38,26 +44,16 @@ public class FirebaseFactory {
 
     /**
      * Gets the instance to manages the data base.
-     * @return The instance that handles the data base.
+     * @return The instance that handles the data base
      */
     public Firestore getFirestore() {
         return FirestoreOptions.newBuilder().setCredentials(googleCredentials).build().getService();
     }
 
     /**
-     * Default constructor for the class.
-     */
-    private FirebaseFactory() {
-        setGoogleCredentials();
-        FirebaseOptions options = getFirebaseOptions(googleCredentials);
-        firebaseApp = FirebaseApp.initializeApp(options);
-    }
-
-    /**
      * Sets the google credentials for the Firebase service.
      */
     private void setGoogleCredentials() {
-        googleCredentials = null;
         try {
             InputStream serviceAccount = Files
                 .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json"));
@@ -70,8 +66,8 @@ public class FirebaseFactory {
 
     /**
      * Gets the Firebase options for the service.
-     * @param googleCredentials The Google credentials of the service.
-     * @return The Firebase options for the service.
+     * @param googleCredentials The Google credentials of the service
+     * @return The Firebase options for the service
      */
     private FirebaseOptions getFirebaseOptions(GoogleCredentials googleCredentials) {
         return new FirebaseOptions.Builder()

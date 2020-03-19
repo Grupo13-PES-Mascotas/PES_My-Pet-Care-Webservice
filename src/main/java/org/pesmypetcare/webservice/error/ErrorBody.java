@@ -12,16 +12,13 @@ public class ErrorBody {
     private String message;
     private String debugMessage;
 
-    /**
-     * Empty creator for the error body that sets its timestamp.
-     */
     public ErrorBody() {
         timestamp = LocalDateTime.now();
     }
 
     /**
      * Creator that sets the message to Unexpected error and gets the localized message from the exception.
-     * @param ex The throwable from which to generate the body error.
+     * @param ex The throwable from which to generate the body error
      */
     public ErrorBody(Throwable ex) {
         this();
@@ -31,8 +28,8 @@ public class ErrorBody {
 
     /**
      * Creator with a specific message and exception.
-     * @param message The message of the body.
-     * @param ex The throwable from which to generate the body error.
+     * @param message The message of the body
+     * @param ex The throwable from which to generate the body error
      */
     public ErrorBody(String message, Throwable ex) {
         this();
@@ -42,9 +39,9 @@ public class ErrorBody {
 
     /**
      * Creator with a specific timestamp, message and debug message.
-     * @param timestamp The timestamp of the body.
-     * @param message The message of the body.
-     * @param debugMessage The debugMessage of the body.
+     * @param timestamp The timestamp of the body
+     * @param message The message of the body
+     * @param debugMessage The debugMessage of the body
      */
     @JsonCreator
     public ErrorBody(@JsonProperty("timestamp") LocalDateTime timestamp,

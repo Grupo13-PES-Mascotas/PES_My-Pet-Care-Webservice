@@ -3,14 +3,11 @@ package org.pesmypetcare.webservice.controller.appmanager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.firebase.auth.FirebaseAuthException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.pesmypetcare.webservice.error.ErrorBody;
 import org.pesmypetcare.webservice.securingservice.FirebaseFactory;
-import org.pesmypetcare.webservice.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,45 +20,40 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 class MyPetCareRestControllerTest {
-    private String jsonUser1;
-    private String jsonUser2;
-    private ObjectMapper objectMapper;
+    private static String jsonUser1;
+    private static String jsonUser2;
+    private static ObjectMapper objectMapper;
+    private static String url;
+    private static String key;
+    private static String password;
 
     @Autowired
     private MockMvc mockMvc;
 
-   @Mock
-    private UserServiceImpl userService;
-
-    @InjectMocks
-    private MyPetCareRestController restController;
-
-    @AfterEach
-    public void resetFirebase() {
+    @AfterAll
+    public static void resetFirebase() {
         try {
             deleteUser("user1");
-            deleteUser("user2");
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
         }
     }
 
-    private void deleteUser(String user1) throws FirebaseAuthException {
-        FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user1);
-    }
-
-    @BeforeEach
-    void setUp() {
-        jsonUser1 = "{\n" +
-            "  \"username\": \"user1\",\n" +
-            "  \"email\": \"user@mail.com\"\n" +
-            "}";
-        jsonUser2 = "{\n" +
-            "  \"username\": \"user2\",\n" +
-            "  \"email\": \"user@mail.com\"\n" +
-            "}";
+    @BeforeAll
+    static void setUp() {
+        jsonUser1 = "{\n"
+            + "  \"username\": \"user1\",\n"
+            + "  \"email\": \"user@mail.com\"\n"
+            + "}";
+        jsonUser2 = "{\n"
+            + "  \"username\": \"user2\",\n" +
+            "  \"email\": \"user@mail.com\"\n"
+            + "}";
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        url = "/signup";
+        password = "123456";
+        key = "password";
     }
 
     @Test
@@ -89,20 +81,24 @@ class MyPetCareRestControllerTest {
 
     @Test
     public void shouldNotPermitSignUpWithAnInvalidEmail() throws Exception {
-        String json = "{\n" +
-            "  \"username\": \"user1\",\n" +
-            "  \"email\": \"user@mail\"\n" +
-            "}";
+        String json = "{\n"
+            + "  \"username\": \"user1\",\n"
+            + "  \"email\": \"user@mail\"\n"
+            + "}";
         String body = doSignInAndGetResponseBody(json);
         String msg = getBodyMessage(body);
         assertEquals("Response message when signing up with an invalid email",
             "The email is invalid", msg);
     }
 
+    private static void deleteUser(String user) throws FirebaseAuthException {
+        FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user);
+    }
+
     private String doSignInAndGetResponseBody(String json) throws Exception {
-        return mockMvc.perform(post("/signup")
+        return mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json).param("password", "123456"))
+            .content(json).param(key, password))
             .andReturn().getResponse().getContentAsString();
     }
 
@@ -112,8 +108,8 @@ class MyPetCareRestControllerTest {
     }
 
     private void doSignIn(String json) throws Exception {
-        mockMvc.perform(post("/signup")
+        mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(json).param("password", "123456"));
+            .content(json).param(key, password));
     }
 }

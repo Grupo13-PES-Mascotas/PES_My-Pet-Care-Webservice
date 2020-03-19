@@ -1,13 +1,11 @@
 package org.pesmypetcare.webservice.error;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseExceptionHandler {
-    private HashMap<String, String> errorMessage;
+    private Map<String, String> errorMessage;
 
-    /**
-     * Default constructor of the class that initializes the default error messages.
-     */
     public FirebaseExceptionHandler() {
         errorMessage = new HashMap<>();
         errorMessage.put("invalid-uid", "The username is invalid");
@@ -21,14 +19,15 @@ public class FirebaseExceptionHandler {
 
     /**
      * Gets the error message associated with the specified error code.
-     * @param errorCode The error code from which to get the message.
-     * @return The message associated with the specified error code.
+     * @param errorCode The error code from which to get the message
+     * @return The message associated with the specified error code
      */
     public String getErrorMessage(String errorCode) {
         String message;
         message = errorMessage.get(errorCode);
-        if (message == null)
+        if (message == null) {
             return "Unexpected error";
+        }
         return message;
     }
 }

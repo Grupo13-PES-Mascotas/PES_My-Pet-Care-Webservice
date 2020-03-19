@@ -15,8 +15,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Creates the http response for the FirebaseAuthException class.
-     * @param ex The exception from which to create the response.
-     * @return The response entity created from the exception.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
      */
     @ExceptionHandler(FirebaseAuthException.class)
     protected ResponseEntity<Object> handleAuthenticationException(
@@ -28,8 +28,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Creates the http response for the IllegalArgumentException class.
-     * @param ex The exception from which to create the response.
-     * @return The response entity created from the exception.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
      */
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
