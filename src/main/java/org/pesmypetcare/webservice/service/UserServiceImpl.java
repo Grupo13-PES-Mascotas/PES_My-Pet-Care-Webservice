@@ -6,22 +6,10 @@ import org.pesmypetcare.webservice.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
-
-    @Override
-    public List<UserEntity> findAll() {
-        return userDao.findAll();
-    }
-
-    @Override
-    public UserEntity findById(int id) {
-        return userDao.findById(id);
-    }
 
     @Override
     public void save(UserEntity userEntity) {

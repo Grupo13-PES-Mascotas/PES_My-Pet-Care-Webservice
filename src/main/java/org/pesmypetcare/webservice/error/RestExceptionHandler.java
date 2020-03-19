@@ -13,22 +13,28 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Creates the http response for the FirebaseAuthException class.
+     * @param ex The exception from which to create the response.
+     * @return The response entity created from the exception.
+     */
     @ExceptionHandler(FirebaseAuthException.class)
     protected ResponseEntity<Object> handleAuthenticationException(
         FirebaseAuthException ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(new FirebaseExceptionHandler().getErrorMessage(ex.getErrorCode()));
-        return buildResponseEntity(apiError);
+        String errorMessage = new FirebaseExceptionHandler().getErrorMessage(ex.getErrorCode());
+        ErrorBody errorBody = new ErrorBody(errorMessage, ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Creates the http response for the IllegalArgumentException class.
+     * @param ex The exception from which to create the response.
+     * @return The response entity created from the exception.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage("Invalid argument");
-        return buildResponseEntity(apiError);
+        ErrorBody errorBody = new ErrorBody("Invalid argument", ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        return new ResponseEntity<>(apiError, apiError.getStatus());
-    }
 }

@@ -10,7 +10,6 @@ import org.pesmypetcare.webservice.securingservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -18,18 +17,6 @@ public class UserDaoImpl implements UserDao {
 
     UserDaoImpl() {
         firebaseFactory = FirebaseFactory.getInstance();
-    }
-
-    @Override
-    public List<UserEntity> findAll() {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public UserEntity findById(int id) {
-        //TODO
-        return null;
     }
 
     @Override
@@ -42,7 +29,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(int uid) {
         //TODO
     }
 
