@@ -84,6 +84,8 @@ task decryptTask(type: Exec) {
     } else {
         commandLine 'echo'
     }
+
+    println System.getenv('FIREBASE_PASSPHRASE')
 }
 
 task copyJson(type: Copy) {
