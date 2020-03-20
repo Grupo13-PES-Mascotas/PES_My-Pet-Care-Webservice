@@ -68,7 +68,7 @@ task decryptTask(type: Exec) {
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
             commandLine 'cmd', './.github/scripts/decrypt_key.sh'
         } else {
-            commandLine 'chmod', '+x', './.github/scripts/decrypt_key.sh'
+            commandLine 'chmod', '+x', '.github/scripts/decrypt_key.sh'
             commandLine 'sh', './.github/scripts/decrypt_key.sh'
             println System.getenv('FIREBASE_PASSPHRASE')
         }
