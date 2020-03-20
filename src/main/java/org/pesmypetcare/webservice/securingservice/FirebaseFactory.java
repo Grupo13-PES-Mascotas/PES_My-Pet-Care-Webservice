@@ -47,7 +47,9 @@ public class FirebaseFactory {
      * @return The instance that handles the data base
      */
     public Firestore getFirestore() {
-        return FirestoreOptions.newBuilder().setCredentials(googleCredentials).build().getService();
+        return FirestoreOptions.newBuilder()
+            .setCredentials(googleCredentials)
+            .build().getService();
     }
 
     /**
