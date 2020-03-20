@@ -109,7 +109,9 @@ class MyPetCareRestControllerTest {
     private static void deleteUser(String user) {
         try {
             FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user);
-        } catch (FirebaseAuthException ignored) { }
+        } catch (FirebaseAuthException ignored) {
+            //Ignore exception
+        }
     }
 
     private String doSignInAndGetResponseBody(String json) throws Exception {
