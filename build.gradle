@@ -69,12 +69,13 @@ task decryptTask(type: Exec) {
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
             commandLine 'cmd', './github/scripts/decrypt_key.sh'
         } else {
+            println System.getenv('FIREBASE_PASSPHRASE')
             commandLine 'chmod +x ./github/scripts/decrypt_key.sh'
             commandLine './github/scripts/decrypt_key.sh'
         }
 
     }
-    if (file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
+    if (file("./github/scripts/my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
         println 'exists'
     } else {
         println 'not exists'
@@ -84,8 +85,6 @@ task decryptTask(type: Exec) {
     } else {
         commandLine 'echo'
     }
-
-    println System.getenv('FIREBASE_PASSPHRASE')
 }
 
 task copyJson(type: Copy) {
