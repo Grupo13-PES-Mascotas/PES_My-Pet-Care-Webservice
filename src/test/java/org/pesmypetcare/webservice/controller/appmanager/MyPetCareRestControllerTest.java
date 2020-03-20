@@ -28,19 +28,20 @@ class MyPetCareRestControllerTest {
     private static String key;
     private static String password;
     private static boolean deleteUser1;
+    private static boolean deleteUser2;
 
     @Autowired
     private MockMvc mockMvc;
 
     @AfterEach
     public void resetFirebase() {
-        try {
-            if (deleteUser1) {
-                deleteUser("user1");
-                deleteUser1 = false;
-            }
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
+        if (deleteUser1) {
+            deleteUser("user1");
+            deleteUser1 = false;
+        }
+        if (deleteUser2) {
+            deleteUser("user2");
+            deleteUser2 = false;
         }
     }
 
@@ -89,6 +90,7 @@ class MyPetCareRestControllerTest {
         assertEquals("Response message when signing up with a registered email",
             "The specified email is already in use", msg);
         deleteUser1 = true;
+        deleteUser2 = true;
     }
 
     @Test
@@ -101,10 +103,13 @@ class MyPetCareRestControllerTest {
         String msg = getBodyMessage(body);
         assertEquals("Response message when signing up with an invalid email",
             "The email is invalid", msg);
+        deleteUser1 = true;
     }
 
-    private static void deleteUser(String user) throws FirebaseAuthException {
-        FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user);
+    private static void deleteUser(String user) {
+        try {
+            FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user);
+        } catch (FirebaseAuthException ignored) { }
     }
 
     private String doSignInAndGetResponseBody(String json) throws Exception {
