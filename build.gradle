@@ -62,9 +62,9 @@ jacocoTestReport {
     dependsOn test
 }
 
-task decryptTask(type: Exec) {
+/*task decryptTask(type: Exec) {
     workingDir projectDir
-    /*if (!file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
+    *//*if (!file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
             commandLine 'cmd', './.github/scripts/decrypt_key.sh'
         } else {
@@ -77,7 +77,7 @@ task decryptTask(type: Exec) {
         println 'exists'
     } else {
         println 'not exists'
-    }*/
+    }*//*
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
         commandLine 'cmd', 'echo'
     } else {
@@ -101,4 +101,4 @@ compileJava {
 
 build {
     finalizedBy copyJson
-}
+}*/
