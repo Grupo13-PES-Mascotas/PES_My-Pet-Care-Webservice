@@ -64,7 +64,7 @@ jacocoTestReport {
 
 task decryptTask(type: Exec) {
     workingDir projectDir
-    if (!file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
+    /*if (!file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
             commandLine 'cmd', './.github/scripts/decrypt_key.sh'
         } else {
@@ -77,14 +77,16 @@ task decryptTask(type: Exec) {
         println 'exists'
     } else {
         println 'not exists'
-    }
+    }*/
     if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
         commandLine 'cmd', 'echo'
     } else {
-        commandLine 'echo'
+        commandLine 'echo', 'Script', '>', 'chivato.txt'
     }
     if (file("chivato.txt").exists()) {
         println 'chivato exists'
+    } else {
+        println 'chivato not exists'
     }
 }
 
