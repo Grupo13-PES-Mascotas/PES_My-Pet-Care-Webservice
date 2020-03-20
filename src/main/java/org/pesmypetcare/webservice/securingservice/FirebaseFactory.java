@@ -58,7 +58,7 @@ public class FirebaseFactory {
     private void setGoogleCredentials() {
         try {
             InputStream serviceAccount = Files
-                .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json"));
+                .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-0b4dfbf318.json"));
             googleCredentials = GoogleCredentials.fromStream(serviceAccount);
             serviceAccount.close();
         } catch (IOException e) {
