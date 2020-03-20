@@ -62,17 +62,15 @@ jacocoTestReport {
     dependsOn test
 }
 
-
 task decryptTask(type: Exec) {
+    workingDir projectDir
     if (!file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
-        workingDir projectDir
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
             commandLine 'cmd', './.github/scripts/decrypt_key.sh'
         } else {
+            commandLine 'sh', './.github/scripts/decrypt_key.sh'
             println System.getenv('FIREBASE_PASSPHRASE')
-            commandLine './.github/scripts/decrypt_key.sh'
         }
-
     }
     if (file("my-pet-care-85883-firebase-adminsdk-voovm-76b1b008f0.json").exists()) {
         println 'exists'
