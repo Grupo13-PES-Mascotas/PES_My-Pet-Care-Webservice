@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.entity.UserEntity;
-import org.pesmypetcare.webservice.securingservice.FirebaseFactory;
+import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -21,7 +21,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(UserEntity userEntity) {
-        Firestore db = FirebaseFactory.getInstance().getFirestore();
+        Firestore db = FirebaseFactory.getInstance().getAdminFirestore();
+            FirebaseFactory.getInstance().getAdminFirestore();
         DocumentReference docRef = db.collection("users").document(userEntity.getUsername());
         HashMap<String, Object> data = new HashMap<>();
         data.put("email", userEntity.getEmail());

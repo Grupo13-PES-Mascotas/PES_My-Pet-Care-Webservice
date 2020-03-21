@@ -7,7 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.pesmypetcare.webservice.error.ErrorBody;
-import org.pesmypetcare.webservice.securingservice.FirebaseFactory;
+import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
