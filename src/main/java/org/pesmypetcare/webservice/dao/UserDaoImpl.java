@@ -37,16 +37,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) {
-        //TODO
-    }
-
-    @Override
     public void saveAuth(UserEntity user, String password) throws FirebaseAuthException {
         UserRecord.CreateRequest request = new UserRecord.CreateRequest().setDisplayName(user.getUsername())
             .setEmail(user.getEmail()).setEmailVerified(false).setPassword(password).setUid(user.getUsername());
         FirebaseAuth myAuth = firebaseFactory.getFirebaseAuth();
         myAuth.createUser(request);
+    }
+
+    @Override
+    public void deleteById(String uid) {
+        //TODO
     }
 
     @Override

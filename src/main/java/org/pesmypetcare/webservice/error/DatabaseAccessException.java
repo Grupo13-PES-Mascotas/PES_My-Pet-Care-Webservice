@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.error;
 
-public class DatabaseAccessException extends Throwable {
+public class DatabaseAccessException extends Exception {
+    //TODO: Document
     private final String errorCode;
 
     public DatabaseAccessException(String errorCode, String detailedMessage) {

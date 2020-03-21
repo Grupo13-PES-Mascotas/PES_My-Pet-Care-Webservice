@@ -1,16 +1,13 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.dao.UserDao;
-import org.pesmypetcare.webservice.dao.UserDaoImpl;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.concurrent.ExecutionException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MyPetCareRestController {
