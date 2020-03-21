@@ -15,7 +15,7 @@ public interface UserService {
      * Deletes the user with the specified uid from the data base.
      * @param id The uid of the user to delete
      */
-    void deleteById(int id);
+    void deleteById(String id);
 
     /**
      * Creates the user authentication profile.
