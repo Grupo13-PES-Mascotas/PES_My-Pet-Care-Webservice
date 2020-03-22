@@ -22,10 +22,9 @@ public class UserRestController {
 
     @GetMapping("/{username}")
     public UserEntity user(@PathVariable String username) throws DatabaseAccessException {
-        UserDao dao = new UserDaoImpl();
         UserEntity user = null;
         try {
-            user = dao.getUserData(username);
+            user = userService.getUserData(username);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

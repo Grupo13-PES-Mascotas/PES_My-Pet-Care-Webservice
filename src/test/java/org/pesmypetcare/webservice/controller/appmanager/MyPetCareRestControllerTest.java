@@ -6,8 +6,10 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.pesmypetcare.webservice.dao.UserDao;
+import org.pesmypetcare.webservice.dao.UserDaoImpl;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.ErrorBody;
-import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +31,7 @@ class MyPetCareRestControllerTest {
     private static String password;
     private static boolean deleteUser1;
     private static boolean deleteUser2;
+    private static UserDao dao;
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,12 +50,10 @@ class MyPetCareRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        jsonUser1 = "{\n"
-            + "  \"username\": \"user1\",\n"
+        jsonUser1 = "{\n  \"username\": \"user1\",\n"
             + "  \"email\": \"user@mail.com\"\n"
             + "}";
-        jsonUser2 = "{\n"
-            + "  \"username\": \"user2\",\n"
+        jsonUser2 = "{\n  \"username\": \"user2\",\n"
             + "  \"email\": \"user@mail.com\"\n"
             + "}";
         objectMapper = new ObjectMapper();
@@ -61,6 +62,7 @@ class MyPetCareRestControllerTest {
         password = "123456";
         key = "password";
         deleteUser1 = false;
+        dao = new UserDaoImpl();
     }
 
     @Test
@@ -108,8 +110,8 @@ class MyPetCareRestControllerTest {
 
     private static void deleteUser(String user) {
         try {
-            FirebaseFactory.getInstance().getFirebaseAuth().deleteUser(user);
-        } catch (FirebaseAuthException ignored) {
+            dao.deleteById(user);
+        } catch (DatabaseAccessException | FirebaseAuthException ignored) {
             //Ignore exception
         }
     }

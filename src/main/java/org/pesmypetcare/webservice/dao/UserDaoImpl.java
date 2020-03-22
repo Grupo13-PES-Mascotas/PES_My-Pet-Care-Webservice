@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -15,34 +20,30 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    private final String USERS_KEY;
-    private FirebaseFactory firebaseFactory;
     private FirebaseAuth myAuth;
-    private Firestore db;
     private CollectionReference users;
 
     public UserDaoImpl() {
-        firebaseFactory = FirebaseFactory.getInstance();
+        FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
         myAuth = firebaseFactory.getFirebaseAuth();
-        db = FirebaseFactory.getInstance().getFirestore();
-        USERS_KEY = "users";
-        users = db.collection(USERS_KEY);
+        Firestore db = FirebaseFactory.getInstance().getFirestore();
+        users = db.collection("users");
     }
 
     @Override
-    public void save(UserEntity userEntity) {
+    public void createUser(UserEntity userEntity) {
         users.document(userEntity.getUsername()).set(userEntity);
     }
 
     @Override
-    public void saveAuth(UserEntity user, String password) throws FirebaseAuthException {
+    public void createUserAuth(UserEntity user, String password) throws FirebaseAuthException {
         UserRecord.CreateRequest request = new UserRecord.CreateRequest().setDisplayName(user.getUsername())
             .setEmail(user.getEmail()).setEmailVerified(false).setPassword(password).setUid(user.getUsername());
         myAuth.createUser(request);
     }
 
     @Override
-    public void deleteById(String uid) throws DatabaseAccessException {
+    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException {
         DocumentReference userRef = users.document(uid);
         try {
             ApiFuture<QuerySnapshot> future = userRef.collection("pets").get();
@@ -54,6 +55,7 @@ public class UserDaoImpl implements UserDao {
             throw new DatabaseAccessException("deletion-failed", e.getMessage());
         }
         userRef.delete();
+        myAuth.deleteUser(uid);
     }
 
     @Override

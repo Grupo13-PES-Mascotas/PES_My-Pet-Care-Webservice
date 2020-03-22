@@ -14,13 +14,16 @@ import java.nio.file.Paths;
 
 public class FirebaseFactory {
     private static FirebaseFactory instance;
-    private FirebaseApp firebaseApp;
     private GoogleCredentials googleCredentials;
+    private Firestore firestore;
+    private FirebaseAuth firebaseAuth;
 
     private FirebaseFactory() {
         setGoogleCredentials();
         FirebaseOptions options = getFirebaseOptions(googleCredentials);
-        firebaseApp = FirebaseApp.initializeApp(options);
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
+        initializeFirebaseAuth(firebaseApp);
+        initializeFirestore();
     }
 
     /**
@@ -39,7 +42,7 @@ public class FirebaseFactory {
      * @return The instance that handles user authentication
      */
     public FirebaseAuth getFirebaseAuth() {
-        return FirebaseAuth.getInstance(firebaseApp);
+        return firebaseAuth;
     }
 
     /**
@@ -47,9 +50,7 @@ public class FirebaseFactory {
      * @return The instance that handles the database
      */
     public Firestore getFirestore() {
-        return FirestoreOptions.newBuilder()
-            .setCredentials(googleCredentials)
-            .build().getService();
+        return firestore;
     }
 
     /**
@@ -76,5 +77,22 @@ public class FirebaseFactory {
             .setCredentials(googleCredentials)
             .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
             .build();
+    }
+
+    /**
+     * Creates the Firestore instance
+     */
+    private void initializeFirestore() {
+        firestore = FirestoreOptions.newBuilder()
+            .setCredentials(googleCredentials)
+            .build().getService();
+    }
+
+    /**
+     * Creates the FirebaseAuth instance
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     */
+    private void initializeFirebaseAuth(FirebaseApp firebaseApp) {
+        firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
     }
 }

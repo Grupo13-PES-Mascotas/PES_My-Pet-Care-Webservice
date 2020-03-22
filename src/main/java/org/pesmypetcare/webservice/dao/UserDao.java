@@ -14,19 +14,19 @@ public interface UserDao {
      * @throws FirebaseAuthException If a user tries to create an account with an existing username or
      * email, or with an invalid email
      */
-    void saveAuth(UserEntity userEntity, String password) throws FirebaseAuthException;
+    void createUserAuth(UserEntity userEntity, String password) throws FirebaseAuthException;
 
     /**
      * Creates a user on the data base.
      * @param userEntity The entity that contains the uid, username and email of the user
      */
-    void save(UserEntity userEntity);
+    void createUser(UserEntity userEntity);
 
     /**
      * Deletes the user with the specified uid from the data base.
      * @param uid The uid of the user to delete
      */
-    void deleteById(String uid) throws DatabaseAccessException;
+    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException;
 
     /**
      * Gets the data of the specified user.
