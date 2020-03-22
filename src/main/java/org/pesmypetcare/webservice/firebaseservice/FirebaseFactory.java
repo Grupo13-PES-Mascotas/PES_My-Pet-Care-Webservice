@@ -6,13 +6,11 @@ import com.google.cloud.firestore.FirestoreOptions;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.cloud.FirestoreClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class FirebaseFactory {
     private static FirebaseFactory instance;
@@ -48,21 +46,10 @@ public class FirebaseFactory {
      * Gets the instance that manages the database.
      * @return The instance that handles the database
      */
-    public Firestore getAdminFirestore() {
+    public Firestore getFirestore() {
         return FirestoreOptions.newBuilder()
             .setCredentials(googleCredentials)
             .build().getService();
-    }
-
-    /**
-     * Gets the user instance for the database.
-     * @param auth The value to use for the auth variable in the security rules for database actions.
-     * @return The instance that handles the  user database
-     */
-    public Firestore getUserFirestore(Map<String, Object> auth) {
-        FirebaseOptions options = getUserFirebaseOptions(auth, googleCredentials);
-        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
-        return FirestoreClient.getFirestore(firebaseApp);
     }
 
     /**
@@ -88,20 +75,6 @@ public class FirebaseFactory {
         return new FirebaseOptions.Builder()
             .setCredentials(googleCredentials)
             .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
-            .build();
-    }
-
-    /**
-     * Gets the Firebase options for the user database instance.
-     * @param auth The value to use for the auth variable in the security rules for database actions.
-     * @param googleCredentials The Google credentials of the service
-     * @return The Firebase options for user database instance
-     */
-    private FirebaseOptions getUserFirebaseOptions(Map<String, Object> auth, GoogleCredentials googleCredentials) {
-        return new FirebaseOptions.Builder()
-            .setCredentials(googleCredentials)
-            .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
-            .setDatabaseAuthVariableOverride(auth)
             .build();
     }
 }
