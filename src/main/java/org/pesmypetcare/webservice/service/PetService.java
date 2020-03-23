@@ -1,11 +1,11 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 
-public interface PetDao {
+public interface PetService {
 
     /**
      * Creates a pet on the data base.
