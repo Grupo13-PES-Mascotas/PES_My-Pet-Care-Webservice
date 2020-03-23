@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+class UserServiceTest {
     @Mock
     private UserDao userDao;
 
@@ -81,7 +81,7 @@ class UserServiceImplTest {
 
     @Test
     public void shouldReturnUserEntity() throws DatabaseAccessException {
-        when(service.getUserData(username)).thenReturn(user);
+        when(userDao.getUserData(username)).thenReturn(user);
         UserEntity entity = service.getUserData(username);
         assertSame(user, entity, "Should return a user entity");
     }
