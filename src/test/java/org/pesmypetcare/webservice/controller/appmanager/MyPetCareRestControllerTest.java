@@ -6,22 +6,30 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.UserDao;
 import org.pesmypetcare.webservice.dao.UserDaoImpl;
+import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.ErrorBody;
+import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class MyPetCareRestControllerTest {
     private static String jsonUser1;
     private static String jsonUser2;
@@ -35,6 +43,12 @@ class MyPetCareRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private UserService service;
+
+   /* @InjectMocks
+    private MyPetCareRestController restController = new MyPetCareRestController();*/
 
     @AfterEach
     public void resetFirebase() {
@@ -67,11 +81,12 @@ class MyPetCareRestControllerTest {
 
     @Test
     public void signUpShouldReturnStatusOK() throws Exception {
+        willDoNothing().given(service).createUserAuth(isA(UserEntity.class), isA(String.class));
         mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonUser1).param(key, password))
             .andExpect(status().isOk());
-        deleteUser1 = true;
+        //deleteUser1 = true;
     }
 
     @Test

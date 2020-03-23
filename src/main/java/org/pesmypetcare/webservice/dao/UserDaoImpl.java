@@ -90,6 +90,12 @@ public class UserDaoImpl implements UserDao {
         myAuth.updateUserAsync(updateRequest);
     }
 
+    /**
+     * Gets the update request for the user.
+     * @param uid The unique identifier of the user
+     * @return An update request for the user data
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
     private UserRecord.UpdateRequest getUserRecord(String uid) throws FirebaseAuthException {
         return myAuth.getUser(uid).updateRequest();
     }
