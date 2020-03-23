@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.service;
 
-import com.google.firebase.auth.FirebaseAuthException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.PetDao;
+import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
@@ -35,7 +35,7 @@ class PetServiceTest {
     private String owner;
     private String name;
     private String field;
-    private Date value;
+    private GenderType value;
 
     @BeforeEach
     void setUp() {
@@ -44,11 +44,7 @@ class PetServiceTest {
         owner = "OwnerUsername";
         name = "PetName";
         field = "birth";
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 1999);
-        cal.set(Calendar.MONTH, Calendar.JANUARY);
-        cal.set(Calendar.DAY_OF_MONTH, 8);
-        value = cal.getTime();
+        value = GenderType.Female;
     }
 
     @Test
