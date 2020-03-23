@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao {
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
         myAuth = firebaseFactory.getFirebaseAuth();
-        Firestore db = FirebaseFactory.getInstance().getFirestore();
+        Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
     }
 

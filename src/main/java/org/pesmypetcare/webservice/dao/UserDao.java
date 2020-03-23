@@ -16,13 +16,13 @@ public interface UserDao {
     void createUserAuth(UserEntity userEntity, String password) throws FirebaseAuthException;
 
     /**
-     * Creates a user on the data base.
+     * Creates a user on the database.
      * @param userEntity The entity that contains the uid, username and email of the user
      */
     void createUser(UserEntity userEntity);
 
     /**
-     * Deletes the user with the specified uid from the data base.
+     * Deletes the user with the specified uid from the database.
      * @param uid The uid of the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
