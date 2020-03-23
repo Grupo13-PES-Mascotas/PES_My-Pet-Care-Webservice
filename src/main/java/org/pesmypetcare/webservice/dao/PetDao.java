@@ -30,7 +30,7 @@ public interface PetDao {
     void deleteAllPets(String owner) throws DatabaseAccessException;
 
     /**
-     * Gets a pet identified by its name and owner
+     * Gets a pet identified by its name and owner.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      * @return The PetEntity of the users data
@@ -39,7 +39,7 @@ public interface PetDao {
     PetEntity getPetData(String owner, String name) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the specified pets from the database
+     * Gets the data from all the specified pets from the database.
      * @param owner Username of the owner of the pets
      * @return The PetEntity of the users data
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -47,7 +47,7 @@ public interface PetDao {
     List<PetEntity> getAllPetsData(String owner) throws DatabaseAccessException;
 
     /**
-     * Updates the pet's field
+     * Updates the pet's field.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      * @param field Name of the field to update
