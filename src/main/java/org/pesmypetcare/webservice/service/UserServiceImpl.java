@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity getUserData(String uid) throws ExecutionException, InterruptedException, DatabaseAccessException {
+    public UserEntity getUserData(String uid) throws DatabaseAccessException {
         return userDao.getUserData(uid);
     }
 

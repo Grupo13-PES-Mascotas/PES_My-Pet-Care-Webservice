@@ -59,10 +59,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public UserEntity getUserData(String uid) throws ExecutionException, InterruptedException, DatabaseAccessException {
+    public UserEntity getUserData(String uid) throws DatabaseAccessException {
         DocumentReference docRef = users.document(uid);
         ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot userDoc = future.get();
+        DocumentSnapshot userDoc;
+        try {
+            userDoc = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException("deletion-failed", e.getMessage());
+        }
         if (!userDoc.exists()) {
             throw new DatabaseAccessException("invalid-user", "The user does not exist");
         }

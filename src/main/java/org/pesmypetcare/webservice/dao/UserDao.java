@@ -33,7 +33,7 @@ public interface UserDao {
      * @param uid The unique identifier of the user
      * @return The UserEntity with the users data
      */
-    UserEntity getUserData(String uid) throws ExecutionException, InterruptedException, DatabaseAccessException;
+    UserEntity getUserData(String uid) throws DatabaseAccessException;
 
     /**
      * Updates the user's email.

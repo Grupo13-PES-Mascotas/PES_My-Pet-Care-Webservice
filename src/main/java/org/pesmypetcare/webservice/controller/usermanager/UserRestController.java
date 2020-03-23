@@ -1,7 +1,5 @@
 package org.pesmypetcare.webservice.controller.usermanager;
 
-import org.pesmypetcare.webservice.dao.UserDao;
-import org.pesmypetcare.webservice.dao.UserDaoImpl;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.UserService;
@@ -22,12 +20,7 @@ public class UserRestController {
 
     @GetMapping("/{username}")
     public UserEntity user(@PathVariable String username) throws DatabaseAccessException {
-        UserEntity user = null;
-        try {
-            user = userService.getUserData(username);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        UserEntity user = userService.getUserData(username);
         return user;
     }
 }
