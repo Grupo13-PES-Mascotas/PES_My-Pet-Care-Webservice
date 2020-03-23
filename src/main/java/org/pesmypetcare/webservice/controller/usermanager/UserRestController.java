@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.ExecutionException;
-
 @RestController
 @RequestMapping("/users")
 public class UserRestController {
@@ -20,7 +18,6 @@ public class UserRestController {
 
     @GetMapping("/{username}")
     public UserEntity user(@PathVariable String username) throws DatabaseAccessException {
-        UserEntity user = userService.getUserData(username);
-        return user;
+        return userService.getUserData(username);
     }
 }

@@ -4,8 +4,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.util.concurrent.ExecutionException;
-
 public interface UserDao {
     /**
      * Creates the user authentication profile.

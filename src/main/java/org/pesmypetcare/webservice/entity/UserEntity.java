@@ -6,4 +6,14 @@ import lombok.Data;
 public class UserEntity {
     private String username;
     private String email;
+
+    /**
+     * Creates a user entity with the given username and email.
+     * @param username The user's username
+     * @param email The user's email
+     */
+    public UserEntity(String username, String email) {
+        setUsername(username);
+        setEmail(email);
+    }
 }

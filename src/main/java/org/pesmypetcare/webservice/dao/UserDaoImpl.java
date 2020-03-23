@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+    private final String ERROR_CODE;
     private FirebaseAuth myAuth;
     private CollectionReference users;
 
@@ -28,6 +29,7 @@ public class UserDaoImpl implements UserDao {
         myAuth = firebaseFactory.getFirebaseAuth();
         Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
+        ERROR_CODE = "deletion-failed";
     }
 
     @Override
@@ -52,7 +54,7 @@ public class UserDaoImpl implements UserDao {
                 document.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException("deletion-failed", e.getMessage());
+            throw new DatabaseAccessException(ERROR_CODE, e.getMessage());
         }
         userRef.delete();
         myAuth.deleteUser(uid);
@@ -66,7 +68,7 @@ public class UserDaoImpl implements UserDao {
         try {
             userDoc = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException("deletion-failed", e.getMessage());
+            throw new DatabaseAccessException(ERROR_CODE, e.getMessage());
         }
         if (!userDoc.exists()) {
             throw new DatabaseAccessException("invalid-user", "The user does not exist");
