@@ -21,10 +21,13 @@ public class PetDaoImpl implements PetDao {
     private final String USER_KEY;
     private final String PETS_KEY;
     private final String DELFAIL_KEY;
-    private Firestore db;
+    private CollectionReference usersRef;
 
     public PetDaoImpl() {
+        Firestore db;
         db = FirebaseFactory.getInstance().getFirestore();
+        usersRef = db.collection("users");
+
         USER_KEY = "users";
         PETS_KEY = "pets";
         DELFAIL_KEY = "deletion-failed";
@@ -32,19 +35,19 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public void createPet(String owner, String name, PetEntity petEntity) {
-        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.set(petEntity);
     }
 
     @Override
     public void deleteByOwnerAndName(String owner, String name) {
-        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.delete();
     }
 
     @Override
     public void deleteAllPets(String owner) throws DatabaseAccessException {
-        CollectionReference petsRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY);
+        CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
@@ -58,7 +61,7 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public PetEntity getPetData(String owner, String name) throws DatabaseAccessException {
-        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         ApiFuture<DocumentSnapshot> future = petRef.get();
         DocumentSnapshot petDoc;
         try {
@@ -74,7 +77,7 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public List<PetEntity> getAllPetsData(String owner) throws DatabaseAccessException {
-        CollectionReference petsRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY);
+        CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
         List<PetEntity> petEntities = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
@@ -90,7 +93,7 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public Object getField(String owner, String name, String field) throws DatabaseAccessException {
-        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         ApiFuture<DocumentSnapshot> future = petRef.get();
         DocumentSnapshot petDoc;
         try {
@@ -106,7 +109,7 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public void updateField(String owner, String name, String field, Object value) {
-        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.update(field, value);
     }
 }
