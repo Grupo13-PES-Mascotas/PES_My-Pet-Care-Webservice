@@ -5,8 +5,6 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -15,14 +13,14 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    private final String ERROR_CODE;
     private FirebaseAuth myAuth;
     private CollectionReference users;
+    private PetDao petDao;
+    private final String ERROR_CODE;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
@@ -30,6 +28,7 @@ public class UserDaoImpl implements UserDao {
         Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
         ERROR_CODE = "deletion-failed";
+        petDao = new PetDaoImpl();
     }
 
     @Override
@@ -45,17 +44,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException {
+    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
+        petDao.deleteAllPets(uid);
         DocumentReference userRef = users.document(uid);
-        try {
-            ApiFuture<QuerySnapshot> future = userRef.collection("pets").get();
-            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                document.getReference().delete();
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(ERROR_CODE, e.getMessage());
-        }
         userRef.delete();
         myAuth.deleteUser(uid);
     }

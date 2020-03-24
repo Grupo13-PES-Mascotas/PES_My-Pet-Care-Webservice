@@ -21,17 +21,18 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    private String username;
+    private String newEmail;
+    private UserEntity user;
+
     @Mock
     private UserDao userDao;
 
     @InjectMocks
     private UserService service = new UserServiceImpl();
-    private UserEntity user;
-    private String username;
-    private String newEmail;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         user = new UserEntity(username, "user@email");
         username = "user";
         newEmail = "new-user@email.com";
@@ -95,7 +96,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void updateEmail() throws FirebaseAuthException {
+    public void shouldUpdateEmail() throws FirebaseAuthException {
         service.updateEmail(username, newEmail);
         verify(userDao).updateEmail(any(String.class), any(String.class));
     }
@@ -109,7 +110,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void updatePassword() throws FirebaseAuthException {
+    public void shouldUpdatePassword() throws FirebaseAuthException {
         service.updatePassword(username, "newPassword");
         verify(userDao).updatePassword(any(String.class), any(String.class));
     }
