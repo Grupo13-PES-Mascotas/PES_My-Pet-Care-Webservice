@@ -103,8 +103,8 @@ class PetServiceTest {
 
     @Test
     public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException {
-        when(petDao.getField(owner,name,field)).thenReturn(value);
-        Object obtainedValue = service.getField(owner,name,field);
+        when(petDao.getField(owner, name, field)).thenReturn(value);
+        Object obtainedValue = service.getField(owner, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
     }
 

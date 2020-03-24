@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class PetDaoImpl implements PetDao {
-    private final String USER_KEY;
     private final String PETS_KEY;
     private final String DELFAIL_KEY;
     private CollectionReference usersRef;
@@ -28,7 +27,6 @@ public class PetDaoImpl implements PetDao {
         db = FirebaseFactory.getInstance().getFirestore();
         usersRef = db.collection("users");
 
-        USER_KEY = "users";
         PETS_KEY = "pets";
         DELFAIL_KEY = "deletion-failed";
     }

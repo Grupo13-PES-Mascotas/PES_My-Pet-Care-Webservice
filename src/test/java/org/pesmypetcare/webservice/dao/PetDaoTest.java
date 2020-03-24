@@ -108,7 +108,8 @@ class PetDaoTest {
     }
 
     @Test
-    void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException, InterruptedException {
+    void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+        InterruptedException {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.get()).willReturn(futureQuery);
@@ -160,13 +161,13 @@ class PetDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
 
-        PetEntity petEntity = petDao.getPetData(owner,name);
+        PetEntity petEntity = petDao.getPetData(owner, name);
 
         assertSame(pet, petEntity, "Should return Pet Entity");
     }
 
     @Test
-    void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExists(){
+    void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExists() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -176,8 +177,8 @@ class PetDaoTest {
             given(documentSnapshot.exists()).willReturn(false);
 
             petDao.getPetData(owner, name);
-        }, "Should throw DatabaseAccessException when the retrieve of a Pet Data from database fails because " +
-            "the document doesn't exist");
+        }, "Should throw DatabaseAccessException when the retrieve from database fails because the document" +
+            " doesn't exist");
     }
 
 
@@ -267,7 +268,7 @@ class PetDaoTest {
     }
 
     @Test
-    void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExistsInFieldRetrieval(){
+    void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExistsInFieldRetrieval() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -277,8 +278,8 @@ class PetDaoTest {
             given(documentSnapshot.exists()).willReturn(false);
 
             petDao.getPetData(owner, name);
-        }, "Should throw DatabaseAccessException when the retrieve of a Pet Data from database fails because " +
-            "the document doesn't exist");
+        }, "Should throw DatabaseAccessException when the retrieve from database fails because document" +
+            " doesn't exist");
     }
 
 
