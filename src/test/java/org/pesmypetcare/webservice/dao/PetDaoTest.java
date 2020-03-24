@@ -40,12 +40,16 @@ class PetDaoTest {
     private static String name;
     private static String field;
     private static GenderType value;
-    private static String PETS_KEY;
-    private static String INTERRUPTED_DEL_EXC;
-    private static String EXECUTION_DEL_EXC;
-    private static String NOT_EXISTS_STR;
-    private static String EXECUTION_RETR_EXC;
-    private static String INTERRUPTED_RETR_EXC;
+    private final String PETS_KEY = "pets";
+    private final String INTERRUPTED_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database "
+        + "fails from InterruptedException";
+    private final String EXECUTION_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database "
+        + "fails from ExecutionException";
+    private final String NOT_EXISTS_STR = " doesn't exist";
+    private final String EXECUTION_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database "
+        + "fails from ExecutionException";
+    private final String INTERRUPTED_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database"
+        + " fails from InterruptedException";
 
     @Mock
     private CollectionReference usersRef;
@@ -79,16 +83,6 @@ class PetDaoTest {
         name = "PetName";
         field = "gender";
         value = GenderType.Other;
-        PETS_KEY = "pets";
-        INTERRUPTED_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database fails from "
-            + "InterruptedException";
-        EXECUTION_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database fails from "
-            + "ExecutionException";
-        NOT_EXISTS_STR = " doesn't exist";
-        EXECUTION_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database fails from "
-            + "ExecutionException";
-        INTERRUPTED_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database fails from "
-            + "InterruptedException";
     }
 
     @Test
