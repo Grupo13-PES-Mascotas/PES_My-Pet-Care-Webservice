@@ -72,7 +72,7 @@ class PetDaoTest {
     private static String INTERRUPTED_RETR_EXC;
 
     @BeforeEach
-    public static void setUp() {
+    public void setUp() {
         pets = new ArrayList<>();
         pet = new PetEntity();
         owner = "OwnerUsername";

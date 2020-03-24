@@ -36,7 +36,7 @@ class PetServiceTest {
     private static GenderType value;
 
     @BeforeEach
-    public static void setUp() {
+    public void setUp() {
         pets = new ArrayList<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
