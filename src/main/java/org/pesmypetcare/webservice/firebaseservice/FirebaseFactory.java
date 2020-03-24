@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.securingservice;
+package org.pesmypetcare.webservice.firebaseservice;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
@@ -14,13 +14,16 @@ import java.nio.file.Paths;
 
 public class FirebaseFactory {
     private static FirebaseFactory instance;
-    private FirebaseApp firebaseApp;
     private GoogleCredentials googleCredentials;
+    private Firestore firestore;
+    private FirebaseAuth firebaseAuth;
 
     private FirebaseFactory() {
         setGoogleCredentials();
         FirebaseOptions options = getFirebaseOptions(googleCredentials);
-        firebaseApp = FirebaseApp.initializeApp(options);
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
+        initializeFirebaseAuth(firebaseApp);
+        initializeFirestore();
     }
 
     /**
@@ -39,17 +42,15 @@ public class FirebaseFactory {
      * @return The instance that handles user authentication
      */
     public FirebaseAuth getFirebaseAuth() {
-        return FirebaseAuth.getInstance(firebaseApp);
+        return firebaseAuth;
     }
 
     /**
-     * Gets the instance to manages the data base.
-     * @return The instance that handles the data base
+     * Gets the instance that manages the database.
+     * @return The instance that handles the database
      */
     public Firestore getFirestore() {
-        return FirestoreOptions.newBuilder()
-            .setCredentials(googleCredentials)
-            .build().getService();
+        return firestore;
     }
 
     /**
@@ -76,5 +77,22 @@ public class FirebaseFactory {
             .setCredentials(googleCredentials)
             .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
             .build();
+    }
+
+    /**
+     * Creates the Firestore instance.
+     */
+    private void initializeFirestore() {
+        firestore = FirestoreOptions.newBuilder()
+            .setCredentials(googleCredentials)
+            .build().getService();
+    }
+
+    /**
+     * Creates the FirebaseAuth instance.
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     */
+    private void initializeFirebaseAuth(FirebaseApp firebaseApp) {
+        firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
     }
 }

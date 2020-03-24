@@ -37,4 +37,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Creates the http response for the DatabaseAccessException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(DatabaseAccessException.class)
+    protected ResponseEntity<Object> handleInvalidAccessToDatabase(DatabaseAccessException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
+
 }
