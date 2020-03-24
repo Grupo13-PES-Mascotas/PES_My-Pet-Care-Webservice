@@ -34,6 +34,19 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
+    private static List<PetEntity> pets;
+    private static PetEntity pet;
+    private static String owner;
+    private static String name;
+    private static String field;
+    private static GenderType value;
+    private static String PETS_KEY;
+    private static String INTERRUPTED_DEL_EXC;
+    private static String EXECUTION_DEL_EXC;
+    private static String NOT_EXISTS_STR;
+    private static String EXECUTION_RETR_EXC;
+    private static String INTERRUPTED_RETR_EXC;
+
     @Mock
     private CollectionReference usersRef;
     @Mock
@@ -57,19 +70,6 @@ class PetDaoTest {
 
     @InjectMocks
     private PetDao petDao = new PetDaoImpl();
-
-    private static List<PetEntity> pets;
-    private static PetEntity pet;
-    private static String owner;
-    private static String name;
-    private static String field;
-    private static GenderType value;
-    private static String PETS_KEY;
-    private static String INTERRUPTED_DEL_EXC;
-    private static String EXECUTION_DEL_EXC;
-    private static String NOT_EXISTS_STR;
-    private static String EXECUTION_RETR_EXC;
-    private static String INTERRUPTED_RETR_EXC;
 
     @BeforeEach
     public void setUp() {

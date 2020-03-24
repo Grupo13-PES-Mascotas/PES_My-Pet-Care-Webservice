@@ -22,18 +22,18 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
-    @Mock
-    private PetDao petDao;
-
-    @InjectMocks
-    private PetService service = new PetServiceImpl();
-
     private static List<PetEntity> pets;
     private static PetEntity pet;
     private static String owner;
     private static String name;
     private static String field;
     private static GenderType value;
+
+    @Mock
+    private PetDao petDao;
+
+    @InjectMocks
+    private PetService service = new PetServiceImpl();
 
     @BeforeEach
     public void setUp() {
