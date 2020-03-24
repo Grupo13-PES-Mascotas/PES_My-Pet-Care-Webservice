@@ -160,8 +160,8 @@ class PetDaoTest {
     }
 
     @Test
-    public void shouldReturnPetEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException
-        , DatabaseAccessException {
+    public void shouldReturnPetEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
+        DatabaseAccessException {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
