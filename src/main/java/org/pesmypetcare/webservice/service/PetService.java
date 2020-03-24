@@ -47,7 +47,7 @@ public interface PetService {
     List<PetEntity> getAllPetsData(String owner) throws DatabaseAccessException;
 
     /**
-     * Gets the value for the specified field of the pet on the database
+     * Gets the value for the specified field of the pet on the database.
      * @param owner Username of the owner of the pets
      * @param name Name of the pet
      * @param field Name of the field to retrieve the value from

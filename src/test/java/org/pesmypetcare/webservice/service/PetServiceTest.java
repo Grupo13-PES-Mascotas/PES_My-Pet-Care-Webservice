@@ -28,15 +28,15 @@ class PetServiceTest {
     @InjectMocks
     private PetService service = new PetServiceImpl();
 
-    private List<PetEntity> pets;
-    private PetEntity pet;
-    private String owner;
-    private String name;
-    private String field;
-    private GenderType value;
+    private static List<PetEntity> pets;
+    private static PetEntity pet;
+    private static String owner;
+    private static String name;
+    private static String field;
+    private static GenderType value;
 
     @BeforeEach
-    public void setUp() {
+    public static void setUp() {
         pets = new ArrayList<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
