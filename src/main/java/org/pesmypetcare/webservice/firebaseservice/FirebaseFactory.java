@@ -80,7 +80,7 @@ public class FirebaseFactory {
     }
 
     /**
-     * Creates the Firestore instance
+     * Creates the Firestore instance.
      */
     private void initializeFirestore() {
         firestore = FirestoreOptions.newBuilder()
@@ -89,7 +89,7 @@ public class FirebaseFactory {
     }
 
     /**
-     * Creates the FirebaseAuth instance
+     * Creates the FirebaseAuth instance.
      * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
      */
     private void initializeFirebaseAuth(FirebaseApp firebaseApp) {

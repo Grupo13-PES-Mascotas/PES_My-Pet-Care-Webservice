@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
     private String username;
     private String newEmail;
+    private String newPassword;
     private UserEntity user;
 
     @Mock
@@ -36,6 +37,7 @@ class UserServiceTest {
         user = new UserEntity(username, "user@email");
         username = "user";
         newEmail = "new-user@email.com";
+        newPassword = "newPassword";
     }
 
     @Test
@@ -111,7 +113,7 @@ class UserServiceTest {
 
     @Test
     public void shouldUpdatePassword() throws FirebaseAuthException {
-        service.updatePassword(username, "newPassword");
+        service.updatePassword(username, newPassword);
         verify(userDao).updatePassword(any(String.class), any(String.class));
     }
 
@@ -119,7 +121,7 @@ class UserServiceTest {
     public void shouldReturnFirebaseAuthExceptionWhenUpdatePasswordFails() {
         assertThrows(FirebaseAuthException.class, () -> {
             doThrow(FirebaseAuthException.class).when(userDao).updatePassword(any(String.class), any(String.class));
-            service.updatePassword(username, "newPassword");
+            service.updatePassword(username, newPassword);
         }, "Should return an exception when password update fails");
     }
 }
