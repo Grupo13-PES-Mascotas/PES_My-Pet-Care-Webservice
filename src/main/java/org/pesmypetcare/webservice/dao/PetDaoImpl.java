@@ -67,7 +67,7 @@ public class PetDaoImpl implements PetDao {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
         if (!petDoc.exists()) {
-            throw new DatabaseAccessException("invalid-user", "The user does not exist");
+            throw new DatabaseAccessException("invalid-pet", "The pet does not exist");
         }
         return petDoc.toObject(PetEntity.class);
     }
@@ -86,6 +86,22 @@ public class PetDaoImpl implements PetDao {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
         return petEntities;
+    }
+
+    @Override
+    public Object getField(String owner, String name, String field) throws DatabaseAccessException {
+        DocumentReference petRef = db.collection(USER_KEY).document(owner).collection(PETS_KEY).document(name);
+        ApiFuture<DocumentSnapshot> future = petRef.get();
+        DocumentSnapshot petDoc;
+        try {
+            petDoc = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
+        if (!petDoc.exists()) {
+            throw new DatabaseAccessException("invalid-pet", "The pet does not exist");
+        }
+        return petDoc.get(field);
     }
 
     @Override

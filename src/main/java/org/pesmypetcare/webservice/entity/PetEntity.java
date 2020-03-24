@@ -12,5 +12,4 @@ public class PetEntity {
     private String patologies;
     private Double recommendedKcal;
     private int washFreq;
-
 }

@@ -41,7 +41,7 @@ class PetServiceTest {
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
-        field = "birth";
+        field = "gender";
         value = GenderType.Female;
     }
 
@@ -54,13 +54,13 @@ class PetServiceTest {
     @Test
     public void shouldReturnNothingWhenPetDeleted() {
         service.deleteByOwnerAndName(owner, name);
-        verify(petDao).deleteByOwnerAndName(any(String.class), any(String.class));
+        verify(petDao).deleteByOwnerAndName(isA(String.class), isA(String.class));
     }
 
     @Test
     public void shouldReturnNothingWhenAllPetsDeleted() throws DatabaseAccessException {
         service.deleteAllPets(owner);
-        verify(petDao).deleteAllPets(any(String.class));
+        verify(petDao).deleteAllPets(isA(String.class));
     }
 
     @Test
@@ -102,9 +102,16 @@ class PetServiceTest {
     }
 
     @Test
+    public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException {
+        when(petDao.getField(owner,name,field)).thenReturn(value);
+        Object obtainedValue = service.getField(owner,name,field);
+        assertSame(value, obtainedValue, "Should return an Object");
+    }
+
+    @Test
     public void shouldReturnNothingWhenPetFieldUpdated() {
         service.updateField(owner, name, field, value);
-        verify(petDao).updateField(any(String.class), any(String.class), any(String.class), any(Object.class));
+        verify(petDao).updateField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }
 
 }

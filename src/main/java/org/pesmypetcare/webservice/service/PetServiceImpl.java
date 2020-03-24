@@ -39,6 +39,11 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public Object getField(String owner, String name, String field) throws DatabaseAccessException {
+        return petDao.getField(owner, name, field);
+    }
+
+    @Override
     public void updateField(String owner, String name, String field, Object value) {
         petDao.updateField(owner, name, field, value);
     }
