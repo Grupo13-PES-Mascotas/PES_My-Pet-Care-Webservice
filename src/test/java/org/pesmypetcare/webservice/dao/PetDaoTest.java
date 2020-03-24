@@ -162,28 +162,22 @@ class PetDaoTest {
     @Test
     public void shouldReturnPetEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
         DatabaseAccessException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        given(futureDocument.get()).willReturn(documentSnapshot);
-        given(documentSnapshot.exists()).willReturn(true);
-        given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
+        retrievePetEntityMock();
 
         PetEntity petEntity = petDao.getPetData(owner, name);
 
         assertSame(pet, petEntity, "Should return Pet Entity");
     }
 
+    private void retrievePetEntityMock() throws InterruptedException, ExecutionException {
+        documentExists(true);
+        given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
+    }
+
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExists() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            given(futureDocument.get()).willReturn(documentSnapshot);
-            given(documentSnapshot.exists()).willReturn(false);
+            documentExists(false);
 
             petDao.getPetData(owner, name);
         }, "Should throw DatabaseAccessException when the retrieve from database fails because the document"
@@ -194,11 +188,7 @@ class PetDaoTest {
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetDocumentReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            willThrow(InterruptedException.class).given(futureDocument).get();
+            throwInterruptionExceptionMock();
 
             petDao.getPetData(owner, name);
         }, INTERRUPTED_RETR_EXC);
@@ -207,11 +197,7 @@ class PetDaoTest {
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetDocumentReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            willThrow(ExecutionException.class).given(futureDocument).get();
+            throwExecutionExceptionMock();
 
             petDao.getPetData(owner, name);
         }, EXECUTION_RETR_EXC);
@@ -263,12 +249,7 @@ class PetDaoTest {
     @Test
     public void shouldReturnPetFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
         DatabaseAccessException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        given(futureDocument.get()).willReturn(documentSnapshot);
-        given(documentSnapshot.exists()).willReturn(true);
+        documentExists(true);
         given(documentSnapshot.get(anyString())).willReturn(value);
 
         Object petValue = petDao.getField(owner, name, field);
@@ -279,43 +260,55 @@ class PetDaoTest {
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExistsInFieldRetrieval() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            given(futureDocument.get()).willReturn(documentSnapshot);
-            given(documentSnapshot.exists()).willReturn(false);
+            documentExists(false);
 
-            petDao.getPetData(owner, name);
+            petDao.getField(owner, name, field);
         }, "Should throw DatabaseAccessException when the retrieve from database fails because document"
             + NOT_EXISTS_STR);
+    }
+
+    private void documentExists(boolean b) throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        given(futureDocument.get()).willReturn(documentSnapshot);
+        given(documentSnapshot.exists()).willReturn(b);
     }
 
 
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            willThrow(InterruptedException.class).given(futureDocument).get();
+            throwInterruptionExceptionMock();
 
-            petDao.getPetData(owner, name);
+            petDao.getField(owner, name, field);
         }, INTERRUPTED_RETR_EXC);
+    }
+
+    private void throwInterruptionExceptionMock() throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        willThrow(InterruptedException.class).given(futureDocument).get();
     }
 
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.get()).willReturn(futureDocument);
-            willThrow(ExecutionException.class).given(futureDocument).get();
+            throwExecutionExceptionMock();
 
-            petDao.getPetData(owner, name);
+            petDao.getField(owner, name, field);
         }, EXECUTION_RETR_EXC);
+    }
+
+    private void throwExecutionExceptionMock() throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        willThrow(ExecutionException.class).given(futureDocument).get();
     }
 
     @Test
