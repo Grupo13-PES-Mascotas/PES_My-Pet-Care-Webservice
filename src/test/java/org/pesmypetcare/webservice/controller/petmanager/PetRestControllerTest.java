@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +57,21 @@ class PetRestControllerTest {
         mockMvc.perform(post(urlBase + "/" + owner + "/" + name)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonPetEntity))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteByOwnerAndNameShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).deleteByOwnerAndName(anyString(), anyString());
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + name)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteAllPetsShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).deleteAllPets(anyString());
+        mockMvc.perform(delete(urlBase + "/" + owner ))
             .andExpect(status().isOk());
     }
 }
