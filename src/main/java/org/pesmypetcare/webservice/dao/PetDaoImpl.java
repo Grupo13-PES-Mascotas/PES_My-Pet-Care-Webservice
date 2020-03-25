@@ -79,9 +79,9 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Map<String,PetEntity > getAllPetsData(String owner) throws DatabaseAccessException {
+    public Map<String, PetEntity> getAllPetsData(String owner) throws DatabaseAccessException {
         CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
-        Map<String,PetEntity > mapa = new HashMap<>();
+        Map<String, PetEntity> mapa = new HashMap<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
