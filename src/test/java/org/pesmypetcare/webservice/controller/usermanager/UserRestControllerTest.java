@@ -66,7 +66,7 @@ class UserRestControllerTest {
 
     @Test
     public void updateEmailShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateEmail(anyString(),anyString());
+        willDoNothing().given(service).updateEmail(anyString(), anyString());
         mockMvc.perform(put(urlBase + "/" + username + "/update/email")
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonEmail))
@@ -75,7 +75,7 @@ class UserRestControllerTest {
 
     @Test
     public void updatePasswordShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updatePassword(anyString(),anyString());
+        willDoNothing().given(service).updatePassword(anyString(), anyString());
         mockMvc.perform(put(urlBase + "/" + username + "/update/password")
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonPassword))
