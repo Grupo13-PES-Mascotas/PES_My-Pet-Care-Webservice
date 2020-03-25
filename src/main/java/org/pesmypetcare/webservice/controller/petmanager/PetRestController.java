@@ -1,7 +1,7 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
-import org.pesmypetcare.webservice.entity.PetFieldEntity;
+import org.pesmypetcare.webservice.entity.ValueEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +99,7 @@ public class PetRestController {
      */
     @PutMapping("/{owner}/{name}/{field}")
     public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
-                            @RequestBody PetFieldEntity valueEntity) {
+                            @RequestBody ValueEntity valueEntity) {
         petService.updateField(owner, name, field, valueEntity.getValue());
     }
 }
