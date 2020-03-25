@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.service;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface PetService {
@@ -41,10 +42,10 @@ public interface PetService {
     /**
      * Gets the data from all the specified pets from the database.
      * @param owner Username of the owner of the pets
-     * @return The Map containing all the owner pets data
+     * @return The List containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Map<String, PetEntity> getAllPetsData(String owner) throws DatabaseAccessException;
+    List< Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field of the pet on the database.
