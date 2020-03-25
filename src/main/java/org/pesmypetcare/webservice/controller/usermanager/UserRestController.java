@@ -24,12 +24,12 @@ public class UserRestController {
         return userService.getUserData(username);
     }
 
-    @PostMapping("/{username}/update/email")
+    @PutMapping("/{username}/update/email")
     public String updateEmail(@PathVariable String username, @RequestBody String newEmail) {
         return "Not implemented yet";
     }
 
-    @PostMapping("/{username}/update/password")
+    @PutMapping("/{username}/update/password")
     public String updatePassword(@PathVariable String username, @RequestBody String newPassword) {
         return "Not implemented yet";
     }
