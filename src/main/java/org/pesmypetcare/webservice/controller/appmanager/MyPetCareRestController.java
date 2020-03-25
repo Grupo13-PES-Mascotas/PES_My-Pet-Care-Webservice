@@ -24,7 +24,7 @@ public class MyPetCareRestController {
     @PostMapping("/signup")
     public void signUp(@RequestBody UserEntity user, @RequestParam String password)
         throws FirebaseAuthException {
-        userService.createUserAuth(user, password);
+        //userService.createUserAuth(user, password);
         userService.createUser(user);
     }
 }
