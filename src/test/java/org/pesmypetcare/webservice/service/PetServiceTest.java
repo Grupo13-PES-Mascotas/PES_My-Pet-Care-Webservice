@@ -1,6 +1,6 @@
 package org.pesmypetcare.webservice.service;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,8 +35,8 @@ class PetServiceTest {
     @InjectMocks
     private PetService service = new PetServiceImpl();
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         pets = new ArrayList<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
