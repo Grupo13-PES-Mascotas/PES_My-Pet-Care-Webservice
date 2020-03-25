@@ -90,7 +90,6 @@ public class PetRestController {
     }
 
     /**
-     *
      * Updates the pet's field.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
