@@ -60,7 +60,7 @@ public class PetRestController {
      */
     @GetMapping("/{owner}/{name}")
     public PetEntity getPetData(@PathVariable String owner, @PathVariable String name) throws DatabaseAccessException {
-        return petService.getPetData(owner,name);
+        return petService.getPetData(owner, name);
     }
 
     /**
@@ -70,7 +70,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}")
-    public List<PetEntity> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException{
+    public List<PetEntity> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
         return petService.getAllPetsData(owner);
     }
 }
