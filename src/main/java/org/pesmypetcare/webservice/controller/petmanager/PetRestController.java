@@ -34,8 +34,8 @@ public class PetRestController {
      * @param name Name of the pet
      */
     @DeleteMapping("/{owner}/{name}")
-    public void deleteByOwnerAndName(@PathVariable String owner, @PathVariable String name){
-        petService.deleteByOwnerAndName(owner,name);
+    public void deleteByOwnerAndName(@PathVariable String owner, @PathVariable String name) {
+        petService.deleteByOwnerAndName(owner, name);
     }
 
     /**
