@@ -36,24 +36,24 @@ class PetRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        jsonPetEntity = "{\n" +
-            "  \"gender\": \"Male\",\n" +
-            "  \"breed\":\"Chihuahua\",\n" +
-            "  \"weight\": 10,\n" +
-            "  \"birth\":\"2017-12-27\",\n" +
-            "  \"patologies\": \"amnesia\",\n" +
-            "  \"recommendedKcal\": 300,\n" +
-            "  \"washFreq\": 3\n" +
-            "}";
+        jsonPetEntity = "{\n"
+            + "  \"gender\": \"Male\",\n"
+            + "  \"breed\":\"Chihuahua\",\n"
+            + "  \"weight\": 10,\n"
+            + "  \"birth\":\"2017-12-27\",\n"
+            + "  \"patologies\": \"amnesia\",\n"
+            + "  \"recommendedKcal\": 300,\n"
+            + "  \"washFreq\": 3\n"
+            + "}";
         owner = "Pepe Lotas";
         name = "ChihuahuaNator";
-        urlBase="/pet";
+        urlBase = "/pet";
     }
 
     @Test
     public void createPetShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).createPet(anyString(), anyString(), isA(PetEntity.class));
-        mockMvc.perform(post(urlBase+"/"+owner+"/"+name)
+        mockMvc.perform(post(urlBase + "/" + owner + "/" + name)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonPetEntity))
             .andExpect(status().isOk());
