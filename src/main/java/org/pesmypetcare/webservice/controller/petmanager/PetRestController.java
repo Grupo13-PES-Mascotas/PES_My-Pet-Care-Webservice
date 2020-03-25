@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
+import org.pesmypetcare.webservice.entity.PetFieldEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,8 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{name}/{field}")
-    public Object getField(@PathVariable String owner,@PathVariable String name,@PathVariable String field) throws DatabaseAccessException {
+    public Object getField(@PathVariable String owner, @PathVariable String name,
+                           @PathVariable String field) throws DatabaseAccessException {
         return petService.getField(owner, name, field);
     }
 
@@ -93,11 +95,11 @@ public class PetRestController {
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      * @param field Name of the field to update
-     * @param value Value the field will have
+     * @param valueEntity Entity that contains the value that the field will have
      */
     @PutMapping("/{owner}/{name}/{field}")
     public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
-                            @RequestBody Object value) {
-        petService.updateField(owner, name, field, value);
+                            @RequestBody PetFieldEntity valueEntity) {
+        petService.updateField(owner, name, field, valueEntity.getValue());
     }
 }
