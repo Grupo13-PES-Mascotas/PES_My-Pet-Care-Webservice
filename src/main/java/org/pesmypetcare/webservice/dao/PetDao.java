@@ -3,7 +3,7 @@ package org.pesmypetcare.webservice.dao;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.util.List;
+import java.util.Map;
 
 public interface PetDao {
 
@@ -33,7 +33,7 @@ public interface PetDao {
      * Gets a pet identified by its name and owner.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
-     * @return The PetEntity of the users data
+     * @return The PetEntity of the owner data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     PetEntity getPetData(String owner, String name) throws DatabaseAccessException;
@@ -41,10 +41,10 @@ public interface PetDao {
     /**
      * Gets the data from all the specified pets from the database.
      * @param owner Username of the owner of the pets
-     * @return The PetEntity of the users data
+     * @return The Map containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<PetEntity> getAllPetsData(String owner) throws DatabaseAccessException;
+    Map<String, PetEntity> getAllPetsData(String owner) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field of the pet on the database.

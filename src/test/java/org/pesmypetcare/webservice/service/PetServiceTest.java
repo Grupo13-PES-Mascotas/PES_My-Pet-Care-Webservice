@@ -11,8 +11,8 @@ import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
-    private static List<PetEntity> pets;
+    private static Map<String, PetEntity> pets;
     private static PetEntity pet;
     private static String owner;
     private static String name;
@@ -37,7 +37,7 @@ class PetServiceTest {
 
     @BeforeAll
     public static void setUp() {
-        pets = new ArrayList<>();
+        pets = new HashMap<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
@@ -89,8 +89,8 @@ class PetServiceTest {
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException {
         when(petDao.getAllPetsData(owner)).thenReturn(pets);
-        List<PetEntity> entityList = service.getAllPetsData(owner);
-        assertSame(pets, entityList, "Should return a list of pet entities");
+        Map<String, PetEntity> map = service.getAllPetsData(owner);
+        assertSame(pets, map, "Should return a list of pet entities");
     }
 
     @Test

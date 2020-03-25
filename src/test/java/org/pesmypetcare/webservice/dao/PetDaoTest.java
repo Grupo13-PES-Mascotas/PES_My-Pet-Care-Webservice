@@ -16,9 +16,10 @@ import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static List<PetEntity> pets;
+    private static Map<String, PetEntity> pets;
     private static PetEntity pet;
     private static String owner;
     private static String name;
@@ -77,7 +78,7 @@ class PetDaoTest {
 
     @BeforeAll
     public static void setUp() {
-        pets = new ArrayList<>();
+        pets = new HashMap<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
@@ -216,9 +217,9 @@ class PetDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<PetEntity> list = petDao.getAllPetsData(owner);
+        Map<String, PetEntity> list = petDao.getAllPetsData(owner);
 
-        assertEquals(pets, list, "Should return a Pet Entity List");
+        assertEquals(pets, list, "Should return a Map containing all pets Data");
     }
 
     @Test
