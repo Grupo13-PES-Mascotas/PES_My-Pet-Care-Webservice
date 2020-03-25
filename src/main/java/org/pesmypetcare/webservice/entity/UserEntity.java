@@ -7,6 +7,11 @@ public class UserEntity {
     private String username;
     private String email;
 
+    public UserEntity() {
+        setUsername(null);
+        setEmail(null);
+    }
+
     /**
      * Creates a user entity with the given username and email.
      * @param username The user's username
