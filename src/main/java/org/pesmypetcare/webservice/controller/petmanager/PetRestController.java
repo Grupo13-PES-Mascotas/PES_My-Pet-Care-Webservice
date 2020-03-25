@@ -1,7 +1,6 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
-import org.pesmypetcare.webservice.entity.ValueEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pet")
@@ -57,7 +56,7 @@ public class PetRestController {
      * Gets a pet identified by its name and owner.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
-     * @return The PetEntity of the users data
+     * @return The PetEntity of the owner pet data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{name}")
@@ -68,11 +67,11 @@ public class PetRestController {
     /**
      * Gets the data from all the specified pets from the database.
      * @param owner Username of the owner of the pets
-     * @return The PetEntity of the users data
+     * @return The Map containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}")
-    public List<PetEntity> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
+    public Map<String,PetEntity > getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
         return petService.getAllPetsData(owner);
     }
 
@@ -91,15 +90,17 @@ public class PetRestController {
     }
 
     /**
+     *
      * Updates the pet's field.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      * @param field Name of the field to update
-     * @param valueEntity Entity that contains the value that the field will have
+     * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
+     *                key "value"
      */
     @PutMapping("/{owner}/{name}/{field}")
     public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
-                            @RequestBody ValueEntity valueEntity) {
-        petService.updateField(owner, name, field, valueEntity.getValue());
+                            @RequestBody Map<String, Object> valueMap) {
+        petService.updateField(owner, name, field, valueMap.get("value"));
     }
 }

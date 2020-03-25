@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
-import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,8 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
@@ -35,7 +34,7 @@ class PetRestControllerTest {
     private static String jsonPetEntity;
     private static String jsonField;
     private static PetEntity petEntity;
-    private static List<PetEntity> petEntityList;
+    private static Map<String, PetEntity> petEntityMap;
     private static String owner;
     private static String name;
     private static String field;
@@ -63,7 +62,7 @@ class PetRestControllerTest {
             "  \"gender\": \"Other\"\n" +
             "} ";
         petEntity = new PetEntity();
-        petEntityList = new ArrayList<>();
+        petEntityMap = new HashMap<>();
         owner = "Pepe Lotas";
         name = "ChihuahuaNator";
         field = "gender";
@@ -104,7 +103,7 @@ class PetRestControllerTest {
 
     @Test
     public void getAllPetsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
-        willReturn(petEntityList).given(service).getAllPetsData(anyString());
+        willReturn(petEntityMap).given(service).getAllPetsData(anyString());
         mockMvc.perform(get(urlBase + "/" + owner))
             .andExpect(status().isOk());
     }

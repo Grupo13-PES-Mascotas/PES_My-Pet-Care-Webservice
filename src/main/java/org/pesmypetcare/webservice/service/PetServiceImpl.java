@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PetServiceImpl implements PetService {
@@ -34,7 +35,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<PetEntity> getAllPetsData(String owner) throws DatabaseAccessException {
+    public Map<String,PetEntity > getAllPetsData(String owner) throws DatabaseAccessException {
         return petDao.getAllPetsData(owner);
     }
 
