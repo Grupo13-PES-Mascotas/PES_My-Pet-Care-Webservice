@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.controller.usermanager;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.UserService;
@@ -15,9 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class UserRestController {
-    //TODO: Implement methods
     @Autowired
     private UserService userService;
+
+    @DeleteMapping("/{username}/delete")
+    public void deleteAccount(@PathVariable String username) throws DatabaseAccessException, FirebaseAuthException {
+        userService.deleteById(username);
+    }
 
     @GetMapping("/{username}")
     public UserEntity getUserData(@PathVariable String username) throws DatabaseAccessException {
@@ -25,17 +30,13 @@ public class UserRestController {
     }
 
     @PutMapping("/{username}/update/email")
-    public String updateEmail(@PathVariable String username, @RequestBody String newEmail) {
-        return "Not implemented yet";
+    public void updateEmail(@PathVariable String username, @RequestBody String newEmail) throws FirebaseAuthException {
+        userService.updateEmail(username, newEmail);
     }
 
     @PutMapping("/{username}/update/password")
-    public String updatePassword(@PathVariable String username, @RequestBody String newPassword) {
-        return "Not implemented yet";
-    }
-
-    @DeleteMapping("/{username}/delete")
-    public String deleteAccount(@PathVariable String username) {
-        return "Not implemented yet";
+    public void updatePassword(@PathVariable String username, @RequestBody String newPassword)
+        throws FirebaseAuthException {
+        userService.updatePassword(username, newPassword);
     }
 }
