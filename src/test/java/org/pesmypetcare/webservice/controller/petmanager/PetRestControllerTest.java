@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.PetService;
@@ -24,6 +25,7 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,10 +33,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class PetRestControllerTest {
     private static String jsonPetEntity;
+    private static String jsonField;
     private static PetEntity petEntity;
     private static List<PetEntity> petEntityList;
     private static String owner;
     private static String name;
+    private static String field;
+    private static GenderType value;
     private static String urlBase;
 
     @Autowired
@@ -54,10 +59,15 @@ class PetRestControllerTest {
             + "  \"recommendedKcal\": 300.0,\n"
             + "  \"washFreq\": 3\n"
             + "}";
+        jsonField = "{\n" +
+            "  \"gender\": \"Other\"\n" +
+            "} ";
         petEntity = new PetEntity();
         petEntityList = new ArrayList<>();
         owner = "Pepe Lotas";
         name = "ChihuahuaNator";
+        field = "gender";
+        value = GenderType.Male;
         urlBase = "/pet";
     }
 
@@ -96,6 +106,22 @@ class PetRestControllerTest {
     public void getAllPetsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
         willReturn(petEntityList).given(service).getAllPetsData(anyString());
         mockMvc.perform(get(urlBase + "/" + owner))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getFieldShouldReturnFieldValueAndStatusOk() throws Exception {
+        willReturn(value).given(service).getField(anyString(), anyString(), anyString());
+        mockMvc.perform(get(urlBase + "/" + owner + "/" + name + "/" + field))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateFieldShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(urlBase + "/" + owner + "/" + name + "/" + field)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonField))
             .andExpect(status().isOk());
     }
 }
