@@ -6,6 +6,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,7 +35,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Map<String, PetEntity> getAllPetsData(String owner) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         return petDao.getAllPetsData(owner);
     }
 

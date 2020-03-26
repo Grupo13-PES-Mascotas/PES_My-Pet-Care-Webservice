@@ -14,7 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,7 +35,7 @@ class PetRestControllerTest {
     private static String jsonPetEntity;
     private static String jsonField;
     private static PetEntity petEntity;
-    private static Map<String, PetEntity> petEntityMap;
+    private static List< Map<String, Object>> petEntityList;
     private static String owner;
     private static String name;
     private static String field;
@@ -62,7 +63,7 @@ class PetRestControllerTest {
             "  \"gender\": \"Other\"\n" +
             "} ";
         petEntity = new PetEntity();
-        petEntityMap = new HashMap<>();
+        petEntityList = new ArrayList<>();
         owner = "Pepe Lotas";
         name = "ChihuahuaNator";
         field = "gender";
@@ -103,7 +104,7 @@ class PetRestControllerTest {
 
     @Test
     public void getAllPetsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
-        willReturn(petEntityMap).given(service).getAllPetsData(anyString());
+        willReturn(petEntityList).given(service).getAllPetsData(anyString());
         mockMvc.perform(get(urlBase + "/" + owner))
             .andExpect(status().isOk());
     }

@@ -9,7 +9,7 @@ public class PetEntity {
     private String breed;
     private Date birth;
     private Double weight;
-    private String patologies;
+    private String pathologies;
     private Double recommendedKcal;
     private int washFreq;
 }

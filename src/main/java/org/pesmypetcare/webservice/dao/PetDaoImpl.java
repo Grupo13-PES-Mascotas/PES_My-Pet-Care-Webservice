@@ -12,6 +12,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,19 +80,22 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Map<String, PetEntity> getAllPetsData(String owner) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
-        Map<String, PetEntity> mapa = new HashMap<>();
+        List<Map<String, Object>> externalList = new ArrayList<>();
+        Map<String, Object> internalList = new HashMap<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
-                mapa.put(petDocument.getId(), petDocument.toObject(PetEntity.class));
+                internalList.put("name", petDocument.getId());
+                internalList.put("body", petDocument.toObject(PetEntity.class));
+                externalList.add(internalList);
             }
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
-        return mapa;
+        return externalList;
     }
 
     @Override

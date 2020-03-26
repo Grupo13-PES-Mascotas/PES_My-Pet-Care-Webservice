@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -67,11 +68,11 @@ public class PetRestController {
     /**
      * Gets the data from all the specified pets from the database.
      * @param owner Username of the owner of the pets
-     * @return The Map containing all the owner pets data
+     * @return The List containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}")
-    public Map<String, PetEntity> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
         return petService.getAllPetsData(owner);
     }
 
