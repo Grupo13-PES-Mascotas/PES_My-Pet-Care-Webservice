@@ -17,7 +17,6 @@ import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static List< Map<String, Object>> pets;
+    private static List<Map<String, Object>> pets;
     private static PetEntity pet;
     private static String owner;
     private static String name;
@@ -218,7 +217,7 @@ class PetDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List< Map<String, Object>> list = petDao.getAllPetsData(owner);
+        List<Map<String, Object>> list = petDao.getAllPetsData(owner);
 
         assertEquals(pets, list, "Should return a List containing all pets Data");
     }

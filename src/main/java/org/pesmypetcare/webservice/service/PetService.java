@@ -45,7 +45,7 @@ public interface PetService {
      * @return The List containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List< Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException;
+    List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field of the pet on the database.

@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
-    private static List< Map<String, Object>> pets;
+    private static List<Map<String, Object>> pets;
     private static PetEntity pet;
     private static String owner;
     private static String name;
@@ -90,7 +90,7 @@ class PetServiceTest {
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException {
         when(petDao.getAllPetsData(owner)).thenReturn(pets);
-        List< Map<String, Object>> lista = service.getAllPetsData(owner);
+        List<Map<String, Object>> lista = service.getAllPetsData(owner);
         assertSame(pets, lista, "Should return a list of pet entities");
     }
 

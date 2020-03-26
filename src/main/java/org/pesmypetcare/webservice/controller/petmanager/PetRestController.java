@@ -72,7 +72,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}")
-    public List< Map<String, Object>> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllPetsData(@PathVariable String owner) throws DatabaseAccessException {
         return petService.getAllPetsData(owner);
     }
 

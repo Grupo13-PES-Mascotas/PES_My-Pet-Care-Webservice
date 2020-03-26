@@ -35,7 +35,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List< Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         return petDao.getAllPetsData(owner);
     }
 

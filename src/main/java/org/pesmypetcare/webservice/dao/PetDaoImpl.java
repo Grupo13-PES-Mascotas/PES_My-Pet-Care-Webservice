@@ -82,7 +82,7 @@ public class PetDaoImpl implements PetDao {
     @Override
     public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
-        List<Map<String, Object>> listaExterna= new ArrayList<>();
+        List<Map<String, Object>> listaExterna = new ArrayList<>();
         Map<String, Object> mapaInterno = new HashMap<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
