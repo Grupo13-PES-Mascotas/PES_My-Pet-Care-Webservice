@@ -52,7 +52,8 @@ class MyPetCareRestControllerTest {
             .content(jsonUser1).param(key, password))
             .andExpect(status().isOk());
     }
-/*
+
+    /*
     @Test
     public void shouldReturnBadRequestWhenFirebaseAuthFails() throws Exception {
         willThrow(FirebaseAuthException.class).given(service).createUserAuth(isA(UserEntity.class), isA(String.class));
@@ -61,5 +62,5 @@ class MyPetCareRestControllerTest {
             .content(jsonUser1).param(key, password))
             .andExpect(status().isBadRequest());
     }
- */
+    */
 }

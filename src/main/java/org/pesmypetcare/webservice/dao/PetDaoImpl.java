@@ -82,20 +82,20 @@ public class PetDaoImpl implements PetDao {
     @Override
     public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
-        List<Map<String, Object>> listaExterna = new ArrayList<>();
-        Map<String, Object> mapaInterno = new HashMap<>();
+        List<Map<String, Object>> externalList = new ArrayList<>();
+        Map<String, Object> internalList = new HashMap<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
-                mapaInterno.put("name", petDocument.getId());
-                mapaInterno.put("body", petDocument.toObject(PetEntity.class));
-                listaExterna.add(mapaInterno);
+                internalList.put("name", petDocument.getId());
+                internalList.put("body", petDocument.toObject(PetEntity.class));
+                externalList.add(internalList);
             }
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
-        return listaExterna;
+        return externalList;
     }
 
     @Override
