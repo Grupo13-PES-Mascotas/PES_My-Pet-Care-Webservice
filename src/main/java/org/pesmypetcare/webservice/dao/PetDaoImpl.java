@@ -83,11 +83,11 @@ public class PetDaoImpl implements PetDao {
     public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
         CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
         List<Map<String, Object>> externalList = new ArrayList<>();
-        Map<String, Object> internalList = new HashMap<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("name", petDocument.getId());
                 internalList.put("body", petDocument.toObject(PetEntity.class));
                 externalList.add(internalList);
