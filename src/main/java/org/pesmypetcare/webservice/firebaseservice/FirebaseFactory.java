@@ -3,9 +3,11 @@ package org.pesmypetcare.webservice.firebaseservice;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.cloud.StorageClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ public class FirebaseFactory {
     private GoogleCredentials googleCredentials;
     private Firestore firestore;
     private FirebaseAuth firebaseAuth;
+    private StorageClient storageClient;
 
     private FirebaseFactory() {
         setGoogleCredentials();
@@ -24,6 +27,7 @@ public class FirebaseFactory {
         FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
         initializeFirebaseAuth(firebaseApp);
         initializeFirestore();
+        initializeStorage(firebaseApp);
     }
 
     /**
@@ -51,6 +55,14 @@ public class FirebaseFactory {
      */
     public Firestore getFirestore() {
         return firestore;
+    }
+
+    /**
+     * Gets the instance that manages the storage.
+     * @return The instance that handles the storage
+     */
+    public Bucket getStorage() {
+        return storageClient.bucket();
     }
 
     /**
@@ -94,5 +106,13 @@ public class FirebaseFactory {
      */
     private void initializeFirebaseAuth(FirebaseApp firebaseApp) {
         firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
+    }
+
+    /**
+     * Creates the StorageClient instance.
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     */
+    private void initializeStorage(FirebaseApp firebaseApp) {
+        storageClient = StorageClient.getInstance(firebaseApp);
     }
 }
