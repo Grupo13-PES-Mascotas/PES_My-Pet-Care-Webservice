@@ -2,7 +2,9 @@ package org.pesmypetcare.webservice.dao;
 
 import com.google.cloud.storage.Bucket;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class StorageDaoImpl implements StorageDao {
     private Bucket storageBucket;
 
@@ -11,12 +13,12 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public void uploadImage(String id, String imgName, byte[] img) {
-        storageBucket.create(id + "-" + imgName, img);
+    public void uploadImage(String imgName, byte[] img) {
+        storageBucket.create(imgName, img);
     }
 
     @Override
-    public byte[] downloadImage(String id, String imgName) {
-        return storageBucket.get(id + "-" + imgName).getContent();
+    public byte[] downloadImage(String imgName) {
+        return storageBucket.get(imgName).getContent();
     }
 }

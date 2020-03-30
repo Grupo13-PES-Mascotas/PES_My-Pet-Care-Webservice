@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.service;
 
 import com.google.firebase.auth.FirebaseAuthException;
+import org.pesmypetcare.webservice.dao.StorageDao;
 import org.pesmypetcare.webservice.dao.UserDao;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private StorageDao storageDao;
 
     @Override
     public void createUserAuth(UserEntity user, String password) throws FirebaseAuthException {
@@ -40,5 +43,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(String uid, String newPassword) throws FirebaseAuthException {
         userDao.updatePassword(uid, newPassword);
+    }
+
+    @Override
+    public void saveProfileImage(String uid, String imgName, byte[] img) {
+        storageDao.uploadImage(uid + "-" + imgName, img);
+    }
+
+    @Override
+    public byte[] getProfileImage(String uid, String imgName) {
+        return storageDao.downloadImage(uid + "-" + imgName);
     }
 }

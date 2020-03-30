@@ -52,4 +52,8 @@ public interface UserService {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     void updatePassword(String uid, String newPassword) throws FirebaseAuthException;
+
+    void saveProfileImage(String uid, String imgName, byte[] img);
+
+    byte[] getProfileImage(String uid, String imgName);
 }
