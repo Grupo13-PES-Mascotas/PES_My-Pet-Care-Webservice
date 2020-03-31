@@ -26,7 +26,7 @@ public interface StorageDao {
     void deleteImage(StorageForm form);
 
     /**
-     * Downloads all the images from the pets folder
+     * Downloads all the images from the pets folder.
      * @param form The form with the request data
      * @return A list with the images as a byte array
      */
