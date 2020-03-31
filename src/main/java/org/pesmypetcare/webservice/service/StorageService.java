@@ -1,21 +1,21 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.form.StorageForm;
 
-public interface StorageDao {
+public interface StorageService {
     /**
-     * Uploads an image to the storage.
-     * @param image The image entity to upload
+     * Saves an image to the storage.
+     * @param image The image entity to save
      */
-    void uploadImage(ImageEntity image);
+    void saveImage(ImageEntity image);
 
     /**
-     * Downloads an image from the storage.
+     * Gets an image from the storage.
      * @param form The form with the request data
      * @return The image as a byte array
      */
-    byte[] downloadImage(StorageForm form);
+    byte[] getImage(StorageForm form);
 
     /**
      * Deletes an image from the storage.

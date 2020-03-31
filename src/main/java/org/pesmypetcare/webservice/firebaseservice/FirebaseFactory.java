@@ -88,6 +88,7 @@ public class FirebaseFactory {
         return new FirebaseOptions.Builder()
             .setCredentials(googleCredentials)
             .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
+            .setStorageBucket("my-pet-care-85883.appspot.com")
             .build();
     }
 
