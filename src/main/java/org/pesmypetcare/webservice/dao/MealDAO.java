@@ -1,7 +1,6 @@
 package org.pesmypetcare.webservice.dao;
 
 import org.pesmypetcare.webservice.entity.MealEntity;
-import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.time.LocalTime;
@@ -45,7 +44,7 @@ public interface MealDAO {
      * @return The MealEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    PetEntity getMealData(String owner, String petName, Date date, LocalTime hour) throws DatabaseAccessException;
+    MealEntity getMealData(String owner, String petName, Date date, LocalTime hour) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the specified meals from the database identified by its pet.
@@ -57,7 +56,7 @@ public interface MealDAO {
     List<Map<String, Object>> getAllMealData(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the meals eaten by the pet between the initial and final time including both
+     * Gets the data from all the meals eaten by the pet between the initial and final time not including them
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date
