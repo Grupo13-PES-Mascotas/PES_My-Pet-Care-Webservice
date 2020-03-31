@@ -27,11 +27,21 @@ public class StorageRestController {
         storage.saveImage(image);
     }
 
-    @GetMapping(value = "/image/{path}",
+    @GetMapping(value = "/image/{user}",
     produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] downloadImage(@RequestHeader("token") String token, @PathVariable String path,
+    public byte[] downloadImage(@RequestHeader("token") String token, @PathVariable String user,
                                 @RequestParam String name) {
+        StorageForm form = new StorageForm(user, name);
+        return storage.getImage(form);
+    }
+
+    @GetMapping(value = "/image/{user}/pets",
+        produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseBody
+    public byte[] downloadPetImage(@RequestHeader("token") String token, @PathVariable String user,
+                                   @RequestParam String name) {
+        String path = user + "/pets";
         StorageForm form = new StorageForm(path, name);
         return storage.getImage(form);
     }

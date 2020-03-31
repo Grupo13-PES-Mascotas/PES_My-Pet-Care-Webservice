@@ -6,6 +6,8 @@ import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class StorageDaoImpl implements StorageDao {
     private Bucket storageBucket;
@@ -27,9 +29,16 @@ public class StorageDaoImpl implements StorageDao {
         return storageBucket.get(image).getContent();
     }
 
+    @Override
     public void deleteImage(StorageForm form) {
         String image = getImagePath(form);
         storageBucket.get(image).delete();
+    }
+
+    @Override
+    public List<byte[]> downloadAllPetImages(StorageForm form) {
+        //TODO
+        return null;
     }
 
     private String getImagePath(StorageForm form) {

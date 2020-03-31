@@ -3,6 +3,8 @@ package org.pesmypetcare.webservice.dao;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.form.StorageForm;
 
+import java.util.List;
+
 public interface StorageDao {
     /**
      * Uploads an image to the storage.
@@ -22,4 +24,11 @@ public interface StorageDao {
      * @param form The form with the request data
      */
     void deleteImage(StorageForm form);
+
+    /**
+     * Downloads all the images from the pets folder
+     * @param form The form with the request data
+     * @return A list with the images as a byte array
+     */
+    List<byte[]> downloadAllPetImages(StorageForm form);
 }
