@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,19 +23,21 @@ public class StorageRestController {
     private StorageService storage;
 
     @PutMapping("/image")
-    public void saveImage(@RequestBody ImageEntity image) {
+    public void saveImage(@RequestHeader("token") String token, @RequestBody ImageEntity image) {
         storage.saveImage(image);
     }
 
-    @GetMapping(value = "/image",
+    @GetMapping(value = "/image/{path}",
     produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] downloadImage(@RequestBody StorageForm storageForm) {
-        return storage.getImage(storageForm);
+    public byte[] downloadImage(@RequestHeader("token") String token, @PathVariable String path,
+                                @RequestParam String name) {
+        StorageForm form = new StorageForm(path, name);
+        return storage.getImage(form);
     }
 
     @DeleteMapping("/image")
-    public void deleteImage(@RequestBody StorageForm storageForm) {
+    public void deleteImage(@RequestHeader("token") String token, @RequestBody StorageForm storageForm) {
         storage.deleteImage(storageForm);
     }
 }
