@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -102,5 +103,28 @@ public class PetRestController {
     public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                             @RequestBody Map<String, Object> valueMap) {
         petService.updateField(owner, name, field, valueMap.get("value"));
+    }
+
+    /**
+     * Gets the pet's birth date from the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @return The birth date from the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    @GetMapping("/{owner}/{name}")
+    LocalDateTime getBirth(@PathVariable String owner, @PathVariable String name) throws DatabaseAccessException {
+        return petService.getBirth(owner, name);
+    }
+
+    /**
+     * Updates the pet's birth date.
+     * @param owner Username of the owner of the pet
+     * @param name Name of the pet
+     * @param date New birth date of the pet
+     */
+    @PutMapping("/{owner}/{name}")
+    void updateBirth(@PathVariable String owner, @PathVariable String name, @RequestBody LocalDateTime date) {
+        petService.updateBirth(owner, name, date);
     }
 }

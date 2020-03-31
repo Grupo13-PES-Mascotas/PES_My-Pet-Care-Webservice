@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.service;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -65,4 +66,21 @@ public interface PetService {
      * @param value Value the field will have
      */
     void updateField(String owner, String name, String field, Object value);
+
+    /**
+     * Gets the pet's birth date from the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @return The birth date from the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    LocalDateTime getBirth(String owner, String name) throws DatabaseAccessException;
+
+    /**
+     * Updates the pet's birth date.
+     * @param owner Username of the owner of the pet
+     * @param name Name of the pet
+     * @param date New birth date of the pet
+     */
+    void updateBirth(String owner, String name, LocalDateTime date);
 }

@@ -6,6 +6,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -47,5 +48,15 @@ public class PetServiceImpl implements PetService {
     @Override
     public void updateField(String owner, String name, String field, Object value) {
         petDao.updateField(owner, name, field, value);
+    }
+
+    @Override
+    public LocalDateTime getBirth(String owner, String name) throws DatabaseAccessException {
+        return petDao.getBirth(owner, name);
+    }
+
+    @Override
+    public void updateBirth(String owner, String name, LocalDateTime date) {
+        petDao.updateBirth(owner, name, date);
     }
 }
