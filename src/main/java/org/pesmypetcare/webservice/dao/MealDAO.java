@@ -3,7 +3,6 @@ package org.pesmypetcare.webservice.dao;
 import org.pesmypetcare.webservice.entity.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +15,7 @@ public interface MealDAO {
      * @param date Date the meal was eaten
      * @param meal The meal entity that contains the attributes of the meal eaten by the pet
      */
-    void createMeal(String owner, String petName, LocalDateTime date, MealEntity meal);
+    void createMeal(String owner, String petName, String date, MealEntity meal);
 
     /**
      * Deletes the pet with the specified owner and name from the database.
@@ -24,7 +23,7 @@ public interface MealDAO {
      * @param petName Name of the pet
      * @param date Date the meal was eaten
      */
-    void deleteByDateAndHour(String owner, String petName, LocalDateTime date);
+    void deleteByDateAndHour(String owner, String petName, String date);
 
     /**
      * Deletes all the meals of the specified pet from database.
@@ -35,14 +34,14 @@ public interface MealDAO {
     void deleteAllMeals(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets a meal identified by its pet, date and hour.
+     * Gets a meal identified by its pet and date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param date Date the meal was eaten
      * @return The MealEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    MealEntity getMealData(String owner, String petName, LocalDateTime date) throws DatabaseAccessException;
+    MealEntity getMealData(String owner, String petName, String date) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the specified meals from the database identified by its pet.
@@ -54,7 +53,7 @@ public interface MealDAO {
     List<Map<String, Object>> getAllMealData(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the meals eaten by the pet between the initial and final time not including them
+     * Gets the data from all the meals eaten by the pet between the initial and final date not including them
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date
@@ -62,8 +61,8 @@ public interface MealDAO {
      * @return The List containing all the meals eaten by the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<String, Object>> getAllMealsBetween(String owner, String petName, LocalDateTime initialDate,
-                                                 LocalDateTime finalDate) throws DatabaseAccessException;
+    List<Map<String, Object>> getAllMealsBetween(String owner, String petName, String initialDate,
+                                                 String finalDate) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field of the meal on the database.
@@ -74,7 +73,7 @@ public interface MealDAO {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Object getMealField(String owner, String petName, LocalDateTime date, String field) throws DatabaseAccessException;
+    Object getMealField(String owner, String petName, String date, String field) throws DatabaseAccessException;
 
     /**
      * Updates the meal's field.
@@ -84,5 +83,5 @@ public interface MealDAO {
      * @param field Name of the field to update
      * @param value Value the field will have
      */
-    void updateMealField(String owner, String petName, LocalDateTime date, String field, Object value);
+    void updateMealField(String owner, String petName, String date, String field, Object value);
 }

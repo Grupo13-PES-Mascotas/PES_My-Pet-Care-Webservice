@@ -121,31 +121,4 @@ public class PetDaoImpl implements PetDao {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.update(field, value);
     }
-
-    @Override
-    public LocalDateTime getBirth(String owner, String name) throws DatabaseAccessException {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        ApiFuture<DocumentSnapshot> future = petRef.get();
-        DocumentSnapshot petDoc;
-        try {
-            petDoc = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
-        if (!petDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_PET_EXC, PET_DOES_NOT_EXIST_EXC);
-        }
-        String dateString = petDoc.getString("birth");
-        if (dateString == null) {
-            throw new DatabaseAccessException(INVALID_PET_EXC, "Field 'birth' not found");
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return LocalDateTime.parse(dateString, formatter);
-    }
-
-    @Override
-    public void updateBirth(String owner, String name, LocalDateTime date) {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        petRef.update("birth", date);
-    }
 }

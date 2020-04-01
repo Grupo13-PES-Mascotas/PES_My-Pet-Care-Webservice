@@ -12,7 +12,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,14 +36,14 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public void createMeal(String owner, String petName, LocalDateTime date, MealEntity meal) {
-        DocumentReference mealRef = getMealsRef(owner, petName).document(date.toString());
+    public void createMeal(String owner, String petName, String date, MealEntity meal) {
+        DocumentReference mealRef = getMealsRef(owner, petName).document(date);
         mealRef.set(meal);
     }
 
     @Override
-    public void deleteByDateAndHour(String owner, String petName, LocalDateTime date) {
-        DocumentReference mealRef = getMealsRef(owner, petName).document(date.toString());
+    public void deleteByDateAndHour(String owner, String petName, String date) {
+        DocumentReference mealRef = getMealsRef(owner, petName).document(date);
         mealRef.delete();
     }
 
@@ -63,9 +62,9 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public MealEntity getMealData(String owner, String petName, LocalDateTime date) throws DatabaseAccessException {
+    public MealEntity getMealData(String owner, String petName, String date) throws DatabaseAccessException {
         CollectionReference mealsRef = getMealsRef(owner, petName);
-        DocumentReference mealRef = mealsRef.document(date.toString());
+        DocumentReference mealRef = mealsRef.document(date);
         ApiFuture<DocumentSnapshot> future = mealRef.get();
         DocumentSnapshot mealDoc;
         try {
@@ -99,8 +98,8 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public List<Map<String, Object>> getAllMealsBetween(String owner, String petName, LocalDateTime initialDate,
-                                                        LocalDateTime finalDate) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllMealsBetween(String owner, String petName, String initialDate,
+                                                        String finalDate) throws DatabaseAccessException {
         CollectionReference mealsRef = getMealsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -108,11 +107,10 @@ public class MealDAOImpl implements MealDAO {
             ApiFuture<QuerySnapshot> future = mealsRef.get();
             List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot mealDocument : mealDocuments) {
-                String str = mealDocument.getId();
-                LocalDateTime idDate = LocalDateTime.parse(str, formatter);
-                if (initialDate.isBefore(idDate) && finalDate.isAfter(idDate)) {
+                String date = mealDocument.getId();
+                if (initialDate.compareTo(date)<0 && finalDate.compareTo(date)>0) {
                     Map<String, Object> internalList = new HashMap<>();
-                    internalList.put("date", idDate);
+                    internalList.put("date", date);
                     internalList.put("body", mealDocument.toObject(MealEntity.class));
                     externalList.add(internalList);
                 }
@@ -124,9 +122,9 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public Object getMealField(String owner, String petName, LocalDateTime date, String field) throws DatabaseAccessException {
+    public Object getMealField(String owner, String petName, String date, String field) throws DatabaseAccessException {
         CollectionReference mealsRef = getMealsRef(owner, petName);
-        DocumentReference mealRef = mealsRef.document(date.toString());
+        DocumentReference mealRef = mealsRef.document(date);
         ApiFuture<DocumentSnapshot> future = mealRef.get();
         DocumentSnapshot mealDoc;
         try {
@@ -141,9 +139,9 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public void updateMealField(String owner, String petName, LocalDateTime date, String field, Object value) {
+    public void updateMealField(String owner, String petName, String date, String field, Object value) {
         CollectionReference mealsRef = getMealsRef(owner, petName);
-        DocumentReference mealRef = mealsRef.document(date.toString());
+        DocumentReference mealRef = mealsRef.document(date);
         mealRef.update(field, value);
     }
 

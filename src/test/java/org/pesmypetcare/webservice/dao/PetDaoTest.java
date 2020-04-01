@@ -170,11 +170,6 @@ class PetDaoTest {
         assertSame(pet, petEntity, "Should return Pet Entity");
     }
 
-    private void retrievePetEntityMock() throws InterruptedException, ExecutionException {
-        documentExists(true);
-        given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
-    }
-
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExists() {
         assertThrows(DatabaseAccessException.class, () -> {
@@ -268,15 +263,6 @@ class PetDaoTest {
             + NOT_EXISTS_STR);
     }
 
-    private void documentExists(boolean b) throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        given(futureDocument.get()).willReturn(documentSnapshot);
-        given(documentSnapshot.exists()).willReturn(b);
-    }
-
 
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesInterruptedException() {
@@ -287,14 +273,6 @@ class PetDaoTest {
         }, INTERRUPTED_RETR_EXC);
     }
 
-    private void throwInterruptionExceptionMock() throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        willThrow(InterruptedException.class).given(futureDocument).get();
-    }
-
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
@@ -302,14 +280,6 @@ class PetDaoTest {
 
             petDao.getField(owner, name, field);
         }, EXECUTION_RETR_EXC);
-    }
-
-    private void throwExecutionExceptionMock() throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        willThrow(ExecutionException.class).given(futureDocument).get();
     }
 
     @Test
@@ -325,5 +295,36 @@ class PetDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(name));
         verify(petRef).update(same(field), same(value));
+    }
+
+
+    private void documentExists(boolean b) throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        given(futureDocument.get()).willReturn(documentSnapshot);
+        given(documentSnapshot.exists()).willReturn(b);
+    }
+
+    private void throwInterruptionExceptionMock() throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        willThrow(InterruptedException.class).given(futureDocument).get();
+    }
+
+    private void throwExecutionExceptionMock() throws InterruptedException, ExecutionException {
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        willThrow(ExecutionException.class).given(futureDocument).get();
+    }
+
+    private void retrievePetEntityMock() throws InterruptedException, ExecutionException {
+        documentExists(true);
+        given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
     }
 }

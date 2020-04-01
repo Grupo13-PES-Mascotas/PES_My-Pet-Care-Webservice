@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class PetEntity {
     private GenderType gender;
     private String breed;
-    private LocalDateTime birth;
+    private String birth;
     private Double weight;
     private String pathologies;
     private Double recommendedKcal;
