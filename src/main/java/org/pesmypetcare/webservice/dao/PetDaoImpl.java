@@ -25,6 +25,7 @@ public class PetDaoImpl implements PetDao {
     private final String PET_DOES_NOT_EXIST_EXC;
     private final String INVALID_PET_EXC;
     private CollectionReference usersRef;
+
     private StorageDao storageDao;
 
     public PetDaoImpl() {
@@ -37,6 +38,14 @@ public class PetDaoImpl implements PetDao {
         DELFAIL_KEY = "deletion-failed";
         PET_DOES_NOT_EXIST_EXC = "The pet does not exist";
         INVALID_PET_EXC = "invalid-pet";
+    }
+
+    /**
+     * Gets the storage dao
+     * @return The storage dao
+     */
+    public StorageDao getStorageDao() {
+        return storageDao;
     }
 
     @Override
