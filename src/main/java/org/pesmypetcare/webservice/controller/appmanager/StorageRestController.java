@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
 import org.pesmypetcare.webservice.entity.ImageEntity;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/storage")
 public class StorageRestController {
@@ -27,6 +30,11 @@ public class StorageRestController {
         storage.saveImage(image);
     }
 
+    @PutMapping("/image/{user}/pets")
+    public void savePetImage(@RequestHeader("token") String token, @PathVariable String user, @RequestBody ImageEntity image) {
+        storage.savePetImage(user, image);
+    }
+
     @GetMapping(value = "/image/{user}",
     produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
@@ -36,14 +44,21 @@ public class StorageRestController {
         return storage.getImage(form);
     }
 
-    @GetMapping(value = "/image/{user}/pets",
+    @GetMapping(value = "/image/{user}/pets/{name}",
         produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] downloadPetImage(@RequestHeader("token") String token, @PathVariable String user,
-                                   @RequestParam String name) {
+                                   @PathVariable String name) {
         String path = user + "/pets";
         StorageForm form = new StorageForm(path, name);
         return storage.getImage(form);
+    }
+
+    @GetMapping(value = "/image/{user}/pets",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, byte[]> downloadAllPetsImages(@RequestHeader("token") String token, @PathVariable String user) throws DatabaseAccessException {
+        return storage.getAllImages(user);
     }
 
     @DeleteMapping("/image")
