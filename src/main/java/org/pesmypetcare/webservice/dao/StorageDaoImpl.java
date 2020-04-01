@@ -22,6 +22,11 @@ public class StorageDaoImpl implements StorageDao {
         petDao = new PetDaoImpl();
     }
 
+    public StorageDaoImpl(PetDao petDao) {
+        storageBucket = FirebaseFactory.getInstance().getStorage();
+        this.petDao = petDao;
+    }
+
     @Override
     public void uploadImage(ImageEntity imageEntity) {
         String path = imageEntity.getUid() + "/" + imageEntity.getImgName();
@@ -50,10 +55,10 @@ public class StorageDaoImpl implements StorageDao {
         storageBucket.get(image).delete();
     }
 
-    /*@Override
+    @Override
     public void deleteImageByName(String imageName) {
         storageBucket.get(imageName).delete();
-    }*/
+    }
 
     @Override
     public Map<String, byte[]> downloadAllPetImages(String owner) throws DatabaseAccessException {

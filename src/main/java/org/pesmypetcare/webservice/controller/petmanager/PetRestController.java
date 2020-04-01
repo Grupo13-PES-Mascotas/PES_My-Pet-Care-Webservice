@@ -39,7 +39,7 @@ public class PetRestController {
      * @param name Name of the pet
      */
     @DeleteMapping("/{owner}/{name}")
-    public void deleteByOwnerAndName(@PathVariable String owner, @PathVariable String name) {
+    public void deleteByOwnerAndName(@PathVariable String owner, @PathVariable String name) throws DatabaseAccessException {
         petService.deleteByOwnerAndName(owner, name);
     }
 

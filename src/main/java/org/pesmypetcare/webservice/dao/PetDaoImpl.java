@@ -25,11 +25,13 @@ public class PetDaoImpl implements PetDao {
     private final String PET_DOES_NOT_EXIST_EXC;
     private final String INVALID_PET_EXC;
     private CollectionReference usersRef;
+    private StorageDao storageDao;
 
     public PetDaoImpl() {
         Firestore db;
         db = FirebaseFactory.getInstance().getFirestore();
         usersRef = db.collection("users");
+        storageDao = new StorageDaoImpl(this);
 
         PETS_KEY = "pets";
         DELFAIL_KEY = "deletion-failed";
@@ -44,9 +46,16 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name) {
+    public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        petRef.delete();
+        try {
+            ApiFuture<DocumentSnapshot> petDoc = petRef.get();
+            String imageLocation = (String) petDoc.get().get("profileImageLocation");
+            deleteProfileImage(imageLocation);
+            petRef.delete();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
     }
 
     @Override
@@ -56,6 +65,8 @@ public class PetDaoImpl implements PetDao {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
+                String imageLocation = (String) petDocument.get("profileImageLocation");
+                deleteProfileImage(imageLocation);
                 petDocument.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -118,5 +129,11 @@ public class PetDaoImpl implements PetDao {
     public void updateField(String owner, String name, String field, Object value) {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.update(field, value);
+    }
+
+    private void deleteProfileImage(String imageLocation) {
+        if (imageLocation != null) {
+            storageDao.deleteImageByName(imageLocation);
+        }
     }
 }

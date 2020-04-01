@@ -31,7 +31,8 @@ public class StorageRestController {
     }
 
     @PutMapping("/image/{user}/pets")
-    public void savePetImage(@RequestHeader("token") String token, @PathVariable String user, @RequestBody ImageEntity image) {
+    public void savePetImage(@RequestHeader("token") String token, @PathVariable String user,
+                             @RequestBody ImageEntity image) {
         storage.savePetImage(user, image);
     }
 
@@ -57,7 +58,8 @@ public class StorageRestController {
     @GetMapping(value = "/image/{user}/pets",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, byte[]> downloadAllPetsImages(@RequestHeader("token") String token, @PathVariable String user) throws DatabaseAccessException {
+    public Map<String, byte[]> downloadAllPetsImages(@RequestHeader("token") String token,
+                                                     @PathVariable String user) throws DatabaseAccessException {
         return storage.getAllImages(user);
     }
 

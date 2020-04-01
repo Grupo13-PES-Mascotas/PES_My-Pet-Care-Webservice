@@ -28,6 +28,14 @@ public interface StorageDao {
     byte[] downloadImage(StorageForm form);
 
     /**
+     * Downloads all the images from the pets folder.
+     * @param owner The path with the requested data
+     * @return A map with pets names and the their images as a byte array
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    Map<String, byte[]> downloadAllPetImages(String owner) throws DatabaseAccessException;
+
+    /**
      * Deletes an image from the storage.
      * @param form The form with the requested data
      */
@@ -36,14 +44,6 @@ public interface StorageDao {
     /**
      * Deletes an image from the storage.
      * @param imageName The name of the image
-     *//*
-    void deleteImageByName(String imageName);*/
-
-    /**
-     * Downloads all the images from the pets folder.
-     * @param owner The path with the requested data
-     * @return A map with pets names and the their images as a byte array
-     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Map<String, byte[]> downloadAllPetImages(String owner) throws DatabaseAccessException;
+    void deleteImageByName(String imageName);
 }

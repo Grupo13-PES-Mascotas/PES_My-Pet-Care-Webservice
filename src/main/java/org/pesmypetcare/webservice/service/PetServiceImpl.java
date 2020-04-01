@@ -20,7 +20,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name) {
+    public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException {
         petDao.deleteByOwnerAndName(owner, name);
     }
 
