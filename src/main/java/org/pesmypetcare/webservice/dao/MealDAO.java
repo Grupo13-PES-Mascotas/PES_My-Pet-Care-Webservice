@@ -23,7 +23,7 @@ public interface MealDAO {
      * @param petName Name of the pet
      * @param date Date the meal was eaten
      */
-    void deleteByDateAndHour(String owner, String petName, String date);
+    void deleteByDate(String owner, String petName, String date);
 
     /**
      * Deletes all the meals of the specified pet from database.

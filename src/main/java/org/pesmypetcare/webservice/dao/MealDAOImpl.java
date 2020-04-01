@@ -42,7 +42,7 @@ public class MealDAOImpl implements MealDAO {
     }
 
     @Override
-    public void deleteByDateAndHour(String owner, String petName, String date) {
+    public void deleteByDate(String owner, String petName, String date) {
         DocumentReference mealRef = getMealsRef(owner, petName).document(date);
         mealRef.delete();
     }

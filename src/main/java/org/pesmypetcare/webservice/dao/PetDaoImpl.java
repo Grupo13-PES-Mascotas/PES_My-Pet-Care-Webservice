@@ -12,8 +12,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
