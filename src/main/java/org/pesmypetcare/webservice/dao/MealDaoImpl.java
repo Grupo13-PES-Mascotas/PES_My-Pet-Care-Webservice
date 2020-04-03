@@ -89,6 +89,13 @@ public class MealDaoImpl implements MealDao {
         return externalList;
     }
 
+    /**
+     * Gets all the meals of the collection and puts them in the externalList
+     * @param mealsRef Reference to the collection of meals
+     * @param externalList list that will contain all the meals
+     * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
+     * @throws ExecutionException Exception thrown by the DB if there's an execution problem
+     */
     private void getAllMealOfAPetFromDatabase(CollectionReference mealsRef, List<Map<String, Object>> externalList)
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
@@ -114,6 +121,16 @@ public class MealDaoImpl implements MealDao {
         return externalList;
     }
 
+    /**
+     * Gets all the meals of the collection between the initial and final dates without taking them into account and
+     * puts them in the externalList
+     * @param initialDate Initial date
+     * @param finalDate Final date
+     * @param mealsRef Reference to the collection of meals
+     * @param externalList list that will contain all the meals
+     * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
+     * @throws ExecutionException Exception thrown by the DB if there's an execution problem
+     */
     private void getMealsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference mealsRef,
                                                   List<Map<String, Object>> externalList) throws InterruptedException,
         ExecutionException {
