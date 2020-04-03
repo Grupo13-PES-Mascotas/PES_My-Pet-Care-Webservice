@@ -279,7 +279,6 @@ public class MealDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = mealDao.getAllMealData(owner, petName);
-
         assertEquals(mealList, list, "Should return a List containing all meals Data");
     }
 
