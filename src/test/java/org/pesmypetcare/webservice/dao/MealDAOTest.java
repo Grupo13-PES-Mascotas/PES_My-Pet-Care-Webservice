@@ -49,7 +49,8 @@ public class MealDAOTest {
     private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
     private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException "
         + "received";
-    private final String DOCUMENT_NOT_EXISTS_EXC_MSG;
+    private final String DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when Meal document"
+        + " doesn't exist";
 
     @Mock
     private Firestore db;
@@ -92,10 +93,6 @@ public class MealDAOTest {
         petName = "Camper";
         field = "kcal";
         value = 60.0;
-    }
-
-    public MealDAOTest() {
-        DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when Meal document doesn't exist";
     }
 
     @Test
