@@ -47,22 +47,9 @@ public class MealDAOTest {
     private static final String PETS_KEY = "pets";
     private static final String MEALS_KEY = "meals";
     private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
-    private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException " +
-        "received";
+    private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException "
+        + "received";
     private final String DOCUMENT_NOT_EXISTS_EXC_MSG;
-
-    @BeforeAll
-    public static void setUp() {
-
-        mealList = new ArrayList<>();
-        mealEntity = new MealEntity();
-        date = "2020-02-13T10:30:00";
-        date2 = "2021-02-13T10:30:00";
-        owner = "Pepe05";
-        petName = "Camper";
-        field = "kcal";
-        value = 60.0;
-    }
 
     @Mock
     private Firestore db;
@@ -93,6 +80,19 @@ public class MealDAOTest {
 
     @InjectMocks
     private MealDAO mealDao = new MealDAOImpl();
+
+    @BeforeAll
+    public static void setUp() {
+
+        mealList = new ArrayList<>();
+        mealEntity = new MealEntity();
+        date = "2020-02-13T10:30:00";
+        date2 = "2021-02-13T10:30:00";
+        owner = "Pepe05";
+        petName = "Camper";
+        field = "kcal";
+        value = 60.0;
+    }
 
     public MealDAOTest() {
         DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when Meal document doesn't exist";
