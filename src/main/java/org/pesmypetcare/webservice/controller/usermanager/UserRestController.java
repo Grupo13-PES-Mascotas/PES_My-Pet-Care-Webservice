@@ -20,24 +20,52 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Deletes the user account.
+     * @param token The personal access token of the user
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
     @DeleteMapping("/{username}/delete")
     public void deleteAccount(@RequestHeader("token") String token,
                               @PathVariable String username) throws DatabaseAccessException, FirebaseAuthException {
         userService.deleteById(username);
     }
 
+    /**
+     * Retrieves the user data.
+     * @param token The personal access token of the user
+     * @param username The user's username
+     * @return A user entity that contains the user data
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
     @GetMapping("/{username}")
     public UserEntity getUserData(@RequestHeader("token") String token,
                                   @PathVariable String username) throws DatabaseAccessException {
         return userService.getUserData(username);
     }
 
+    /**
+     * Updates the user email bound to the account.
+     * @param token The personal access token of the user
+     * @param username The user's username
+     * @param newEmail The new email
+     * @throws FirebaseAuthException If an error occurs when updating the data
+     */
     @PutMapping("/{username}/update/email")
     public void updateEmail(@RequestHeader("token") String token,
                             @PathVariable String username, @RequestBody String newEmail) throws FirebaseAuthException {
         userService.updateEmail(username, newEmail);
     }
 
+    /**
+     * Updates the user password for the account.
+     * @param token The personal access token of the user
+     * @param username The user's username
+     * @param newPassword The new password
+     * @throws FirebaseAuthException If an error occurs when updating the data
+     */
     @PutMapping("/{username}/update/password")
     public void updatePassword(@RequestHeader("token") String token,
                                @PathVariable String username, @RequestBody String newPassword)
