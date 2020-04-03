@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.util.Base64;
 import org.junit.jupiter.api.BeforeAll;
@@ -114,8 +115,9 @@ class StorageRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk()).andReturn();
         String result = getContentAsString(response);
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> resultMap = mapper.readValue(result, Map.class);
+        Map<String, String> resultMap = mapper.readValue(result, typeRef);
         assertEquals(images, resultMap, "Should return a map with the pets names ant their profile"
             + " image as a base64 encoded string");
     }
