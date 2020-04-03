@@ -53,7 +53,8 @@ public class PetMealRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
-    public void deleteAllMeals(@PathVariable String owner, @PathVariable String petName) throws DatabaseAccessException {
+    public void deleteAllMeals(@PathVariable String owner, @PathVariable String petName)
+        throws DatabaseAccessException {
         mealService.deleteAllMeals(owner, petName);
     }
 
