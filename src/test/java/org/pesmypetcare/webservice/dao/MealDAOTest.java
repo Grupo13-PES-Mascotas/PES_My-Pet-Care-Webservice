@@ -35,9 +35,6 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MealDAOTest {
-    private static final String USERS_KEY = "users";
-    private static final String PETS_KEY = "pets";
-    private static final String MEALS_KEY = "meals";
     private static List<Map<String, Object>> mealList;
     private static MealEntity mealEntity;
     private static String date;
@@ -46,6 +43,13 @@ public class MealDAOTest {
     private static String petName;
     private static String field;
     private static Double value;
+    private static final String USERS_KEY = "users";
+    private static final String PETS_KEY = "pets";
+    private static final String MEALS_KEY = "meals";
+    private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
+    private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException received";
+    private final String DOCUMENT_NOT_EXISTS_EXC_MSG;
+
 
     @Mock
     private Firestore db;
@@ -77,13 +81,17 @@ public class MealDAOTest {
     @InjectMocks
     private MealDAO mealDao = new MealDAOImpl();
 
+    public MealDAOTest() {
+        DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when Meal document doesn't exist";
+    }
+
 
     @BeforeAll
     public static void setUp() {
         mealList = new ArrayList<>();
         mealEntity = new MealEntity();
-        date="2020-02-13T10:30:00";
-        date2="2021-02-13T10:30:00";
+        date = "2020-02-13T10:30:00";
+        date2 = "2021-02-13T10:30:00";
         owner = "Pepe05";
         petName = "Camper";
         field = "kcal";
@@ -170,7 +178,7 @@ public class MealDAOTest {
             willThrow(InterruptedException.class).given(futureQuery).get();
 
             mealDao.deleteAllMeals(owner, petName);
-        }, "Should throw DatabaseAccessException when InterruptedException received");
+        }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
@@ -185,7 +193,7 @@ public class MealDAOTest {
             willThrow(ExecutionException.class).given(futureQuery).get();
 
             mealDao.deleteAllMeals(owner, petName);
-        }, "Should throw DatabaseAccessException when ExecutionException received");
+        }, EXCECUTION_EXC_MSG);
     }
 
     @Test
@@ -221,7 +229,7 @@ public class MealDAOTest {
             given(documentSnapshot.exists()).willReturn(false);
 
             mealDao.getMealData(owner, petName, date);
-        }, "Should throw DatabaseAccessException when Meal document doesn't exist");
+        }, DOCUMENT_NOT_EXISTS_EXC_MSG);
     }
 
 
@@ -238,7 +246,7 @@ public class MealDAOTest {
             willThrow(InterruptedException.class).given(futureDocument).get();
 
             mealDao.getMealData(owner, petName, date);
-        }, "Should throw DatabaseAccessException when InterruptedException received");
+        }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
@@ -255,7 +263,7 @@ public class MealDAOTest {
 
 
             mealDao.getMealData(owner, petName, date);
-        }, "Should throw DatabaseAccessException when ExecutionException received");
+        }, EXCECUTION_EXC_MSG);
     }
 
     @Test
@@ -291,7 +299,7 @@ public class MealDAOTest {
             willThrow(InterruptedException.class).given(futureQuery).get();
 
             mealDao.getAllMealData(owner, petName);
-        }, "Should throw DatabaseAccessException when InterruptedException received");
+        }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
@@ -306,12 +314,12 @@ public class MealDAOTest {
             willThrow(ExecutionException.class).given(futureQuery).get();
 
             mealDao.getAllMealData(owner, petName);
-        }, "Should throw DatabaseAccessException when ExecutionException received");
+        }, EXCECUTION_EXC_MSG);
     }
 
     @Test
-    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -331,7 +339,8 @@ public class MealDAOTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException()
+    {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -342,7 +351,7 @@ public class MealDAOTest {
             willThrow(InterruptedException.class).given(futureQuery).get();
 
             mealDao.getAllMealsBetween(owner, petName, date, date2);
-        }, "Should throw DatabaseAccessException when InterruptedException received");
+        }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
@@ -357,7 +366,7 @@ public class MealDAOTest {
             willThrow(ExecutionException.class).given(futureQuery).get();
 
             mealDao.getAllMealsBetween(owner, petName, date, date2);
-        }, "Should throw DatabaseAccessException when ExecutionException received");
+        }, EXCECUTION_EXC_MSG);
     }
 
     @Test
@@ -393,7 +402,7 @@ public class MealDAOTest {
             given(documentSnapshot.exists()).willReturn(false);
 
             mealDao.getMealField(owner, petName, date, field);
-        }, "Should throw DatabaseAccessException when Meal document doesn't exist");
+        }, DOCUMENT_NOT_EXISTS_EXC_MSG);
     }
 
 
@@ -410,7 +419,7 @@ public class MealDAOTest {
             willThrow(InterruptedException.class).given(futureDocument).get();
 
             mealDao.getMealField(owner, petName, date, field);
-        }, "Should throw DatabaseAccessException when InterruptedException received");
+        }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
@@ -426,7 +435,7 @@ public class MealDAOTest {
             willThrow(ExecutionException.class).given(futureDocument).get();
 
             mealDao.getMealField(owner, petName, date, field);
-        }, "Should throw DatabaseAccessException when ExecutionException received");
+        }, EXCECUTION_EXC_MSG);
     }
 
     @Test
@@ -440,7 +449,7 @@ public class MealDAOTest {
         given(mealRef.update(anyString(), any())).willReturn(null);
 
         mealDao.updateMealField(owner, petName, date, field, value);
-        
+
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));

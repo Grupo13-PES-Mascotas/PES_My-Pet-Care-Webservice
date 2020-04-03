@@ -24,10 +24,10 @@ public class MealDAOImpl implements MealDAO {
     private final String MEAL_DOES_NOT_EXIST_EXC;
     private final String INVALID_MEAL_EXC;
 
-    Firestore db;
+    private Firestore db;
 
     public MealDAOImpl() {
-        db =  FirebaseFactory.getInstance().getFirestore();
+        db = FirebaseFactory.getInstance().getFirestore();
 
         DELFAIL_KEY = "deletion-failed";
         MEAL_DOES_NOT_EXIST_EXC = "The meal does not exist";
@@ -102,21 +102,25 @@ public class MealDAOImpl implements MealDAO {
         CollectionReference mealsRef = getMealsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
-            ApiFuture<QuerySnapshot> future = mealsRef.get();
-            List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
-            for (QueryDocumentSnapshot mealDocument : mealDocuments) {
-                String date = mealDocument.getId();
-                if (initialDate.compareTo(date)<0 && finalDate.compareTo(date)>0) {
-                    Map<String, Object> internalList = new HashMap<>();
-                    internalList.put("date", date);
-                    internalList.put("body", mealDocument.toObject(MealEntity.class));
-                    externalList.add(internalList);
-                }
-            }
+            getMealsBetweenDatesFromDatabase(initialDate, finalDate, mealsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
         return externalList;
+    }
+
+    private void getMealsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference mealsRef, List<Map<String, Object>> externalList) throws InterruptedException, ExecutionException {
+        ApiFuture<QuerySnapshot> future = mealsRef.get();
+        List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
+        for (QueryDocumentSnapshot mealDocument : mealDocuments) {
+            String date = mealDocument.getId();
+            if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
+                internalList.put("date", date);
+                internalList.put("body", mealDocument.toObject(MealEntity.class));
+                externalList.add(internalList);
+            }
+        }
     }
 
     @Override

@@ -53,7 +53,7 @@ public interface MealDAO {
     List<Map<String, Object>> getAllMealData(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the meals eaten by the pet between the initial and final date not including them
+     * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date

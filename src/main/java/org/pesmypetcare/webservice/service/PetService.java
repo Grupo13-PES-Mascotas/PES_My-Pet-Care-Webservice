@@ -3,7 +3,6 @@ package org.pesmypetcare.webservice.service;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 

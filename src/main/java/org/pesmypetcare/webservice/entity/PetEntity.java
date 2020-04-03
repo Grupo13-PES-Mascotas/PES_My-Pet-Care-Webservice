@@ -2,8 +2,6 @@ package org.pesmypetcare.webservice.entity;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class PetEntity {
     private GenderType gender;
