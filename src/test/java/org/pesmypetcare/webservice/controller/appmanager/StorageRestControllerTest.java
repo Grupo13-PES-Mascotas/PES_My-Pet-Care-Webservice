@@ -85,7 +85,7 @@ class StorageRestControllerTest {
 
     @Test
     public void downloadImage() throws Exception {
-        given(service.getImage(any(StorageForm.class))).willReturn(img);
+        given(service.getImage(any(StorageForm.class))).willReturn(downloadExpectedResult);
         MvcResult response = mockMvc.perform(get(BASE_URL + "/user")
             .header("token", "my-token")
             .contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +97,7 @@ class StorageRestControllerTest {
 
     @Test
     public void downloadPetImage() throws Exception {
-        given(service.getImage(any(StorageForm.class))).willReturn(img);
+        given(service.getImage(any(StorageForm.class))).willReturn(downloadExpectedResult);
         MvcResult response = mockMvc.perform(get(BASE_URL + "/user/pets/Toby-image.png")
             .header("token", "my-token")
             .contentType(MediaType.APPLICATION_JSON))

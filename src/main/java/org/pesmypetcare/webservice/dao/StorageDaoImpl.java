@@ -45,9 +45,10 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public byte[] downloadImage(StorageForm form) {
+    public String downloadImage(StorageForm form) {
         String image= getImagePath(form);
-        return storageBucket.get(image).getContent();
+        byte[] img = storageBucket.get(image).getContent();
+        return Base64.encodeBase64String(img);
     }
 
     @Override

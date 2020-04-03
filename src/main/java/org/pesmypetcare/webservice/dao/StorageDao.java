@@ -23,9 +23,9 @@ public interface StorageDao {
     /**
      * Downloads an image from the storage.
      * @param form The form with the requested data
-     * @return The image as a byte array
+     * @return The image as a base64 encoded byte array
      */
-    byte[] downloadImage(StorageForm form);
+    String downloadImage(StorageForm form);
 
     /**
      * Downloads all the images from the pets folder.

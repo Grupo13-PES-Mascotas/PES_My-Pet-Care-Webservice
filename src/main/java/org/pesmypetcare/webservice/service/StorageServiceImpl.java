@@ -25,7 +25,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public byte[] getImage(StorageForm form) {
+    public String getImage(StorageForm form) {
         return storageDao.downloadImage(form);
     }
 

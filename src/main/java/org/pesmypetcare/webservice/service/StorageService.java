@@ -23,9 +23,9 @@ public interface StorageService {
     /**
      * Gets an image from the storage.
      * @param form The form with the request data
-     * @return The image as a byte array
+     * @return The image as a base64 encoded byte array
      */
-    byte[] getImage(StorageForm form);
+    String getImage(StorageForm form);
 
     /**
      * Deletes an image from the storage.
