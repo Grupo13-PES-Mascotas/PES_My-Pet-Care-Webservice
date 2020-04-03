@@ -7,6 +7,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,14 +35,14 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MealDAOTest {
-    private static final List<Map<String, Object>> mealList = new ArrayList<>();
-    private static final MealEntity mealEntity = new MealEntity();
-    private static final String date = "2020-02-13T10:30:00";
-    private static final String date2 = "2021-02-13T10:30:00";
-    private static final String owner = "Pepe05";
-    private static final String petName = "Camper";
-    private static final String field = "kcal";
-    private static final Double value = 60.0;
+    private static List<Map<String, Object>> mealList;
+    private static MealEntity mealEntity;
+    private static String date;
+    private static String date2;
+    private static String owner;
+    private static String petName;
+    private static String field;
+    private static Double value;
     private static final String USERS_KEY = "users";
     private static final String PETS_KEY = "pets";
     private static final String MEALS_KEY = "meals";
@@ -50,6 +51,18 @@ public class MealDAOTest {
         "received";
     private final String DOCUMENT_NOT_EXISTS_EXC_MSG;
 
+    @BeforeAll
+    public static void setUp() {
+
+        mealList = new ArrayList<>();
+        mealEntity = new MealEntity();
+        date = "2020-02-13T10:30:00";
+        date2 = "2021-02-13T10:30:00";
+        owner = "Pepe05";
+        petName = "Camper";
+        field = "kcal";
+        value = 60.0;
+    }
 
     @Mock
     private Firestore db;
