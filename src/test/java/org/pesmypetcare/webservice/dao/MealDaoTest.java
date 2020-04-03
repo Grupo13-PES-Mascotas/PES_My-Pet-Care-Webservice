@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class MealDAOTest {
+public class MealDaoTest {
     private static List<Map<String, Object>> mealList;
     private static MealEntity mealEntity;
     private static String date;
@@ -80,11 +80,10 @@ public class MealDAOTest {
     private Iterator<QueryDocumentSnapshot> it;
 
     @InjectMocks
-    private MealDAO mealDao = new MealDAOImpl();
+    private MealDao mealDao = new MealDaoImpl();
 
     @BeforeAll
     public static void setUp() {
-
         mealList = new ArrayList<>();
         mealEntity = new MealEntity();
         date = "2020-02-13T10:30:00";

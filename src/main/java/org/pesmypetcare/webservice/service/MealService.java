@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -6,7 +6,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import java.util.List;
 import java.util.Map;
 
-public interface MealDAO {
+public interface MealService {
 
     /**
      * Creates a meal eaten by a pet on the database.

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MealEntity {
-    private String name;
+    private String mealName;
     private Double kcal;
 }

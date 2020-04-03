@@ -19,14 +19,14 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Repository
-public class MealDAOImpl implements MealDAO {
+public class MealDaoImpl implements MealDao {
     private final String DELFAIL_KEY;
     private final String MEAL_DOES_NOT_EXIST_EXC;
     private final String INVALID_MEAL_EXC;
 
     private Firestore db;
 
-    public MealDAOImpl() {
+    public MealDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
 
         DELFAIL_KEY = "deletion-failed";
