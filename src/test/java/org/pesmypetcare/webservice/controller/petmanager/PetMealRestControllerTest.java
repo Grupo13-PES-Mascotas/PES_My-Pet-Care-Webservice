@@ -54,21 +54,21 @@ public class PetMealRestControllerTest {
     @BeforeAll
     public static void setUp() {
         jsonMealEntity = "{\n"
-            + "  \"mealName\": \"Asparagus with soy milk\",\n"
-            + "  \"kcal\":\"60.0\",\n"
+            + "  \"mealName\": \"Asparagus with milk\",\n"
+            + "  \"kcal\": 60.0\n"
             + "}";
-        jsonField = "{\n" +
-            "  \"mealName\": \"Asparagus with chocolate\"\n" +
-            "} ";
+        jsonField = "{\n"
+            + "  \"value\": \"Asparagus with chocolate\"\n"
+            + "} ";
         mealEntity = new MealEntity();
         mealEntityList = new ArrayList<>();
-        owner = "Manolo";
-        petName = "Canpeque";
+        owner = "Manolo Manolon";
+        petName = "Canpeque2";
         date = "2019-02-13T10:30:00";
         date2 = "2021-02-13T10:30:00";
         field = "mealName";
         value = "Asparagus with ketchup";
-        urlBase = "/pet";
+        urlBase = "/pet/meal";
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PetMealRestControllerTest {
     public void getAllMealsBetweenShouldReturnMealEntityListAndStatusOk() throws Exception {
         willReturn(mealEntityList).given(service).getAllMealsBetween(anyString(), anyString(), anyString(),
             anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/" + date + "/" + date2))
+        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/between/" + date + "/" + date2))
             .andExpect(status().isOk());
     }
 

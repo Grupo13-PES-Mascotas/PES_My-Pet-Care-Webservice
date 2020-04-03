@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pet")
+@RequestMapping("/pet/meal")
 public class PetMealRestController {
     @Autowired
     private MealService mealService;
@@ -94,7 +94,7 @@ public class PetMealRestController {
      * @return The List containing all the meals eaten by the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @GetMapping("/{owner}/{petName}/{initialDate}/{finalDate}")
+    @GetMapping("/{owner}/{petName}/between/{initialDate}/{finalDate}")
     public List<Map<String, Object>> getAllMealsBetween(@PathVariable String owner, @PathVariable String petName,
                                                  @PathVariable String initialDate, @PathVariable String finalDate)
         throws DatabaseAccessException {
@@ -122,11 +122,12 @@ public class PetMealRestController {
      * @param petName Name of the pet
      * @param date Date the meal was eaten
      * @param field Name of the field to update
-     * @param value Value the field will have
+     * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
+     *      *                key "value"
      */
     @PutMapping("/{owner}/{petName}/{date}/{field}")
     public void updateMealField(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
-                         @PathVariable String field, @RequestBody Object value) {
-        mealService.updateMealField(owner, petName, date, field, value);
+                         @PathVariable String field, @RequestBody Map<String, Object> valueMap) {
+        mealService.updateMealField(owner, petName, date, field, valueMap.get("value"));
     }
 }

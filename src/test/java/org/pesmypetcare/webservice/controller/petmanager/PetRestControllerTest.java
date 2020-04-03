@@ -60,7 +60,7 @@ class PetRestControllerTest {
             + "  \"washFreq\": 3\n"
             + "}";
         jsonField = "{\n" +
-            "  \"gender\": \"Other\"\n" +
+            "  \"value\": \"Other\"\n" +
             "} ";
         petEntity = new PetEntity();
         petEntityList = new ArrayList<>();
