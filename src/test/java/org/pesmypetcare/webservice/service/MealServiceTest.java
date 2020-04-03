@@ -87,7 +87,8 @@ public class MealServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMealRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(mealDao).getMealData(any(String.class), any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(mealDao).getMealData(any(String.class), any(String.class),
+                isA(String.class));
             service.getMealData(owner, petName, date);
         }, "Should return an exception when retrieving a meal fails");
     }
@@ -120,10 +121,10 @@ public class MealServiceTest {
             doThrow(DatabaseAccessException.class).when(mealDao).getAllMealsBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllMealsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set of meals fails");
+        }, "Should return an exception when retrieving a set of meals between dates fails");
     }
 
-        @Test
+    @Test
     public void shouldReturnMealFieldWhenMealFieldRetrieved() throws DatabaseAccessException {
         when(mealDao.getMealField(owner, petName, date, field)).thenReturn(value);
         Object obtainedValue = service.getMealField(owner, petName, date, field);
@@ -142,7 +143,8 @@ public class MealServiceTest {
     @Test
     public void shouldReturnNothingWhenMealFieldUpdated() {
         service.updateMealField(owner, petName, date, field, value);
-        verify(mealDao).updateMealField(isA(String.class), isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
+        verify(mealDao).updateMealField(isA(String.class), isA(String.class), isA(String.class), isA(String.class),
+            isA(Object.class));
     }
 
 }
