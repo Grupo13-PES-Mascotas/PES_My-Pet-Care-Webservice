@@ -30,7 +30,7 @@ public class PetMealRestController {
      * @param meal The meal entity that contains the attributes of the meal eaten by the pet
      */
     @PostMapping("/{owner}/{petName}/{date}")
-    void createMeal(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
+    public void createMeal(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
                     @RequestBody MealEntity meal) {
         mealService.createMeal(owner, petName, date, meal);
     }
@@ -42,7 +42,7 @@ public class PetMealRestController {
      * @param date Date the meal was eaten
      */
     @DeleteMapping("/{owner}/{petName}/{date}")
-    void deleteByDate(@PathVariable String owner, @PathVariable String petName, @PathVariable String date) {
+    public void deleteByDate(@PathVariable String owner, @PathVariable String petName, @PathVariable String date) {
         mealService.deleteByDate(owner, petName, date);
     }
 
@@ -52,8 +52,8 @@ public class PetMealRestController {
      * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @DeleteMapping("/{owner}/{petName}/{date}")
-    void deleteAllMeals(@PathVariable String owner, @PathVariable String petName) throws DatabaseAccessException {
+    @DeleteMapping("/{owner}/{petName}")
+    public void deleteAllMeals(@PathVariable String owner, @PathVariable String petName) throws DatabaseAccessException {
         mealService.deleteAllMeals(owner, petName);
     }
 
@@ -66,7 +66,8 @@ public class PetMealRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{date}")
-    MealEntity getMealData(@PathVariable String owner, @PathVariable String petName, @PathVariable String date) throws DatabaseAccessException {
+    public MealEntity getMealData(@PathVariable String owner, @PathVariable String petName, @PathVariable String date)
+        throws DatabaseAccessException {
         return mealService.getMealData(owner, petName, date);
     }
 
@@ -78,7 +79,8 @@ public class PetMealRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
-    List<Map<String, Object>> getAllMealData(@PathVariable String owner, @PathVariable String petName) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllMealData(@PathVariable String owner, @PathVariable String petName)
+        throws DatabaseAccessException {
         return mealService.getAllMealData(owner, petName);
     }
 
@@ -91,9 +93,10 @@ public class PetMealRestController {
      * @return The List containing all the meals eaten by the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @GetMapping("/{owner}/{petName}/{date}")
-    List<Map<String, Object>> getAllMealsBetween(@PathVariable String owner, @PathVariable String petName, @PathVariable String initialDate,
-                                                 @PathVariable String finalDate) throws DatabaseAccessException {
+    @GetMapping("/{owner}/{petName}/{initialDate}/{finalDate}")
+    public List<Map<String, Object>> getAllMealsBetween(@PathVariable String owner, @PathVariable String petName,
+                                                 @PathVariable String initialDate, @PathVariable String finalDate)
+        throws DatabaseAccessException {
         return mealService.getAllMealsBetween(owner, petName, initialDate, finalDate);
     }
 
@@ -106,8 +109,9 @@ public class PetMealRestController {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @GetMapping("/{owner}/{petName}/{date}")
-    Object getMealField(@PathVariable String owner, @PathVariable String petName, @PathVariable String date, @PathVariable String field) throws DatabaseAccessException {
+    @GetMapping("/{owner}/{petName}/{date}/{field}")
+    public Object getMealField(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
+                        @PathVariable String field) throws DatabaseAccessException {
         return mealService.getMealField(owner, petName, date, field);
     }
 
@@ -119,8 +123,8 @@ public class PetMealRestController {
      * @param field Name of the field to update
      * @param value Value the field will have
      */
-    @PutMapping("/{owner}/{petName}/{date}")
-    void updateMealField(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
+    @PutMapping("/{owner}/{petName}/{date}/{field}")
+    public void updateMealField(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
                          @PathVariable String field, @RequestBody Object value) {
         mealService.updateMealField(owner, petName, date, field, value);
     }
