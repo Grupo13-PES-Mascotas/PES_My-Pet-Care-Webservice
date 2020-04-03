@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.MealEntity;
-import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.service.MealService;
-import org.pesmypetcare.webservice.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -91,7 +89,7 @@ public class PetMealRestControllerTest {
     @Test
     public void deleteAllMealsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllMeals(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner ))
+        mockMvc.perform(delete(urlBase + "/" + owner))
             .andExpect(status().isOk());
     }
 
