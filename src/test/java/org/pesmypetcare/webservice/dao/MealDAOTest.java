@@ -16,11 +16,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
@@ -33,8 +38,10 @@ public class MealDAOTest {
     private static final String USERS_KEY = "users";
     private static final String PETS_KEY = "pets";
     private static final String MEALS_KEY = "meals";
+    private static List<Map<String, Object>> mealList;
     private static MealEntity mealEntity;
     private static String date;
+    private static String date2;
     private static String owner;
     private static String petName;
     private static String field;
@@ -63,18 +70,20 @@ public class MealDAOTest {
     @Mock
     private DocumentSnapshot documentSnapshot;
     @Mock
-    private List<QueryDocumentSnapshot> petsDocuments;
+    private List<QueryDocumentSnapshot> mealsDocuments;
     @Mock
     private Iterator<QueryDocumentSnapshot> it;
 
     @InjectMocks
-    private MealDAO mealDAO = new MealDAOImpl();
+    private MealDAO mealDao = new MealDAOImpl();
 
 
     @BeforeAll
     public static void setUp() {
+        mealList = new ArrayList<>();
         mealEntity = new MealEntity();
         date="2020-02-13T10:30:00";
+        date2="2021-02-13T10:30:00";
         owner = "Pepe05";
         petName = "Camper";
         field = "kcal";
@@ -91,7 +100,7 @@ public class MealDAOTest {
         given(mealsRef.document(anyString())).willReturn(mealRef);
         given(mealRef.set(isA(MealEntity.class))).willReturn(null);
 
-        mealDAO.createMeal(owner, petName, date, mealEntity);
+        mealDao.createMeal(owner, petName, date, mealEntity);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -112,7 +121,7 @@ public class MealDAOTest {
         given(mealsRef.document(anyString())).willReturn(mealRef);
         given(mealRef.delete()).willReturn(null);
 
-        mealDAO.deleteByDate(owner, petName, date);
+        mealDao.deleteByDate(owner, petName, date);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -133,10 +142,10 @@ public class MealDAOTest {
         given(petRef.collection(anyString())).willReturn(mealsRef);
         given(mealsRef.get()).willReturn(futureQuery);
         given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(petsDocuments);
-        given(petsDocuments.iterator()).willReturn(it);
+        given(querySnapshot.getDocuments()).willReturn(mealsDocuments);
+        given(mealsDocuments.iterator()).willReturn(it);
 
-        mealDAO.deleteAllMeals(owner, petName);
+        mealDao.deleteAllMeals(owner, petName);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -146,6 +155,298 @@ public class MealDAOTest {
         verify(mealsRef).get();
         verify(futureQuery).get();
         verify(querySnapshot).getDocuments();
-        verify(petsDocuments).iterator();
+        verify(mealsDocuments).iterator();
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseReceivesInterruptedException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(InterruptedException.class).given(futureQuery).get();
+
+            mealDao.deleteAllMeals(owner, petName);
+        }, "Should throw DatabaseAccessException when InterruptedException received");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseReceivesExecutionException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(ExecutionException.class).given(futureQuery).get();
+
+            mealDao.deleteAllMeals(owner, petName);
+        }, "Should throw DatabaseAccessException when ExecutionException received");
+    }
+
+    @Test
+    public void shouldReturnMealEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
+        DatabaseAccessException {
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(mealsRef);
+        given(mealsRef.document(anyString())).willReturn(mealRef);
+        given(mealRef.get()).willReturn(futureDocument);
+        given(futureDocument.get()).willReturn(documentSnapshot);
+        given(documentSnapshot.exists()).willReturn(true);
+        given(documentSnapshot.toObject(MealEntity.class)).willReturn(mealEntity);
+
+        MealEntity meal = mealDao.getMealData(owner, petName, date);
+
+        assertSame(mealEntity, meal, "Should return Meal Entity");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenMealDocumentNotExists() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            given(futureDocument.get()).willReturn(documentSnapshot);
+            given(documentSnapshot.exists()).willReturn(false);
+
+            mealDao.getMealData(owner, petName, date);
+        }, "Should throw DatabaseAccessException when Meal document doesn't exist");
+    }
+
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealDocumentReceivesInterruptedException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            willThrow(InterruptedException.class).given(futureDocument).get();
+
+            mealDao.getMealData(owner, petName, date);
+        }, "Should throw DatabaseAccessException when InterruptedException received");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealDocumentReceivesExecutionException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            willThrow(ExecutionException.class).given(futureDocument).get();
+
+
+            mealDao.getMealData(owner, petName, date);
+        }, "Should throw DatabaseAccessException when ExecutionException received");
+    }
+
+    @Test
+    public void shouldReturnAllMealsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+        InterruptedException {
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(mealsRef);
+        given(mealsRef.get()).willReturn(futureQuery);
+        given(futureQuery.get()).willReturn(querySnapshot);
+        given(querySnapshot.getDocuments()).willReturn(mealsDocuments);
+        given(mealsDocuments.iterator()).willReturn(it);
+        given(it.hasNext()).willReturn(true);
+        given(it.hasNext()).willReturn(true);
+        given(it.hasNext()).willReturn(false);
+
+        List<Map<String, Object>> list = mealDao.getAllMealData(owner, petName);
+
+        assertEquals(mealList, list, "Should return a List containing all meals Data");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsDataFromDatabaseReceivesInterruptedException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(InterruptedException.class).given(futureQuery).get();
+
+            mealDao.getAllMealData(owner, petName);
+        }, "Should throw DatabaseAccessException when InterruptedException received");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsDataFromDatabaseReceivesExecutionException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(ExecutionException.class).given(futureQuery).get();
+
+            mealDao.getAllMealData(owner, petName);
+        }, "Should throw DatabaseAccessException when ExecutionException received");
+    }
+
+    @Test
+    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+        InterruptedException {
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(mealsRef);
+        given(mealsRef.get()).willReturn(futureQuery);
+        given(futureQuery.get()).willReturn(querySnapshot);
+        given(querySnapshot.getDocuments()).willReturn(mealsDocuments);
+        given(mealsDocuments.iterator()).willReturn(it);
+        given(it.hasNext()).willReturn(true);
+        given(it.hasNext()).willReturn(true);
+        given(it.hasNext()).willReturn(false);
+
+        List<Map<String, Object>> list = mealDao.getAllMealsBetween(owner, petName, date, date2);
+
+        assertEquals(mealList, list, "Should return a List containing all meals between two dates");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(InterruptedException.class).given(futureQuery).get();
+
+            mealDao.getAllMealsBetween(owner, petName, date, date2);
+        }, "Should throw DatabaseAccessException when InterruptedException received");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesExecutionException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.get()).willReturn(futureQuery);
+            willThrow(ExecutionException.class).given(futureQuery).get();
+
+            mealDao.getAllMealsBetween(owner, petName, date, date2);
+        }, "Should throw DatabaseAccessException when ExecutionException received");
+    }
+
+    @Test
+    public void shouldReturnMealFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
+        DatabaseAccessException {
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(mealsRef);
+        given(mealsRef.document(anyString())).willReturn(mealRef);
+        given(mealRef.get()).willReturn(futureDocument);
+        given(futureDocument.get()).willReturn(documentSnapshot);
+        given(documentSnapshot.exists()).willReturn(true);
+        given(documentSnapshot.get(anyString())).willReturn(value);
+
+        Object mealValue = mealDao.getMealField(owner, petName, date, field);
+
+        assertSame(value, mealValue, "Should return field value");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenMealDocumentNotExistsInFieldRetrieval() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            given(futureDocument.get()).willReturn(documentSnapshot);
+            given(documentSnapshot.exists()).willReturn(false);
+
+            mealDao.getMealField(owner, petName, date, field);
+        }, "Should throw DatabaseAccessException when Meal document doesn't exist");
+    }
+
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealFieldReceivesInterruptedException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            willThrow(InterruptedException.class).given(futureDocument).get();
+
+            mealDao.getMealField(owner, petName, date, field);
+        }, "Should throw DatabaseAccessException when InterruptedException received");
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealFieldReceivesExecutionException() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            given(db.collection(anyString())).willReturn(usersRef);
+            given(usersRef.document(anyString())).willReturn(ownerRef);
+            given(ownerRef.collection(anyString())).willReturn(petsRef);
+            given(petsRef.document(anyString())).willReturn(petRef);
+            given(petRef.collection(anyString())).willReturn(mealsRef);
+            given(mealsRef.document(anyString())).willReturn(mealRef);
+            given(mealRef.get()).willReturn(futureDocument);
+            willThrow(ExecutionException.class).given(futureDocument).get();
+
+            mealDao.getMealField(owner, petName, date, field);
+        }, "Should throw DatabaseAccessException when ExecutionException received");
+    }
+
+    @Test
+    public void shouldUpdateFieldWhenRequested() {
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(mealsRef);
+        given(mealsRef.document(anyString())).willReturn(mealRef);
+        given(mealRef.update(anyString(), any())).willReturn(null);
+
+        mealDao.updateMealField(owner, petName, date, field, value);
+        
+        verify(db).collection(same(USERS_KEY));
+        verify(usersRef).document(same(owner));
+        verify(ownerRef).collection(same(PETS_KEY));
+        verify(petsRef).document(same(petName));
+        verify(petRef).collection(same(MEALS_KEY));
+        verify(mealsRef).document(same(date));
+        verify(mealRef).update(same(field), same(value));
     }
 }

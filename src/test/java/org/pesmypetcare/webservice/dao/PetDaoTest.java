@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static List<Map<String, Object>> pets;
+    private static List<Map<String, Object>> petList;
     private static PetEntity pet;
     private static String owner;
     private static String name;
@@ -78,7 +78,7 @@ class PetDaoTest {
 
     @BeforeAll
     public static void setUp() {
-        pets = new ArrayList<>();
+        petList = new ArrayList<>();
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
@@ -214,7 +214,7 @@ class PetDaoTest {
 
         List<Map<String, Object>> list = petDao.getAllPetsData(owner);
 
-        assertEquals(pets, list, "Should return a List containing all pets Data");
+        assertEquals(petList, list, "Should return a List containing all pets Data");
     }
 
     @Test
@@ -240,7 +240,6 @@ class PetDaoTest {
             petDao.getAllPetsData(owner);
         }, EXECUTION_DEL_EXC);
     }
-
 
     @Test
     public void shouldReturnPetFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,

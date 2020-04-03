@@ -12,7 +12,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +101,6 @@ public class MealDAOImpl implements MealDAO {
                                                         String finalDate) throws DatabaseAccessException {
         CollectionReference mealsRef = getMealsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         try {
             ApiFuture<QuerySnapshot> future = mealsRef.get();
             List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
