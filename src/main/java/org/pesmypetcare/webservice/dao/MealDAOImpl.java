@@ -82,18 +82,23 @@ public class MealDAOImpl implements MealDAO {
         CollectionReference mealsRef = getMealsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
-            ApiFuture<QuerySnapshot> future = mealsRef.get();
-            List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
-            for (QueryDocumentSnapshot mealDocument : mealDocuments) {
-                Map<String, Object> internalList = new HashMap<>();
-                internalList.put("date", mealDocument.getId());
-                internalList.put("body", mealDocument.toObject(MealEntity.class));
-                externalList.add(internalList);
-            }
+            getAllMealOfAPetFromDatabase(mealsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
         return externalList;
+    }
+
+    private void getAllMealOfAPetFromDatabase(CollectionReference mealsRef, List<Map<String, Object>> externalList)
+        throws InterruptedException, ExecutionException {
+        ApiFuture<QuerySnapshot> future = mealsRef.get();
+        List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
+        for (QueryDocumentSnapshot mealDocument : mealDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
+            internalList.put("date", mealDocument.getId());
+            internalList.put("body", mealDocument.toObject(MealEntity.class));
+            externalList.add(internalList);
+        }
     }
 
     @Override
@@ -109,7 +114,9 @@ public class MealDAOImpl implements MealDAO {
         return externalList;
     }
 
-    private void getMealsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference mealsRef, List<Map<String, Object>> externalList) throws InterruptedException, ExecutionException {
+    private void getMealsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference mealsRef,
+                                                  List<Map<String, Object>> externalList) throws InterruptedException,
+        ExecutionException {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
         List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot mealDocument : mealDocuments) {
@@ -148,6 +155,7 @@ public class MealDAOImpl implements MealDAO {
     }
 
     public CollectionReference getMealsRef(String owner, String petName) {
-        return db.collection("users").document(owner).collection("pets").document(petName).collection("meals");
+        return db.collection("users").document(owner).collection("pets").document(petName)
+            .collection("meals");
     }
 }

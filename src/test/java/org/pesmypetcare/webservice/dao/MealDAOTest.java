@@ -7,7 +7,6 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,19 +34,20 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MealDAOTest {
-    private static List<Map<String, Object>> mealList;
-    private static MealEntity mealEntity;
-    private static String date;
-    private static String date2;
-    private static String owner;
-    private static String petName;
-    private static String field;
-    private static Double value;
+    private static final List<Map<String, Object>> mealList = new ArrayList<>();
+    private static final MealEntity mealEntity = new MealEntity();
+    private static final String date = "2020-02-13T10:30:00";
+    private static final String date2 = "2021-02-13T10:30:00";
+    private static final String owner = "Pepe05";
+    private static final String petName = "Camper";
+    private static final String field = "kcal";
+    private static final Double value = 60.0;
     private static final String USERS_KEY = "users";
     private static final String PETS_KEY = "pets";
     private static final String MEALS_KEY = "meals";
     private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
-    private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException received";
+    private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException " +
+        "received";
     private final String DOCUMENT_NOT_EXISTS_EXC_MSG;
 
 
@@ -83,19 +83,6 @@ public class MealDAOTest {
 
     public MealDAOTest() {
         DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when Meal document doesn't exist";
-    }
-
-
-    @BeforeAll
-    public static void setUp() {
-        mealList = new ArrayList<>();
-        mealEntity = new MealEntity();
-        date = "2020-02-13T10:30:00";
-        date2 = "2021-02-13T10:30:00";
-        owner = "Pepe05";
-        petName = "Camper";
-        field = "kcal";
-        value = 60.0;
     }
 
     @Test
@@ -339,8 +326,7 @@ public class MealDAOTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException()
-    {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
