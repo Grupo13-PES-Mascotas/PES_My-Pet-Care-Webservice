@@ -67,11 +67,16 @@ public class StorageDaoImpl implements StorageDao {
         for (Map<String, Object> pet : pets) {
             PetEntity petEntity = (PetEntity) pet.get("body");
             String path = petEntity.getProfileImageLocation();
-            getProfileImageIfItExists(result, pet, path);
+            getPetProfileImageIfItExists(result, pet, path);
         }
         return result;
     }
 
+    /**
+     * Obtain the image path.
+     * @param form The request form
+     * @return The path to the image
+     */
     private String getImagePath(StorageForm form) {
         if (form.getPath().isEmpty()) {
             return form.getImageName();
@@ -79,11 +84,17 @@ public class StorageDaoImpl implements StorageDao {
         return form.getPath() + "/" + form.getImageName();
     }
 
-    private void getProfileImageIfItExists(Map<String, byte[]> result, Map<String, Object> pet, String path) {
+    /**
+     * Gets the profile image of a pet if it exists.
+     * @param response A map to store the pet name and its image
+     * @param pet The pet data as a map
+     * @param path The path to the image
+     */
+    private void getPetProfileImageIfItExists(Map<String, byte[]> response, Map<String, Object> pet, String path) {
         if (path != null) {
             String name = (String) pet.get("name");
             byte[] image = storageBucket.get(path).getContent();
-            result.put(name, image);
+            response.put(name, image);
         }
     }
 }

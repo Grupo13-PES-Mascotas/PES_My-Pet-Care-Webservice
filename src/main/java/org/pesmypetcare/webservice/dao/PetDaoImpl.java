@@ -140,6 +140,10 @@ public class PetDaoImpl implements PetDao {
         petRef.update(field, value);
     }
 
+    /**
+     * Deletes the pet profile image.
+     * @param imageLocation The image location
+     */
     private void deleteProfileImage(String imageLocation) {
         if (imageLocation != null) {
             storageDao.deleteImageByName(imageLocation);

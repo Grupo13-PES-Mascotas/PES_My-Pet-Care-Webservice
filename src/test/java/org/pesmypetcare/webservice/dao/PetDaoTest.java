@@ -72,6 +72,8 @@ class PetDaoTest {
     private List<QueryDocumentSnapshot> petsDocuments;
     @Mock
     private Iterator<QueryDocumentSnapshot> it;
+    @Mock
+    private StorageDao storageDao;
 
     @InjectMocks
     private PetDao petDao = new PetDaoImpl();
@@ -102,10 +104,17 @@ class PetDaoTest {
     }
 
     @Test
-    public void shouldDeletePetOnDatabaseWhenRequested() {
+    public void shouldDeletePetOnDatabaseWhenRequested() throws DatabaseAccessException {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.get()).willReturn(futureDocument);
+        try {
+            given(futureDocument.get()).willReturn(documentSnapshot);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException("deletion-failed", e.getMessage());
+        }
+        given(documentSnapshot.get(anyString())).willReturn("user/pets/pet-profile-image.png");
         given(petRef.delete()).willReturn(null);
 
         petDao.deleteByOwnerAndName(owner, name);

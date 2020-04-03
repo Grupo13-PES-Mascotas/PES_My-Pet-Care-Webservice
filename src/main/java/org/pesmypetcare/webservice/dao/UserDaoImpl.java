@@ -101,6 +101,5 @@ public class UserDaoImpl implements UserDao {
     private void deleteUserStorage(String uid) {
         StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
         storageDao.deleteImageByName(uid + "/profile-image.png");
-        storageDao.deleteImageByName(uid);
     }
 }

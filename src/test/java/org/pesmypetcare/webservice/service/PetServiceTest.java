@@ -53,7 +53,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenPetDeleted() {
+    public void shouldReturnNothingWhenPetDeleted() throws DatabaseAccessException {
         service.deleteByOwnerAndName(owner, name);
         verify(petDao).deleteByOwnerAndName(isA(String.class), isA(String.class));
     }
