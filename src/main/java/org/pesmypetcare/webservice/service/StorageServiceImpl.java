@@ -30,7 +30,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Map<String, byte[]> getAllImages(String owner) throws DatabaseAccessException {
+    public Map<String, String> getAllImages(String owner) throws DatabaseAccessException {
         return storageDao.downloadAllPetImages(owner);
     }
 

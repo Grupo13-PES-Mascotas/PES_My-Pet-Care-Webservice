@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
+import com.google.api.client.util.Base64;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
@@ -39,26 +40,28 @@ public class StorageRestController {
     @GetMapping(value = "/image/{user}",
     produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] downloadImage(@RequestHeader("token") String token, @PathVariable String user,
+    public String downloadImage(@RequestHeader("token") String token, @PathVariable String user,
                                 @RequestParam String name) {
         StorageForm form = new StorageForm(user, name);
-        return storage.getImage(form);
+        byte[] response = storage.getImage(form);
+        return Base64.encodeBase64String(response);
     }
 
     @GetMapping(value = "/image/{user}/pets/{name}",
         produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] downloadPetImage(@RequestHeader("token") String token, @PathVariable String user,
+    public String downloadPetImage(@RequestHeader("token") String token, @PathVariable String user,
                                    @PathVariable String name) {
         String path = user + "/pets";
         StorageForm form = new StorageForm(path, name);
-        return storage.getImage(form);
+        byte[] response = storage.getImage(form);
+        return Base64.encodeBase64String(response);
     }
 
     @GetMapping(value = "/image/{user}/pets",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, byte[]> downloadAllPetsImages(@RequestHeader("token") String token,
+    public Map<String, String> downloadAllPetsImages(@RequestHeader("token") String token,
                                                      @PathVariable String user) throws DatabaseAccessException {
         return storage.getAllImages(user);
     }

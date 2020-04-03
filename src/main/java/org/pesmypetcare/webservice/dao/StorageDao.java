@@ -33,7 +33,7 @@ public interface StorageDao {
      * @return A map with pets names and the their images as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Map<String, byte[]> downloadAllPetImages(String owner) throws DatabaseAccessException;
+    Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException;
 
     /**
      * Deletes an image from the storage.

@@ -39,5 +39,5 @@ public interface StorageService {
      * @return A map with pets names and the their images as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Map<String, byte[]> getAllImages(String owner) throws DatabaseAccessException;
+    Map<String, String> getAllImages(String owner) throws DatabaseAccessException;
 }

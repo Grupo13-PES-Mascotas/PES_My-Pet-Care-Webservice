@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.dao;
 
+import com.google.api.client.util.Base64;
 import com.google.cloud.storage.Bucket;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.entity.PetEntity;
@@ -61,8 +62,8 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public Map<String, byte[]> downloadAllPetImages(String owner) throws DatabaseAccessException {
-        Map<String, byte[]> result = new HashMap<>();
+    public Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException {
+        Map<String, String> result = new HashMap<>();
         List<Map<String, Object>> pets = petDao.getAllPetsData(owner);
         for (Map<String, Object> pet : pets) {
             PetEntity petEntity = (PetEntity) pet.get("body");
@@ -90,11 +91,12 @@ public class StorageDaoImpl implements StorageDao {
      * @param pet The pet data as a map
      * @param path The path to the image
      */
-    private void getPetProfileImageIfItExists(Map<String, byte[]> response, Map<String, Object> pet, String path) {
+    private void getPetProfileImageIfItExists(Map<String, String> response, Map<String, Object> pet, String path) {
         if (path != null) {
             String name = (String) pet.get("name");
             byte[] image = storageBucket.get(path).getContent();
-            response.put(name, image);
+            String base64Image = Base64.encodeBase64String(image);
+            response.put(name, base64Image);
         }
     }
 }
