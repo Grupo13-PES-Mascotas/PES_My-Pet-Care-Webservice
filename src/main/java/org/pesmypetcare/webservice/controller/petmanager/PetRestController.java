@@ -30,6 +30,7 @@ public class PetRestController {
      */
     @PostMapping("/{owner}/{name}")
     public void createPet(@PathVariable String owner, @PathVariable String name, @RequestBody PetEntity pet) {
+        System.out.println("Create pet:" + pet);
         petService.createPet(owner, name, pet);
     }
 
