@@ -90,8 +90,8 @@ class PetServiceTest {
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException {
         when(petDao.getAllPetsData(owner)).thenReturn(pets);
-        List<Map<String, Object>> lista = service.getAllPetsData(owner);
-        assertSame(pets, lista, "Should return a list of pet entities");
+        List<Map<String, Object>> list = service.getAllPetsData(owner);
+        assertSame(pets, list, "Should return a list of pet entities");
     }
 
     @Test
@@ -110,9 +110,17 @@ class PetServiceTest {
     }
 
     @Test
+    public void shouldReturnDatabaseAccessExceptionWhenGetPetFieldRequestFails() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            doThrow(DatabaseAccessException.class).when(petDao).getField(any(String.class), any(String.class),
+                any(String.class));
+            service.getField(owner, name, field);
+        }, "Should return an exception when retrieving a pet field fails");
+    }
+
+    @Test
     public void shouldReturnNothingWhenPetFieldUpdated() {
         service.updateField(owner, name, field, value);
         verify(petDao).updateField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }
-
 }
