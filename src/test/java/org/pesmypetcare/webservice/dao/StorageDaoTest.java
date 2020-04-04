@@ -18,12 +18,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -34,8 +36,8 @@ class StorageDaoTest {
     private static StorageForm storageForm;
     private static byte[] img;
     private static String owner;
-    private static String path;
-    private static String petPath;
+    private static String entityPath;
+    private static String formPath;
     private static String expectedDownload;
     private static Map<String, String> images;
     private static List<Map<String, Object>> pets;
@@ -57,8 +59,8 @@ class StorageDaoTest {
         initializeImageEntity();
         storageForm = new StorageForm("user/pets", "Linux-image.png");
         owner = "user";
-        path = "user/Linux-image.png";
-        petPath = "user/pets/Linux-image.png";
+        entityPath = "user/Linux-image.png";
+        formPath = "user/pets/Linux-image.png";
         expectedDownload = Base64.encodeBase64String(img);
         images = new HashMap<>();
         images.put("Linux", expectedDownload);
@@ -68,19 +70,19 @@ class StorageDaoTest {
     @Test
     public void uploadImage() {
         dao.uploadImage(imageEntity);
-        verify(bucket).create(path, img, "image/png");
+        verify(bucket).create(entityPath, img, "image/png");
     }
 
     @Test
     public void uploadPetImage() {
         dao.uploadPetImage(owner, imageEntity);
-        verify(petDao).updateField(owner, "Linux", "profileImageLocation", petPath);
-        verify(bucket).create(petPath, img, "image/png");
+        verify(petDao).updateField(owner, "Linux", "profileImageLocation", formPath);
+        verify(bucket).create(formPath, img, "image/png");
     }
 
     @Test
     public void downloadImage() {
-        given(bucket.get(petPath)).willReturn(blob);
+        given(bucket.get(formPath)).willReturn(blob);
         given(blob.getContent()).willReturn(img);
         String result = dao.downloadImage(storageForm);
         assertEquals(expectedDownload, result, "Should return the image as a base64 encoded string");
@@ -89,7 +91,7 @@ class StorageDaoTest {
     @Test
     public void downloadAllPetImages() throws DatabaseAccessException {
         given(petDao.getAllPetsData(owner)).willReturn(pets);
-        given(bucket.get(petPath)).willReturn(blob);
+        given(bucket.get(formPath)).willReturn(blob);
         given(blob.getContent()).willReturn(img);
         Map<String, String> resultMap = dao.downloadAllPetImages(owner);
         assertEquals(images, resultMap, "Should return a map with the pets names ant their profile"
@@ -97,11 +99,25 @@ class StorageDaoTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenDatabaseAccessFails() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            willThrow(DatabaseAccessException.class).given(petDao).getAllPetsData(anyString());
+            dao.downloadAllPetImages(owner);
+        }, "Should throw an exception when database access fails");
+    }
+
+    @Test
     public void deleteImage() {
+        given(bucket.get(formPath)).willReturn(blob);
+        dao.deleteImage(storageForm);
+        verify(blob).delete();
     }
 
     @Test
     public void deleteImageByName() {
+        given(bucket.get(entityPath)).willReturn(blob);
+        dao.deleteImageByName(entityPath);
+        verify(blob).delete();
     }
 
     private static void initializeImageEntity() {
@@ -117,7 +133,7 @@ class StorageDaoTest {
         Map<String, Object> pet = new HashMap<>();
         pet.put("name", "Linux");
         PetEntity entity = new PetEntity();
-        entity.setProfileImageLocation(petPath);
+        entity.setProfileImageLocation(formPath);
         pet.put("body", entity);
         pets.add(pet);
     }
