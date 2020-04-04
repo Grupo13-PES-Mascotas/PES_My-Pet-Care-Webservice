@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class StorageDaoTest {
-    private static String CONTENT_TYPE = "image/png";
+    private static final String CONTENT_TYPE = "image/png";
     private static ImageEntity imageEntity;
     private static StorageForm storageForm;
     private static byte[] img;
@@ -66,7 +66,7 @@ class StorageDaoTest {
         storageForm = new StorageForm("user/pets", "Linux-image.png");
         expectedDownload = Base64.encodeBase64String(img);
         images = new HashMap<>();
-        images.put("Linux", expectedDownload);
+        images.put(petName, expectedDownload);
         initializePetsList();
     }
 
