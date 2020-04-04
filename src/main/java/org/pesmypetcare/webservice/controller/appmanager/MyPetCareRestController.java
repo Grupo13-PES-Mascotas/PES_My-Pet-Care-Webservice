@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
-import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
