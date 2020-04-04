@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class StorageDaoTest {
+    private static String CONTENT_TYPE = "image/png";
     private static ImageEntity imageEntity;
     private static StorageForm storageForm;
     private static byte[] img;
@@ -39,6 +40,7 @@ class StorageDaoTest {
     private static String entityPath;
     private static String formPath;
     private static String expectedDownload;
+    private static String petName;
     private static Map<String, String> images;
     private static List<Map<String, Object>> pets;
 
@@ -56,11 +58,12 @@ class StorageDaoTest {
 
     @BeforeAll
     public static void setUp() {
-        initializeImageEntity();
-        storageForm = new StorageForm("user/pets", "Linux-image.png");
+        petName = "Linux";
         owner = "user";
         entityPath = "user/Linux-image.png";
         formPath = "user/pets/Linux-image.png";
+        initializeImageEntity();
+        storageForm = new StorageForm("user/pets", "Linux-image.png");
         expectedDownload = Base64.encodeBase64String(img);
         images = new HashMap<>();
         images.put("Linux", expectedDownload);
@@ -70,14 +73,14 @@ class StorageDaoTest {
     @Test
     public void uploadImage() {
         dao.uploadImage(imageEntity);
-        verify(bucket).create(entityPath, img, "image/png");
+        verify(bucket).create(entityPath, img, CONTENT_TYPE);
     }
 
     @Test
     public void uploadPetImage() {
         dao.uploadPetImage(owner, imageEntity);
-        verify(petDao).updateField(owner, "Linux", "profileImageLocation", formPath);
-        verify(bucket).create(formPath, img, "image/png");
+        verify(petDao).updateField(owner, petName, "profileImageLocation", formPath);
+        verify(bucket).create(formPath, img, CONTENT_TYPE);
     }
 
     @Test
@@ -122,7 +125,7 @@ class StorageDaoTest {
 
     private static void initializeImageEntity() {
         imageEntity = new ImageEntity();
-        imageEntity.setUid("user");
+        imageEntity.setUid(owner);
         imageEntity.setImgName("Linux-image.png");
         img = "Some content".getBytes();
         imageEntity.setImg(img);
@@ -131,7 +134,7 @@ class StorageDaoTest {
     private static void initializePetsList() {
         pets = new ArrayList<>();
         Map<String, Object> pet = new HashMap<>();
-        pet.put("name", "Linux");
+        pet.put("name", petName);
         PetEntity entity = new PetEntity();
         entity.setProfileImageLocation(formPath);
         pet.put("body", entity);

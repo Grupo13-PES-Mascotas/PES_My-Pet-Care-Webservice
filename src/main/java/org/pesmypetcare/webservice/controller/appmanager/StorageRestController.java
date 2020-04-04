@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
-import com.google.api.client.util.Base64;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
@@ -23,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/storage")
 public class StorageRestController {
+    private final String TOKEN = "token";
     @Autowired
     private StorageService storage;
 
@@ -32,7 +32,7 @@ public class StorageRestController {
      * @param image The image entity containing the image, its path and name
      */
     @PutMapping("/image")
-    public void saveImage(@RequestHeader("token") String token, @RequestBody ImageEntity image) {
+    public void saveImage(@RequestHeader(TOKEN) String token, @RequestBody ImageEntity image) {
         storage.saveImage(image);
     }
 
@@ -43,7 +43,7 @@ public class StorageRestController {
      * @param image The image entity containing the image, its path and name
      */
     @PutMapping("/image/{user}/pets")
-    public void savePetImage(@RequestHeader("token") String token, @PathVariable String user,
+    public void savePetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                              @RequestBody ImageEntity image) {
         storage.savePetImage(user, image);
     }
@@ -56,9 +56,9 @@ public class StorageRestController {
      * @return The image as a base64 encoded byte array
      */
     @GetMapping(value = "/image/{user}",
-    produces = MediaType.IMAGE_PNG_VALUE)
+        produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public String downloadImage(@RequestHeader("token") String token, @PathVariable String user,
+    public String downloadImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                                 @RequestParam String name) {
         StorageForm form = new StorageForm(user, name);
         return storage.getImage(form);
@@ -74,7 +74,7 @@ public class StorageRestController {
     @GetMapping(value = "/image/{user}/pets/{name}",
         produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public String downloadPetImage(@RequestHeader("token") String token, @PathVariable String user,
+    public String downloadPetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                                    @PathVariable String name) {
         String path = user + "/pets";
         StorageForm form = new StorageForm(path, name);
@@ -91,7 +91,7 @@ public class StorageRestController {
     @GetMapping(value = "/image/{user}/pets",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> downloadAllPetsImages(@RequestHeader("token") String token,
+    public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token,
                                                      @PathVariable String user) throws DatabaseAccessException {
         return storage.getAllImages(user);
     }
@@ -102,7 +102,7 @@ public class StorageRestController {
      * @param storageForm A form with the image name and its path
      */
     @DeleteMapping("/image")
-    public void deleteImage(@RequestHeader("token") String token, @RequestBody StorageForm storageForm) {
+    public void deleteImage(@RequestHeader(TOKEN) String token, @RequestBody StorageForm storageForm) {
         storage.deleteImage(storageForm);
     }
 }

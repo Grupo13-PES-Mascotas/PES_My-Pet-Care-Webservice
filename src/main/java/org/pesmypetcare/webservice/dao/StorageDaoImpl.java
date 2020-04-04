@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Repository
 public class StorageDaoImpl implements StorageDao {
+    private final String CONTENT_TYPE = "image/png";
     private Bucket storageBucket;
     private PetDao petDao;
 
@@ -32,21 +33,21 @@ public class StorageDaoImpl implements StorageDao {
     public void uploadImage(ImageEntity imageEntity) {
         String path = imageEntity.getUid() + "/" + imageEntity.getImgName();
         byte[] img = imageEntity.getImg();
-        storageBucket.create(path, img, "image/png");
+        storageBucket.create(path, img, CONTENT_TYPE);
     }
 
     @Override
     public void uploadPetImage(String owner, ImageEntity image) {
         String imageName = image.getImgName();
         String path = image.getUid() + "/pets/" + image.getImgName();
-        String name = imageName.substring(0, imageName.indexOf("-"));
+        String name = imageName.substring(0, imageName.indexOf('-'));
         petDao.updateField(owner, name, "profileImageLocation", path);
-        storageBucket.create(path, image.getImg(), "image/png");
+        storageBucket.create(path, image.getImg(), CONTENT_TYPE);
     }
 
     @Override
     public String downloadImage(StorageForm form) {
-        String image= getImagePath(form);
+        String image = getImagePath(form);
         byte[] img = storageBucket.get(image).getContent();
         return Base64.encodeBase64String(img);
     }

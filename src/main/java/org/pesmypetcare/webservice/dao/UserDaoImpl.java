@@ -95,7 +95,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Deletes all the user files on the storage
+     * Deletes all the user files on the storage.
      * @param uid The user unique identifier
      */
     private void deleteUserStorage(String uid) {
