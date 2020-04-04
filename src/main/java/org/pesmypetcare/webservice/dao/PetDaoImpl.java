@@ -41,7 +41,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     /**
-     * Gets the storage dao
+     * Gets the storage dao.
      * @return The storage dao
      */
     public StorageDao getStorageDao() {
