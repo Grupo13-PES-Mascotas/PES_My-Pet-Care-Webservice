@@ -11,4 +11,5 @@ public class PetEntity {
     private String pathologies;
     private Double recommendedKcal;
     private int washFreq;
+    private String profileImageLocation;
 }

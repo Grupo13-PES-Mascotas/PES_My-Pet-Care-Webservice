@@ -30,6 +30,8 @@ class UserRestControllerTest {
     private static UserEntity userEntity;
     private static String jsonEmail;
     private static String jsonPassword;
+    private static String token;
+    private static String myToken;
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,6 +43,8 @@ class UserRestControllerTest {
     public static void setUp() {
         urlBase = "/users";
         username = "PotatoMaster";
+        token = "token";
+        myToken = "my-token";
         userEntity = new UserEntity();
         jsonEmail = "{\n"
             + "  \"newEmail\": \"xavi@nanako.com\"\n"
@@ -53,14 +57,16 @@ class UserRestControllerTest {
     @Test
     public void deleteAccountShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteById(anyString());
-        mockMvc.perform(delete(urlBase + "/" + username + "/delete"))
+        mockMvc.perform(delete(urlBase + "/" + username + "/delete")
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getUserDataShouldReturnUserDataAndStatusOk() throws Exception {
         willReturn(userEntity).given(service).getUserData(username);
-        mockMvc.perform(get(urlBase + "/" + username))
+        mockMvc.perform(get(urlBase + "/" + username)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 
@@ -69,7 +75,8 @@ class UserRestControllerTest {
         willDoNothing().given(service).updateEmail(anyString(), anyString());
         mockMvc.perform(put(urlBase + "/" + username + "/update/email")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonEmail))
+            .content(jsonEmail)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 
@@ -78,7 +85,8 @@ class UserRestControllerTest {
         willDoNothing().given(service).updatePassword(anyString(), anyString());
         mockMvc.perform(put(urlBase + "/" + username + "/update/password")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonPassword))
+            .content(jsonPassword)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 }

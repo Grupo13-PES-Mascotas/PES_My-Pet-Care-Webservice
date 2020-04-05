@@ -47,6 +47,7 @@ public class UserDaoImpl implements UserDao {
     public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
         petDao.deleteAllPets(uid);
         DocumentReference userRef = users.document(uid);
+        deleteUserStorage(uid);
         userRef.delete();
         myAuth.deleteUser(uid);
     }
@@ -91,5 +92,14 @@ public class UserDaoImpl implements UserDao {
      */
     private UserRecord.UpdateRequest getUserRecord(String uid) throws FirebaseAuthException {
         return myAuth.getUser(uid).updateRequest();
+    }
+
+    /**
+     * Deletes all the user files on the storage.
+     * @param uid The user unique identifier
+     */
+    private void deleteUserStorage(String uid) {
+        StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
+        storageDao.deleteImageByName(uid + "/profile-image.png");
     }
 }
