@@ -29,21 +29,20 @@ public class MedicationDaoImpl implements MedicationDao{
         db =  FirebaseFactory.getInstance().getFirestore();
 
         DELFAIL_KEY = "deletion-failed";
-        MEDICATION_DOES_NOT_EXIST_EXC = "The meal does not exist";
-        INVALID_MEDICATION_EXC = "invalid-meal";
+        MEDICATION_DOES_NOT_EXIST_EXC = "The med does not exist";
+        INVALID_MEDICATION_EXC = "invalid-med";
     }
 
     @Override
-    public void createMedication(String owner, String petName, String date, String name, MedicationEntity medication) {
-        String aux = (date + "/" + name);
-        DocumentReference medicationRef = getMedicationsRef(owner, petName).document(aux);
+    public void createMedication(String owner, String petName, String dateName, MedicationEntity medication) {
+        DocumentReference medicationRef = getMedicationsRef(owner, petName).document(dateName);
         medicationRef.set(medication);
     }
 
     @Override
-    public void deleteByDateAndName(String owner, String petName, String date, String name) {
-        DocumentReference mealRef = getMedicationsRef(owner, petName).document(toPK(date, name));
-        mealRef.delete();
+    public void deleteByDateAndName(String owner, String petName, String dateName) {
+        DocumentReference medRef = getMedicationsRef(owner, petName).document(dateName);
+        medRef.delete();
     }
 
     @Override
@@ -93,9 +92,9 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     @Override
-    public MedicationEntity getMedicationData(String owner, String petName, String date, String name) throws DatabaseAccessException {
+    public MedicationEntity getMedicationData(String owner, String petName, String dateName) throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference medicationsRefDoc = medicationsRef.document(toPK(date, name));
+        DocumentReference medicationsRefDoc = medicationsRef.document(dateName);
         ApiFuture<DocumentSnapshot> future = medicationsRefDoc.get();
         DocumentSnapshot medicationDoc;
         try {
@@ -109,7 +108,7 @@ public class MedicationDaoImpl implements MedicationDao{
         return medicationDoc.toObject(MedicationEntity.class);
     }
 
-    @Override //ojo, fíjate que aquí la salida es un map de string y object. Tu PK es de dos strings.
+    @Override
     public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
@@ -160,9 +159,9 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     @Override
-    public Object getMedicationField(String owner, String petName, String date, String name, String field) throws DatabaseAccessException {
+    public Object getMedicationField(String owner, String petName, String dateName, String field) throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference medicationDocRef = medicationsRef.document(toPK(date, name));
+        DocumentReference medicationDocRef = medicationsRef.document(dateName);
         ApiFuture<DocumentSnapshot> future = medicationDocRef.get();
         DocumentSnapshot medicationDoc;
         try {
@@ -177,10 +176,10 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     @Override
-    public void updateMedicationField(String owner, String petName, String date, String name, String field, Object value) {
+    public void updateMedicationField(String owner, String petName, String dateName, String field, Object value) {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference mealRef = medicationsRef.document(date);
-        mealRef.update(field, value);
+        DocumentReference medRef = medicationsRef.document(dateName);
+        medRef.update(field, value);
     }
 
 
