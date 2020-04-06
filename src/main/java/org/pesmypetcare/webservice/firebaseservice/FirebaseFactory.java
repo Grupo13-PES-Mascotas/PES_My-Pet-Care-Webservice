@@ -3,26 +3,31 @@ package org.pesmypetcare.webservice.firebaseservice;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class FirebaseFactory {
     private static FirebaseFactory instance;
-    private FirebaseApp firebaseApp;
     private GoogleCredentials googleCredentials;
+    private Firestore firestore;
+    private FirebaseAuth firebaseAuth;
+    private StorageClient storageClient;
 
     private FirebaseFactory() {
         setGoogleCredentials();
         FirebaseOptions options = getFirebaseOptions(googleCredentials);
-        firebaseApp = FirebaseApp.initializeApp(options);
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
+        initializeFirebaseAuth(firebaseApp);
+        initializeFirestore();
+        initializeStorage(firebaseApp);
     }
 
     /**
@@ -41,28 +46,23 @@ public class FirebaseFactory {
      * @return The instance that handles user authentication
      */
     public FirebaseAuth getFirebaseAuth() {
-        return FirebaseAuth.getInstance(firebaseApp);
+        return firebaseAuth;
     }
 
     /**
      * Gets the instance that manages the database.
      * @return The instance that handles the database
      */
-    public Firestore getAdminFirestore() {
-        return FirestoreOptions.newBuilder()
-            .setCredentials(googleCredentials)
-            .build().getService();
+    public Firestore getFirestore() {
+        return firestore;
     }
 
     /**
-     * Gets the user instance for the database.
-     * @param auth The value to use for the auth variable in the security rules for database actions.
-     * @return The instance that handles the  user database
+     * Gets the instance that manages the storage.
+     * @return The instance that handles the storage
      */
-    public Firestore getUserFirestore(Map<String, Object> auth) {
-        FirebaseOptions options = getUserFirebaseOptions(auth, googleCredentials);
-        FirebaseApp firebaseApp = FirebaseApp.initializeApp(options);
-        return FirestoreClient.getFirestore(firebaseApp);
+    public Bucket getStorage() {
+        return storageClient.bucket();
     }
 
     /**
@@ -88,20 +88,32 @@ public class FirebaseFactory {
         return new FirebaseOptions.Builder()
             .setCredentials(googleCredentials)
             .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
+            .setStorageBucket("my-pet-care-85883.appspot.com")
             .build();
     }
 
     /**
-     * Gets the Firebase options for the user database instance.
-     * @param auth The value to use for the auth variable in the security rules for database actions.
-     * @param googleCredentials The Google credentials of the service
-     * @return The Firebase options for user database instance
+     * Creates the Firestore instance.
      */
-    private FirebaseOptions getUserFirebaseOptions(Map<String, Object> auth, GoogleCredentials googleCredentials) {
-        return new FirebaseOptions.Builder()
+    private void initializeFirestore() {
+        firestore = FirestoreOptions.newBuilder()
             .setCredentials(googleCredentials)
-            .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
-            .setDatabaseAuthVariableOverride(auth)
-            .build();
+            .build().getService();
+    }
+
+    /**
+     * Creates the FirebaseAuth instance.
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     */
+    private void initializeFirebaseAuth(FirebaseApp firebaseApp) {
+        firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
+    }
+
+    /**
+     * Creates the StorageClient instance.
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     */
+    private void initializeStorage(FirebaseApp firebaseApp) {
+        storageClient = StorageClient.getInstance(firebaseApp);
     }
 }

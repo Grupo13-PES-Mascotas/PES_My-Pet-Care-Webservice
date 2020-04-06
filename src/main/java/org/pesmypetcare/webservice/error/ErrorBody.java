@@ -52,4 +52,3 @@ public class ErrorBody {
         this.debugMessage = debugMessage;
     }
 }
-

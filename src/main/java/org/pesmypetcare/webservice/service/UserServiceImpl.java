@@ -1,8 +1,6 @@
 package org.pesmypetcare.webservice.service;
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.dao.UserDao;
-import org.pesmypetcare.webservice.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,6 @@ package org.pesmypetcare.webservice.service;
 
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.entity.UserEntity;
 
 public interface UserService {
     /**
