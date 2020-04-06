@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pet/meal")
+@RequestMapping("/meal")
 public class PetMealRestController {
     @Autowired
     private MealService mealService;
