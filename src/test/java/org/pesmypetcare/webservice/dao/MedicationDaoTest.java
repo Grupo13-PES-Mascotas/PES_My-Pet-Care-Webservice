@@ -41,6 +41,7 @@ public class MedicationDaoTest {
     private static String petName;
     private static String date;
     private static String date2;
+    private static String name;
     private static String dateName;
     private static String field;
     private static int value;
@@ -96,6 +97,7 @@ public class MedicationDaoTest {
         dateName = "26-03-2020/Cloroform";
         field = "duration";
         value = 4;
+        name = "Cloroform";
     }
 
     @Test
@@ -120,7 +122,7 @@ public class MedicationDaoTest {
     }
 
     @Test
-    public void shouldDeleteMedOnDatabaseWhenRequested() { //??
+    public void shouldDeleteByDateMedOnDatabaseWhenRequested() { //??
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -141,6 +143,52 @@ public class MedicationDaoTest {
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
         verify(medsRef).document(same(date)); //?
+        verify(medRef).delete();
+    }
+
+    @Test
+    public void shouldDeleteByNameMedOnDatabaseWhenRequested() { //??
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(medsRef);
+        given(medsRef.document(anyString())).willReturn(medRef);
+        given(medRef.delete()).willReturn(null);
+
+        try {
+            medDao.deleteByName(owner, petName, name);
+        } catch (DatabaseAccessException e) {
+            e.printStackTrace();
+        }
+
+        verify(db).collection(same(USERS_KEY));
+        verify(usersRef).document(same(owner));
+        verify(ownerRef).collection(same(PETS_KEY));
+        verify(petsRef).document(same(petName));
+        verify(petRef).collection(same(MEDICATION_KEY));
+        verify(medsRef).document(same(name));
+        verify(medRef).delete();
+    }
+
+    @Test
+    public void shouldDeleteConcreteMedOnDatabaseWhenRequested() { //??
+        given(db.collection(anyString())).willReturn(usersRef);
+        given(usersRef.document(anyString())).willReturn(ownerRef);
+        given(ownerRef.collection(anyString())).willReturn(petsRef);
+        given(petsRef.document(anyString())).willReturn(petRef);
+        given(petRef.collection(anyString())).willReturn(medsRef);
+        given(medsRef.document(anyString())).willReturn(medRef);
+        given(medRef.delete()).willReturn(null);
+
+        medDao.deleteByDateAndName(owner, petName, dateName);
+
+        verify(db).collection(same(USERS_KEY));
+        verify(usersRef).document(same(owner));
+        verify(ownerRef).collection(same(PETS_KEY));
+        verify(petsRef).document(same(petName));
+        verify(petRef).collection(same(MEDICATION_KEY));
+        verify(medsRef).document(same(name));
         verify(medRef).delete();
     }
 
@@ -372,7 +420,7 @@ public class MedicationDaoTest {
     }
 
     @Test
-    public void shouldReturnmedFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
+    public void shouldReturnMedFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
             DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
