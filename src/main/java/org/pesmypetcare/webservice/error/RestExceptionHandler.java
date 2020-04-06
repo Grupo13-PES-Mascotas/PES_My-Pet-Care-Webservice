@@ -45,7 +45,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DatabaseAccessException.class)
     protected ResponseEntity<Object> handleInvalidAccessToDatabase(DatabaseAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
-        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

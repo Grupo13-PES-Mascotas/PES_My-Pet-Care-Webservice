@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
@@ -45,7 +46,9 @@ class UserDaoTest {
     @Mock
     private DocumentReference docRef;
     @Mock
-    private PetDao petDao;
+    private PetDaoImpl petDao;
+    @Mock
+    private StorageDao storageDao;
     @Mock
     private ApiFuture<DocumentSnapshot> future;
     @Mock
@@ -92,6 +95,8 @@ class UserDaoTest {
     @Test
     public void shouldDeleteUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException {
         given(usersRef.document(anyString())).willReturn(docRef);
+        given(petDao.getStorageDao()).willReturn(storageDao);
+        willDoNothing().given(storageDao).deleteImageByName(anyString());
         dao.deleteById(username);
         verify(petDao).deleteAllPets(same(username));
         verify(docRef).delete();
@@ -109,6 +114,8 @@ class UserDaoTest {
     @Test
     public void shouldThrowFirebaseAuthExceptionWhenDeleteFromDatabaseFails() {
         given(usersRef.document(anyString())).willReturn(docRef);
+        given(petDao.getStorageDao()).willReturn(storageDao);
+        willDoNothing().given(storageDao).deleteImageByName(anyString());
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(auth).deleteUser(anyString());
             dao.deleteById(username);
