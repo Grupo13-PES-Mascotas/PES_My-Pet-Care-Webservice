@@ -35,28 +35,6 @@ public class PetMedicationRestController {
     }
 
     /**
-     * Deletes the pet with the specified owner and name from the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     */
-    @DeleteMapping("/{owner}/{petName}")
-    public void deleteByDate(@PathVariable String owner, @PathVariable String petName, String date) throws DatabaseAccessException {
-        medicationService.deleteByDate(owner, petName, date);
-    }
-
-    /**
-     * Deletes all the medication with the specified owner and pet from certain date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param medicationName Name of the medication
-     */
-    @DeleteMapping("/{owner}/{petName}")
-    void deleteByName(String owner, String petName, String medicationName) throws DatabaseAccessException{
-        medicationService.deleteByName(owner, petName, medicationName);
-    }
-
-    /**
      * Deletes all the medication with the specified owner and pet from certain date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet

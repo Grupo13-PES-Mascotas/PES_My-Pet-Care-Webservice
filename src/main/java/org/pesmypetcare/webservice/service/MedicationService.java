@@ -20,25 +20,9 @@ public interface MedicationService {
      * Deletes all the medication with the specified owner and pet from certain date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param medicationName Name of the medication
-     */
-    void deleteByName(String owner, String petName, String medicationName) throws DatabaseAccessException;
-
-    /**
-     * Deletes all the medication with the specified owner and pet from certain date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
      * @param dateName date + name of the receipt of the medication
      */
     void deleteByDateAndName(String owner, String petName, String dateName);
-
-    /**
-     * Deletes all the medication with the specified owner and pet from certain date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the receipt of the medication
-     */
-    void deleteByDate(String owner, String petName, String date) throws DatabaseAccessException;
 
     /**
      * Deletes all the medications of the specified pet from database.

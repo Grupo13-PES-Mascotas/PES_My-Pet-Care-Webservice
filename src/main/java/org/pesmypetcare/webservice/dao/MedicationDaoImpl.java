@@ -46,38 +46,6 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     @Override
-    public void deleteByDate(String owner, String petName, String date) throws DatabaseAccessException {
-        CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        try {
-            ApiFuture<QuerySnapshot> future = medicationsRef.get();
-            List<QueryDocumentSnapshot> medicationDocuments = future.get().getDocuments();
-            for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
-                if (pkToDate(medicationDocument.getId()) == date) { //will it work?
-                    medicationDocument.getReference().delete();
-                }
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
-    }
-
-    @Override
-    public void deleteByName(String owner, String petName, String medicationName) throws DatabaseAccessException {
-        CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        try {
-            ApiFuture<QuerySnapshot> future = medicationsRef.get();
-            List<QueryDocumentSnapshot> medicationDocuments = future.get().getDocuments();
-            for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
-                if (pkToName(medicationDocument.getId()) == medicationName) { //will it work?
-                    medicationDocument.getReference().delete();
-                }
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
-    }
-
-    @Override
     public void deleteAllMedications(String owner, String petName) throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         try {

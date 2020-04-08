@@ -117,58 +117,8 @@ public class MedicationDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(isA(String.class));
+        verify(medsRef).document(same (dateName));
         verify(medRef).set(same(medEntity));
-    }
-
-    @Test
-    public void shouldDeleteByDateMedOnDatabaseWhenRequested() { //??
-        given(db.collection(anyString())).willReturn(usersRef);
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(medsRef);
-        given(medsRef.document(anyString())).willReturn(medRef);
-        given(medRef.delete()).willReturn(null);
-
-        try {
-            medDao.deleteByDate(owner, petName, date);
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        }
-
-        verify(db).collection(same(USERS_KEY));
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).document(same(petName));
-        verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(date)); //?
-        verify(medRef).delete();
-    }
-
-    @Test
-    public void shouldDeleteByNameMedOnDatabaseWhenRequested() { //??
-        given(db.collection(anyString())).willReturn(usersRef);
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(medsRef);
-        given(medsRef.document(anyString())).willReturn(medRef);
-        given(medRef.delete()).willReturn(null);
-
-        try {
-            medDao.deleteByName(owner, petName, name);
-        } catch (DatabaseAccessException e) {
-            e.printStackTrace();
-        }
-
-        verify(db).collection(same(USERS_KEY));
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).document(same(petName));
-        verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(name));
-        verify(medRef).delete();
     }
 
     @Test
@@ -188,7 +138,7 @@ public class MedicationDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(name));
+        verify(medsRef).document(same(dateName));
         verify(medRef).delete();
     }
 
@@ -505,7 +455,7 @@ public class MedicationDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(date));
+        verify(medsRef).document(same(dateName));
         verify(medRef).update(same(field), same(value));
     }
 }

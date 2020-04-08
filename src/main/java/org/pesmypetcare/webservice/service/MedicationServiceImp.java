@@ -23,16 +23,6 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public void deleteByDate(String owner, String petName, String date) throws DatabaseAccessException {
-        medicationDao.deleteByDate(owner, petName, date);
-    }
-
-    @Override
-    public void deleteByName(String owner, String petName, String medicationName) throws DatabaseAccessException {
-        medicationDao.deleteByName(owner, petName, medicationName);
-    }
-
-    @Override
     public void deleteAllMedications(String owner, String petName) throws DatabaseAccessException {
         medicationDao.deleteAllMedications(owner, petName);
     }
