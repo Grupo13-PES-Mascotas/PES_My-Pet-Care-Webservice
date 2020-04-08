@@ -59,7 +59,7 @@ public class UserRestController {
     public void updateEmail(@RequestHeader("token") String token,
                             @PathVariable String username, @RequestBody Map<String, String> valueMap) 
         throws FirebaseAuthException {
-        userService.updateEmail(username, valueMap.get("password"));
+        userService.updateEmail(username, valueMap.get("email"));
     }
 
     /**
