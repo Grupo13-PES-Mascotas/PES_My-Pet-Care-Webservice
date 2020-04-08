@@ -50,26 +50,27 @@ public class UserRestController {
      * Updates the user email bound to the account.
      * @param token The personal access token of the user
      * @param username The user's username
-     * @param newEmail The new email
+     * @param valueMap Entity that contains the value that the field will have.
      * @throws FirebaseAuthException If an error occurs when updating the data
      */
     @PutMapping("/{username}/update/email")
     public void updateEmail(@RequestHeader("token") String token,
-                            @PathVariable String username, @RequestBody String newEmail) throws FirebaseAuthException {
-        userService.updateEmail(username, newEmail);
+                            @PathVariable String username, @RequestBody Map<String, String> valueMap) 
+        throws FirebaseAuthException {
+        userService.updateEmail(username, valueMap.get("password"));
     }
 
     /**
      * Updates the user password for the account.
      * @param token The personal access token of the user
      * @param username The user's username
-     * @param newPassword The new password
+     * @param valueMap Entity that contains the value that the field will have.
      * @throws FirebaseAuthException If an error occurs when updating the data
      */
     @PutMapping("/{username}/update/password")
     public void updatePassword(@RequestHeader("token") String token,
-                               @PathVariable String username, @RequestBody String newPassword)
+                               @PathVariable String username, @RequestBody Map<String, String> valueMap)
         throws FirebaseAuthException {
-        userService.updatePassword(username, newPassword);
+        userService.updatePassword(username, valueMap.get("password"));
     }
 }
