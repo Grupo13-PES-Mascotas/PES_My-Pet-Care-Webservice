@@ -34,7 +34,7 @@ class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = new UserEntity(username, "user@email");
+        user = new UserEntity(username, "123456", "user@email");
         username = "user";
         newEmail = "new-user@email.com";
         newPassword = "newPassword";
@@ -55,9 +55,9 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenUserCreated() {
-        service.createUser(user);
-        verify(userDao).createUser(isA(UserEntity.class));
+    public void shouldReturnNothingWhenUserCreated() throws DatabaseAccessException {
+        service.createUser("uid", user);
+        verify(userDao).createUser("uid", isA(UserEntity.class));
     }
 
     @Test

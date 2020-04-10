@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(UserEntity userEntity) {
-        userDao.createUser(userEntity);
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
+        userDao.createUser(uid , userEntity);
     }
 
     @Override

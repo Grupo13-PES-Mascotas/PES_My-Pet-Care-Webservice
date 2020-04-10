@@ -66,7 +66,7 @@ class UserDaoTest {
         password = "123456";
         username = "username";
         email = "user@email.com";
-        userEntity = new UserEntity(username, email);
+        userEntity = new UserEntity(username, password, email);
     }
 
     @Test
@@ -84,10 +84,10 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldCreateUserOnDatabase() {
+    public void shouldCreateUserOnDatabase() throws DatabaseAccessException {
         given(usersRef.document(anyString())).willReturn(docRef);
         given(docRef.set(any(UserEntity.class))).willReturn(null);
-        dao.createUser(userEntity);
+        dao.createUser("uid", userEntity);
         verify(usersRef).document(same(userEntity.getUsername()));
         verify(docRef).set(same(userEntity));
     }
