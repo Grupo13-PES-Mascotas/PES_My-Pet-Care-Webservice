@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 public class UserDaoImpl implements UserDao {
     private FirebaseAuth myAuth;
     private CollectionReference users;
-    private CollectionReference used_usernames;
     private PetDao petDao;
     private final String ERROR_CODE;
 
@@ -28,21 +27,13 @@ public class UserDaoImpl implements UserDao {
         myAuth = firebaseFactory.getFirebaseAuth();
         Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
-        used_usernames = db.collection("used_usernames");
         ERROR_CODE = "deletion-failed";
         petDao = new PetDaoImpl();
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
-        Iterable<DocumentReference> usernames = used_usernames.listDocuments();
-        for (DocumentReference username : usernames) {
-            if (userEntity.getUsername().equals(username.getId())) {
-                throw new DatabaseAccessException("invalid-username", "The username is already in user");
-            }
-        }
-        used_usernames.document(userEntity.getUsername());
-        users.document(uid).set(userEntity);
+    public void createUser(UserEntity userEntity) {
+        users.document(userEntity.getUsername()).set(userEntity);
     }
 
     @Override

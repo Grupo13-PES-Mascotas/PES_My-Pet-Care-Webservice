@@ -87,7 +87,7 @@ class UserDaoTest {
     public void shouldCreateUserOnDatabase() {
         given(usersRef.document(anyString())).willReturn(docRef);
         given(docRef.set(any(UserEntity.class))).willReturn(null);
-        dao.createUser(, userEntity);
+        dao.createUser(userEntity);
         verify(usersRef).document(same(userEntity.getUsername()));
         verify(docRef).set(same(userEntity));
     }
