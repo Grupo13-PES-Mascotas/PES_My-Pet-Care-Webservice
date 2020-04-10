@@ -39,9 +39,7 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<DocumentSnapshot> future = used_usernames.document(userEntity.getUsername()).get();
         DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
         if (!usernameDoc.exists()) {
-            Map<String, Boolean> docData = new HashMap<>();
-            docData.put("exists", true);
-            used_usernames.document(userEntity.getUsername()).set(docData);
+            saveUsername(userEntity.getUsername());
             users.document(uid).set(userEntity);
         } else {
             throw new DatabaseAccessException("invalid-username", "The username is already in use");
@@ -129,9 +127,51 @@ public class UserDaoImpl implements UserDao {
      * Updates the user's username.
      * @param uid The unique identifier of the user
      * @param newUsername The new username for the account
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    private void updateUsername(String uid, String newUsername) {
+    private void updateUsername(String uid, String newUsername) throws DatabaseAccessException, FirebaseAuthException {
+        ApiFuture<DocumentSnapshot> future = used_usernames.document(newUsername).get();
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
+        if (!usernameDoc.exists()) {
+            saveUsername(newUsername);
+            deleteOldUsername(uid);
+            updateDisplayName(uid, newUsername);
+        } else {
+            throw new DatabaseAccessException("invalid-username", "The username is already in use");
+        }
+    }
 
+    /**
+     * Updates the display name.
+     * @param uid The unique identifier of the user
+     * @param newUsername The new username for the account
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
+    private void updateDisplayName(String uid, String newUsername) throws FirebaseAuthException {
+        UserRecord.UpdateRequest updateRequest = getUserRecord(uid);
+        updateRequest.setDisplayName(newUsername);
+        myAuth.updateUserAsync(updateRequest);
+    }
+
+    /**
+     * Deletes the old username from the database.
+     * @param uid The unique identifier of the user
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
+    private void deleteOldUsername(String uid) throws FirebaseAuthException {
+        String oldUsername = myAuth.getUser(uid).getDisplayName();
+        used_usernames.document(Objects.requireNonNull(oldUsername)).delete();
+    }
+
+    /**
+     * Saves the username inside the used usernames collection.
+     * @param username The username to save
+     */
+    private void saveUsername(String username) {
+        Map<String, Boolean> docData = new HashMap<>();
+        docData.put("exists", true);
+        used_usernames.document(username).set(docData);
     }
 
     /**
