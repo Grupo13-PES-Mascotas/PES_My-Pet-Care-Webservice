@@ -13,33 +13,39 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @Repository
 public class UserDaoImpl implements UserDao {
     private FirebaseAuth myAuth;
     private CollectionReference users;
+    private CollectionReference used_usernames;
     private PetDao petDao;
-    private final String ERROR_CODE;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
         myAuth = firebaseFactory.getFirebaseAuth();
         Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
-        ERROR_CODE = "deletion-failed";
+        used_usernames = db.collection("used_usernames");
         petDao = new PetDaoImpl();
     }
 
     @Override
-    public void createUser(UserEntity userEntity) throws DatabaseAccessException {
-        Iterable<DocumentReference> usernames = users.listDocuments();
-        for (DocumentReference username : usernames) {
-            if (userEntity.getUsername().equals(username.getId())) {
-                throw new DatabaseAccessException("invalid-username", "The username is already in use");
-            }
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = used_usernames.document(userEntity.getUsername()).get();
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
+        if (!usernameDoc.exists()) {
+            Map<String, Boolean> docData = new HashMap<>();
+            docData.put("exists", true);
+            used_usernames.document(userEntity.getUsername()).set(docData);
+            users.document(uid).set(userEntity);
+        } else {
+            throw new DatabaseAccessException("invalid-username", "The username is already in use");
         }
-        users.document(userEntity.getUsername()).set(userEntity);
     }
 
     @Override
@@ -50,11 +56,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteFromDatabase(String username) throws DatabaseAccessException {
-        petDao.deleteAllPets(username);
-        DocumentReference userRef = users.document(username);
-        deleteUserStorage(username);
-        userRef.delete();
+    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+        petDao.deleteAllPets(uid);
+        deleteUserStorage(uid);
+        ApiFuture<DocumentSnapshot> future = users.document(uid).get();
+        DocumentSnapshot userDoc = getDocumentSnapshot(future);
+        String username = (String) userDoc.get("username");
+        used_usernames.document(Objects.requireNonNull(username)).delete();
+        users.document(uid).delete();
     }
 
     @Override
@@ -67,12 +76,7 @@ public class UserDaoImpl implements UserDao {
     public UserEntity getUserData(String uid) throws DatabaseAccessException {
         DocumentReference docRef = users.document(uid);
         ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot userDoc;
-        try {
-            userDoc = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(ERROR_CODE, e.getMessage());
-        }
+        DocumentSnapshot userDoc = getDocumentSnapshot(future);
         if (!userDoc.exists()) {
             throw new DatabaseAccessException("invalid-user", "The user does not exist");
         }
@@ -80,15 +84,76 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateEmail(String uid, String newEmail) throws FirebaseAuthException {
+    public void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException {
+        switch (field) {
+            case "username":
+                updateUsername(uid, newValue);
+                break;
+            case "email":
+                updateEmail(uid, newValue);
+                break;
+            case "password":
+                updatePassword(uid, newValue);
+                break;
+            default:
+                throw new DatabaseAccessException("invalid-field", "The field does not exist");
+        }
+    }
+
+    /**
+     * Gets the document snapshot for the api future given.
+     * @param future The api future from which to get the document
+     * @return The document snapshot for the api future given
+     * @throws DatabaseAccessException If the deletion fails or if the user doesn't exist
+     */
+    private DocumentSnapshot getDocumentSnapshot(ApiFuture<DocumentSnapshot> future) throws DatabaseAccessException {
+        DocumentSnapshot userDoc;
+        try {
+            userDoc = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException("retrieval-failed", e.getMessage());
+        }
+        return userDoc;
+    }
+
+    /**
+     * Deletes all the user files on the storage.
+     * @param uid The user unique identifier
+     */
+    private void deleteUserStorage(String uid) {
+        StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
+        storageDao.deleteImageByName(uid + "/profile-image.png");
+    }
+
+    /**
+     * Updates the user's username.
+     * @param uid The unique identifier of the user
+     * @param newUsername The new username for the account
+     */
+    private void updateUsername(String uid, String newUsername) {
+
+    }
+
+    /**
+     * Updates the user's email.
+     * @param uid The unique identifier of the user
+     * @param newEmail The new email for the account
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
+    private void updateEmail(String uid, String newEmail) throws FirebaseAuthException {
         UserRecord.UpdateRequest updateRequest = getUserRecord(uid);
         updateRequest.setEmail(newEmail);
         myAuth.updateUserAsync(updateRequest);
         users.document(uid).update("email", newEmail);
     }
 
-    @Override
-    public void updatePassword(String uid, String newPassword) throws FirebaseAuthException {
+    /**
+     * Updates the user's username.
+     * @param uid The unique identifier of the user
+     * @param newPassword The new password for the account
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     */
+    private void updatePassword(String uid, String newPassword) throws FirebaseAuthException {
         //TODO: Apply password encryption
         UserRecord.UpdateRequest updateRequest = getUserRecord(uid);
         updateRequest.setPassword(newPassword);
@@ -103,14 +168,5 @@ public class UserDaoImpl implements UserDao {
      */
     private UserRecord.UpdateRequest getUserRecord(String uid) throws FirebaseAuthException {
         return myAuth.getUser(uid).updateRequest();
-    }
-
-    /**
-     * Deletes all the user files on the storage.
-     * @param uid The user unique identifier
-     */
-    private void deleteUserStorage(String uid) {
-        StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
-        storageDao.deleteImageByName(uid + "/profile-image.png");
     }
 }

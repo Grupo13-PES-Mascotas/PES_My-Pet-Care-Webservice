@@ -14,13 +14,16 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    private static final String EMAIL_FIELD = "email";
+    private static final String PASSWORD_FIELD = "password";
     private String username;
     private String newEmail;
     private String newPassword;
@@ -31,19 +34,23 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService service = new UserServiceImpl();
+    private String uid;
+    private String password;
 
     @BeforeEach
     public void setUp() {
-        user = new UserEntity(username, "123456", "user@email");
+        uid = "uid";
         username = "user";
+        password = "123456";
         newEmail = "new-user@email.com";
         newPassword = "newPassword";
+        user = new UserEntity(username, password, "user@email");
     }
 
     @Test
     public void shouldReturnNothingWhenUserAccountCreated() throws FirebaseAuthException {
-        service.createUserAuth(user, "123456");
-        verify(userDao).createUserAuth(isA(UserEntity.class), isA(String.class));
+        service.createUserAuth(user, password);
+        verify(userDao).createUserAuth(same(user), same(password));
     }
 
     @Test
@@ -56,14 +63,14 @@ class UserServiceTest {
 
     @Test
     public void shouldReturnNothingWhenUserCreated() throws DatabaseAccessException {
-        service.createUser(user);
-        verify(userDao).createUser(isA(UserEntity.class));
+        service.createUser(uid, user);
+        verify(userDao).createUser(same(uid), same(user));
     }
 
     @Test
     public void shouldReturnNothingWhenUserDeleted() throws DatabaseAccessException, FirebaseAuthException {
         service.deleteById(username);
-        verify(userDao).deleteById(any(String.class));
+        verify(userDao).deleteById(same(username));
     }
 
     @Test
@@ -98,30 +105,30 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldUpdateEmail() throws FirebaseAuthException {
-        service.updateEmail(username, newEmail);
-        verify(userDao).updateEmail(any(String.class), any(String.class));
+    public void shouldUpdateEmail() throws FirebaseAuthException, DatabaseAccessException {
+        service.updateField(username, EMAIL_FIELD, newEmail);
+        verify(userDao).updateField(same(username), same(EMAIL_FIELD), same(newEmail));
     }
 
     @Test
     public void shouldReturnFirebaseAuthExceptionWhenUpdateEmailFails() {
         assertThrows(FirebaseAuthException.class, () -> {
-            doThrow(FirebaseAuthException.class).when(userDao).updateEmail(any(String.class), any(String.class));
-            service.updateEmail(username, newEmail);
+            doThrow(FirebaseAuthException.class).when(userDao).updateField(anyString(), anyString(), anyString());
+            service.updateField(username, EMAIL_FIELD, newEmail);
         }, "Should return an exception when email update fails");
     }
 
     @Test
-    public void shouldUpdatePassword() throws FirebaseAuthException {
-        service.updatePassword(username, newPassword);
-        verify(userDao).updatePassword(any(String.class), any(String.class));
+    public void shouldUpdatePassword() throws FirebaseAuthException, DatabaseAccessException {
+        service.updateField(username, PASSWORD_FIELD, newPassword);
+        verify(userDao).updateField(same(username), same(PASSWORD_FIELD), same(newPassword));
     }
 
     @Test
     public void shouldReturnFirebaseAuthExceptionWhenUpdatePasswordFails() {
         assertThrows(FirebaseAuthException.class, () -> {
-            doThrow(FirebaseAuthException.class).when(userDao).updatePassword(any(String.class), any(String.class));
-            service.updatePassword(username, newPassword);
+            doThrow(FirebaseAuthException.class).when(userDao).updateField(anyString(), anyString(), anyString());
+            service.updateField(username, PASSWORD_FIELD, newPassword);
         }, "Should return an exception when password update fails");
     }
 }
