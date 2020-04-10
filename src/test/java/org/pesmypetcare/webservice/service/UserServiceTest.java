@@ -56,8 +56,8 @@ class UserServiceTest {
 
     @Test
     public void shouldReturnNothingWhenUserCreated() {
-        service.createUser(user);
-        verify(userDao).createUser(isA(UserEntity.class));
+        service.createUser(, user);
+        verify(userDao).createUser(, isA(UserEntity.class));
     }
 
     @Test
