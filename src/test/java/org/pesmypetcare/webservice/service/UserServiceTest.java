@@ -56,8 +56,8 @@ class UserServiceTest {
 
     @Test
     public void shouldReturnNothingWhenUserCreated() throws DatabaseAccessException {
-        service.createUser("uid", user);
-        verify(userDao).createUser("uid", isA(UserEntity.class));
+        service.createUser(user);
+        verify(userDao).createUser(isA(UserEntity.class));
     }
 
     @Test

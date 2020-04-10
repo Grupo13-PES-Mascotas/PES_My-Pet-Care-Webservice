@@ -34,15 +34,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
-        Iterable<DocumentReference> usernames = used_usernames.listDocuments();
+    public void createUser(UserEntity userEntity) throws DatabaseAccessException {
+        Iterable<DocumentReference> usernames = users.listDocuments();
         for (DocumentReference username : usernames) {
             if (userEntity.getUsername().equals(username.getId())) {
-                throw new DatabaseAccessException("invalid-username", "The username is already in user");
+                throw new DatabaseAccessException("invalid-username", "The username is already in use");
             }
         }
-        used_usernames.document(userEntity.getUsername());
-        users.document(uid).set(userEntity);
+        users.document(userEntity.getUsername()).set(userEntity);
     }
 
     @Override

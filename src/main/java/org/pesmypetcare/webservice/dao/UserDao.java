@@ -15,11 +15,10 @@ public interface UserDao {
 
     /**
      * Creates a user on the database.
-     * @param uid The uid of the new user
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException;
+    void createUser(UserEntity userEntity) throws DatabaseAccessException;
 
     /**
      * Deletes the user with the specified uid from the database.
