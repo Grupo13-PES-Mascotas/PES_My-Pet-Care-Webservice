@@ -101,7 +101,7 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMMedicationsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
+    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
@@ -156,7 +156,7 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     public String toPK(String date, String name){
-        return date + "/" + name;
+        return date + "%" + name;
     }
 
     public String pkToDate(String pk){
@@ -165,7 +165,7 @@ public class MedicationDaoImpl implements MedicationDao{
     }
 
     public String pkToName(String pk){
-        String[] parts = pk.split("/");
+        String[] parts = pk.split("%");
         return parts[1];
     }
 }

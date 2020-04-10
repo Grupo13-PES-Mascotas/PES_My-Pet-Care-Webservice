@@ -40,7 +40,7 @@ public class PetMedicationRestController {
      * @param petName Name of the pet
      * @param dateName date + name of the receipt of the medication
      */
-    @DeleteMapping("/{owner}/{petName}")
+    @DeleteMapping("/{owner}/{petName}/{dateName}")
     void deleteByDateAndName(String owner, String petName, String dateName){
         medicationService.deleteByDateAndName(owner, petName, dateName);
     }
@@ -97,7 +97,7 @@ public class PetMedicationRestController {
     public List<Map<List<String>, Object>> getAllMedicationsBetween(@PathVariable String owner, @PathVariable String petName,
                                                         @PathVariable String initialDate, @PathVariable String finalDate)
             throws DatabaseAccessException {
-        return medicationService.getAllMMedicationsBetween(owner, petName, initialDate, finalDate);
+        return medicationService.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
     /**
@@ -124,7 +124,7 @@ public class PetMedicationRestController {
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
      */
-    @PutMapping("/{owner}/{petName}/{date}/{field}")
+    @PutMapping("/{owner}/{petName}/{dateName}/{field}")
     public void updateMedicationField(@PathVariable String owner, @PathVariable String petName, @PathVariable String dateName,
                                 @PathVariable String field, @RequestBody Map<String, Object> valueMap) {
         medicationService.updateMedicationField(owner, petName, dateName, field, valueMap.get("value"));

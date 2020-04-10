@@ -94,7 +94,7 @@ public class MedicationDaoTest {
         petName = "linux";
         date = "26-03-2020";
         date2 = "26-04-2020";
-        dateName = "26-03-2020/Cloroform";
+        dateName = "26-03-2020%Cloroform";
         field = "duration";
         value = 4;
         name = "Cloroform";
@@ -334,7 +334,7 @@ public class MedicationDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<List<String>, Object>> list = medDao.getAllMMedicationsBetween(owner, petName, date, date2);
+        List<Map<List<String>, Object>> list = medDao.getAllMedicationsBetween(owner, petName, date, date2);
 
         assertEquals(medList, list, "Should return a List containing all meds between two dates");
     }
@@ -350,7 +350,7 @@ public class MedicationDaoTest {
             given(medsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            medDao.getAllMMedicationsBetween(owner, petName, date, date2);
+            medDao.getAllMedicationsBetween(owner, petName, date, date2);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -365,7 +365,7 @@ public class MedicationDaoTest {
             given(medsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            medDao.getAllMMedicationsBetween(owner, petName, date, date2);
+            medDao.getAllMedicationsBetween(owner, petName, date, date2);
         }, EXCECUTION_EXC_MSG);
     }
 

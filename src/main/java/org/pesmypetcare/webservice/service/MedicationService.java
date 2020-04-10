@@ -60,7 +60,7 @@ public interface MedicationService {
      * @return The List containing all the medication of the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<List<String>, Object>> getAllMMedicationsBetween(String owner, String petName, String initialDate,
+    List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
                                                               String finalDate) throws DatabaseAccessException;
 
     /**

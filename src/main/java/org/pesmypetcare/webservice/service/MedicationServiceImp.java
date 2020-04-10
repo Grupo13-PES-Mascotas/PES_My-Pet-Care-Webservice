@@ -38,8 +38,8 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMMedicationsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
-        return medicationDao.getAllMMedicationsBetween(owner, petName, initialDate, finalDate);
+    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
+        return medicationDao.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
     @Override
