@@ -17,7 +17,7 @@ public class WeightDaoImpl implements WeightDao {
     private Firestore db;
 
 
-    public WeightDaoImpl(String pets_key) {
+    public WeightDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
 
         DELFAIL_KEY = "deletion-failed";
@@ -94,10 +94,10 @@ public class WeightDaoImpl implements WeightDao {
     }
 
     @Override
-    public void updateWeight(String owner, String petName, String petDate, double value) {
+    public void updateWeight(String owner, String petName, String petDate, double value, String field) {
         CollectionReference weightsRef = getWeightsRef(owner, petName);
         DocumentReference weightRef = weightsRef.document(petDate);
-        weightRef.update("weightValue", value);
+        weightRef.update(field, value);
     }
 
     public CollectionReference getWeightsRef(String owner, String petName) {

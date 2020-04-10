@@ -47,7 +47,7 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public void updateWeight(String owner, String petName, String petDate, double value) throws DatabaseAccessException {
-        weightDao.updateWeight(owner, petName, petDate, value);
+    public void updateWeight(String owner, String petName, String petDate, double value, String field) throws DatabaseAccessException {
+        weightDao.updateWeight(owner, petName, petDate, value, field);
     }
 }

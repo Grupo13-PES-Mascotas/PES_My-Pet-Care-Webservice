@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -40,7 +39,6 @@ public class PetWeightRestController {
     private static String petName;
     private static String date;
     private static String date2;
-    private static String field;
     private static String value;
     private static String urlBase;
 
@@ -63,5 +61,60 @@ public class PetWeightRestController {
         date2 = "2020-10-22T00:47:00";
         value = "7,5";
         urlBase = "/pet/weight";
+    }
+
+    @Test
+    public void createWeightShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).createWeight(anyString(), anyString(), anyString(), isA(WeightEntity.class));
+        mockMvc.perform(post(urlBase + "/" + owner + "/" + petName + "/" + date)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jsonWeightEntity))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteByDateShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).deleteWeightByDate(anyString(), anyString(), anyString());
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + date)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteAllWeightsShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).deleteAllWeights(anyString(), anyString());
+        mockMvc.perform(delete(urlBase + "/" + owner))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getWeightDataShouldReturnWeightEntityAndStatusOk() throws Exception {
+        willReturn(weightEntityList).given(service).getWeightByDate(anyString(), anyString(), anyString());
+        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/" + date))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllWeightDataShouldReturnWeightEntityListAndStatusOk() throws Exception {
+        willReturn(weightEntityList).given(service).getAllWeight(anyString(), anyString());
+        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllWeightsBetweenShouldReturnMealEntityListAndStatusOk() throws Exception {
+        willReturn(weightEntityList).given(service).getAllWeightsBetween(anyString(), anyString(), anyString(),
+            anyString());
+        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/between/" + date + "/" + date2))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateWeightShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).updateWeight(anyString(), anyString(), anyString(), anyDouble(), anyString());
+        mockMvc.perform(put(urlBase + "/" + owner + "/" + petName + "/" + date )
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(value))
+            .andExpect(status().isOk());
     }
 }

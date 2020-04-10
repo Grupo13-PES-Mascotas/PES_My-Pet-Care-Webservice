@@ -69,7 +69,8 @@ public interface WeightDao {
      * @param petName Name of the pet
      * @param petDate Date of the weight instance
      * @param value Value of the new weight
+     * @param field Value of the field to update
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateWeight(String owner, String petName, String petDate, double value)  throws DatabaseAccessException;
+    void updateWeight(String owner, String petName, String petDate, double value, String field)  throws DatabaseAccessException;
 }
