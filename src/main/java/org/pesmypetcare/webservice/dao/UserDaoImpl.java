@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutionException;
 public class UserDaoImpl implements UserDao {
     private FirebaseAuth myAuth;
     private CollectionReference users;
-    private CollectionReference used_usernames;
     private PetDao petDao;
     private final String ERROR_CODE;
 
@@ -28,7 +27,6 @@ public class UserDaoImpl implements UserDao {
         myAuth = firebaseFactory.getFirebaseAuth();
         Firestore db = firebaseFactory.getFirestore();
         users = db.collection("users");
-        used_usernames = db.collection("used_usernames");
         ERROR_CODE = "deletion-failed";
         petDao = new PetDaoImpl();
     }
@@ -52,11 +50,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
-        petDao.deleteAllPets(uid);
-        DocumentReference userRef = users.document(uid);
-        deleteUserStorage(uid);
+    public void deleteFromDatabase(String username) throws DatabaseAccessException {
+        petDao.deleteAllPets(username);
+        DocumentReference userRef = users.document(username);
+        deleteUserStorage(username);
         userRef.delete();
+    }
+
+    @Override
+    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
+        deleteFromDatabase(uid);
         myAuth.deleteUser(uid);
     }
 

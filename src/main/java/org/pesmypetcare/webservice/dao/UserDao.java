@@ -21,6 +21,13 @@ public interface UserDao {
     void createUser(UserEntity userEntity) throws DatabaseAccessException;
 
     /**
+     * Deletes a user from database.
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void deleteFromDatabase(String username) throws DatabaseAccessException;
+
+    /**
      * Deletes the user with the specified uid from the database.
      * @param uid The uid of the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database

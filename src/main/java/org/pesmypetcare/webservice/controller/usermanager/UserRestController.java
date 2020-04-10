@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,8 +30,13 @@ public class UserRestController {
      */
     @DeleteMapping("/{username}/delete")
     public void deleteAccount(@RequestHeader("token") String token,
-                              @PathVariable String username) throws DatabaseAccessException, FirebaseAuthException {
-        userService.deleteById(username);
+                              @PathVariable String username, @RequestParam(required = false) boolean db) throws DatabaseAccessException, FirebaseAuthException {
+        if (db) {
+            userService.deleteFromDatabase(username);
+        } else {
+            System.out.println("Aqui");
+            //userService.deleteById(username);
+        }
     }
 
     /**
