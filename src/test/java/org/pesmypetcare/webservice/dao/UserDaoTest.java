@@ -36,12 +36,15 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
+    private static final String USERNAME_FIELD = "username";
     private static final String EMAIL_FIELD = "email";
     private static final String PASSWORD_FIELD = "password";
     private static UserEntity userEntity;
+    private static String uid;
     private static String username;
     private static String password;
     private static String email;
+    private static Map<String, Boolean> docData;
 
     @Mock
     private FirebaseAuth myAuth;
@@ -72,9 +75,12 @@ class UserDaoTest {
     @BeforeAll
     public static void setUp() {
         password = "123456";
+        uid = "123eA2eA4";
         username = "username";
         email = "user@email.com";
         userEntity = new UserEntity(username, password, email);
+        docData = new HashMap<>();
+        docData.put("exists", true);
     }
 
     @Test
@@ -93,8 +99,6 @@ class UserDaoTest {
 
     @Test
     public void shouldCreateUserOnDatabase() throws DatabaseAccessException, ExecutionException, InterruptedException {
-        Map<String, Boolean> docData = new HashMap<>();
-        docData.put("exists", true);
         given(used_usernames.document(anyString())).willReturn(usernameRef);
         given(users.document(anyString())).willReturn(userRef);
         given(usernameRef.get()).willReturn(future);
@@ -116,7 +120,7 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
-        given(snapshot.get("username")).willReturn(username);
+        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(used_usernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         dao.deleteById(username);
@@ -142,7 +146,7 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
-        given(snapshot.get("username")).willReturn(username);
+        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(used_usernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         assertThrows(FirebaseAuthException.class, () -> {
@@ -174,43 +178,49 @@ class UserDaoTest {
     }
 
     @Test
+    public void shouldUpdateUsername() throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
+        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(false);
+        given(usernameRef.set(docData)).willReturn(null);
+        given(myAuth.getUser(anyString())).willReturn(userRecord);
+        given(userRecord.getDisplayName()).willReturn("oldUsername");
+        given(usernameRef.delete()).willReturn(null);
+        given(userRecord.updateRequest()).willReturn(updateRequest);
+        given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
+        given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
+
+        dao.updateField(uid, USERNAME_FIELD, username);
+        verify(used_usernames, times(2)).document(same(username));
+        verify(usernameRef).set(docData);
+        verify(myAuth, times(2)).getUser(same(uid));
+        verify(userRecord).getDisplayName();
+        verify(used_usernames).document(same("oldUsername"));
+        verify(usernameRef).delete();
+        verify(userRecord).updateRequest();
+        verify(updateRequest).setDisplayName(same(username));
+        verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(users).document(same(uid));
+        verify(userRef).update(same(USERNAME_FIELD), same(username));
+    }
+
+    @Test
     public void shouldUpdateEmail() throws FirebaseAuthException, DatabaseAccessException {
         given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setEmail(anyString())).willReturn(updateRequest);
         given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
-        given(users.document(username)).willReturn(userRef);
-        given(userRef.update(EMAIL_FIELD, email)).willReturn(null);
-        dao.updateField(username, EMAIL_FIELD, email);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
 
+        dao.updateField(uid, EMAIL_FIELD, email);
         verify(updateRequest).setEmail(same(email));
         verify(myAuth).updateUserAsync(same(updateRequest));
-        verify(users).document(same(username));
+        verify(users).document(same(uid));
         verify(userRef).update(same(EMAIL_FIELD), same(email));
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingEmail() {
-        assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(myAuth).getUser(username);
-            dao.updateField(username, EMAIL_FIELD, email);
-        }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsNullWhenUpdatingEmail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(myAuth).getUser(isNull());
-            dao.updateField(null, EMAIL_FIELD, email);
-        }, "Should return IllegalArgumentException if the user id is null");
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsEmptyWhenUpdatingEmail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(myAuth).getUser(matches("^$"));
-            dao.updateField("", EMAIL_FIELD, email);
-        }, "Should return IllegalArgumentException if the user id is empty");
     }
 
     @Test
@@ -219,33 +229,37 @@ class UserDaoTest {
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setPassword(anyString())).willReturn(updateRequest);
         given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
 
-        dao.updateField(username, PASSWORD_FIELD, password);
+        dao.updateField(uid, PASSWORD_FIELD, password);
         verify(updateRequest).setPassword(same(password));
         verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(users).document(same(uid));
+        verify(userRef).update(same(PASSWORD_FIELD), same(password));
     }
 
     @Test
-    public void shouldFailIfAnErrorOccurredWhileRetrievingTheDataWhenUpdatingPassword() {
+    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingField() {
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(myAuth).getUser(username);
-            dao.updateField(username, PASSWORD_FIELD, password);
+            dao.updateField(username, EMAIL_FIELD, email);
         }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
     }
 
     @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsNullWhenUpdatingPassword() {
+    public void shouldFailIfAnErrorOccursWhenUserIdIsNullWhenUpdatingField() {
         assertThrows(IllegalArgumentException.class, () -> {
             willThrow(IllegalArgumentException.class).given(myAuth).getUser(isNull());
-            dao.updateField(null, PASSWORD_FIELD, password);
+            dao.updateField(null, EMAIL_FIELD, email);
         }, "Should return IllegalArgumentException if the user id is null");
     }
 
     @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsEmptyWhenUpdatingPassword() {
+    public void shouldFailIfAnErrorOccursWhenUserIdIsEmptyWhenUpdatingField() {
         assertThrows(IllegalArgumentException.class, () -> {
             willThrow(IllegalArgumentException.class).given(myAuth).getUser(matches("^$"));
-            dao.updateField("", PASSWORD_FIELD, password);
+            dao.updateField("", EMAIL_FIELD, email);
         }, "Should return IllegalArgumentException if the user id is empty");
     }
 }
