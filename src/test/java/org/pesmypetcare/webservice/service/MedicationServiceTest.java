@@ -34,7 +34,7 @@ public class MedicationServiceTest {
     private static String date2;
     private static String field;
     private static int value;
-    private static String GET_EXCEPTION_MSG = "Should return an exception when retrieving a Medication fails";
+    private static String GETEXCEPTIONMSG = "Should return an exception when retrieving a Medication fails";
 
     @Mock
     private MedicationDao medicationDao;
@@ -96,7 +96,7 @@ public class MedicationServiceTest {
             doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationData(any(String.class),
                     any(String.class), isA(String.class));
             service.getMedicationData(owner, petName, dateName);
-        }, GET_EXCEPTION_MSG);
+        }, GETEXCEPTIONMSG);
     }
 
     @Test
@@ -113,11 +113,11 @@ public class MedicationServiceTest {
             doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationData(any(String.class),
                     isA(String.class));
             service.getAllMedicationData(owner, petName);
-        }, GET_EXCEPTION_MSG);
+        }, GETEXCEPTIONMSG);
     }
 
     @Test
-    public void shouldReturnMedicationEntityListWhenGetMedicationsBetweenDatesRetrieved() throws DatabaseAccessException,
+    public void shouldReturnMedEntityListWhenGetMedsBetweenDatesRetrieved() throws DatabaseAccessException,
             ExecutionException, InterruptedException {
         when(medicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(medicationList);
         List<Map<List<String>, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);

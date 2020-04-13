@@ -128,7 +128,8 @@ public class PetMedicationRestControllerTest {
 
     @Test
     public void updateMedicationFieldShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateMedicationField(anyString(), anyString(), anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateMedicationField(anyString(), anyString(), anyString(),
+                anyString(), anyString());
         mockMvc.perform(put(urlBase + DASH + owner + DASH + petName + DASH + dateName + DASH + field)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonField))

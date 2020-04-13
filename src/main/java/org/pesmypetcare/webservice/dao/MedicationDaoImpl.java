@@ -90,7 +90,7 @@ public class MedicationDaoImpl implements MedicationDao {
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
-        List<QueryDocumentSnapshot> medicationDocuments = null;
+        List<QueryDocumentSnapshot> medicationDocuments;
             medicationDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             Map<List<String>, Object> internalList = new HashMap<>();
@@ -120,7 +120,7 @@ public class MedicationDaoImpl implements MedicationDao {
         for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             Map<List<String>, Object> internalList = new HashMap<>();
             aux = medicationDocument.getId();
-            if (initialDate.compareTo(pkToDate(aux)) < 0 && finalDate.compareTo(pkToDate(aux)) > 0){
+            if (initialDate.compareTo(pkToDate(aux)) < 0 && finalDate.compareTo(pkToDate(aux)) > 0) {
                 pks.add(pkToDate(aux));
                 pks.add(pkToName(aux));
                 internalList.put(Collections.singletonList(DATENAME), pks);
