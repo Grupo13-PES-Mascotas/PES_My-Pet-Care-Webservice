@@ -33,8 +33,14 @@ public class MyPetCareRestController {
         userService.createUser((String) user.get("uid"), userEntity);
     }
 
+    /**
+     * Checks if a username is already in use.
+     * @param username The username to check
+     * @return True if the username is in use
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
     @GetMapping("/usernames")
-    public Map<String, Boolean> existsUsername(@RequestParam String username) throws DatabaseAccessException {
+    public Map<String, Boolean> usernameAlreadyInUse(@RequestParam String username) throws DatabaseAccessException {
         boolean exists = userService.existsUsername(username);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
