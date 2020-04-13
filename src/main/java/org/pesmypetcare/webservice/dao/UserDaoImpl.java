@@ -35,12 +35,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
-        ApiFuture<DocumentSnapshot> future = used_usernames.document(userEntity.getUsername()).get();
-        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
-        if (!usernameDoc.exists()) {
-            saveUsername(userEntity.getUsername());
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+        String username = userEntity.getUsername();
+        if (!existsUsername(username)) {
+            saveUsername(uid, username);
             users.document(uid).set(userEntity);
+            updateDisplayName(uid, username);
         } else {
             throw new DatabaseAccessException("invalid-username", "The username is already in use");
         }
@@ -82,7 +82,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException {
+    public void updateField(String username, String field, String newValue)
+        throws FirebaseAuthException, DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = used_usernames.document(username).get();
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
+        if (!usernameDoc.exists())
+            throw new DatabaseAccessException("invalid-user", "The user does not exist");
+        String uid = (String) usernameDoc.get("user");
         switch (field) {
             case "username":
                 updateUsername(uid, newValue);
@@ -96,6 +102,13 @@ public class UserDaoImpl implements UserDao {
             default:
                 throw new DatabaseAccessException("invalid-field", "The field does not exist");
         }
+    }
+
+    @Override
+    public boolean existsUsername(String username) throws DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = used_usernames.document(username).get();
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
+        return usernameDoc.exists();
     }
 
     /**
@@ -134,7 +147,7 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<DocumentSnapshot> future = used_usernames.document(newUsername).get();
         DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
         if (!usernameDoc.exists()) {
-            saveUsername(newUsername);
+            saveUsername(uid, newUsername);
             deleteOldUsername(uid);
             updateDisplayName(uid, newUsername);
             users.document(uid).update("username", newUsername);
@@ -174,9 +187,9 @@ public class UserDaoImpl implements UserDao {
      * Saves the username inside the used usernames collection.
      * @param username The username to save
      */
-    private void saveUsername(String username) {
-        Map<String, Boolean> docData = new HashMap<>();
-        docData.put("exists", true);
+    private void saveUsername(String uid, String username) {
+        Map<String, String> docData = new HashMap<>();
+        docData.put("user", uid);
         used_usernames.document(username).set(docData);
     }
 

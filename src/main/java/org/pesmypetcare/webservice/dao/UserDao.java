@@ -15,12 +15,12 @@ public interface UserDao {
 
     /**
      * Creates a user on the database.
-     *
-     * @param uid
+     * @param uid The user's unique identifier
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException;
+    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
 
     /**
      * Deletes a user from database.
@@ -47,10 +47,18 @@ public interface UserDao {
 
     /**
      * Updates a user field.
-     * @param uid The unique identifier of the user
+     * @param username The user's username
      * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
+    void updateField(String username, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
+
+    /**
+     * Checks if a username is already in use.
+     * @param username The username to check
+     * @return True if the username is already in use
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    boolean existsUsername(String username) throws DatabaseAccessException;
 }

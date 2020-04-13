@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException {
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
         userDao.createUser(uid, userEntity);
     }
 
@@ -40,5 +40,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException {
         userDao.updateField(uid, field, newValue);
+    }
+
+    @Override
+    public boolean existsUsername(String username) throws DatabaseAccessException {
+        return userDao.existsUsername(username);
     }
 }

@@ -21,7 +21,7 @@ public interface UserService {
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException;
+    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
 
     /**
      * Deletes a user from database.
@@ -55,4 +55,12 @@ public interface UserService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
+
+    /**
+     * Checks if a username is already in use.
+     * @param username The username to check
+     * @return True if the username is already in use
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    boolean existsUsername(String username) throws DatabaseAccessException;
 }
