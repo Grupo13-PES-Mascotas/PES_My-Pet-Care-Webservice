@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class MedicationServiceImp implements MedicationService {
     @Autowired
@@ -28,22 +29,27 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public MedicationEntity getMedicationData(String owner, String petName, String dateName) throws DatabaseAccessException {
+    public MedicationEntity getMedicationData(String owner, String petName, String dateName)
+            throws DatabaseAccessException {
         return medicationDao.getMedicationData(owner, petName, dateName);
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException {
+    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
+            throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationDao.getAllMedicationData(owner, petName);
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
+    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
+                                                                    String initialDate, String finalDate)
+            throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationDao.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
     @Override
-    public Object getMedicationField(String owner, String petName, String dateName, String field) throws DatabaseAccessException {
+    public Object getMedicationField(String owner, String petName, String dateName, String field)
+            throws DatabaseAccessException {
         return medicationDao.getMedicationField(owner, petName, dateName, field);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/medication")
@@ -81,7 +82,7 @@ public class PetMedicationRestController {
     @GetMapping("/{owner}/{petName}")
     public List<Map<List<String>, Object>> getAllMedicationData(@PathVariable String owner,
                                                                 @PathVariable String petName)
-            throws DatabaseAccessException {
+            throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationService.getAllMedicationData(owner, petName);
     }
 
@@ -98,7 +99,7 @@ public class PetMedicationRestController {
     public List<Map<List<String>, Object>>
     getAllMedicationsBetween(@PathVariable String owner, @PathVariable String petName,
                              @PathVariable String initialDate, @PathVariable String finalDate)
-            throws DatabaseAccessException {
+            throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationService.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
@@ -129,7 +130,7 @@ public class PetMedicationRestController {
      */
     @PutMapping("/{owner}/{petName}/{dateName}/{field}")
     public void updateMedicationField(@PathVariable String owner, @PathVariable String petName,
-                                      @PathVariable String dateName,  @PathVariable String field,
+                                      @PathVariable String dateName, @PathVariable String field,
                                       @RequestBody Map<String, Object> valueMap) {
         medicationService.updateMedicationField(owner, petName, dateName, field, valueMap.get("value"));
     }

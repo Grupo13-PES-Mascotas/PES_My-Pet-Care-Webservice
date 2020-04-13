@@ -25,8 +25,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MedicationServiceTest {
-    private static List<Map<List<String>, Object>> MedicationList;
-    private static MedicationEntity MedicationEntity;
+    private static List<Map<List<String>, Object>> medicationList;
+    private static MedicationEntity medicationEntity;
     private static String owner;
     private static String petName;
     private static String dateName;
@@ -34,17 +34,18 @@ public class MedicationServiceTest {
     private static String date2;
     private static String field;
     private static int value;
+    private static String GET_EXCEPTION_MSG = "Should return an exception when retrieving a Medication fails";
 
     @Mock
-    private MedicationDao MedicationDao;
+    private MedicationDao medicationDao;
 
     @InjectMocks
     private MedicationService service = new MedicationServiceImp();
 
     @BeforeAll
     public static void setUp() {
-        MedicationList = new ArrayList<>();
-        MedicationEntity = new MedicationEntity();
+        medicationList = new ArrayList<>();
+        medicationEntity = new MedicationEntity();
         dateName = "2020-02-13/Cloroform";
         date = "2020-02-13";
         date2 = "2021-02-13";
@@ -56,27 +57,27 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnNothingWhenMedicationCreated() {
-        service.createMedication(owner, petName, dateName, MedicationEntity);
-        verify(MedicationDao).createMedication(isA(String.class), isA(String.class), isA(String.class),
+        service.createMedication(owner, petName, dateName, medicationEntity);
+        verify(medicationDao).createMedication(isA(String.class), isA(String.class), isA(String.class),
                 isA(MedicationEntity.class));
     }
 
     @Test
     public void shouldReturnNothingWhenMedicationDeleted() {
         service.deleteByDateAndName(owner, petName, dateName);
-        verify(MedicationDao).deleteByDateAndName(isA(String.class), isA(String.class), isA(String.class));
+        verify(medicationDao).deleteByDateAndName(isA(String.class), isA(String.class), isA(String.class));
     }
 
     @Test
     public void shouldReturnNothingWhenAllMedicationsDeleted() throws DatabaseAccessException {
         service.deleteAllMedications(owner, petName);
-        verify(MedicationDao).deleteAllMedications(isA(String.class), isA(String.class));
+        verify(medicationDao).deleteAllMedications(isA(String.class), isA(String.class));
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenAllMedicationDeleteFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(MedicationDao).deleteAllMedications(any(String.class),
+            doThrow(DatabaseAccessException.class).when(medicationDao).deleteAllMedications(any(String.class),
                     isA(String.class));
             service.deleteAllMedications(owner, petName);
         }, "Should return a database access exception when a Medication deletion fails");
@@ -84,48 +85,49 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnMedicationEntityWhenMedicationRetrieved() throws DatabaseAccessException {
-        when(MedicationDao.getMedicationData(owner, petName, dateName)).thenReturn(MedicationEntity);
+        when(medicationDao.getMedicationData(owner, petName, dateName)).thenReturn(medicationEntity);
         MedicationEntity Medication = service.getMedicationData(owner, petName, dateName);
-        assertSame(MedicationEntity, Medication, "Should return a Medication entity");
+        assertSame(medicationEntity, Medication, "Should return a Medication entity");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(MedicationDao).getMedicationData(any(String.class),
+            doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationData(any(String.class),
                     any(String.class), isA(String.class));
             service.getMedicationData(owner, petName, dateName);
-        }, "Should return an exception when retrieving a Medication fails");
+        }, GET_EXCEPTION_MSG);
     }
 
     @Test
     public void shouldReturnMedicationEntityListWhenGetSetOfMedicationsRetrieved() throws DatabaseAccessException,
             ExecutionException, InterruptedException {
-        when(MedicationDao.getAllMedicationData(owner, petName)).thenReturn(MedicationList);
+        when(medicationDao.getAllMedicationData(owner, petName)).thenReturn(medicationList);
         List<Map<List<String>, Object>> list = service.getAllMedicationData(owner, petName);
-        assertSame(MedicationList, list, "Should return a list of Medication entities");
+        assertSame(medicationList, list, "Should return a list of Medication entities");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfMedicationsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(MedicationDao).getAllMedicationData(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationData(any(String.class),
+                    isA(String.class));
             service.getAllMedicationData(owner, petName);
-        }, "Should return an exception when retrieving a set of Medications fails");
+        }, GET_EXCEPTION_MSG);
     }
 
     @Test
     public void shouldReturnMedicationEntityListWhenGetMedicationsBetweenDatesRetrieved() throws DatabaseAccessException,
             ExecutionException, InterruptedException {
-        when(MedicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(MedicationList);
+        when(medicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(medicationList);
         List<Map<List<String>, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);
-        assertSame(MedicationList, list, "Should return a list of Medication entities");
+        assertSame(medicationList, list, "Should return a list of Medication entities between the stated dates");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationsBetweenDatesRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(MedicationDao).getAllMedicationsBetween(any(String.class),
+            doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationsBetween(any(String.class),
                     isA(String.class), isA(String.class), isA(String.class));
             service.getAllMedicationsBetween(owner, petName, date, date2);
         }, "Should return an exception when retrieving a set of Medications between dates fails");
@@ -133,7 +135,7 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnMedicationFieldWhenMedicationFieldRetrieved() throws DatabaseAccessException {
-        when(MedicationDao.getMedicationField(owner, petName, date, field)).thenReturn(value);
+        when(medicationDao.getMedicationField(owner, petName, date, field)).thenReturn(value);
         Object obtainedValue = service.getMedicationField(owner, petName, date, field);
         assertSame(value, obtainedValue, "Should return an Object");
     }
@@ -141,8 +143,8 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(MedicationDao).getMedicationField(any(String.class), any(String.class),
-                    isA(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationField(any(String.class),
+                    any(String.class), isA(String.class), isA(String.class));
             service.getMedicationField(owner, petName, date, field);
         }, "Should return an exception when retrieving a Medication field fails");
     }
@@ -150,8 +152,8 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnNothingWhenMedicationFieldUpdated() {
         service.updateMedicationField(owner, petName, date, field, value);
-        verify(MedicationDao).updateMedicationField(isA(String.class), isA(String.class), isA(String.class), isA(String.class),
+        verify(medicationDao).updateMedicationField(isA(String.class), isA(String.class),
+                isA(String.class), isA(String.class),
                 isA(Object.class));
     }
-
 }

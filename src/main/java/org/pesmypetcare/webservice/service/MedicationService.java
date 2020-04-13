@@ -5,6 +5,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public interface MedicationService {
     /**
@@ -33,7 +34,7 @@ public interface MedicationService {
     void deleteAllMedications(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets a medication identified by its pet, date and name
+     * Gets a medication identified by its pet, date and name.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param dateName pk of the medication.
@@ -49,10 +50,10 @@ public interface MedicationService {
      * @return The List containing all the medications of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException;
+    List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException, ExecutionException, InterruptedException;
 
     /**
-     * Gets the data from all the medications of the pet between the initial and final date not including them
+     * Gets the data from all the medications of the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date
@@ -61,7 +62,7 @@ public interface MedicationService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
-                                                              String finalDate) throws DatabaseAccessException;
+                                                              String finalDate) throws DatabaseAccessException, ExecutionException, InterruptedException;
 
     /**
      * Gets the value for the specified field of the medication on the database.
@@ -72,7 +73,8 @@ public interface MedicationService {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Object getMedicationField(String owner, String petName, String dateName, String field) throws DatabaseAccessException;
+    Object getMedicationField(String owner, String petName, String dateName, String field)
+            throws DatabaseAccessException;
 
     /**
      * Updates the medication's field.

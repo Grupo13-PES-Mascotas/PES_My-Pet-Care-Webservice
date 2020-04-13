@@ -41,7 +41,6 @@ public class MedicationDaoTest {
     private static String petName;
     private static String date;
     private static String date2;
-    private static String name;
     private static String dateName;
     private static String field;
     private static int value;
@@ -97,7 +96,6 @@ public class MedicationDaoTest {
         dateName = "26-03-2020%Cloroform";
         field = "duration";
         value = 4;
-        name = "Cloroform";
     }
 
     @Test
@@ -117,7 +115,7 @@ public class MedicationDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same (dateName));
+        verify(medsRef).document(same(dateName));
         verify(medRef).set(same(medEntity));
     }
 

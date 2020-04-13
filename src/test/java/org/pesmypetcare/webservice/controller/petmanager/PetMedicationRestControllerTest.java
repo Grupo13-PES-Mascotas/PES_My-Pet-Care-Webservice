@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PetMedicationRestControllerTest {
     private static String jsonMedicationEntity;
     private static String jsonField;
-    private static MedicationEntity MedicationEntity;
-    private static List<Map<String, Object>> MedicationEntityList;
+    private static MedicationEntity medicationEntity;
+    private static List<Map<String, Object>> medicationEntityList;
     private static String owner;
     private static String petName;
     private static String dateName;
@@ -43,6 +43,7 @@ public class PetMedicationRestControllerTest {
     private static String field;
     private static int value;
     private static String urlBase;
+    private final String DASH = "/";
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,8 +60,8 @@ public class PetMedicationRestControllerTest {
         jsonField = "{\n"
                 + "  \"quantity\": 3.0\n"
                 + "} ";
-        MedicationEntity = new MedicationEntity();
-        MedicationEntityList = new ArrayList<>();
+        medicationEntity = new MedicationEntity();
+        medicationEntityList = new ArrayList<>();
         owner = "Manolo";
         petName = "Canpeque2";
         dateName = "2019-02-13T10:30:00%Cloroform";
@@ -73,8 +74,9 @@ public class PetMedicationRestControllerTest {
 
     @Test
     public void createMedicationShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).createMedication(anyString(), anyString(), anyString(), isA(MedicationEntity.class));
-        mockMvc.perform(post(urlBase + "/" + owner + "/" + petName + "/" + dateName)
+        willDoNothing().given(service).createMedication(anyString(), anyString(), anyString(),
+                isA(MedicationEntity.class));
+        mockMvc.perform(post(urlBase + DASH + owner + DASH + petName + DASH + dateName)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMedicationEntity))
                 .andExpect(status().isOk());
@@ -83,7 +85,7 @@ public class PetMedicationRestControllerTest {
     @Test
     public void deleteByDateAndNameShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteByDateAndName(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + dateName)
+        mockMvc.perform(delete(urlBase + DASH + owner + DASH + petName + DASH + dateName)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -91,43 +93,43 @@ public class PetMedicationRestControllerTest {
     @Test
     public void deleteAllMedicationsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllMedications(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName))
+        mockMvc.perform(delete(urlBase + DASH + owner + DASH + petName))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getMedicationDataShouldReturnMedicationEntityAndStatusOk() throws Exception {
-        willReturn(MedicationEntity).given(service).getMedicationData(anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/" + dateName))
+        willReturn(medicationEntity).given(service).getMedicationData(anyString(), anyString(), anyString());
+        mockMvc.perform(get(urlBase + DASH + owner + DASH + petName + DASH + dateName))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getAllMedicationDataShouldReturnMedicationEntityListAndStatusOk() throws Exception {
-        willReturn(MedicationEntityList).given(service).getAllMedicationData(anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName))
+        willReturn(medicationEntityList).given(service).getAllMedicationData(anyString(), anyString());
+        mockMvc.perform(get(urlBase + DASH + owner + DASH + petName))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getAllMedicationsBetweenShouldReturnMedicationEntityListAndStatusOk() throws Exception {
-        willReturn(MedicationEntityList).given(service).getAllMedicationsBetween(anyString(), anyString(), anyString(),
+        willReturn(medicationEntityList).given(service).getAllMedicationsBetween(anyString(), anyString(), anyString(),
                 anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/between/" + date + "/" + date2))
+        mockMvc.perform(get(urlBase + DASH + owner + DASH + petName + "/between/" + date + DASH + date2))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getMedicationFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(value).given(service).getMedicationField(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/" + dateName + "/" + field))
+        mockMvc.perform(get(urlBase + DASH + owner + DASH + petName + DASH + dateName + DASH + field))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void updateMedicationFieldShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).updateMedicationField(anyString(), anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(urlBase + "/" + owner + "/" + petName + "/" + dateName + "/" + field)
+        mockMvc.perform(put(urlBase + DASH + owner + DASH + petName + DASH + dateName + DASH + field)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonField))
                 .andExpect(status().isOk());

@@ -37,7 +37,7 @@ public interface MedicationDao {
     void deleteAllMedications(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets a medication identified by its pet, date and name
+     * Gets a medication identified by its pet, date and name.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param dateName pk of the medication
@@ -53,10 +53,11 @@ public interface MedicationDao {
      * @return The List containing all the medications of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException, ExecutionException, InterruptedException;
+    List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException,
+            ExecutionException, InterruptedException;
 
     /**
-     * Gets the data from all the medications of the pet between the initial and final date not including them
+     * Gets the data from all the medications of the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date
@@ -65,7 +66,8 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
-                                                              String finalDate) throws DatabaseAccessException, ExecutionException, InterruptedException;
+                                                              String finalDate) throws DatabaseAccessException,
+            ExecutionException, InterruptedException;
 
     /**
      * Gets the value for the specified field of the medication on the database.
