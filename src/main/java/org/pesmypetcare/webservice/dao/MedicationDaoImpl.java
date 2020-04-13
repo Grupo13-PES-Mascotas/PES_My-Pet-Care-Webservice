@@ -80,35 +80,48 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
             ApiFuture<QuerySnapshot> future = medicationsRef.get();
-            List<QueryDocumentSnapshot> medicationDocuments = future.get().getDocuments();
-            for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
-                Map<List<String>, Object> internalList = new HashMap<>();
-                List<String> pks = new ArrayList<String>();
-                aux = medicationDocument.getId();
-                pks.add(pkToDate(aux));
-                pks.add(pkToName(aux));
-                internalList.put(Collections.singletonList("dateName"), pks);
-                internalList.put(Collections.singletonList("body"), medicationDocument.toObject(MedicationEntity.class));
-                externalList.add(internalList);
-            }
+        List<QueryDocumentSnapshot> medicationDocuments = null;
+        try {
+            medicationDocuments = future.get().getDocuments();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
+            Map<List<String>, Object> internalList = new HashMap<>();
+            List<String> pks = new ArrayList<String>();
+            aux = medicationDocument.getId();
+            pks.add(pkToDate(aux));
+            pks.add(pkToName(aux));
+            internalList.put(Collections.singletonList("dateName"), pks);
+            internalList.put(Collections.singletonList("body"),
+                    medicationDocument.toObject(MedicationEntity.class));
+            externalList.add(internalList);
+        }
         return externalList;
     }
 
     @Override
     public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
-                                                                    String initialDate, String finalDate)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+                                                                    String initialDate, String finalDate) {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
-        List<QueryDocumentSnapshot> medicationDocuments = future.get().getDocuments();
+        List<QueryDocumentSnapshot> medicationDocuments = null;
+        try {
+            medicationDocuments = future.get().getDocuments();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             Map<List<String>, Object> internalList = new HashMap<>();
             List<String> pks = new ArrayList<String>();
