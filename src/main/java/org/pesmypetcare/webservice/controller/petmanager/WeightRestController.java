@@ -103,11 +103,12 @@ public class WeightRestController {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param petDate Date of the weight instance
-     * @param value Value of the new weight
+     * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
+     *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{owner}/{petName}/{petDate}")
     public void updateWeight(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @PathVariable String field, @RequestBody double value) throws DatabaseAccessException {
-        weightService.updateWeight(owner, petName, petDate, value, field);
+                             @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
+        weightService.updateWeight(owner, petName, petDate, valueMap.get("value"));
     }}

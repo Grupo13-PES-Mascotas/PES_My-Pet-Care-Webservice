@@ -22,6 +22,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class WeightServiceTest {
 
     private static List<Map<String, Object>> weightList;
@@ -126,8 +127,8 @@ public class WeightServiceTest {
 
     @Test
     public void shouldReturnNothingWhenWeightFieldUpdated() throws DatabaseAccessException {
-        service.updateWeight(owner, petName, date, value, field);
+        service.updateWeight(owner, petName, date, value);
         verify(weightDao).updateWeight(isA(String.class), isA(String.class), isA(String.class),
-            isA(Double.class), isA(String.class));
+            isA(Double.class));
     }
 }

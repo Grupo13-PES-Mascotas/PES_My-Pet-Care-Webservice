@@ -73,5 +73,5 @@ public interface WeightService {
      * @param field Value of field to update
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateWeight(String owner, String petName, String petDate, double value, String field)  throws DatabaseAccessException;
+    void updateWeight(String owner, String petName, String petDate, Object value)  throws DatabaseAccessException;
 }

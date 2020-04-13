@@ -94,10 +94,10 @@ public class WeightDaoImpl implements WeightDao {
     }
 
     @Override
-    public void updateWeight(String owner, String petName, String petDate, double value, String field) {
+    public void updateWeight(String owner, String petName, String petDate, Object value) {
         CollectionReference weightsRef = getWeightsRef(owner, petName);
         DocumentReference weightRef = weightsRef.document(petDate);
-        weightRef.update(field, value);
+        weightRef.update("weightValue", value);
     }
 
     public CollectionReference getWeightsRef(String owner, String petName) {

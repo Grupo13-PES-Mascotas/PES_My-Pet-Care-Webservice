@@ -39,7 +39,7 @@ public class PetWeightRestController {
     private static String petName;
     private static String date;
     private static String date2;
-    private static String value;
+    private static String field;
     private static String urlBase;
 
     @Autowired
@@ -51,16 +51,19 @@ public class PetWeightRestController {
     @BeforeAll
     public static void setUp() {
         jsonWeightEntity = "{\n"
-            + "  \"weightValue\": \"5,3\",\n"
+            + "  \"weightValue\": 5.3\n"
             + "}";
+        jsonField = "{\n"
+            + "  \"value\": 7.5\n"
+            + "} ";
         weightEntity = new WeightEntity();
         weightEntityList = new ArrayList<>();
-        owner = "Albert";
-        petName = "Manolito";
+        owner = "Hola";
+        petName = "Muy Buenas";
         date = "2018-10-22T00:47:00";
         date2 = "2020-10-22T00:47:00";
-        value = "7,5";
-        urlBase = "/pet/weight";
+        field = "weightValue";
+        urlBase = "/weight";
     }
 
     @Test
@@ -83,13 +86,13 @@ public class PetWeightRestController {
     @Test
     public void deleteAllWeightsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllWeights(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getWeightDataShouldReturnWeightEntityAndStatusOk() throws Exception {
-        willReturn(weightEntityList).given(service).getWeightByDate(anyString(), anyString(), anyString());
+        willReturn(weightEntity).given(service).getWeightByDate(anyString(), anyString(), anyString());
         mockMvc.perform(get(urlBase + "/" + owner + "/" + petName + "/" + date))
             .andExpect(status().isOk());
     }
@@ -111,10 +114,10 @@ public class PetWeightRestController {
 
     @Test
     public void updateWeightShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateWeight(anyString(), anyString(), anyString(), anyDouble(), anyString());
-        mockMvc.perform(put(urlBase + "/" + owner + "/" + petName + "/" + date )
+        willDoNothing().given(service).updateWeight(anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(urlBase + "/" + owner + "/" + petName + "/" + date)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(value))
+            .content(jsonField))
             .andExpect(status().isOk());
     }
 }

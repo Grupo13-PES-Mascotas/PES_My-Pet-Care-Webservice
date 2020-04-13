@@ -373,7 +373,7 @@ public class WeightDaoTest {
         given(weightsRef.document(anyString())).willReturn(weightRef);
         given(weightRef.update(anyString(), any())).willReturn(null);
 
-        WeightDao.updateWeight(owner, petName, date, value, field);
+        WeightDao.updateWeight(owner, petName, date, value);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
