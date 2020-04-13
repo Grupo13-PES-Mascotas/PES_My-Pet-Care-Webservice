@@ -6,7 +6,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.concurrent.ExecutionException;
 
 
 public interface MedicationDao {
@@ -17,7 +17,7 @@ public interface MedicationDao {
      * @param dateName Date + name of the receipt of the medication
      * @param medication The medication entity that has the attributes of the medication for the pet.
      */
-    void createMedication(String owner, String petName, String dateName,MedicationEntity medication);
+    void createMedication(String owner, String petName, String dateName, MedicationEntity medication);
 
     /**
      * Deletes all the medication with the specified owner and pet from certain date.
@@ -65,7 +65,7 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
-                                                              String finalDate) throws DatabaseAccessException;
+                                                              String finalDate) throws DatabaseAccessException, ExecutionException, InterruptedException;
 
     /**
      * Gets the value for the specified field of the medication on the database.
@@ -76,7 +76,8 @@ public interface MedicationDao {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Object getMedicationField(String owner, String petName, String dateName, String field) throws DatabaseAccessException;
+    Object getMedicationField(String owner, String petName, String dateName, String field)
+            throws DatabaseAccessException;
 
     /**
      * Updates the medication's field.
