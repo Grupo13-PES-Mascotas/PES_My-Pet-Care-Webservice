@@ -81,11 +81,10 @@ public class MedicationDaoImpl implements MedicationDao {
 
     @Override
     public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
-            throws DatabaseAccessException {
+            throws DatabaseAccessException, ExecutionException, InterruptedException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
-        try {
             ApiFuture<QuerySnapshot> future = medicationsRef.get();
             List<QueryDocumentSnapshot> medicationDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
@@ -94,13 +93,10 @@ public class MedicationDaoImpl implements MedicationDao {
                 aux = medicationDocument.getId();
                 pks.add(pkToDate(aux));
                 pks.add(pkToName(aux));
-                internalList.put(Collections.singletonList("date"), pks);
+                internalList.put(Collections.singletonList("dateName"), pks);
                 internalList.put(Collections.singletonList("body"), medicationDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);
             }
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
         return externalList;
     }
 
@@ -120,7 +116,7 @@ public class MedicationDaoImpl implements MedicationDao {
             if (initialDate.compareTo(pkToDate(aux)) < 0 && finalDate.compareTo(pkToDate(aux)) > 0){
                 pks.add(pkToDate(aux));
                 pks.add(pkToName(aux));
-                internalList.put(Collections.singletonList("date"), pks);
+                internalList.put(Collections.singletonList("dateName"), pks);
                 internalList.put(Collections.singletonList("body"),
                         medicationDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);

@@ -30,8 +30,8 @@ public class PetMedicationRestController {
      */
     @PostMapping("/{owner}/{petName}/{dateName}")
     public void createMedication(@PathVariable String owner, @PathVariable String petName,
-                                 @PathVariable String dateName,  @RequestBody MedicationEntity medication) {
-        medicationService.createMedication (owner, petName, dateName, medication);
+                                 @PathVariable String dateName, @RequestBody MedicationEntity medication) {
+        medicationService.createMedication(owner, petName, dateName, medication);
     }
 
     /**
@@ -67,8 +67,7 @@ public class PetMedicationRestController {
      */
     @GetMapping("/{owner}/{petName}/{dateName}")
     public MedicationEntity getMedicationData(@PathVariable String owner, @PathVariable String petName,
-                                              @PathVariable String dateName)
-            throws DatabaseAccessException {
+                                              @PathVariable String dateName) throws DatabaseAccessException {
         return medicationService.getMedicationData(owner, petName, dateName);
     }
 
@@ -114,7 +113,7 @@ public class PetMedicationRestController {
      */
     @GetMapping("/{owner}/{petName}/{dateName}/{field}")
     public Object getMedicationField(@PathVariable String owner, @PathVariable String petName,
-                                     @PathVariable String dateName,  @PathVariable String field)
+                                     @PathVariable String dateName, @PathVariable String field)
             throws DatabaseAccessException {
         return medicationService.getMedicationField(owner, petName, dateName, field);
     }
