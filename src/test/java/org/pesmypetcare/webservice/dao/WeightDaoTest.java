@@ -80,7 +80,7 @@ public class WeightDaoTest {
     private Iterator<QueryDocumentSnapshot> it;
 
     @InjectMocks
-    private WeightDao WeightDao = new WeightDaoImpl();
+    private WeightDao weightDao = new WeightDaoImpl();
 
     @BeforeAll
     public static void setUp() {
@@ -91,7 +91,7 @@ public class WeightDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "weightValue";
-        value = 5.3;
+        value = 9.0/2.0;
     }
 
     @Test
@@ -104,7 +104,7 @@ public class WeightDaoTest {
         given(weightsRef.document(anyString())).willReturn(weightRef);
         given(weightRef.set(isA(WeightEntity.class))).willReturn(null);
 
-        WeightDao.createWeight(owner, petName, date, weightEntity);
+        weightDao.createWeight(owner, petName, date, weightEntity);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -125,7 +125,7 @@ public class WeightDaoTest {
         given(weightsRef.document(anyString())).willReturn(weightRef);
         given(weightRef.delete()).willReturn(null);
 
-        WeightDao.deleteWeightByDate(owner, petName, date);
+        weightDao.deleteWeightByDate(owner, petName, date);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -149,7 +149,7 @@ public class WeightDaoTest {
         given(querySnapshot.getDocuments()).willReturn(weightsDocuments);
         given(weightsDocuments.iterator()).willReturn(it);
 
-        WeightDao.deleteAllWeights(owner, petName);
+        weightDao.deleteAllWeights(owner, petName);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -173,7 +173,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            WeightDao.deleteAllWeights(owner, petName);
+            weightDao.deleteAllWeights(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -188,7 +188,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            WeightDao.deleteAllWeights(owner, petName);
+            weightDao.deleteAllWeights(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -206,7 +206,7 @@ public class WeightDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(WeightEntity.class)).willReturn(weightEntity);
 
-        WeightEntity meal = WeightDao.getWeightByDate(owner, petName, date);
+        WeightEntity meal = weightDao.getWeightByDate(owner, petName, date);
 
         assertSame(weightEntity, meal, "Should return Meal Entity");
     }
@@ -224,7 +224,7 @@ public class WeightDaoTest {
             given(futureDocument.get()).willReturn(documentSnapshot);
             given(documentSnapshot.exists()).willReturn(false);
 
-            WeightDao.getWeightByDate(owner, petName, date);
+            weightDao.getWeightByDate(owner, petName, date);
         }, DOCUMENT_NOT_EXISTS_EXC_MSG);
     }
 
@@ -241,7 +241,7 @@ public class WeightDaoTest {
             given(weightRef.get()).willReturn(futureDocument);
             willThrow(InterruptedException.class).given(futureDocument).get();
 
-            WeightDao.getWeightByDate(owner, petName, date);
+            weightDao.getWeightByDate(owner, petName, date);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -258,7 +258,7 @@ public class WeightDaoTest {
             willThrow(ExecutionException.class).given(futureDocument).get();
 
 
-            WeightDao.getWeightByDate(owner, petName, date);
+            weightDao.getWeightByDate(owner, petName, date);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -278,7 +278,7 @@ public class WeightDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = WeightDao.getAllWeight(owner, petName);
+        List<Map<String, Object>> list = weightDao.getAllWeight(owner, petName);
         assertEquals(weightList, list, "Should return a List containing all meals Data");
     }
 
@@ -293,7 +293,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            WeightDao.getAllWeight(owner, petName);
+            weightDao.getAllWeight(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -308,7 +308,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            WeightDao.getAllWeight(owner, petName);
+            weightDao.getAllWeight(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -328,13 +328,14 @@ public class WeightDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = WeightDao.getAllWeightsBetween(owner, petName, date, date2);
+        List<Map<String, Object>> list = weightDao.getAllWeightsBetween(owner, petName, date, date2);
 
         assertEquals(weightList, list, "Should return a List containing all meals between two dates");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException()
+    {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -344,7 +345,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            WeightDao.getAllWeightsBetween(owner, petName, date, date2);
+            weightDao.getAllWeightsBetween(owner, petName, date, date2);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -359,7 +360,7 @@ public class WeightDaoTest {
             given(weightsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            WeightDao.getAllWeightsBetween(owner, petName, date, date2);
+            weightDao.getAllWeightsBetween(owner, petName, date, date2);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -373,7 +374,7 @@ public class WeightDaoTest {
         given(weightsRef.document(anyString())).willReturn(weightRef);
         given(weightRef.update(anyString(), any())).willReturn(null);
 
-        WeightDao.updateWeight(owner, petName, date, value);
+        weightDao.updateWeight(owner, petName, date, value);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));

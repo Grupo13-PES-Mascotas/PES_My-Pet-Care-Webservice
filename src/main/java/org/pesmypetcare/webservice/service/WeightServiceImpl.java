@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class WeightServiceImpl implements WeightService {
     @Autowired
-    public WeightDao weightDao;
+    private WeightDao weightDao;
 
 
     @Override
@@ -42,12 +42,14 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllWeightsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllWeightsBetween(String owner, String petName, String initialDate,
+                                                          String finalDate) throws DatabaseAccessException {
         return weightDao.getAllWeightsBetween(owner, petName, initialDate, finalDate);
     }
 
     @Override
-    public void updateWeight(String owner, String petName, String petDate, Object value) throws DatabaseAccessException {
+    public void updateWeight(String owner, String petName, String petDate, Object value)
+        throws DatabaseAccessException {
         weightDao.updateWeight(owner, petName, petDate, value);
     }
 }

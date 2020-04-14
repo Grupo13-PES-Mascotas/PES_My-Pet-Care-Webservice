@@ -1,18 +1,29 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class WeightDaoImpl implements WeightDao {
     private final String DELFAIL_KEY;
     private final String WEIGHT_DOES_NOT_EXIST_EXC;
     private final String INVALID_WEIGHT_EXC;
+    private final String internalListString1;
+    private final String internalListString2;
+
 
     private Firestore db;
 
@@ -23,6 +34,8 @@ public class WeightDaoImpl implements WeightDao {
         DELFAIL_KEY = "deletion-failed";
         WEIGHT_DOES_NOT_EXIST_EXC = "The weight does not exist";
         INVALID_WEIGHT_EXC = "invalid-pet";
+        internalListString1 = "date";
+        internalListString2 = "body";
     }
 
     @Override
@@ -82,7 +95,8 @@ public class WeightDaoImpl implements WeightDao {
     }
 
     @Override
-    public List<Map<String, Object>> getAllWeightsBetween(String owner, String petName, String initialDate, String finalDate) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllWeightsBetween(String owner, String petName, String initialDate,
+                                                          String finalDate) throws DatabaseAccessException {
         CollectionReference weightsRef = getWeightsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
@@ -118,8 +132,8 @@ public class WeightDaoImpl implements WeightDao {
         List<QueryDocumentSnapshot> weightDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot weightDocument : weightDocuments) {
             Map<String, Object> internalList = new HashMap<>();
-            internalList.put("date", weightDocument.getId());
-            internalList.put("body", weightDocument.toObject(WeightEntity.class));
+            internalList.put(internalListString1, weightDocument.getId());
+            internalList.put(internalListString2, weightDocument.toObject(WeightEntity.class));
             externalList.add(internalList);
         }
     }
@@ -134,17 +148,18 @@ public class WeightDaoImpl implements WeightDao {
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getWeightsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference weightsRef,
-                                                  List<Map<String, Object>> externalList) throws InterruptedException,
-        ExecutionException {
+    private void getWeightsBetweenDatesFromDatabase(String initialDate, String finalDate,
+                                                    CollectionReference weightsRef, List<Map<String,
+        Object>> externalList) throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = weightsRef.get();
         List<QueryDocumentSnapshot> weightDocuments = future.get().getDocuments();
+        Map<String, Object> internalList;
         for (QueryDocumentSnapshot weightDocument : weightDocuments) {
             String date = weightDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
-                Map<String, Object> internalList = new HashMap<>();
-                internalList.put("date", date);
-                internalList.put("body", weightDocument.toObject(WeightEntity.class));
+                internalList = new HashMap<>();
+                internalList.put(internalListString1, date);
+                internalList.put(internalListString2, weightDocument.toObject(WeightEntity.class));
                 externalList.add(internalList);
             }
         }

@@ -31,7 +31,6 @@ public class WeightServiceTest {
     private static String petName;
     private static String date;
     private static String date2;
-    private static String field;
     private static Double value;
 
     @Mock
@@ -48,14 +47,14 @@ public class WeightServiceTest {
         date2 = "2021-02-13T10:30:00";
         owner = "TupoJohn";
         petName = "Perico";
-        field = "weightValue";
-        value = 5.3;
+        value = 9.0/2.0;
     }
 
     @Test
     public void shouldReturnNothingWhenWeightCreated() {
         service.createWeight(owner, petName, date, weightEntity);
-        verify(weightDao).createWeight(isA(String.class), isA(String.class), isA(String.class), isA(WeightEntity.class));
+        verify(weightDao).createWeight(isA(String.class), isA(String.class), isA(String.class),
+            isA(WeightEntity.class));
     }
 
     @Test
@@ -73,7 +72,8 @@ public class WeightServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenAllWeightDeleteFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(weightDao).deleteAllWeights(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(weightDao).deleteAllWeights(any(String.class),
+                isA(String.class));
             service.deleteAllWeights(owner, petName);
         }, "Should return a database access exception when a weight deletion fails");
     }

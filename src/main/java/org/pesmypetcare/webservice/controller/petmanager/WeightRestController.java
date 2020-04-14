@@ -54,7 +54,7 @@ public class WeightRestController {
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
     public void deleteWeightByDate(@PathVariable String owner, @PathVariable String petName,
-                                   @PathVariable String petDate)  throws DatabaseAccessException {
+                                   @PathVariable String petDate) throws DatabaseAccessException {
         weightService.deleteWeightByDate(owner, petName, petDate);
     }
     /**
@@ -111,4 +111,5 @@ public class WeightRestController {
     public void updateWeight(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
                              @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
         weightService.updateWeight(owner, petName, petDate, valueMap.get("value"));
-    }}
+    }
+}

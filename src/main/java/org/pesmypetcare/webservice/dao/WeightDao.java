@@ -21,7 +21,7 @@ public interface WeightDao {
      * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void deleteAllWeights(String owner, String petName)  throws DatabaseAccessException;
+    void deleteAllWeights(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Deletes the weight with the specified pet and date.
@@ -30,7 +30,7 @@ public interface WeightDao {
      * @param petDate Date of the weight instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void deleteWeightByDate(String owner, String petName, String petDate)  throws DatabaseAccessException;
+    void deleteWeightByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
 
     /**
      * Get one weight of the pet with the specified date.
@@ -40,7 +40,7 @@ public interface WeightDao {
      * @return The WeightEntity with the data of weight
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    WeightEntity getWeightByDate(String owner, String petName, String petDate)  throws DatabaseAccessException;
+    WeightEntity getWeightByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
 
     /**
      * Gets all the specified weights of one pet.
@@ -49,7 +49,7 @@ public interface WeightDao {
      * @return The list with all of the weights
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<String, Object>> getAllWeight(String owner, String petName)  throws DatabaseAccessException;
+    List<Map<String, Object>> getAllWeight(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
@@ -69,8 +69,7 @@ public interface WeightDao {
      * @param petName Name of the pet
      * @param petDate Date of the weight instance
      * @param value Value of the new weight
-     * @param field Value of the field to update
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateWeight(String owner, String petName, String petDate, Object value)  throws DatabaseAccessException;
+    void updateWeight(String owner, String petName, String petDate, Object value) throws DatabaseAccessException;
 }
