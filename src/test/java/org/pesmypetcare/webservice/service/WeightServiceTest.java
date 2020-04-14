@@ -47,7 +47,7 @@ public class WeightServiceTest {
         date2 = "2021-02-13T10:30:00";
         owner = "TupoJohn";
         petName = "Perico";
-        value = 9.0/2.0;
+        value = 9.0 / 2.0;
     }
 
     @Test

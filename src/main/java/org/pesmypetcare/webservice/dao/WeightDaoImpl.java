@@ -153,11 +153,10 @@ public class WeightDaoImpl implements WeightDao {
         Object>> externalList) throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = weightsRef.get();
         List<QueryDocumentSnapshot> weightDocuments = future.get().getDocuments();
-        Map<String, Object> internalList;
         for (QueryDocumentSnapshot weightDocument : weightDocuments) {
             String date = weightDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
-                internalList = new HashMap<>();
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(internalListString1, date);
                 internalList.put(internalListString2, weightDocument.toObject(WeightEntity.class));
                 externalList.add(internalList);

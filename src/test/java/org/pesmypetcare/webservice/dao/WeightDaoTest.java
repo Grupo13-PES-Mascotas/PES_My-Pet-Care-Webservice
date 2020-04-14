@@ -91,11 +91,11 @@ public class WeightDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "weightValue";
-        value = 9.0/2.0;
+        value = 9.0 / 2.0;
     }
 
     @Test
-    public void shouldCreateMealOnDatabaseWhenRequested() {
+    public void shouldCreateWeightOnDatabaseWhenRequested() {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -116,7 +116,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldDeleteMealOnDatabaseWhenRequested() throws DatabaseAccessException {
+    public void shouldDeleteWeightOnDatabaseWhenRequested() throws DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -137,7 +137,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldDeleteAllMealsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+    public void shouldDeleteAllWeightsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
         InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -193,7 +193,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldReturnMealEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
+    public void shouldReturnWeightEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
         DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -212,7 +212,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenMealDocumentNotExists() {
+    public void shouldThrowDatabaseAccessExceptionWhenWeightDocumentNotExists() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -230,7 +230,7 @@ public class WeightDaoTest {
 
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealDocumentReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveWeightDocumentReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -246,7 +246,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrieveMealDocumentReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenRetrieveWeightDocumentReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -263,7 +263,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldReturnAllMealsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+    public void shouldReturnAllWeightsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
         InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -283,7 +283,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsDataFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeightsDataFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -298,7 +298,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsDataFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeightsDataFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -313,7 +313,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
+    public void shouldReturnAllWeightsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
         ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -334,8 +334,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesInterruptedException()
-    {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeightsBetweenFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -350,7 +349,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllMealsBetweenDatesFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeightsBetweenFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -365,7 +364,7 @@ public class WeightDaoTest {
     }
 
     @Test
-    public void shouldUpdateFieldWhenRequested() throws DatabaseAccessException {
+    public void shouldUpdateWhenRequested() throws DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
