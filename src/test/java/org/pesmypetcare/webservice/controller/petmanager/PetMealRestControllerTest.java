@@ -66,7 +66,7 @@ public class PetMealRestControllerTest {
         date2 = "2021-02-13T10:30:00";
         field = "mealName";
         value = "Asparagus with ketchup";
-        urlBase = "/pet/meal";
+        urlBase = "/meal";
     }
 
     @Test
@@ -89,7 +89,7 @@ public class PetMealRestControllerTest {
     @Test
     public void deleteAllMealsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllMeals(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName))
             .andExpect(status().isOk());
     }
 

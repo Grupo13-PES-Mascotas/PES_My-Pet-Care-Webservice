@@ -10,6 +10,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+@Repository
 public class WeightDaoImpl implements WeightDao {
     private final String DELFAIL_KEY;
     private final String WEIGHT_DOES_NOT_EXIST_EXC;
