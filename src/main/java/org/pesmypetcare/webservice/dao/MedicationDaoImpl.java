@@ -84,14 +84,19 @@ public class MedicationDaoImpl implements MedicationDao {
 
     @Override
     public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
-            throws ExecutionException, InterruptedException {
+            throws DatabaseAccessException {
         List<String> pks = new ArrayList<>();
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
         List<QueryDocumentSnapshot> medicationDocuments;
+        try {
             medicationDocuments = future.get().getDocuments();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
         for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             Map<List<String>, Object> internalList = new HashMap<>();
             aux = medicationDocument.getId();
@@ -108,16 +113,20 @@ public class MedicationDaoImpl implements MedicationDao {
 
     @Override
     public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
-                                                                    String initialDate, String finalDate)
-            throws ExecutionException, InterruptedException {
+                                                                    String initialDate, String finalDate) throws DatabaseAccessException {
         List<String> pks = new ArrayList<>();
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
         String aux;
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
         List<QueryDocumentSnapshot> medicationDocuments;
-        medicationDocuments = future.get().getDocuments();
-        for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
+                try {
+                    medicationDocuments = future.get().getDocuments();
+                }  catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                    throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+                }
+                for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             Map<List<String>, Object> internalList = new HashMap<>();
             aux = medicationDocument.getId();
             if (initialDate.compareTo(pkToDate(aux)) < 0 && finalDate.compareTo(pkToDate(aux)) > 0) {
