@@ -38,7 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException {
+    public void updateField(String uid, String field, String newValue)
+        throws FirebaseAuthException, DatabaseAccessException {
         userDao.updateField(uid, field, newValue);
     }
 

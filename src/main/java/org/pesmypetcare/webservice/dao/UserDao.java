@@ -52,7 +52,8 @@ public interface UserDao {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String username, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
+    void updateField(String username, String field, String newValue)
+        throws FirebaseAuthException, DatabaseAccessException;
 
     /**
      * Checks if a username is already in use.

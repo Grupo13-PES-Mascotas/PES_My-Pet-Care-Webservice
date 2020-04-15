@@ -32,8 +32,9 @@ public class UserRestController {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @DeleteMapping("/{username}")
-    public void deleteAccount(@RequestHeader("token") String token,
-                              @PathVariable String username, @RequestParam(required = false) boolean db) throws DatabaseAccessException, FirebaseAuthException {
+    public void deleteAccount(@RequestHeader("token") String token, @PathVariable String username,
+                              @RequestParam(required = false) boolean db)
+        throws DatabaseAccessException, FirebaseAuthException {
         if (db) {
             userService.deleteFromDatabase(username);
         } else {

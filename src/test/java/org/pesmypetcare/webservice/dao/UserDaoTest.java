@@ -37,6 +37,7 @@ class UserDaoTest {
     private static final String USERNAME_FIELD = "username";
     private static final String EMAIL_FIELD = "email";
     private static final String PASSWORD_FIELD = "password";
+    private static final String USER_FIELD = "user";
     private static UserEntity userEntity;
     private static String uid;
     private static String username;
@@ -50,7 +51,7 @@ class UserDaoTest {
     @Mock
     private CollectionReference users;
     @Mock
-    private CollectionReference used_usernames;
+    private CollectionReference usedUsernames;
     @Mock
     private DocumentReference userRef;
     @Mock
@@ -81,8 +82,8 @@ class UserDaoTest {
     public static void setUp() {
         password = "123456";
         uid = "123eA2eA4";
-        username = "username";
-        newUsername = "new_username";
+        username = "John";
+        newUsername = "Michael";
         email = "user@email.com";
         userEntity = new UserEntity(username, password, email);
         docData = new HashMap<>();
@@ -106,7 +107,7 @@ class UserDaoTest {
     @Test
     public void shouldCreateUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException,
         ExecutionException, InterruptedException {
-        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(users.document(anyString())).willReturn(userRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
@@ -118,7 +119,7 @@ class UserDaoTest {
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
 
         dao.createUser(uid, userEntity);
-        verify(used_usernames, times(2)).document(same(username));
+        verify(usedUsernames, times(2)).document(same(username));
         verify(usernameRef).set(docData);
         verify(users).document(same(uid));
         verify(userRef).set(same(userEntity));
@@ -135,7 +136,7 @@ class UserDaoTest {
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.get(USERNAME_FIELD)).willReturn(username);
-        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         dao.deleteById(username);
         verify(petDao).deleteAllPets(same(username));
@@ -161,7 +162,7 @@ class UserDaoTest {
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.get(USERNAME_FIELD)).willReturn(username);
-        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(myAuth).deleteUser(anyString());
@@ -194,12 +195,12 @@ class UserDaoTest {
     @Test
     public void shouldUpdateUsername() throws FirebaseAuthException, DatabaseAccessException,
         ExecutionException, InterruptedException {
-        given(used_usernames.document(username)).willReturn(usernameRef);
+        given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
         given(oldSnapshot.exists()).willReturn(true);
         given(oldSnapshot.get(anyString())).willReturn(uid);
-        given(used_usernames.document(newUsername)).willReturn(newUsernameRef);
+        given(usedUsernames.document(newUsername)).willReturn(newUsernameRef);
         given(newUsernameRef.get()).willReturn(newFuture);
         given(newFuture.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
@@ -213,12 +214,12 @@ class UserDaoTest {
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
         dao.updateField(username, USERNAME_FIELD, newUsername);
-        verify(used_usernames, times(2)).document(same(username));
-        verify(oldSnapshot).get(same("user"));
+        verify(usedUsernames, times(2)).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
         verify(newUsernameRef).set(docData);
         verify(myAuth, times(2)).getUser(same(uid));
         verify(userRecord).getDisplayName();
-        verify(used_usernames, times(2)).document(same(newUsername));
+        verify(usedUsernames, times(2)).document(same(newUsername));
         verify(usernameRef).delete();
         verify(userRecord).updateRequest();
         verify(updateRequest).setDisplayName(same(newUsername));
@@ -230,7 +231,7 @@ class UserDaoTest {
     @Test
     public void shouldUpdateEmail() throws FirebaseAuthException, DatabaseAccessException,
         ExecutionException, InterruptedException {
-        given(used_usernames.document(username)).willReturn(usernameRef);
+        given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
         given(oldSnapshot.exists()).willReturn(true);
@@ -243,8 +244,8 @@ class UserDaoTest {
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
         dao.updateField(username, EMAIL_FIELD, email);
-        verify(used_usernames).document(same(username));
-        verify(oldSnapshot).get(same("user"));
+        verify(usedUsernames).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setEmail(same(email));
         verify(myAuth).updateUserAsync(same(updateRequest));
         verify(users).document(same(uid));
@@ -254,7 +255,7 @@ class UserDaoTest {
     @Test
     public void shouldUpdatePassword() throws FirebaseAuthException, DatabaseAccessException,
         ExecutionException, InterruptedException {
-        given(used_usernames.document(username)).willReturn(usernameRef);
+        given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
         given(oldSnapshot.exists()).willReturn(true);
@@ -267,8 +268,8 @@ class UserDaoTest {
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
         dao.updateField(username, PASSWORD_FIELD, password);
-        verify(used_usernames).document(same(username));
-        verify(oldSnapshot).get(same("user"));
+        verify(usedUsernames).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setPassword(same(password));
         verify(myAuth).updateUserAsync(same(updateRequest));
         verify(users).document(same(uid));
@@ -278,7 +279,7 @@ class UserDaoTest {
     @Test
     public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingField()
         throws ExecutionException, InterruptedException {
-        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(true);
@@ -291,7 +292,7 @@ class UserDaoTest {
 
     @Test
     public void shouldFailWhenUpdatingFieldIfTheUserDoesNotExist() throws ExecutionException, InterruptedException {
-        given(used_usernames.document(anyString())).willReturn(usernameRef);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
