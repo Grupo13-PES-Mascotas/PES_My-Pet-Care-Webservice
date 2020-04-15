@@ -24,8 +24,10 @@ public class UserDaoImpl implements UserDao {
     private static final String USER_DOES_NOT_EXIST_MESSAGE = "The user does not exist";
     private static final String USERNAME_FIELD = "username";
     private static final String USER_KEY = "user";
-    private final String EMAIL_FIELD = "email";
-    private final String PASSWORD_FIELD = "password";
+    private static final String EMAIL_FIELD = "email";
+    private static final String PASSWORD_FIELD = "password";
+    private static final String INVALID_USER = "invalid-user";
+    private static final String INVALID_USERNAME = "invalid-username";
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
@@ -48,7 +50,7 @@ public class UserDaoImpl implements UserDao {
             users.document(uid).set(userEntity);
             updateDisplayName(uid, username);
         } else {
-            throw new DatabaseAccessException("invalid-username", USED_USERNAME_MESSAGE);
+            throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }
     }
 
@@ -82,7 +84,7 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot userDoc = getDocumentSnapshot(future);
         if (!userDoc.exists()) {
-            throw new DatabaseAccessException("invalid-user", USER_DOES_NOT_EXIST_MESSAGE);
+            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
         }
         return userDoc.toObject(UserEntity.class);
     }
@@ -116,7 +118,7 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<DocumentSnapshot> future = usedUsernames.document(username).get();
         DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
         if (!usernameDoc.exists()) {
-            throw new DatabaseAccessException("invalid-user", USER_DOES_NOT_EXIST_MESSAGE);
+            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
         }
         return (String) usernameDoc.get(USER_KEY);
     }
@@ -169,7 +171,7 @@ public class UserDaoImpl implements UserDao {
             updateDisplayName(uid, newUsername);
             users.document(uid).update(USERNAME_FIELD, newUsername);
         } else {
-            throw new DatabaseAccessException("invalid-username", USED_USERNAME_MESSAGE);
+            throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }
     }
 

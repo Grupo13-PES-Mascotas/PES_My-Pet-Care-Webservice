@@ -87,7 +87,7 @@ class UserDaoTest {
         email = "user@email.com";
         userEntity = new UserEntity(username, password, email);
         docData = new HashMap<>();
-        docData.put("user", uid);
+        docData.put(USER_FIELD, uid);
     }
 
     @Test
