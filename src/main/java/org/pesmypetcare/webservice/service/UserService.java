@@ -16,7 +16,6 @@ public interface UserService {
 
     /**
      * Creates a user on the data base.
-     *
      * @param uid The unique identifier of the user
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
