@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -23,16 +24,22 @@ public class UserRestController {
     private UserService userService;
 
     /**
-     * Deletes the user account.
+     * Deletes the user.
      * @param token The personal access token of the user
      * @param username The user's username
+     * @param db If true deletes the user only from the database, otherwise deletes the user entirely
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    @DeleteMapping("/{username}/delete")
-    public void deleteAccount(@RequestHeader("token") String token,
-                              @PathVariable String username) throws DatabaseAccessException, FirebaseAuthException {
-        userService.deleteById(username);
+    @DeleteMapping("/{username}")
+    public void deleteAccount(@RequestHeader("token") String token, @PathVariable String username,
+                              @RequestParam(required = false) boolean db)
+        throws DatabaseAccessException, FirebaseAuthException {
+        if (db) {
+            userService.deleteFromDatabase(username);
+        } else {
+            userService.deleteById(username);
+        }
     }
 
     /**
@@ -52,27 +59,15 @@ public class UserRestController {
      * Updates the user email bound to the account.
      * @param token The personal access token of the user
      * @param username The user's username
-     * @param valueMap Entity that contains the value that the field will have.
+     * @param value The new value
      * @throws FirebaseAuthException If an error occurs when updating the data
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @PutMapping("/{username}/update/email")
-    public void updateEmail(@RequestHeader("token") String token,
-                            @PathVariable String username, @RequestBody Map<String, String> valueMap) 
-        throws FirebaseAuthException {
-        userService.updateEmail(username, valueMap.get("email"));
-    }
-
-    /**
-     * Updates the user password for the account.
-     * @param token The personal access token of the user
-     * @param username The user's username
-     * @param valueMap Entity that contains the value that the field will have.
-     * @throws FirebaseAuthException If an error occurs when updating the data
-     */
-    @PutMapping("/{username}/update/password")
-    public void updatePassword(@RequestHeader("token") String token,
-                               @PathVariable String username, @RequestBody Map<String, String> valueMap)
-        throws FirebaseAuthException {
-        userService.updatePassword(username, valueMap.get("password"));
+    @PutMapping("/{username}")
+    public void updateField(@RequestHeader("token") String token, @PathVariable String username,
+                            @RequestBody Map<String, String> value)
+        throws FirebaseAuthException, DatabaseAccessException {
+        String field = value.keySet().iterator().next();
+        userService.updateField(username, field, value.get(field));
     }
 }
