@@ -100,7 +100,29 @@ public class MedicationDaoImpl implements MedicationDao {
         return externalList;
     }
 
-    private Map<List<String>, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument){
+    @Override
+    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
+                                                                    String initialDate, String finalDate)
+            throws DatabaseAccessException {
+        CollectionReference medicationsRef = getMedicationsRef(owner, petName);
+        List<Map<List<String>, Object>> externalList = new ArrayList<>();
+        ApiFuture<QuerySnapshot> future = medicationsRef.get();
+        List<QueryDocumentSnapshot> medicationDocuments;
+        try {
+            medicationDocuments = future.get().getDocuments();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
+        for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
+            if (initialDate.compareTo(pkToDate(medicationDocument.getId())) < 0
+                    && finalDate.compareTo(pkToDate(medicationDocument.getId())) > 0) {
+                externalList.add(getEachInternalList(medicationDocument));
+            }
+        }
+        return externalList;
+    }
+
+    private Map<List<String>, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
         List<String> pks = new ArrayList<>();
         String aux;
         Map<List<String>, Object> internalList = new HashMap<>();
@@ -112,29 +134,6 @@ public class MedicationDaoImpl implements MedicationDao {
         internalList.put(Collections.singletonList(BODY),
                 medicationDocument.toObject(MedicationEntity.class));
         return internalList;
-    }
-
-    @Override
-    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
-                                                                    String initialDate, String finalDate)
-            throws DatabaseAccessException {
-        CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        List<Map<List<String>, Object>> externalList = new ArrayList<>();
-        ApiFuture<QuerySnapshot> future = medicationsRef.get();
-        List<QueryDocumentSnapshot> medicationDocuments;
-                try {
-                    medicationDocuments = future.get().getDocuments();
-                }  catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-                }
-                for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
-            if (initialDate.compareTo(pkToDate(medicationDocument.getId())) < 0 &&
-                    finalDate.compareTo(pkToDate(medicationDocument.getId())) > 0) {
-                externalList.add(getEachInternalList(medicationDocument));
-            }
-        }
-        return externalList;
     }
 
     @Override
