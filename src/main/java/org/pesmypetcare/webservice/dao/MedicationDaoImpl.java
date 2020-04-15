@@ -10,6 +10,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+@Repository
 public class MedicationDaoImpl implements MedicationDao {
 
     private Firestore db;

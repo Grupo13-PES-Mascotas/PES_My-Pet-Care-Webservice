@@ -4,11 +4,13 @@ import org.pesmypetcare.webservice.dao.MedicationDao;
 import org.pesmypetcare.webservice.entity.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+@Service
 public class MedicationServiceImp implements MedicationService {
     @Autowired
     private MedicationDao medicationDao;
