@@ -61,6 +61,7 @@ public class UserRestController {
      * @param username The user's username
      * @param value The new value
      * @throws FirebaseAuthException If an error occurs when updating the data
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{username}")
     public void updateField(@RequestHeader("token") String token, @PathVariable String username,
