@@ -42,7 +42,7 @@ public class PetMedicationRestController {
      * @param dateName date + name of the receipt of the medication
      */
     @DeleteMapping("/{owner}/{petName}/{dateName}")
-    void deleteByDateAndName(String owner, String petName, String dateName) {
+    public void deleteByDateAndName(String owner, String petName, String dateName) {
         medicationService.deleteByDateAndName(owner, petName, dateName);
     }
 
