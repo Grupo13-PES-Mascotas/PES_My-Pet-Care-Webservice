@@ -103,8 +103,7 @@ public class MedicationDaoImpl implements MedicationDao {
         return externalList;
     }
 
-    private Map<List<String>, Object> getEachInternalList
-            (QueryDocumentSnapshot medicationDocument) {
+    private Map<List<String>, Object> getEachInternalList (QueryDocumentSnapshot medicationDocument) {
         List<String> pks = new ArrayList<>();
         String aux;
         Map<List<String>, Object> internalList = new HashMap<>();
@@ -137,13 +136,12 @@ public class MedicationDaoImpl implements MedicationDao {
                                                          CollectionReference medsRef,
                                                          List<Map<List<String>, Object>> externalList)
             throws InterruptedException, ExecutionException {
-        String date;
         List<String> aux = null;
         ApiFuture<QuerySnapshot> future = medsRef.get();
         List<QueryDocumentSnapshot> medDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
             aux = pkToList(medDocument.getId());
-            date = pkToDate(medDocument.getId());
+            String date = pkToDate(medDocument.getId());
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
                 Map<List<String>, Object> internalList = new HashMap<>();
                 internalList.put(Collections.singletonList(DATENAME), aux);
@@ -154,7 +152,6 @@ public class MedicationDaoImpl implements MedicationDao {
             aux.clear();
         }
     }
-
 
 
     @Override
@@ -199,7 +196,7 @@ public class MedicationDaoImpl implements MedicationDao {
         return parts[1];
     }
 
-    public List<String> pkToList(String pk){
+    public List<String> pkToList(String pk) {
         List<String> output = null;
         output.add(pkToDate(pk));
         output.add(pkToName(pk));
