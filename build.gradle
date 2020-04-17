@@ -25,6 +25,7 @@ ext {
 }
 
 dependencies {
+    compile 'com.google.apis:google-api-services-calendar:v3-rev20200315-1.30.9'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.google.firebase:firebase-admin:6.12.2'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
