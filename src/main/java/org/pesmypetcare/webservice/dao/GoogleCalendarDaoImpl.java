@@ -83,8 +83,9 @@ public class GoogleCalendarDaoImpl implements GoogleCalendarDao {
     public void createEvent(String accessToken, String calendarId, Event event) throws CalendarAccessException {
         service = initializeService(accessToken);
         try {
-            service.events().insert(calendarId, event).execute();
+            Event prueba = service.events().insert(calendarId, event).execute();
         } catch (IOException e) {
+            e.printStackTrace();
             throw new CalendarAccessException("Error inserting event", e.getMessage());
         }
     }

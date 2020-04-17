@@ -20,6 +20,8 @@ public class EventEntity {
     private Integer emailReminderMinutes;
     private Integer repetitionInterval;
     private DateTime startDate;
+    private DateTime endDate;
+
 
     public EventEntity (Event event) {
         summary = event.getSummary();
@@ -27,6 +29,21 @@ public class EventEntity {
         id = event.getId();
         color = event.getColorId();
         startDate = event.getStart().getDate();
+        endDate = event.getEnd().getDate();
+    }
+
+    public EventEntity(String summary, String description, String id, String color, Integer emailReminderMinutes,
+                       Integer repetitionInterval, DateTime startDate, DateTime endDate) {
+        this.summary = summary;
+        this.description = description;
+        this.id = id;
+        this.color = color;
+        this.emailReminderMinutes = emailReminderMinutes;
+        this.repetitionInterval = repetitionInterval;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        System.out.println(startDate);
+        System.out.println(this.startDate);
     }
 
     public Event convertToEvent() {
@@ -41,6 +58,11 @@ public class EventEntity {
             .setDateTime(startDate)
             .setTimeZone("Europe/Madrid");
         event.setStart(start);
+        // Final Date
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDate)
+            .setTimeZone("Europe/Madrid");
+        event.setEnd(end);
         // Recurrence
         String[] recurrence = new String[] {"RRULE:FREQ=DAILY;INTERVAL="+repetitionInterval};
         event.setRecurrence(Arrays.asList(recurrence));
