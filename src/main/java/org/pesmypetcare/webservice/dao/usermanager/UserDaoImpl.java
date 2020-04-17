@@ -33,10 +33,10 @@ public class UserDaoImpl implements UserDao {
     private static final String USER_KEY = "user";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
-    private final FirebaseAuth myAuth;
-    private final CollectionReference users;
-    private final CollectionReference usedUsernames;
-    private final PetDao petDao;
+    private FirebaseAuth myAuth;
+    private CollectionReference users;
+    private CollectionReference usedUsernames;
+    private PetDao petDao;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
