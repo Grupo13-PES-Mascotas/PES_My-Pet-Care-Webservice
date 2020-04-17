@@ -52,8 +52,9 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void deleteGroup(String name) throws DatabaseAccessException {
         String id = getGroupId(name);
-        DocumentReference groupRef = groups.document(id);
         batch = db.batch();
+        deleteCollection(groups.document(id).collection("members"), batch);
+        DocumentReference groupRef = groups.document(id);
         batch.delete(groupRef);
         DocumentReference namesRef = groupsNames.document(name);
         batch.delete(namesRef);
@@ -87,6 +88,9 @@ public class GroupDaoImpl implements GroupDao {
         String id = getGroupId(name);
         groups.document(id).update(field, newValue);
         if ("name".equals(field)) {
+            if (groupNameInUse((String) newValue)) {
+                throw new DatabaseAccessException("invalid-group-name", "The name is already in use");
+            }
             batch = db.batch();
             DocumentReference namesRef = groupsNames.document(name);
             batch.delete(namesRef);
@@ -107,14 +111,11 @@ public class GroupDaoImpl implements GroupDao {
      * @param entity The group entity
      * @param groupRef The group document reference
      * @param batch The batch of writes to which it belongs
-     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void saveUserAsMember(GroupEntity entity, DocumentReference groupRef, WriteBatch batch)
-        throws DatabaseAccessException {
+    private void saveUserAsMember(GroupEntity entity, DocumentReference groupRef, WriteBatch batch) {
         String creatorUid = entity.getCreator();
-        Map<String, String> data = new HashMap<>();
-        UserDao userDao = new UserDaoImpl();
-        data.put("username", userDao.getField(creatorUid, UserDaoImpl.USERNAME_FIELD));
+        Map<String, Boolean> data = new HashMap<>();
+        data.put("exists", true);
         DocumentReference memberRef = groupRef.collection("members").document(creatorUid);
         batch.set(memberRef, data);
     }
@@ -161,6 +162,18 @@ public class GroupDaoImpl implements GroupDao {
         Map<String, String> docData = new HashMap<>();
         docData.put("group", groupId);
         namesRef.set(docData);
+    }
+
+    /**
+     * Deletes the specified collection.
+     * @param collection The collection to delete
+     * @param batch The batch of writes to which it belongs
+     */
+    private void deleteCollection(CollectionReference collection, WriteBatch batch) {
+        Iterable<DocumentReference> membersDocRefs = collection.listDocuments();
+        for (DocumentReference docRef : membersDocRefs) {
+            batch.delete(docRef);
+        }
     }
 
     /**
