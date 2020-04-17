@@ -20,10 +20,10 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class PetDaoImpl implements PetDao {
-    private final String PETS_KEY;
-    private final String DELFAIL_KEY;
-    private final String PET_DOES_NOT_EXIST_EXC;
-    private final String INVALID_PET_EXC;
+    private static final String PETS_KEY = "pets";
+    private static final String DELFAIL_KEY = "deletion-failed";
+    private static final String PET_DOES_NOT_EXIST_EXC = "The pet does not exist";
+    private static final String INVALID_PET_EXC = "invalid-pet";
     private CollectionReference usersRef;
 
     private StorageDao storageDao;
@@ -34,10 +34,6 @@ public class PetDaoImpl implements PetDao {
         usersRef = db.collection("users");
         storageDao = new StorageDaoImpl(this);
 
-        PETS_KEY = "pets";
-        DELFAIL_KEY = "deletion-failed";
-        PET_DOES_NOT_EXIST_EXC = "The pet does not exist";
-        INVALID_PET_EXC = "invalid-pet";
     }
 
     /**
@@ -80,7 +76,7 @@ public class PetDaoImpl implements PetDao {
                 petDocument.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(PET_DOES_NOT_EXIST_EXC, e.getMessage());
         }
     }
 

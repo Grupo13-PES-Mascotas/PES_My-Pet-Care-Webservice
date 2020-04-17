@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class MealDaoImpl implements MealDao {
-    private final String DELFAIL_KEY;
+    private final String DELETION_FAIL_KEY;
     private final String MEAL_DOES_NOT_EXIST_EXC;
     private final String INVALID_MEAL_EXC;
 
@@ -29,7 +29,7 @@ public class MealDaoImpl implements MealDao {
     public MealDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
 
-        DELFAIL_KEY = "deletion-failed";
+        DELETION_FAIL_KEY = "deletion-failed";
         MEAL_DOES_NOT_EXIST_EXC = "The meal does not exist";
         INVALID_MEAL_EXC = "invalid-meal";
     }
@@ -56,7 +56,7 @@ public class MealDaoImpl implements MealDao {
                 mealDocument.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAIL_KEY, e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class MealDaoImpl implements MealDao {
         try {
             mealDoc = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAIL_KEY, e.getMessage());
         }
         if (!mealDoc.exists()) {
             throw new DatabaseAccessException(INVALID_MEAL_EXC, MEAL_DOES_NOT_EXIST_EXC);
@@ -84,7 +84,7 @@ public class MealDaoImpl implements MealDao {
         try {
             getAllMealOfAPetFromDatabase(mealsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAIL_KEY, e.getMessage());
         }
         return externalList;
     }
@@ -116,7 +116,7 @@ public class MealDaoImpl implements MealDao {
         try {
             getMealsBetweenDatesFromDatabase(initialDate, finalDate, mealsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAIL_KEY, e.getMessage());
         }
         return externalList;
     }
@@ -156,7 +156,7 @@ public class MealDaoImpl implements MealDao {
         try {
             mealDoc = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAIL_KEY, e.getMessage());
         }
         if (!mealDoc.exists()) {
             throw new DatabaseAccessException(INVALID_MEAL_EXC, MEAL_DOES_NOT_EXIST_EXC);
