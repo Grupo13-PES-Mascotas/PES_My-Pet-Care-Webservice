@@ -3,6 +3,9 @@ package org.pesmypetcare.webservice.error;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 public class FirebaseExceptionHandler {
     private Map<String, String> errorMessage;
 

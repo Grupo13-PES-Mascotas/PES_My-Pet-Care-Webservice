@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 @RestController
 public class MyPetCareRestController {
     @Autowired
@@ -30,7 +33,7 @@ public class MyPetCareRestController {
     public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException {
         ObjectMapper mapper = new ObjectMapper();
         UserEntity userEntity = mapper.convertValue(user.get("user"), UserEntity.class);
-        userService.createUser(, (String) user.get("uid"), userEntity);
+        userService.createUser((String) user.get("uid"), userEntity);
     }
 
     /**

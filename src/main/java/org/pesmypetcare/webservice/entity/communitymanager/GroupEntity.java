@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Data
 public class GroupEntity {
     private String name;

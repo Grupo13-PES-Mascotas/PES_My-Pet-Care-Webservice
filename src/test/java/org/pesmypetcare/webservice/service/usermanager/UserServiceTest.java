@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.usermanager;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.usermanager.UserService;
-import org.pesmypetcare.webservice.service.usermanager.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +19,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Santiago Del Rey
+ */
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     private static final String EMAIL_FIELD = "email";

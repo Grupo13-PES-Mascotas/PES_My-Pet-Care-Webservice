@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 @RestController
 @RequestMapping("/storage")
 public class StorageRestController {

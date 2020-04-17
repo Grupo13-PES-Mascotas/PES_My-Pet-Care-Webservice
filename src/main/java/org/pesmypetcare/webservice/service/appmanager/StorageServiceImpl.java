@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Service
 public class StorageServiceImpl implements StorageService {
     @Autowired

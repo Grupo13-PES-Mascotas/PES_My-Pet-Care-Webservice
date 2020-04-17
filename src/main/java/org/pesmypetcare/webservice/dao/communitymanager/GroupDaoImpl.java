@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Repository
 public class GroupDaoImpl implements GroupDao {
     private final CollectionReference groups;

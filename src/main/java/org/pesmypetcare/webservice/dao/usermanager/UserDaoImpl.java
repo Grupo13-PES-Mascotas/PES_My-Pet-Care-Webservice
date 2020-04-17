@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Repository
 public class UserDaoImpl implements UserDao {
     private static final String USED_USERNAME_MESSAGE = "The username is already in use";

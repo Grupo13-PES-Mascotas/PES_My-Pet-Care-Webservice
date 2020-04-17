@@ -5,6 +5,9 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 
+/**
+ * @author Santiago Del Rey
+ */
 public interface GroupDao {
     /**
      * Creates a group of forums.

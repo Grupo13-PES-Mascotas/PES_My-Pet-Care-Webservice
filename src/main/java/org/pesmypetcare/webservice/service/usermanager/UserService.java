@@ -5,6 +5,9 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+/**
+ * @author Santiago Del Rey
+ */
 public interface UserService {
     /**
      * Creates the user authentication profile.

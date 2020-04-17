@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Data
 public class ErrorBody {
     private LocalDateTime timestamp;
