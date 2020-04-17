@@ -74,8 +74,17 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateField(String name, String field, String newValue) throws DatabaseAccessException {
-
+    public void updateField(String name, String field, Object newValue) throws DatabaseAccessException {
+        String id = getGroupId(name);
+        if ("tags".equals(field)) {
+            groups.document(id).update(field, newValue);
+        } else {
+            groups.document(id).update(field, newValue);
+        }
+        if ("name".equals(field)) {
+            groupsNames.document(name).delete();
+            saveGroupName((String) newValue, id);
+        }
     }
 
     @Override
@@ -114,6 +123,18 @@ public class GroupDaoImpl implements GroupDao {
         Map<String, String> docData = new HashMap<>();
         docData.put("group", groupId);
         batch.set(namesRef, docData);
+    }
+
+    /**
+     * Saves the group name in database.
+     * @param name The group name
+     * @param groupId The group id to which the name belongs
+     */
+    private void saveGroupName(String name, String groupId) {
+        DocumentReference namesRef = groupsNames.document(name);
+        Map<String, String> docData = new HashMap<>();
+        docData.put("group", groupId);
+        namesRef.set(docData);
     }
 
     /**
