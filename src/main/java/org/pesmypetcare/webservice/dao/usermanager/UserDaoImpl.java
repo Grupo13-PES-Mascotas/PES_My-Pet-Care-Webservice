@@ -2,7 +2,6 @@ package org.pesmypetcare.webservice.dao.usermanager;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,12 +25,12 @@ import java.util.concurrent.ExecutionException;
  */
 @Repository
 public class UserDaoImpl implements UserDao {
+    public static final String USERNAME_FIELD = "username";
+    public static final String EMAIL_FIELD = "email";
+    public static final String PASSWORD_FIELD = "password";
     private static final String USED_USERNAME_MESSAGE = "The username is already in use";
     private static final String USER_DOES_NOT_EXIST_MESSAGE = "The user does not exist";
-    private static final String USERNAME_FIELD = "username";
     private static final String USER_KEY = "user";
-    private static final String EMAIL_FIELD = "email";
-    private static final String PASSWORD_FIELD = "password";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
     private final FirebaseAuth myAuth;
@@ -64,11 +63,8 @@ public class UserDaoImpl implements UserDao {
     public void deleteFromDatabase(String uid) throws DatabaseAccessException {
         petDao.deleteAllPets(uid);
         deleteUserStorage(uid);
-        ApiFuture<DocumentSnapshot> future = users.document(uid).get();
-        DocumentSnapshot userDoc = getDocumentSnapshot(future);
-        if (!userDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
-        }
+        DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
+        throwExceptionIfUserDoesNotExist(userDoc);
         String username = (String) userDoc.get(USERNAME_FIELD);
         usedUsernames.document(Objects.requireNonNull(username)).delete();
         users.document(uid).delete();
@@ -82,12 +78,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public UserEntity getUserData(String uid) throws DatabaseAccessException {
-        DocumentReference docRef = users.document(uid);
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-        DocumentSnapshot userDoc = getDocumentSnapshot(future);
-        if (!userDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
-        }
+        DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
+        throwExceptionIfUserDoesNotExist(userDoc);
         return userDoc.toObject(UserEntity.class);
     }
 
@@ -110,6 +102,19 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public boolean existsUsername(String username) throws DatabaseAccessException {
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, username);
+        return usernameDoc.exists();
+    }
+
+    @Override
+    public String getField(String uid, String field) throws DatabaseAccessException {
+        DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
+        throwExceptionIfUserDoesNotExist(userDoc);
+        return (String) userDoc.get(field);
+    }
+
     /**
      * Gets the user's uid.
      * @param username The user's username
@@ -117,28 +122,20 @@ public class UserDaoImpl implements UserDao {
      * @throws DatabaseAccessException If the user doesn't exist
      */
     private String getUid(String username) throws DatabaseAccessException {
-        ApiFuture<DocumentSnapshot> future = usedUsernames.document(username).get();
-        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
-        if (!usernameDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
-        }
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, username);
+        throwExceptionIfUserDoesNotExist(usernameDoc);
         return (String) usernameDoc.get(USER_KEY);
-    }
-
-    @Override
-    public boolean existsUsername(String username) throws DatabaseAccessException {
-        ApiFuture<DocumentSnapshot> future = usedUsernames.document(username).get();
-        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
-        return usernameDoc.exists();
     }
 
     /**
      * Gets the document snapshot for the api future given.
-     * @param future The api future from which to get the document
+     * @param collection The collection from which to get the document
+     * @param docName The document name
      * @return The document snapshot for the api future given
      * @throws DatabaseAccessException If the deletion fails or if the user doesn't exist
      */
-    private DocumentSnapshot getDocumentSnapshot(ApiFuture<DocumentSnapshot> future) throws DatabaseAccessException {
+    private DocumentSnapshot getDocumentSnapshot(CollectionReference collection, String docName) throws DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = collection.document(docName).get();
         DocumentSnapshot userDoc;
         try {
             userDoc = future.get();
@@ -165,8 +162,7 @@ public class UserDaoImpl implements UserDao {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     private void updateUsername(String uid, String newUsername) throws DatabaseAccessException, FirebaseAuthException {
-        ApiFuture<DocumentSnapshot> future = usedUsernames.document(newUsername).get();
-        DocumentSnapshot usernameDoc = getDocumentSnapshot(future);
+        DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, newUsername);
         if (!usernameDoc.exists()) {
             saveUsername(uid, newUsername);
             deleteOldUsername(uid);
@@ -244,5 +240,17 @@ public class UserDaoImpl implements UserDao {
      */
     private UserRecord.UpdateRequest getUserRecord(String uid) throws FirebaseAuthException {
         return myAuth.getUser(uid).updateRequest();
+    }
+
+    /**
+     * Throws DatabaseAccessException if the user does not exist.
+     *
+     * @param userDoc The document snapshot of the user
+     * @throws DatabaseAccessException If the user does not exist
+     */
+    private void throwExceptionIfUserDoesNotExist(DocumentSnapshot userDoc) throws DatabaseAccessException {
+        if (!userDoc.exists()) {
+            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
+        }
     }
 }

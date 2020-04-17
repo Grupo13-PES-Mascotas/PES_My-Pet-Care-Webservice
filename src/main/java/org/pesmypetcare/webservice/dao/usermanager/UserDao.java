@@ -57,4 +57,14 @@ public interface UserDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     boolean existsUsername(String username) throws DatabaseAccessException;
+
+    /**
+     * Gets a user field.
+     *
+     * @param uid The user uid
+     * @param field The field to retrieve
+     * @return The field requested
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    String getField(String uid, String field) throws DatabaseAccessException;
 }

@@ -13,7 +13,7 @@ public interface GroupDao {
      * Creates a group.
      * @param entity The group entity with the group data
      */
-    void createGroup(GroupEntity entity);
+    void createGroup(GroupEntity entity) throws DatabaseAccessException;
 
     /**
      * Deletes a group by name.
