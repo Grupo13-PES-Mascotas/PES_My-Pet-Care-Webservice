@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -81,7 +80,7 @@ class UserDaoTest {
     private UserRecord.UpdateRequest updateRequest;
 
     @InjectMocks
-    private UserDao dao = new UserDaoImpl();
+    private final UserDao dao = new UserDaoImpl();
 
     @BeforeAll
     public static void setUp() {
@@ -93,20 +92,6 @@ class UserDaoTest {
         userEntity = new UserEntity(username, password, email);
         docData = new HashMap<>();
         docData.put(USER_FIELD, uid);
-    }
-
-    @Test
-    public void shouldCreateUserAccount() throws FirebaseAuthException {
-        dao.createUserAuth(userEntity, password);
-        verify(myAuth).createUser(isA(UserRecord.CreateRequest.class));
-    }
-
-    @Test
-    public void shouldThrowFirebaseAuthExceptionOnFail() {
-        assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(myAuth).createUser(any(UserRecord.CreateRequest.class));
-            dao.createUserAuth(userEntity, password);
-        }, "Should throw FirebaseAuthException when the creation fails");
     }
 
     @Test
@@ -140,6 +125,7 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(true);
         given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
@@ -148,6 +134,19 @@ class UserDaoTest {
         verify(userRef).delete();
         verify(usernameRef).delete();
         verify(myAuth).deleteUser(same(username));
+    }
+
+    @Test
+    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseOfNonExistentUser()
+        throws ExecutionException, InterruptedException {
+            given(petDao.getStorageDao()).willReturn(storageDao);
+            willDoNothing().given(storageDao).deleteImageByName(anyString());
+            given(users.document(anyString())).willReturn(userRef);
+            given(userRef.get()).willReturn(future);
+            given(future.get()).willReturn(snapshot);
+            given(snapshot.exists()).willReturn(false);
+        assertThrows(DatabaseAccessException.class, () -> dao.deleteById(username),
+            "Should throw DatabaseAccessException when the deleting a non existent user");
     }
 
     @Test
@@ -166,13 +165,14 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(true);
         given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(myAuth).deleteUser(anyString());
             dao.deleteById(username);
-        }, "Should throw DatabaseAccessException when the deletion from Firebase authentication fails");
+        }, "Should throw FirebaseAuthException when the deletion from Firebase authentication fails");
     }
 
     @Test

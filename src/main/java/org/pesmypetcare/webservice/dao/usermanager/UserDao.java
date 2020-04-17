@@ -9,14 +9,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
  */
 public interface UserDao {
     /**
-     * Creates the user authentication profile.
-     * @param userEntity The entity that contains the uid, username and email of the user
-     * @param password The password for the new account
-     * @throws FirebaseAuthException If an error occurs when retrieving the data
-     */
-    void createUserAuth(UserEntity userEntity, String password) throws FirebaseAuthException;
-
-    /**
      * Creates a user on the database.
      * @param uid The user's unique identifier
      * @param userEntity The entity that contains the username, password and email for the new user

@@ -34,10 +34,10 @@ public class UserDaoImpl implements UserDao {
     private static final String PASSWORD_FIELD = "password";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
-    private FirebaseAuth myAuth;
-    private CollectionReference users;
-    private CollectionReference usedUsernames;
-    private PetDao petDao;
+    private final FirebaseAuth myAuth;
+    private final CollectionReference users;
+    private final CollectionReference usedUsernames;
+    private final PetDao petDao;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
@@ -61,18 +61,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUserAuth(UserEntity user, String password) throws FirebaseAuthException {
-        UserRecord.CreateRequest request = new UserRecord.CreateRequest().setDisplayName(user.getUsername())
-            .setEmail(user.getEmail()).setEmailVerified(false).setPassword(password).setUid(user.getUsername());
-        myAuth.createUser(request);
-    }
-
-    @Override
     public void deleteFromDatabase(String uid) throws DatabaseAccessException {
         petDao.deleteAllPets(uid);
         deleteUserStorage(uid);
         ApiFuture<DocumentSnapshot> future = users.document(uid).get();
         DocumentSnapshot userDoc = getDocumentSnapshot(future);
+        if (!userDoc.exists()) {
+            throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
+        }
         String username = (String) userDoc.get(USERNAME_FIELD);
         usedUsernames.document(Objects.requireNonNull(username)).delete();
         users.document(uid).delete();

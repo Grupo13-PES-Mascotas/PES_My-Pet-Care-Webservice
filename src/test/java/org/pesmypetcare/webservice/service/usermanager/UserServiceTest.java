@@ -29,28 +29,20 @@ class UserServiceTest {
     private String username;
     private String newEmail;
     private UserEntity user;
+    private String uid;
 
     @Mock
     private UserDao userDao;
 
     @InjectMocks
-    private UserService service = new UserServiceImpl();
-    private String uid;
-    private String password;
+    private final UserService service = new UserServiceImpl();
 
     @BeforeEach
     public void setUp() {
         uid = "uid";
         username = "user";
-        password = "123456";
         newEmail = "new-user@email.com";
-        user = new UserEntity(username, password, "user@email");
-    }
-
-    @Test
-    public void shouldReturnNothingWhenUserAccountCreated() throws FirebaseAuthException {
-        service.createUserAuth(user, password);
-        verify(userDao).createUserAuth(same(user), same(password));
+        user = new UserEntity(username, "123456", "user@email");
     }
 
     @Test
