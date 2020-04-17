@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.entity.UserEntity;
-import org.pesmypetcare.webservice.service.UserService;
+import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
+import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +51,7 @@ class UserRestControllerTest {
 
     @Test
     public void deleteAccountShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).deleteById(anyString());
+        willDoNothing().given(service).deleteById(anyString(), anyString());
         mockMvc.perform(delete(URL)
             .header(token, myToken))
             .andExpect(status().isOk());
@@ -59,7 +59,7 @@ class UserRestControllerTest {
 
     @Test
     public void getUserDataShouldReturnUserDataAndStatusOk() throws Exception {
-        willReturn(userEntity).given(service).getUserData(username);
+        willReturn(userEntity).given(service).getUserData(anyString(), username);
         mockMvc.perform(get(URL)
             .header(token, myToken))
             .andExpect(status().isOk());
@@ -67,7 +67,7 @@ class UserRestControllerTest {
 
     @Test
     public void updateFieldShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(put(URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonUpdate)

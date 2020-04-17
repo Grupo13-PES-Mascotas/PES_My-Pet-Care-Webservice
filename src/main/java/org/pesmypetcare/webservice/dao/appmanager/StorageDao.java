@@ -1,6 +1,6 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.appmanager;
 
-import org.pesmypetcare.webservice.entity.ImageEntity;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
 

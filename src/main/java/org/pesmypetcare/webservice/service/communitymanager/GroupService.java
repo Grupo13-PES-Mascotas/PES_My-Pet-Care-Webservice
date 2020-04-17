@@ -1,36 +1,35 @@
 
-package org.pesmypetcare.webservice.service;
-import org.pesmypetcare.webservice.entity.GroupEntity;
+package org.pesmypetcare.webservice.service.communitymanager;
+import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface GroupService {
     /**
      * Creates a group of forums.
-     * @param name The group name
      * @param entity The group entity with the group data
      */
-    void createGroup(String name, GroupEntity entity);
+    void createGroup(GroupEntity entity) throws DatabaseAccessException;
 
     /**
      * Deletes a group by name.
      * @param name The group name.
      */
-    void deleteGroup(String name);
+    void deleteGroup(String name) throws DatabaseAccessException;
 
     /**
      * Gets a group by its name.
      * @param name The group name
      * @return The group entity
      */
-    GroupEntity getGroup(String name);
+    GroupEntity getGroup(String name) throws DatabaseAccessException;
 
     /**
      * Gets all groups in database.
      * @return A list with all the groups and its names
      */
-    List<Map<String, Object>> getAllGroups();
+    List<GroupEntity> getAllGroups() throws DatabaseAccessException;
 
     /**
      * Updates a group field.
@@ -38,5 +37,5 @@ public interface GroupService {
      * @param field The field to update
      * @param newValue The new field value
      */
-    void updateField(String name, String field, String newValue);
+    void updateField(String name, String field, Object newValue) throws DatabaseAccessException;
 }

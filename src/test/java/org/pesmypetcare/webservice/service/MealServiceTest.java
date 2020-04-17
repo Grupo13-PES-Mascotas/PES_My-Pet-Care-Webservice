@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.dao.MealDao;
-import org.pesmypetcare.webservice.entity.MealEntity;
+import org.pesmypetcare.webservice.dao.petmanager.MealDao;
+import org.pesmypetcare.webservice.entity.petmanager.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.service.petmanager.MealService;
+import org.pesmypetcare.webservice.service.petmanager.MealServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

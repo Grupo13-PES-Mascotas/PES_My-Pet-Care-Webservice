@@ -1,7 +1,7 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.usermanager;
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.entity.UserEntity;
+import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 public interface UserDao {

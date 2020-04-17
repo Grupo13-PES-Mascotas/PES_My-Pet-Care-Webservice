@@ -1,9 +1,9 @@
 package org.pesmypetcare.webservice.controller.usermanager;
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.entity.UserEntity;
+import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.UserService;
+import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,9 +36,9 @@ public class UserRestController {
                               @RequestParam(required = false) boolean db)
         throws DatabaseAccessException, FirebaseAuthException {
         if (db) {
-            userService.deleteFromDatabase(username);
+            userService.deleteFromDatabase(token, username);
         } else {
-            userService.deleteById(username);
+            userService.deleteById(token, username);
         }
     }
 
@@ -52,7 +52,7 @@ public class UserRestController {
     @GetMapping("/{username}")
     public UserEntity getUserData(@RequestHeader("token") String token,
                                   @PathVariable String username) throws DatabaseAccessException {
-        return userService.getUserData(username);
+        return userService.getUserData(token, username);
     }
 
     /**
@@ -68,6 +68,6 @@ public class UserRestController {
                             @RequestBody Map<String, String> value)
         throws FirebaseAuthException, DatabaseAccessException {
         String field = value.keySet().iterator().next();
-        userService.updateField(username, field, value.get(field));
+        userService.updateField(token, username, field, value.get(field));
     }
 }

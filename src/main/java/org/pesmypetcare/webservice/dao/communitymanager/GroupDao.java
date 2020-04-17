@@ -1,6 +1,6 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.communitymanager;
 
-import org.pesmypetcare.webservice.entity.GroupEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;

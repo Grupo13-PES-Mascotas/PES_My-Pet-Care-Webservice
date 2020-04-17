@@ -1,10 +1,12 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.appmanager;
 
 import com.google.api.client.util.Base64;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
-import org.pesmypetcare.webservice.entity.ImageEntity;
-import org.pesmypetcare.webservice.entity.PetEntity;
+import org.pesmypetcare.webservice.dao.petmanager.PetDao;
+import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
+import org.pesmypetcare.webservice.entity.petmanager.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.pesmypetcare.webservice.form.StorageForm;

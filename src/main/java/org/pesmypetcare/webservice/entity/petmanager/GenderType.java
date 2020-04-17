@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.entity;
+package org.pesmypetcare.webservice.entity.petmanager;
 
 public enum GenderType {
     Male,

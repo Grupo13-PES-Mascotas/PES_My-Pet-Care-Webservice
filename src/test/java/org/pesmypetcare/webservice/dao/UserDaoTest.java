@@ -13,7 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.entity.UserEntity;
+import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
+import org.pesmypetcare.webservice.dao.usermanager.UserDao;
+import org.pesmypetcare.webservice.dao.usermanager.UserDaoImpl;
+import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.HashMap;

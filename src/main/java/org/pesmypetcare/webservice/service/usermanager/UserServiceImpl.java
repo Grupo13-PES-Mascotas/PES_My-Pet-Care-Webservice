@@ -1,8 +1,8 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.usermanager;
 
 import com.google.firebase.auth.FirebaseAuthException;
-import org.pesmypetcare.webservice.dao.UserDao;
-import org.pesmypetcare.webservice.entity.UserEntity;
+import org.pesmypetcare.webservice.dao.usermanager.UserDao;
+import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+    public void deleteFromDatabase(String token, String uid) throws DatabaseAccessException {
         userDao.deleteFromDatabase(uid);
     }
 
     @Override
-    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException {
+    public void deleteById(String token, String uid) throws DatabaseAccessException, FirebaseAuthException {
         userDao.deleteById(uid);
     }
 
     @Override
-    public UserEntity getUserData(String uid) throws DatabaseAccessException {
+    public UserEntity getUserData(String token, String uid) throws DatabaseAccessException {
         return userDao.getUserData(uid);
     }
 
     @Override
-    public void updateField(String uid, String field, String newValue)
+    public void updateField(String token, String uid, String field, String newValue)
         throws FirebaseAuthException, DatabaseAccessException {
         userDao.updateField(uid, field, newValue);
     }

@@ -1,7 +1,7 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.appmanager;
 
-import org.pesmypetcare.webservice.dao.StorageDao;
-import org.pesmypetcare.webservice.entity.ImageEntity;
+import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.springframework.beans.factory.annotation.Autowired;
