@@ -21,6 +21,14 @@ public class EventEntity {
     private Integer repetitionInterval;
     private DateTime startDate;
 
+    public EventEntity (Event event) {
+        summary = event.getSummary();
+        description = event.getDescription();
+        id = event.getId();
+        color = event.getColorId();
+        startDate = event.getStart().getDate();
+    }
+
     public Event convertToEvent() {
         // Basic attributes
         Event event = new Event()

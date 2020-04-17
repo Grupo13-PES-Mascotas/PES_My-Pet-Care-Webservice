@@ -20,7 +20,7 @@ public interface GoogleCalendarDao {
     String createSecondaryCalendar(String accessToken, Calendar calendar) throws CalendarAccessException;
 
     /**
-     * Creates a Secondary Google Calendar in the account specified by the accessToken
+     * Deletes a Secondary Google Calendar in the account specified by the accessToken
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the created calendar
      * @throws CalendarAccessException If an error occurs when accessing the calendar

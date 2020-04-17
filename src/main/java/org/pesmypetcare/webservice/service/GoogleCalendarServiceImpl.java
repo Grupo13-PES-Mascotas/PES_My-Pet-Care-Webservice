@@ -25,7 +25,8 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     private PetDao petDao;
 
     @Override
-    public void createSecondaryCalendar(String accessToken, String owner, String petName) throws CalendarAccessException {
+    public void createSecondaryCalendar(String accessToken, String owner, String petName)
+        throws CalendarAccessException {
         Calendar calendar = new Calendar();
         calendar.setSummary(petName);
         calendar.setTimeZone("Europe/Madrid");
@@ -55,10 +56,11 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public Event retrieveEvent(String accessToken, String owner, String petName, String eventId)
+    public EventEntity retrieveEvent(String accessToken, String owner, String petName, String eventId)
         throws CalendarAccessException, DatabaseAccessException {
         String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
-        return googleCalendarDao.retrieveEvent(accessToken, calendarId, eventId);
+        Event event = googleCalendarDao.retrieveEvent(accessToken, calendarId, eventId);
+        return new EventEntity(event);
     }
 
     @Override

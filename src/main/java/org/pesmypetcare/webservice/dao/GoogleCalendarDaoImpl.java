@@ -102,7 +102,8 @@ public class GoogleCalendarDaoImpl implements GoogleCalendarDao {
     }
 
     @Override
-    public void updateEvent(String accessToken, String calendarId, String eventId, Event event) throws CalendarAccessException {
+    public void updateEvent(String accessToken, String calendarId, String eventId, Event event)
+        throws CalendarAccessException {
         service = initializeService(accessToken);
         try {
             service.events().update(calendarId, eventId, event).execute();

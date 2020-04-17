@@ -22,7 +22,7 @@ public interface GoogleCalendarService {
     void createSecondaryCalendar(String accessToken, String owner, String petName) throws CalendarAccessException;
 
     /**
-     * Creates a Secondary Google Calendar in the account specified by the accessToken
+     * Deletes a Secondary Google Calendar in the account specified by the accessToken
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -41,7 +41,8 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Event> getAllEventsFromCalendar(String accessToken, String owner, String petName) throws CalendarAccessException, DatabaseAccessException;
+    List<Event> getAllEventsFromCalendar(String accessToken, String owner, String petName)
+        throws CalendarAccessException, DatabaseAccessException;
 
     /**
      * Creates an Event in a specified Google Calendar
@@ -52,7 +53,8 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void createEvent(String accessToken, String owner, String petName, EventEntity eventEntity) throws CalendarAccessException, DatabaseAccessException;
+    void createEvent(String accessToken, String owner, String petName, EventEntity eventEntity)
+        throws CalendarAccessException, DatabaseAccessException;
 
     /**
      * Retrieves an Event in a specified Google Calendar
@@ -64,7 +66,8 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Event retrieveEvent(String accessToken, String owner, String petName, String eventId) throws CalendarAccessException, DatabaseAccessException;
+    EventEntity retrieveEvent(String accessToken, String owner, String petName, String eventId)
+        throws CalendarAccessException, DatabaseAccessException;
 
     /**
      * Updates an Event in a specified Google Calendar
@@ -76,7 +79,8 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateEvent(String accessToken, String owner, String petName, String eventId, EventEntity eventEntity) throws CalendarAccessException, DatabaseAccessException;
+    void updateEvent(String accessToken, String owner, String petName, String eventId, EventEntity eventEntity)
+        throws CalendarAccessException, DatabaseAccessException;
 
     /**
      * Deletes an Event in a specified Google Calendar
@@ -87,5 +91,6 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void deleteEvent(String accessToken, String owner, String petName, String eventId) throws CalendarAccessException, DatabaseAccessException;
+    void deleteEvent(String accessToken, String owner, String petName, String eventId)
+        throws CalendarAccessException, DatabaseAccessException;
 }
