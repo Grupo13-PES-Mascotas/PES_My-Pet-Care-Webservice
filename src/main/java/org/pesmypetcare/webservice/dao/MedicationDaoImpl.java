@@ -119,8 +119,7 @@ public class MedicationDaoImpl implements MedicationDao {
 
     @Override
     public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
-                                                                    String initialDate,
-                                                                    String finalDate)
+                                                                    String initialDate, String finalDate)
             throws DatabaseAccessException {
         CollectionReference medsRef = getMedicationsRef(owner, petName);
         List<Map<List<String>, Object>> externalList = new ArrayList<>();
@@ -136,7 +135,7 @@ public class MedicationDaoImpl implements MedicationDao {
                                                          CollectionReference medsRef,
                                                          List<Map<List<String>, Object>> externalList)
             throws InterruptedException, ExecutionException {
-        List<String> aux = null;
+        List<String> aux;
         ApiFuture<QuerySnapshot> future = medsRef.get();
         List<QueryDocumentSnapshot> medDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
