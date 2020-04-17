@@ -138,8 +138,8 @@ public class MedicationDaoImpl implements MedicationDao {
         List<QueryDocumentSnapshot> medDocuments = medsRef.get().get().getDocuments();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
             List<String> aux = pkToList(medDocument.getId());
-            if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0 &&
-                    finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
+            if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0
+                    && finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
                 Map<List<String>, Object> internalList = new HashMap<>();
                 internalList.put(Collections.singletonList(DATENAME), aux);
                 internalList.put(Collections.singletonList(BODY),
