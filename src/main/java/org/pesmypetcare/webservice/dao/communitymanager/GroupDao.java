@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface GroupDao {
     /**
-     * Creates a group of forums.
+     * Creates a group.
      * @param entity The group entity with the group data
      */
     void createGroup(GroupEntity entity);

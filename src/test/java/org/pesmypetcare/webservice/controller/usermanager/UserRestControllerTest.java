@@ -62,7 +62,7 @@ class UserRestControllerTest {
 
     @Test
     public void getUserDataShouldReturnUserDataAndStatusOk() throws Exception {
-        willReturn(userEntity).given(service).getUserData(anyString(), username);
+        willReturn(userEntity).given(service).getUserData(token, username);
         mockMvc.perform(get(URL)
             .header(token, myToken))
             .andExpect(status().isOk());
