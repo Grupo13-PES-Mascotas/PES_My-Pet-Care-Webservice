@@ -103,7 +103,7 @@ public class MedicationDaoImpl implements MedicationDao {
         return externalList;
     }
 
-    private Map<List<String>, Object> getEachInternalList (QueryDocumentSnapshot medicationDocument) {
+    private Map<List<String>, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
         List<String> pks = new ArrayList<>();
         String aux;
         Map<List<String>, Object> internalList = new HashMap<>();
@@ -135,30 +135,24 @@ public class MedicationDaoImpl implements MedicationDao {
                                                          CollectionReference medsRef,
                                                          List<Map<List<String>, Object>> externalList)
             throws InterruptedException, ExecutionException {
-        List<String> aux;
-        ApiFuture<QuerySnapshot> future = medsRef.get();
-        List<QueryDocumentSnapshot> medDocuments = future.get().getDocuments();
+        List<QueryDocumentSnapshot> medDocuments = medsRef.get().get().getDocuments();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
-            aux = pkToList(medDocument.getId());
-            String date = pkToDate(medDocument.getId());
-            if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+            List<String> aux = pkToList(medDocument.getId());
+            if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0 &&
+                    finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
                 Map<List<String>, Object> internalList = new HashMap<>();
                 internalList.put(Collections.singletonList(DATENAME), aux);
                 internalList.put(Collections.singletonList(BODY),
                         medDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);
             }
-            aux.clear();
         }
     }
-
 
     @Override
     public Object getMedicationField(String owner, String petName, String dateName, String field)
             throws DatabaseAccessException {
-        CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference medicationDocRef = medicationsRef.document(dateName);
-        ApiFuture<DocumentSnapshot> future = medicationDocRef.get();
+        ApiFuture<DocumentSnapshot> future = getMedicationsRef(owner, petName).document(dateName).get();
         DocumentSnapshot medicationDoc;
         try {
             medicationDoc = future.get();
