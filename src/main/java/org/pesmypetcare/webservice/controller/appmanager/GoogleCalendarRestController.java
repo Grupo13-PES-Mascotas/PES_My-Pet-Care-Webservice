@@ -86,7 +86,6 @@ public class GoogleCalendarRestController {
     void createEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                      @PathVariable String petName, @RequestBody EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException{
-        System.out.println("Hasta aqui?");
         googleCalendarService.createEvent(accessToken, owner, petName, eventEntity);
     }
 
