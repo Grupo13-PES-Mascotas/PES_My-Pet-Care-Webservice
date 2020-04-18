@@ -12,6 +12,7 @@ public interface WeightService {
      * Creates a weight of the pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
+     * @param date Creation date of the pet's weight
      * @param weightEntity The parameters of weight
      */
     void createWeight(String owner, String petName, String date, WeightEntity weightEntity);

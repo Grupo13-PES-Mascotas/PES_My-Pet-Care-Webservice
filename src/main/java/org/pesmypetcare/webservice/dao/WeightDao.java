@@ -11,6 +11,7 @@ public interface WeightDao {
      * Creates a weight of the pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
+     * @param date Creation date of the pet's weight
      * @param weightEntity The parameters of weight
      */
     void createWeight(String owner, String petName, String date, WeightEntity weightEntity);
@@ -61,7 +62,7 @@ public interface WeightDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllWeightsBetween(String owner, String petName, String initialDate,
-                                                 String finalDate) throws DatabaseAccessException;
+                                                   String finalDate) throws DatabaseAccessException;
 
     /**
      * Updates one of the weights specified with the date and the pet name.

@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
-public class PetWeightRestController {
+public class PetWeightRestControllerTest {
     private static String jsonWeightEntity;
     private static String jsonField;
     private static WeightEntity weightEntity;

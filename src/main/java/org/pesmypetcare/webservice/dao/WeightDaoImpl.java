@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class WeightDaoImpl implements WeightDao {
-    private final String DELFAIL_KEY;
-    private final String WEIGHT_DOES_NOT_EXIST_EXC;
-    private final String INVALID_WEIGHT_EXC;
-    private final String internalListString1;
-    private final String internalListString2;
+    private static final String DELFAIL_KEY = "deletion-failed";
+    private static final String WEIGHT_DOES_NOT_EXIST_EXC = "The weight does not exist";
+    private static final String INVALID_WEIGHT_EXC = "invalid-pet";
+    private static final String internalListString1 = "date";
+    private static final String internalListString2 = "body";
 
 
     private Firestore db;
@@ -32,19 +32,12 @@ public class WeightDaoImpl implements WeightDao {
 
     public WeightDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
-
-        DELFAIL_KEY = "deletion-failed";
-        WEIGHT_DOES_NOT_EXIST_EXC = "The weight does not exist";
-        INVALID_WEIGHT_EXC = "invalid-pet";
-        internalListString1 = "date";
-        internalListString2 = "body";
     }
 
     @Override
     public void createWeight(String owner, String petName, String date, WeightEntity weightEntity) {
         DocumentReference weightRef = getWeightsRef(owner, petName).document(date);
         weightRef.set(weightEntity);
-        System.out.println("Weight created");
     }
 
     @Override

@@ -34,6 +34,7 @@ public class WeightRestController {
                              @RequestBody WeightEntity weightEntity) {
         weightService.createWeight(owner, petName, petDate, weightEntity);
     }
+
     /**
      * Deletes all weights of the pet.
      * @param owner Username of the owner of the pet
@@ -45,6 +46,7 @@ public class WeightRestController {
         throws DatabaseAccessException {
         weightService.deleteAllWeights(owner, petName);
     }
+
     /**
      * Deletes the weight with the specified pet and date.
      * @param owner Username of the owner of the pet
@@ -57,6 +59,7 @@ public class WeightRestController {
                                    @PathVariable String petDate) throws DatabaseAccessException {
         weightService.deleteWeightByDate(owner, petName, petDate);
     }
+
     /**
      * Get one weight of the pet with the specified date.
      * @param owner Username of the owner of the pet
@@ -70,6 +73,7 @@ public class WeightRestController {
                                         @PathVariable String petDate) throws DatabaseAccessException {
         return weightService.getWeightByDate(owner, petName, petDate);
     }
+
     /**
      * Gets all the specified weights of one pet.
      * @param owner Username of the owner of the pet
@@ -82,6 +86,7 @@ public class WeightRestController {
         throws DatabaseAccessException {
         return weightService.getAllWeight(owner, petName);
     }
+
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
@@ -98,6 +103,7 @@ public class WeightRestController {
         throws DatabaseAccessException {
         return weightService.getAllWeightsBetween(owner, petName, initialDate, finalDate);
     }
+
     /**
      * Updates one of the weights specified with the date and the pet name.
      * @param owner Username of the owner of the pet
@@ -112,4 +118,5 @@ public class WeightRestController {
                              @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
         weightService.updateWeight(owner, petName, petDate, valueMap.get("value"));
     }
+
 }
