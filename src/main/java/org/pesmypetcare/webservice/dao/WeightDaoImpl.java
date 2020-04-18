@@ -109,6 +109,12 @@ public class WeightDaoImpl implements WeightDao {
         weightRef.update("weightValue", value);
     }
 
+    /**
+     * Return the weight collection of one pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return Return the weight collection of one pet
+     */
     public CollectionReference getWeightsRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName)
             .collection("weights");
