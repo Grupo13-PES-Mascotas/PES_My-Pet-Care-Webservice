@@ -27,6 +27,7 @@ public class EventEntity {
     @JsonDeserialize(using = DateTimeHandler.class)
     private DateTime endDate;
 
+    public EventEntity () {}
 
     public EventEntity (Event event) {
         id = event.getId();
