@@ -74,12 +74,11 @@ public interface GoogleCalendarService {
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to update
-     * @param eventEntity New Event that overwrites the past event
+     * @param eventEntity New Event that overwrites the past event with the same id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateEvent(String accessToken, String owner, String petName, String eventId, EventEntity eventEntity)
+    void updateEvent(String accessToken, String owner, String petName, EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException;
 
     /**

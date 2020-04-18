@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -94,16 +95,16 @@ public class GoogleCalendarRestController {
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to retrieve
+     * @param body Body of the request containing the id of the event to retrieve with key eventId assigned
      * @return Event retrieved
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/event/{owner}/{petName}")
     EventEntity retrieveEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                              @PathVariable String petName, @RequestBody String eventId)
+                              @PathVariable String petName, @RequestBody Map<String, Object> body)
         throws CalendarAccessException, DatabaseAccessException{
-        return googleCalendarService.retrieveEvent(accessToken, owner, petName, eventId);
+        return googleCalendarService.retrieveEvent(accessToken, owner, petName, (String) body.get("eventId"));
     }
 
     /**
@@ -111,16 +112,15 @@ public class GoogleCalendarRestController {
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to update
-     * @param eventEntity New Event that overwrites the past event
+     * @param eventEntity New Event that overwrites the past event with the same id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/event/{owner}/{petName}")
     void updateEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner, @PathVariable String petName,
-                     @RequestBody String eventId, @RequestBody EventEntity eventEntity)
+                     @RequestBody EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException{
-        googleCalendarService.updateEvent(accessToken, owner, petName, eventId, eventEntity);
+        googleCalendarService.updateEvent(accessToken, owner, petName, eventEntity);
     }
 
     /**
@@ -128,15 +128,15 @@ public class GoogleCalendarRestController {
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to delete
+     * @param body Body of the request containing the id of the event to delete with key eventId assigned
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/event/{owner}/{petName}")
     void deleteEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner, @PathVariable String petName,
-                     @RequestBody String eventId) throws CalendarAccessException
+                     @RequestBody Map<String, Object> body) throws CalendarAccessException
         , DatabaseAccessException{
-        googleCalendarService.deleteEvent(accessToken, owner, petName, eventId);
+        googleCalendarService.deleteEvent(accessToken, owner, petName, (String) body.get("eventId"));
     }
 
 }

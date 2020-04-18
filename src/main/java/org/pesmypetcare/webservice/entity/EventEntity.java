@@ -2,10 +2,8 @@ package org.pesmypetcare.webservice.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
-import com.google.gson.JsonArray;
 import lombok.Data;
 import com.google.api.services.calendar.model.Event;
 import org.pesmypetcare.webservice.jsonhandler.DateTimeHandler;
@@ -31,12 +29,13 @@ public class EventEntity {
 
 
     public EventEntity (Event event) {
-        //Not initialized Remainder and Repetition
         id = event.getId();
         summary = event.getSummary();
         location = event.getLocation();
         description = event.getDescription();
         color = event.getColorId();
+        emailReminderMinutes = 0;
+        repetitionInterval = 0;
         startDate = event.getStart().getDate();
         endDate = event.getEnd().getDate();
     }
@@ -53,8 +52,6 @@ public class EventEntity {
         this.repetitionInterval = repetitionInterval;
         this.startDate = startDate;
         this.endDate = endDate;
-        System.out.println(startDate);
-        System.out.println(this.startDate);
     }
 
     public Event convertToEvent() {

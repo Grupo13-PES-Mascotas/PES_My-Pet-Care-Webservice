@@ -65,10 +65,10 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public void updateEvent(String accessToken, String owner, String petName, String eventId, EventEntity eventEntity)
+    public void updateEvent(String accessToken, String owner, String petName, EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException {
         String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
-        googleCalendarDao.updateEvent(accessToken, calendarId, eventId, eventEntity.convertToEvent());
+        googleCalendarDao.updateEvent(accessToken, calendarId, eventEntity.getId(), eventEntity.convertToEvent());
     }
 
     @Override
