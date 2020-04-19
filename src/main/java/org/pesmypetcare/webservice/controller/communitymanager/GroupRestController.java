@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.controller.communitymanager;
 
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.communitymanager.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,17 @@ public class GroupRestController {
             throw new IllegalArgumentException("Field must be either name or description");
         }
         service.updateField(group, field, updateValue.get("value"));
+    }
+
+    /**
+     * Gets all the existent tags.
+     *
+     * @return The tags and the groups that have them
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    @GetMapping("/tags")
+    public Map<String, TagEntity> getAllTags() throws DatabaseAccessException {
+        return service.getAllTags();
     }
 
     /**

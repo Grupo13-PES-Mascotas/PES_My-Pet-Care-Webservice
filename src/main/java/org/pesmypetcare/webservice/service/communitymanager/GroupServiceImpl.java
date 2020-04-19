@@ -2,11 +2,13 @@ package org.pesmypetcare.webservice.service.communitymanager;
 
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Santiago Del Rey
@@ -73,5 +75,10 @@ public class GroupServiceImpl implements GroupService {
         } else {
             groupDao.updateTags(group, newTags, deletedTags);
         }
+    }
+
+    @Override
+    public Map<String, TagEntity> getAllTags() throws DatabaseAccessException {
+        return groupDao.getAllTags();
     }
 }

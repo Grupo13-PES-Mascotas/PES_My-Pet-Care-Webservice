@@ -1,9 +1,11 @@
 package org.pesmypetcare.webservice.dao.communitymanager;
 
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Santiago Del Rey
@@ -13,7 +15,7 @@ public interface GroupDao {
      * Creates a group.
      * @param entity The group entity with the group data
      */
-    void createGroup(GroupEntity entity);
+    void createGroup(GroupEntity entity) throws DatabaseAccessException;
 
     /**
      * Deletes a group by name.
@@ -72,4 +74,12 @@ public interface GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException;
+
+    /**
+     * Gets all the existent tags.
+     *
+     * @return The tags and the groups that have them
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    Map<String, TagEntity> getAllTags() throws DatabaseAccessException;
 }
