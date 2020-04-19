@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 @Repository
 public class MedicationDaoImpl implements MedicationDao {
 
-    private Firestore db;
+    private final Firestore db;
 
     private final String DELFAIL_KEY;
     private final String MEDICATION_DOES_NOT_EXIST_EXC;

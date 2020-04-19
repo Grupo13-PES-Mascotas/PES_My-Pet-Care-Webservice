@@ -34,7 +34,8 @@ public class MedicationServiceTest {
     private static String date2;
     private static String field;
     private static int value;
-    private static String GETEXCEPTIONMSG = "Should return an exception when retrieving a Medication fails";
+    private static String getExceptionMsg = "Should return an exception when retrieving a" +
+            "Medication fails";
 
     @Mock
     private MedicationDao medicationDao;
@@ -86,8 +87,8 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnMedicationEntityWhenMedicationRetrieved() throws DatabaseAccessException {
         when(medicationDao.getMedicationData(owner, petName, dateName)).thenReturn(medicationEntity);
-        MedicationEntity Medication = service.getMedicationData(owner, petName, dateName);
-        assertSame(medicationEntity, Medication, "Should return a Medication entity");
+        MedicationEntity medication = service.getMedicationData(owner, petName, dateName);
+        assertSame(medicationEntity, medication, "Should return a Medication entity");
     }
 
     @Test
@@ -96,7 +97,7 @@ public class MedicationServiceTest {
             doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationData(any(String.class),
                     any(String.class), isA(String.class));
             service.getMedicationData(owner, petName, dateName);
-        }, GETEXCEPTIONMSG);
+        }, getExceptionMsg);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class MedicationServiceTest {
             doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationData(any(String.class),
                     isA(String.class));
             service.getAllMedicationData(owner, petName);
-        }, GETEXCEPTIONMSG);
+        }, getExceptionMsg);
     }
 
     @Test
