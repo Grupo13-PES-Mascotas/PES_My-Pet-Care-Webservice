@@ -39,7 +39,8 @@ public class PetDaoImpl implements PetDao {
 
     @Override
     public void createPet(String owner, String name, PetEntity petEntity) {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).
+                collection(PETS_KEY).document(name);
         petRef.set(petEntity);
     }
 
