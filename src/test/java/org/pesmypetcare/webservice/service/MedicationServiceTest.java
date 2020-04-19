@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MedicationServiceTest {
-    private static List<Map<List<String>, Object>> medicationList;
+    private static List<Map<String, Object>> medicationList;
     private static MedicationEntity medicationEntity;
     private static String owner;
     private static String petName;
@@ -34,8 +34,8 @@ public class MedicationServiceTest {
     private static String date2;
     private static String field;
     private static int value;
-    private static String getExceptionMsg = "Should return an exception when retrieving a" +
-            "Medication fails";
+    private static String getExceptionMsg = "Should return an exception when retrieving a"
+            + "Medication fails";
 
     @Mock
     private MedicationDao medicationDao;
@@ -104,7 +104,7 @@ public class MedicationServiceTest {
     public void shouldReturnMedicationEntityListWhenGetSetOfMedicationsRetrieved() throws DatabaseAccessException,
             ExecutionException, InterruptedException {
         when(medicationDao.getAllMedicationData(owner, petName)).thenReturn(medicationList);
-        List<Map<List<String>, Object>> list = service.getAllMedicationData(owner, petName);
+        List<Map<String, Object>> list = service.getAllMedicationData(owner, petName);
         assertSame(medicationList, list, "Should return a list of Medication entities");
     }
 
@@ -121,7 +121,7 @@ public class MedicationServiceTest {
     public void shouldReturnMedEntityListWhenGetMedsBetweenDatesRetrieved() throws DatabaseAccessException,
             ExecutionException, InterruptedException {
         when(medicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(medicationList);
-        List<Map<List<String>, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);
+        List<Map<String, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);
         assertSame(medicationList, list, "Should return a list of Medication entities between the stated dates");
     }
 

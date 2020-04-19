@@ -1,28 +1,19 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 import org.pesmypetcare.webservice.entity.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Repository
 public class MedicationDaoImpl implements MedicationDao {
 
-    private final Firestore db;
+    private Firestore db;
 
     private final String DELFAIL_KEY;
     private final String MEDICATION_DOES_NOT_EXIST_EXC;
@@ -86,10 +77,10 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
+    public List<Map<String, Object>> getAllMedicationData(String owner, String petName)
             throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        List<Map<List<String>, Object>> externalList = new ArrayList<>();
+        List<Map<String, Object>> externalList = new ArrayList<>();
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
         List<QueryDocumentSnapshot> medicationDocuments;
         try {
@@ -103,47 +94,38 @@ public class MedicationDaoImpl implements MedicationDao {
         return externalList;
     }
 
-    private Map<List<String>, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
-        List<String> pks = new ArrayList<>();
-        String aux;
-        Map<List<String>, Object> internalList = new HashMap<>();
-        aux = medicationDocument.getId();
-        pks.add(pkToDate(aux));
-        pks.add(pkToName(aux));
-        internalList.put(Collections.singletonList(DATENAME), pks);
-        pks.clear();
-        internalList.put(Collections.singletonList(BODY),
-                medicationDocument.toObject(MedicationEntity.class));
+    private Map<String, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
+        Map<String, Object> internalList = new HashMap<>();
+        internalList.put(DATENAME, medicationDocument.getId());
+        internalList.put(BODY, medicationDocument.toObject(MedicationEntity.class));
         return internalList;
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
+    public List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName,
                                                                     String initialDate, String finalDate)
             throws DatabaseAccessException {
         CollectionReference medsRef = getMedicationsRef(owner, petName);
-        List<Map<List<String>, Object>> externalList = new ArrayList<>();
+        List<Map<String, Object>> externalList = new ArrayList<>();
         try {
-            getMeadicationsBetweenDatesFromDatabase(initialDate, finalDate, medsRef, externalList);
+            getMedicationsBetweenDatesFromDatabase(initialDate, finalDate, medsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
         return externalList;
     }
 
-    private void getMeadicationsBetweenDatesFromDatabase(String initialDate, String finalDate,
+    private void getMedicationsBetweenDatesFromDatabase(String initialDate, String finalDate,
                                                          CollectionReference medsRef,
-                                                         List<Map<List<String>, Object>> externalList)
+                                                         List<Map<String, Object>> externalList)
             throws InterruptedException, ExecutionException {
         List<QueryDocumentSnapshot> medDocuments = medsRef.get().get().getDocuments();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
-            List<String> aux = pkToList(medDocument.getId());
             if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0
                     && finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
-                Map<List<String>, Object> internalList = new HashMap<>();
-                internalList.put(Collections.singletonList(DATENAME), aux);
-                internalList.put(Collections.singletonList(BODY),
-                        medDocument.toObject(MedicationEntity.class));
+                Map<String, Object> internalList = new HashMap<>();
+                internalList.put(DATENAME, medDocument.getId());
+                internalList.put(BODY, medDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);
             }
         }
@@ -184,15 +166,4 @@ public class MedicationDaoImpl implements MedicationDao {
         return parts[0];
     }
 
-    public String pkToName(String pk) {
-        String[] parts = pk.split(SEPARATOR);
-        return parts[1];
-    }
-
-    public List<String> pkToList(String pk) {
-        List<String> output = null;
-        output.add(pkToDate(pk));
-        output.add(pkToName(pk));
-        return output;
-    }
 }

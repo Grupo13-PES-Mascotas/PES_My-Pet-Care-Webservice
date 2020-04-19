@@ -80,7 +80,7 @@ public class PetMedicationRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
-    public List<Map<List<String>, Object>> getAllMedicationData(@PathVariable String owner,
+    public List<Map<String, Object>> getAllMedicationData(@PathVariable String owner,
                                                                 @PathVariable String petName)
             throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationService.getAllMedicationData(owner, petName);
@@ -96,7 +96,7 @@ public class PetMedicationRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/between/{initialDate}/{finalDate}")
-    public List<Map<List<String>, Object>> getAllMedicationsBetween(@PathVariable String owner,
+    public List<Map<String, Object>> getAllMedicationsBetween(@PathVariable String owner,
                                                                     @PathVariable String petName,
                                                                     @PathVariable String initialDate,
                                                                     @PathVariable String finalDate)

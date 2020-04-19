@@ -37,13 +37,13 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName)
+    public List<Map<String, Object>> getAllMedicationData(String owner, String petName)
             throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationDao.getAllMedicationData(owner, petName);
     }
 
     @Override
-    public List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName,
+    public List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName,
                                                                     String initialDate, String finalDate)
             throws DatabaseAccessException, ExecutionException, InterruptedException {
         return medicationDao.getAllMedicationsBetween(owner, petName, initialDate, finalDate);

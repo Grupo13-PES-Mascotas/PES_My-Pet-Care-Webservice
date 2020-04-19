@@ -50,7 +50,7 @@ public interface MedicationService {
      * @return The List containing all the medications of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<List<String>, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException,
+    List<Map<String, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException,
             ExecutionException, InterruptedException;
 
     /**
@@ -62,7 +62,7 @@ public interface MedicationService {
      * @return The List containing all the medication of the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<List<String>, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
+    List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
                                                               String finalDate) throws DatabaseAccessException,
             ExecutionException, InterruptedException;
 

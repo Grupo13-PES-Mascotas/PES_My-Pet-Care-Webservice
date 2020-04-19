@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class MedicationDaoTest {
-    private static List<Map<List<String>, Object>> medList;
+    private static List<Map<String, Object>> medList;
     private static MedicationEntity medEntity;
     private static String owner;
     private static String petName;
@@ -282,7 +282,7 @@ public class MedicationDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<List<String>, Object>> list = medDao.getAllMedicationData(owner, petName);
+        List<Map<String, Object>> list = medDao.getAllMedicationData(owner, petName);
         assertEquals(medList, list, "Should return a List containing all meds Data");
     }
 
@@ -332,7 +332,7 @@ public class MedicationDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<List<String>, Object>> list = medDao.getAllMedicationsBetween(owner, petName, date, date2);
+        List<Map<String, Object>> list = medDao.getAllMedicationsBetween(owner, petName, date, date2);
 
         assertEquals(medList, list, "Should return a List containing all meds between two dates");
     }
