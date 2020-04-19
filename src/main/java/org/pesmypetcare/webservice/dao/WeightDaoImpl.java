@@ -23,8 +23,8 @@ public class WeightDaoImpl implements WeightDao {
     private static final String DELFAIL_KEY = "deletion-failed";
     private static final String WEIGHT_DOES_NOT_EXIST_EXC = "The weight does not exist";
     private static final String INVALID_WEIGHT_EXC = "invalid-pet";
-    private static final String internalListString1 = "date";
-    private static final String internalListString2 = "body";
+    private static final String INTERNAL_LIST_STRING_1 = "date";
+    private static final String INTERNAL_LIST_STRING_2 = "body";
 
 
     private Firestore db;
@@ -133,8 +133,8 @@ public class WeightDaoImpl implements WeightDao {
         List<QueryDocumentSnapshot> weightDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot weightDocument : weightDocuments) {
             Map<String, Object> internalList = new HashMap<>();
-            internalList.put(internalListString1, weightDocument.getId());
-            internalList.put(internalListString2, weightDocument.toObject(WeightEntity.class));
+            internalList.put(INTERNAL_LIST_STRING_1, weightDocument.getId());
+            internalList.put(INTERNAL_LIST_STRING_2, weightDocument.toObject(WeightEntity.class));
             externalList.add(internalList);
         }
     }
