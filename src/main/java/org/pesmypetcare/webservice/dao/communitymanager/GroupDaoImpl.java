@@ -57,7 +57,7 @@ public class GroupDaoImpl implements GroupDao {
         saveUserAsMember(entity.getCreator(), groupRef, batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
-            addGroupToTag(tag, groupRef.getId(), batch);
+            addGroupToTag(tag, name, batch);
         }
         batch.commit();
     }
@@ -106,6 +106,7 @@ public class GroupDaoImpl implements GroupDao {
                 throw new DatabaseAccessException("invalid-group-name", "The name is already in use");
             }
             batch = db.batch();
+            changeNameInTags(name, newValue, batch);
             DocumentReference namesRef = groupsNames.document(name);
             batch.delete(namesRef);
             saveGroupName(newValue, id, batch);
@@ -140,14 +141,14 @@ public class GroupDaoImpl implements GroupDao {
             data.put("tags", FieldValue.arrayRemove(deletedTags.toArray()));
             batch.update(groupRef, data);
             for (String tag : deletedTags) {
-                deleteGroupFromTag(tag, id, batch);
+                deleteGroupFromTag(tag, group, batch);
             }
         }
         if (newTags != null) {
             data.put("tags", FieldValue.arrayUnion(newTags.toArray()));
             batch.update(groupRef, data);
             for (String tag : newTags) {
-                addGroupToTag(tag, id, batch);
+                addGroupToTag(tag, group, batch);
             }
         }
         batch.commit();
@@ -237,28 +238,49 @@ public class GroupDaoImpl implements GroupDao {
     /**
      * Deletes an entry in the tag collection for the group.
      * @param tag The tag
-     * @param groupId The group id
+     * @param group The group name
      * @param batch The batch of writes to which it belongs
      */
-    private void deleteGroupFromTag(String tag, String groupId, WriteBatch batch) {
+    private void deleteGroupFromTag(String tag, String group, WriteBatch batch) {
         DocumentReference tagRef = tags.document(tag);
         Map<String, Object> data = new HashMap<>();
-        data.put("groups", FieldValue.arrayRemove(groupId));
+        data.put("groups", FieldValue.arrayRemove(group));
         batch.update(tagRef, data);
     }
 
     /**
      * Deletes a group from all its tags.
      *
-     * @param id The group id
+     * @param group The group name
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void deleteGroupFromAllTags(String id) throws DatabaseAccessException {
-        Query query = tags.whereArrayContains("groups", id);
+    private void deleteGroupFromAllTags(String group) throws DatabaseAccessException {
+        Query query = tags.whereArrayContains("groups", group);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 batch.delete(document.getReference());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the tags data");
+        }
+    }
+
+    /**
+     * Updates the group name in all its tags.
+     * @param oldName The old name
+     * @param newName The new name
+     * @param batch The batch of writes to which it belongs
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void changeNameInTags(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
+        Query query = tags.whereArrayContains("groups", oldName);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                deleteGroupFromTag(document.getId(), oldName, batch);
+                addGroupToTag(document.getId(), newName, batch);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
