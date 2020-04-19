@@ -158,8 +158,8 @@ public class WeightDaoImpl implements WeightDao {
             String date = weightDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
                 Map<String, Object> internalList = new HashMap<>();
-                internalList.put(internalListString1, date);
-                internalList.put(internalListString2, weightDocument.toObject(WeightEntity.class));
+                internalList.put(INTERNAL_LIST_STRING_1, date);
+                internalList.put(INTERNAL_LIST_STRING_2, weightDocument.toObject(WeightEntity.class));
                 externalList.add(internalList);
             }
         }
