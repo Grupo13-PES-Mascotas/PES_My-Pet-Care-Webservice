@@ -1,34 +1,36 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Repository
 public class MedicationDaoImpl implements MedicationDao {
+    private static final String DELETION_FAILED = "deletion-failed";
+    private static final String MEDICATION_DOES_NOT_EXIST_EXC = "The med does not exist";
+    private static final String INVALID_MEDICATION_EXC = "invalid-med";
+    private static final String DATE_NAME = "dateName";
+    private static final String BODY = "body";
+    private static final String SEPARATOR = "%";
 
     private Firestore db;
 
-    private final String DELFAIL_KEY;
-    private final String MEDICATION_DOES_NOT_EXIST_EXC;
-    private final String INVALID_MEDICATION_EXC;
-    private final String DATENAME = "dateName";
-    private final String BODY = "body";
-    private final String SEPARATOR = "%";
-
-
     public MedicationDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
-
-        DELFAIL_KEY = "deletion-failed";
-        MEDICATION_DOES_NOT_EXIST_EXC = "The med does not exist";
-        INVALID_MEDICATION_EXC = "invalid-med";
     }
 
     @Override
@@ -54,7 +56,7 @@ public class MedicationDaoImpl implements MedicationDao {
                 medicationDocument.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAILED, e.getMessage());
         }
     }
 
@@ -68,7 +70,7 @@ public class MedicationDaoImpl implements MedicationDao {
         try {
             medicationDoc = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAILED, e.getMessage());
         }
         if (!medicationDoc.exists()) {
             throw new DatabaseAccessException(INVALID_MEDICATION_EXC, MEDICATION_DOES_NOT_EXIST_EXC);
@@ -86,7 +88,7 @@ public class MedicationDaoImpl implements MedicationDao {
         try {
             medicationDocuments = future.get().getDocuments();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAILED, e.getMessage());
         }
         for (QueryDocumentSnapshot medicationDocument : medicationDocuments) {
             externalList.add(getEachInternalList(medicationDocument));
@@ -96,7 +98,7 @@ public class MedicationDaoImpl implements MedicationDao {
 
     private Map<String, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
         Map<String, Object> internalList = new HashMap<>();
-        internalList.put(DATENAME, medicationDocument.getId());
+        internalList.put(DATE_NAME, medicationDocument.getId());
         internalList.put(BODY, medicationDocument.toObject(MedicationEntity.class));
         return internalList;
     }
@@ -110,7 +112,7 @@ public class MedicationDaoImpl implements MedicationDao {
         try {
             getMedicationsBetweenDatesFromDatabase(initialDate, finalDate, medsRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAILED, e.getMessage());
         }
         return externalList;
     }
@@ -124,7 +126,7 @@ public class MedicationDaoImpl implements MedicationDao {
             if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0
                     && finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
                 Map<String, Object> internalList = new HashMap<>();
-                internalList.put(DATENAME, medDocument.getId());
+                internalList.put(DATE_NAME, medDocument.getId());
                 internalList.put(BODY, medDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);
             }
@@ -139,7 +141,7 @@ public class MedicationDaoImpl implements MedicationDao {
         try {
             medicationDoc = future.get();
         } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+            throw new DatabaseAccessException(DELETION_FAILED, e.getMessage());
         }
         if (!medicationDoc.exists()) {
             throw new DatabaseAccessException(INVALID_MEDICATION_EXC,
