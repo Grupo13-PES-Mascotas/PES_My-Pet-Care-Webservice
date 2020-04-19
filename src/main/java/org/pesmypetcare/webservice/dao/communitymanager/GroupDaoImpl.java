@@ -54,7 +54,9 @@ public class GroupDaoImpl implements GroupDao {
         batch.set(groupRef, entity);
         String name = entity.getName();
         saveGroupName(name, groupRef.getId(), batch);
-        saveUserAsMember(entity.getCreator(), groupRef, batch);
+        String creator = entity.getCreator();
+        saveUserAsMember(creator, groupRef, batch);
+        userDao.addGroupSubscription(creator, groupRef.getId(), batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
             addGroupToTag(tag, name, batch);
@@ -129,6 +131,22 @@ public class GroupDaoImpl implements GroupDao {
         saveUserAsMember(userUid, groupRef, batch);
         userDao.addGroupSubscription(userUid, groupId, batch);
         batch.commit();
+    }
+
+    @Override
+    public void unsubscribe(String group, String username) throws DatabaseAccessException {
+        String userUid = userDao.getUid(username);
+        String groupId = getGroupId(group);
+        DocumentReference groupRef = groups.document(groupId);
+        batch = db.batch();
+        deleteUserFromMember(userUid, groupRef, batch);
+        userDao.deleteGroupSubscription(userUid, groupId, batch);
+        batch.commit();
+    }
+
+    private void deleteUserFromMember(String userUid, DocumentReference groupRef, WriteBatch batch) {
+        DocumentReference memberRef = groupRef.collection("members").document(userUid);
+        batch.delete(memberRef);
     }
 
     @Override

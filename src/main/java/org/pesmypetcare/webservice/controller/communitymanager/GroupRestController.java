@@ -117,4 +117,17 @@ public class GroupRestController {
     public void subscribe(@RequestHeader("token") String token, @RequestParam String group, String username) throws DatabaseAccessException {
         service.subscribe(token, group, username);
     }
+
+    /**
+     * Unsubscribes a user to a group.
+     *
+     * @param token The personal access token of the user
+     * @param group The group name
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     */
+    @PutMapping("/unsubscribe")
+    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group, String username) throws DatabaseAccessException {
+        service.unsubscribe(token, group, username);
+    }
 }

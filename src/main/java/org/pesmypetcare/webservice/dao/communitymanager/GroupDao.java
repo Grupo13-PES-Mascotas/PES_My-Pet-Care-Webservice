@@ -60,10 +60,10 @@ public interface GroupDao {
      * Subscribes a user to a group.
      *
      * @param group The group name
-     * @param uid The user's uid
+     * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void subscribe(String group, String uid) throws DatabaseAccessException;
+    void subscribe(String group, String username) throws DatabaseAccessException;
 
     /**
      * Updates the group tags.
@@ -82,4 +82,13 @@ public interface GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     Map<String, TagEntity> getAllTags() throws DatabaseAccessException;
+
+    /**
+     * Unsubscribes a user to a group.
+     *
+     * @param group The group name
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void unsubscribe(String group, String username) throws DatabaseAccessException;
 }

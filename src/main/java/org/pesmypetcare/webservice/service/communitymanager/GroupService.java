@@ -76,4 +76,14 @@ public interface GroupService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     Map<String, TagEntity> getAllTags() throws DatabaseAccessException;
+
+    /**
+     * Unsubscribes a user to a group.
+     *
+     * @param token The personal access token of the user
+     * @param group The group name
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     */
+    void unsubscribe(String token, String group, String username) throws DatabaseAccessException;
 }

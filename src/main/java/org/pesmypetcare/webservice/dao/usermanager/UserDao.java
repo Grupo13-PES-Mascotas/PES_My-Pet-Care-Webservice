@@ -85,4 +85,12 @@ public interface UserDao {
      * @param batch The batch of writes to which it belongs
      */
     void addGroupSubscription(String userUid, String groupId, WriteBatch batch);
+
+    /**
+     * Deletes an entry of the group in the subscription collection.
+     *  @param userUid The user's uid
+     * @param groupId The group's id
+     * @param batch The batch of writes to which it belongs
+     */
+    void deleteGroupSubscription(String userUid, String groupId, WriteBatch batch);
 }

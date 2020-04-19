@@ -127,9 +127,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addGroupSubscription(String userUid, String groupId, WriteBatch batch) {
         DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
-        Map<String, Boolean> data = new HashMap<>();
-        data.put("exists", true);
+        Map<String, String> data = new HashMap<>();
+        data.put("exists", groupId);
         batch.set(subscription, data);
+    }
+
+    @Override
+    public void deleteGroupSubscription(String userUid, String groupId, WriteBatch batch) {
+        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
+        batch.delete(subscription);
     }
 
     /**

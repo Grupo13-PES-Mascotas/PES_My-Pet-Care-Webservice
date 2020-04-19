@@ -81,4 +81,13 @@ public class GroupServiceImpl implements GroupService {
     public Map<String, TagEntity> getAllTags() throws DatabaseAccessException {
         return groupDao.getAllTags();
     }
+
+    @Override
+    public void unsubscribe(String token, String group, String username) throws DatabaseAccessException {
+        if (!groupDao.groupNameInUse(group)) {
+            throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
+        } else {
+            groupDao.unsubscribe(group, username);
+        }
+    }
 }
