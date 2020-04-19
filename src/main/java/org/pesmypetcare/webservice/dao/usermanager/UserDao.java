@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.dao.usermanager;
 
+import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -67,4 +68,21 @@ public interface UserDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     String getField(String uid, String field) throws DatabaseAccessException;
+
+    /**
+     * Gets the user's uid.
+     *
+     * @param username The user's username
+     * @return The user's uid
+     * @throws DatabaseAccessException If the user doesn't exist
+     */
+    String getUid(String username) throws DatabaseAccessException;
+
+    /**
+     * Creates an entry of the group in the subscription collection.
+     *  @param userUid The user's uid
+     * @param groupId The group's id
+     * @param batch The batch of writes to which it belongs
+     */
+    void addGroupSubscription(String userUid, String groupId, WriteBatch batch);
 }

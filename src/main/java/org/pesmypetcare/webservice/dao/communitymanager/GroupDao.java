@@ -13,7 +13,7 @@ public interface GroupDao {
      * Creates a group.
      * @param entity The group entity with the group data
      */
-    void createGroup(GroupEntity entity) throws DatabaseAccessException;
+    void createGroup(GroupEntity entity);
 
     /**
      * Deletes a group by name.
@@ -44,7 +44,7 @@ public interface GroupDao {
      * @param newValue The new field value
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String name, String field, Object newValue) throws DatabaseAccessException;
+    void updateField(String name, String field, String newValue) throws DatabaseAccessException;
 
     /**
      * Checks whether a group name is already in use or not.
@@ -53,4 +53,23 @@ public interface GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     boolean groupNameInUse(String name) throws DatabaseAccessException;
+
+    /**
+     * Subscribes a user to a group.
+     *
+     * @param group The group name
+     * @param uid The user's uid
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void subscribe(String group, String uid) throws DatabaseAccessException;
+
+    /**
+     * Updates the group tags.
+     *
+     * @param group The group name
+     * @param newTags The new tags
+     * @param deletedTags The deleted tags
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException;
 }

@@ -14,46 +14,64 @@ import java.util.List;
 @Service
 public class GroupServiceImpl implements GroupService {
     @Autowired
-    private GroupDao dao;
+    private GroupDao groupDao;
 
     @Override
     public void createGroup(GroupEntity entity) throws DatabaseAccessException {
-        if (dao.groupNameInUse(entity.getName())) {
+        if (groupDao.groupNameInUse(entity.getName())) {
             throw new DatabaseAccessException("invalid-group-name", "The name is already in use");
         } else {
-            dao.createGroup(entity);
+            groupDao.createGroup(entity);
         }
     }
 
     @Override
     public void deleteGroup(String name) throws DatabaseAccessException {
-        if (!dao.groupNameInUse(name)) {
+        if (!groupDao.groupNameInUse(name)) {
             throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
         } else {
-            dao.deleteGroup(name);
+            groupDao.deleteGroup(name);
         }
     }
 
     @Override
     public GroupEntity getGroup(String name) throws DatabaseAccessException {
-        if (!dao.groupNameInUse(name)) {
+        if (!groupDao.groupNameInUse(name)) {
             throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
         } else {
-            return dao.getGroup(name);
+            return groupDao.getGroup(name);
         }
     }
 
     @Override
     public List<GroupEntity> getAllGroups() throws DatabaseAccessException {
-        return dao.getAllGroups();
+        return groupDao.getAllGroups();
     }
 
     @Override
-    public void updateField(String name, String field, Object newValue) throws DatabaseAccessException {
-        if (!dao.groupNameInUse(name)) {
+    public void updateField(String name, String field, String newValue) throws DatabaseAccessException {
+        if (!groupDao.groupNameInUse(name)) {
             throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
         } else {
-            dao.updateField(name, field, newValue);
+            groupDao.updateField(name, field, newValue);
+        }
+    }
+
+    @Override
+    public void subscribe(String token, String group, String username) throws DatabaseAccessException {
+        if (!groupDao.groupNameInUse(group)) {
+            throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
+        } else {
+            groupDao.subscribe(group, username);
+        }
+    }
+
+    @Override
+    public void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException {
+        if (!groupDao.groupNameInUse(group)) {
+            throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
+        } else {
+            groupDao.updateTags(group, newTags, deletedTags);
         }
     }
 }

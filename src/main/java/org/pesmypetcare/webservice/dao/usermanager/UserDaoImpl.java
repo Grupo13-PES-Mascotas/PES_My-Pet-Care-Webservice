@@ -2,8 +2,10 @@ package org.pesmypetcare.webservice.dao.usermanager;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -115,16 +117,19 @@ public class UserDaoImpl implements UserDao {
         return (String) userDoc.get(field);
     }
 
-    /**
-     * Gets the user's uid.
-     * @param username The user's username
-     * @return The user's uid
-     * @throws DatabaseAccessException If the user doesn't exist
-     */
-    private String getUid(String username) throws DatabaseAccessException {
+    @Override
+    public String getUid(String username) throws DatabaseAccessException {
         DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, username);
         throwExceptionIfUserDoesNotExist(usernameDoc);
         return (String) usernameDoc.get(USER_KEY);
+    }
+
+    @Override
+    public void addGroupSubscription(String userUid, String groupId, WriteBatch batch) {
+        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
+        Map<String, Boolean> data = new HashMap<>();
+        data.put("exists", true);
+        batch.set(subscription, data);
     }
 
     /**

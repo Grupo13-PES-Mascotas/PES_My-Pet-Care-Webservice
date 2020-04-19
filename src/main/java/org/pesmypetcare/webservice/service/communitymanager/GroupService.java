@@ -45,5 +45,25 @@ public interface GroupService {
      * @param newValue The new field value
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String name, String field, Object newValue) throws DatabaseAccessException;
+    void updateField(String name, String field, String newValue) throws DatabaseAccessException;
+
+    /**
+     * Subscribes a user to a group.
+     *
+     * @param token The personal access token of the user
+     * @param group The group name
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void subscribe(String token, String group, String username) throws DatabaseAccessException;
+
+    /**
+     * Updates the group tags.
+     *
+     * @param group The group name
+     * @param newTags The new tags
+     * @param deletedTags The deleted tags
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException;
 }

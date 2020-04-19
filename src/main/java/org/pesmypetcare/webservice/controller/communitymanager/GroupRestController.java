@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,40 +40,69 @@ public class GroupRestController {
     /**
      * Deletes a group.
      *
-     * @param name The group name
+     * @param group The group name
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @DeleteMapping
-    public void deleteGroup(@RequestParam String name) throws DatabaseAccessException {
-        service.deleteGroup(name);
+    public void deleteGroup(@RequestParam String group) throws DatabaseAccessException {
+        service.deleteGroup(group);
     }
 
     /**
      * Gets a group if a name is specified, otherwise gets all the groups.
      *
-     * @param name The group name
+     * @param group The group name
      * @return The requested group entity or all the groups if none is specified
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping
-    public Object getGroup(@RequestParam(defaultValue = "all") String name) throws DatabaseAccessException {
-        if ("all".equals(name)) {
+    public Object getGroup(@RequestParam(defaultValue = "all") String group) throws DatabaseAccessException {
+        if ("all".equals(group)) {
             return service.getAllGroups();
         }
-        return service.getGroup(name);
+        return service.getGroup(group);
     }
 
     /**
      * Updates a group field.
      *
-     * @param name The group name
+     * @param group The group name
      * @param field The field to update
      * @param updateValue The new value stored in a map
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PutMapping
-    public void updateField(@RequestParam String name, @RequestParam String field,
-                            @RequestBody Map<String , Object> updateValue) throws DatabaseAccessException {
-        service.updateField(name, field, updateValue.get("value"));
+    public void updateField(@RequestParam String group, @RequestParam String field,
+                            @RequestBody Map<String , String> updateValue) throws DatabaseAccessException {
+        if (!("name".equals(field) || "description".equals(field))) {
+            throw new IllegalArgumentException("Field must be either name or description");
+        }
+        service.updateField(group, field, updateValue.get("value"));
+    }
+
+    /**
+     * Updates a the group tags.
+     *
+     * @param group The group name
+     * @param updateValue The new value stored in a map
+     * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     */
+    @PutMapping("/tags")
+    public void updateTags(@RequestParam String group,
+                            @RequestBody Map<String , List<String>> updateValue) throws DatabaseAccessException {
+        service.updateTags(group, updateValue.get("new"), updateValue.get("deleted"));
+    }
+
+    /**
+     * Subscribes a user to a group.
+     *
+     * @param token The personal access token of the user
+     * @param group The group name
+     * @param username The user's username
+     * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     */
+    @PutMapping("/subscribe")
+    public void subscribe(@RequestHeader("token") String token, @RequestParam String group, String username) throws DatabaseAccessException {
+        service.subscribe(token, group, username);
     }
 }

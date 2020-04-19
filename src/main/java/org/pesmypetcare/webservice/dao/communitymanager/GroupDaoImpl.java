@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -13,6 +14,7 @@ import org.pesmypetcare.webservice.dao.usermanager.UserDaoImpl;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -32,6 +34,9 @@ public class GroupDaoImpl implements GroupDao {
     private final Firestore db;
     private WriteBatch batch;
 
+    @Autowired
+    private UserDao userDao;
+
     public GroupDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
         groups = db.collection("groups");
@@ -39,18 +44,23 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void createGroup(GroupEntity entity) throws DatabaseAccessException {
+    public void createGroup(GroupEntity entity) {
         batch = db.batch();
         DocumentReference groupRef = groups.document();
         batch.set(groupRef, entity);
         String name = entity.getName();
         saveGroupName(name, groupRef.getId(), batch);
-        saveUserAsMember(entity, groupRef, batch);
+        saveUserAsMember(entity.getCreator(), groupRef, batch);
+        List<String> tags = entity.getTags();
+        for (String tag : tags) {
+            addGroupToTag(tag, groupRef.getId(), batch);
+        }
         batch.commit();
     }
 
     @Override
     public void deleteGroup(String name) throws DatabaseAccessException {
+        //TODO: Delete group from tags
         String id = getGroupId(name);
         batch = db.batch();
         deleteCollection(groups.document(id).collection("members"), batch);
@@ -84,17 +94,17 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateField(String name, String field, Object newValue) throws DatabaseAccessException {
+    public void updateField(String name, String field, String newValue) throws DatabaseAccessException {
         String id = getGroupId(name);
         groups.document(id).update(field, newValue);
         if ("name".equals(field)) {
-            if (groupNameInUse((String) newValue)) {
+            if (groupNameInUse(newValue)) {
                 throw new DatabaseAccessException("invalid-group-name", "The name is already in use");
             }
             batch = db.batch();
             DocumentReference namesRef = groupsNames.document(name);
             batch.delete(namesRef);
-            saveGroupName((String) newValue, id, batch);
+            saveGroupName(newValue, id, batch);
             batch.commit();
         }
     }
@@ -105,18 +115,51 @@ public class GroupDaoImpl implements GroupDao {
         return snapshot.exists();
     }
 
+    @Override
+    public void subscribe(String group, String username) throws DatabaseAccessException {
+        String userUid = userDao.getUid(username);
+        String groupId = getGroupId(group);
+        DocumentReference groupRef = groups.document(groupId);
+        batch = db.batch();
+        saveUserAsMember(userUid, groupRef, batch);
+        userDao.addGroupSubscription(userUid, groupId, batch);
+        batch.commit();
+    }
+
+    @Override
+    public void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException {
+        String id = getGroupId(group);
+        DocumentReference groupRef = groups.document(id);
+        Map<String, Object> data = new HashMap<>();
+        batch = db.batch();
+        if (deletedTags != null) {
+            data.put("tags", FieldValue.arrayRemove(deletedTags.toArray()));
+            batch.update(groupRef, data);
+            for (String tag : deletedTags) {
+                deleteGroupFromTag(tag, id, batch);
+            }
+        }
+        if (newTags != null) {
+            data.put("tags", FieldValue.arrayUnion(newTags.toArray()));
+            batch.update(groupRef, data);
+            for (String tag : newTags) {
+                addGroupToTag(tag, id, batch);
+            }
+        }
+        batch.commit();
+    }
+
     /**
      * Saves the user as a member of the group.
      *
-     * @param entity The group entity
+     * @param userUid The user's uid
      * @param groupRef The group document reference
      * @param batch The batch of writes to which it belongs
      */
-    private void saveUserAsMember(GroupEntity entity, DocumentReference groupRef, WriteBatch batch) {
-        String creatorUid = entity.getCreator();
+    private void saveUserAsMember(String userUid, DocumentReference groupRef, WriteBatch batch) {
         Map<String, Boolean> data = new HashMap<>();
         data.put("exists", true);
-        DocumentReference memberRef = groupRef.collection("members").document(creatorUid);
+        DocumentReference memberRef = groupRef.collection("members").document(userUid);
         batch.set(memberRef, data);
     }
 
@@ -153,15 +196,27 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     /**
-     * Saves the group name in database.
-     * @param name The group name
-     * @param groupId The group id to which the name belongs
+     * Creates an entry in the tag collection for the group.
+     * @param tag The tag
+     * @param groupId The group id
+     * @param batch The batch of writes to which it belongs
      */
-    private void saveGroupName(String name, String groupId) {
-        DocumentReference namesRef = groupsNames.document(name);
-        Map<String, String> docData = new HashMap<>();
-        docData.put("group", groupId);
-        namesRef.set(docData);
+    private void addGroupToTag(String tag, String groupId, WriteBatch batch) {
+        DocumentReference tagRef = db.document("tags/" + tag + "/groups/" + groupId);
+        Map<String, Boolean> data = new HashMap<>();
+        data.put("exists", true);
+        batch.set(tagRef, data);
+    }
+
+    /**
+     * Deletes an entry in the tag collection for the group.
+     * @param tag The tag
+     * @param groupId The group id
+     * @param batch The batch of writes to which it belongs
+     */
+    private void deleteGroupFromTag(String tag, String groupId, WriteBatch batch) {
+        DocumentReference tagRef = db.document("tags/" + tag + "/groups/" + groupId);
+        batch.delete(tagRef);
     }
 
     /**

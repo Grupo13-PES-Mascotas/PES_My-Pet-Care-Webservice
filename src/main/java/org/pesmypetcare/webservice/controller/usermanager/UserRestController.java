@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserRestController {
+    private static final String TOKEN = "token";
     @Autowired
     private UserService userService;
 
@@ -35,7 +36,7 @@ public class UserRestController {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @DeleteMapping("/{username}")
-    public void deleteAccount(@RequestHeader("token") String token, @PathVariable String username,
+    public void deleteAccount(@RequestHeader(TOKEN) String token, @PathVariable String username,
                               @RequestParam(required = false) boolean db)
         throws DatabaseAccessException, FirebaseAuthException {
         if (db) {
@@ -53,7 +54,7 @@ public class UserRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{username}")
-    public UserEntity getUserData(@RequestHeader("token") String token,
+    public UserEntity getUserData(@RequestHeader(TOKEN) String token,
                                   @PathVariable String username) throws DatabaseAccessException {
         return userService.getUserData(token, username);
     }
@@ -67,7 +68,7 @@ public class UserRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{username}")
-    public void updateField(@RequestHeader("token") String token, @PathVariable String username,
+    public void updateField(@RequestHeader(TOKEN) String token, @PathVariable String username,
                             @RequestBody Map<String, String> value)
         throws FirebaseAuthException, DatabaseAccessException {
         String field = value.keySet().iterator().next();
