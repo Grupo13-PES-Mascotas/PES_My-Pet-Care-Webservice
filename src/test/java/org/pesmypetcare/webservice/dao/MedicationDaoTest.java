@@ -40,7 +40,6 @@ public class MedicationDaoTest {
     private static String date2;
     private static String name;
     private static String field;
-    private static String separator;
     private static String datename;
     private static int value;
 
@@ -95,7 +94,6 @@ public class MedicationDaoTest {
         name = "Cloroform";
         field = "duration";
         value = 4;
-        separator = "½";
         datename = "26-03-2020½Cloroform";
     }
 
