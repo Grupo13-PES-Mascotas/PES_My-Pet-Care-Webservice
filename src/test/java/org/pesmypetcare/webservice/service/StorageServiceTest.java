@@ -11,8 +11,6 @@ import org.pesmypetcare.webservice.dao.StorageDao;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +23,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class StorageServiceTest {
     private static ImageEntity imageEntity;
