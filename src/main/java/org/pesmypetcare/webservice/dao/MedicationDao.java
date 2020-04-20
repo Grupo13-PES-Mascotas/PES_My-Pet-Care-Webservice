@@ -47,7 +47,8 @@ public interface MedicationDao {
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    MedicationEntity getMedicationData(String owner, String petName, String date, String name) throws DatabaseAccessException;
+    MedicationEntity getMedicationData(String owner, String petName, String date, String name)
+            throws DatabaseAccessException;
 
     /**
      * Gets the data from all the specified medications from the database identified by its pet.
