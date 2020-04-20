@@ -3,7 +3,7 @@ import lombok.Data;
 
 @Data
 public class MedicationEntity {
-    private double quantity;
+    private Double quantity;
     private int duration;
     private int periodicity;
 }

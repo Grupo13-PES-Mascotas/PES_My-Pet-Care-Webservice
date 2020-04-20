@@ -93,7 +93,7 @@ public class MedicationDaoTest {
         petName = "linux";
         date = "26-03-2020";
         date2 = "26-04-2020";
-        dateName = "26-03-2020%Cloroform";
+        dateName = "26-03-2020$Cloroform";
         field = "duration";
         value = 4;
     }
