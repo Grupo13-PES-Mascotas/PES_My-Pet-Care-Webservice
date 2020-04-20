@@ -26,8 +26,7 @@ public class PetMedicationRestController {
      * @param medication The Medication entity that contains the attributes of the Medication
      */
     @PostMapping("/{owner}/{petName}/{dateName}")
-    public void createMedication(@RequestHeader(TOKEN) String accessToken,
-                                 @PathVariable String owner,
+    public void createMedication(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                                  @PathVariable String petName,
                                  @PathVariable String dateName,
                                  @RequestBody MedicationEntity medication) {
