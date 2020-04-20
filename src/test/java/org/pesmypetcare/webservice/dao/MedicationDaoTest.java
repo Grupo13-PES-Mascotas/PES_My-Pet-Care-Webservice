@@ -47,7 +47,8 @@ public class MedicationDaoTest {
     private static final String USERS_KEY = "users";
     private static final String PETS_KEY = "pets";
     private static final String MEDICATION_KEY = "medications";
-    private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
+    private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when"
+            + "ExecutionException received";
     private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException "
             + "received";
     private final String DOCUMENT_NOT_EXISTS_EXC_MSG = "Should throw DatabaseAccessException when med document"
