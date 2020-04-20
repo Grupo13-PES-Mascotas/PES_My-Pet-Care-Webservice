@@ -26,7 +26,7 @@ public class MedicationDaoImpl implements MedicationDao {
     private static final String DATE = "date";
     private static final String NAME = "name";
     private static final String BODY = "body";
-    private static final String SEPARATOR = "$";
+    private static final String SEPARATOR = "½";
 
     private Firestore db;
 
@@ -35,15 +35,15 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public void createMedication(String owner, String petName, String dateName,
+    public void createMedication(String owner, String petName, String date, String name,
                                  MedicationEntity medication) {
-        DocumentReference medicationRef = getMedicationsRef(owner, petName).document(dateName);
+        DocumentReference medicationRef = getMedicationsRef(owner, petName).document(date + SEPARATOR + name);
         medicationRef.set(medication);
     }
 
     @Override
-    public void deleteByDateAndName(String owner, String petName, String dateName) {
-        DocumentReference medRef = getMedicationsRef(owner, petName).document(dateName);
+    public void deleteByDateAndName(String owner, String petName, String date, String name) {
+        DocumentReference medRef = getMedicationsRef(owner, petName).document(date + SEPARATOR + name);
         medRef.delete();
     }
 
@@ -62,10 +62,10 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public MedicationEntity getMedicationData(String owner, String petName, String dateName)
+    public MedicationEntity getMedicationData(String owner, String petName, String date, String name)
             throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference medicationsRefDoc = medicationsRef.document(dateName);
+        DocumentReference medicationsRefDoc = medicationsRef.document(date + SEPARATOR + name);
         ApiFuture<DocumentSnapshot> future = medicationsRefDoc.get();
         DocumentSnapshot medicationDoc;
         try {
@@ -137,9 +137,10 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public Object getMedicationField(String owner, String petName, String dateName, String field)
+    public Object getMedicationField(String owner, String petName, String date, String name, String field)
             throws DatabaseAccessException {
-        ApiFuture<DocumentSnapshot> future = getMedicationsRef(owner, petName).document(dateName).get();
+        ApiFuture<DocumentSnapshot> future = getMedicationsRef(owner, petName)
+                .document(date + SEPARATOR + name).get();
         DocumentSnapshot medicationDoc;
         try {
             medicationDoc = future.get();
@@ -154,10 +155,10 @@ public class MedicationDaoImpl implements MedicationDao {
     }
 
     @Override
-    public void updateMedicationField(String owner, String petName, String dateName, String field,
-                                      Object value) {
+    public void updateMedicationField(String owner, String petName, String date, String name,
+                                      String field, Object value) {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
-        DocumentReference medRef = medicationsRef.document(dateName);
+        DocumentReference medRef = medicationsRef.document(date + SEPARATOR + name);
         medRef.update(field, value);
     }
 
@@ -176,6 +177,4 @@ public class MedicationDaoImpl implements MedicationDao {
         String[] parts = pk.split(SEPARATOR);
         return parts[1];
     }
-
-
 }

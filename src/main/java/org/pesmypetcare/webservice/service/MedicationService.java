@@ -15,7 +15,7 @@ public interface MedicationService {
      * @param dateName Date of the receipt of the medication
      * @param medication The medication entity that has the attributes of the medication for the pet.
      */
-    void createMedication(String owner, String petName, String dateName, MedicationEntity medication);
+    void createMedication(String owner, String petName, String date, String name, MedicationEntity medication);
 
     /**
      * Deletes all the medication with the specified owner and pet from certain date.
@@ -23,7 +23,7 @@ public interface MedicationService {
      * @param petName Name of the pet
      * @param dateName date + name of the receipt of the medication
      */
-    void deleteByDateAndName(String owner, String petName, String dateName);
+    void deleteByDateAndName(String owner, String petName, String date, String name);
 
     /**
      * Deletes all the medications of the specified pet from database.
@@ -41,7 +41,8 @@ public interface MedicationService {
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    MedicationEntity getMedicationData(String owner, String petName, String dateName) throws DatabaseAccessException;
+    MedicationEntity getMedicationData(String owner, String petName, String date, String name)
+            throws DatabaseAccessException;
 
     /**
      * Gets the data from all the specified medications from the database identified by its pet.
@@ -75,7 +76,7 @@ public interface MedicationService {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Object getMedicationField(String owner, String petName, String dateName, String field)
+    Object getMedicationField(String owner, String petName, String date, String name, String field)
             throws DatabaseAccessException;
 
     /**
@@ -86,6 +87,7 @@ public interface MedicationService {
      * @param field Name of the field to update
      * @param value Value the field will have
      */
-    void updateMedicationField(String owner, String petName, String dateName, String field, Object value);
+    void updateMedicationField(String owner, String petName, String date, String name, String field,
+                               Object value);
 
 }

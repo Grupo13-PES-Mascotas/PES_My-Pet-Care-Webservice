@@ -30,15 +30,17 @@ public class PetMedicationRestController {
      * @param accessToken oauth2 token needed to access the Database
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName Date + name of the Medication
+     * @param date Date of the Medication
+     * @param name Name of the Medication
      * @param medication The Medication entity that contains the attributes of the Medication
      */
-    @PostMapping("/{owner}/{petName}/{dateName}")
+    @PostMapping("/{owner}/{petName}/{date}/{name}")
     public void createMedication(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                                  @PathVariable String petName,
-                                 @PathVariable String dateName,
+                                 @PathVariable String date,
+                                 @PathVariable String name,
                                  @RequestBody MedicationEntity medication) {
-        medicationService.createMedication(owner, petName, dateName, medication);
+        medicationService.createMedication(owner, petName, date, name, medication);
     }
 
     /**
@@ -48,12 +50,13 @@ public class PetMedicationRestController {
      * @param petName Name of the pet
      * @param dateName date + name of the receipt of the medication
      */
-    @DeleteMapping("/{owner}/{petName}/{dateName}")
+    @DeleteMapping("/{owner}/{petName}/{date}/{name}")
     public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken,
                                     @PathVariable String owner,
                                     @PathVariable String petName,
-                                    @PathVariable String dateName) {
-        medicationService.deleteByDateAndName(owner, petName, dateName);
+                                    @PathVariable String date,
+                                    @PathVariable String name) {
+        medicationService.deleteByDateAndName(owner, petName, date, name);
     }
 
     /**
@@ -80,13 +83,14 @@ public class PetMedicationRestController {
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @GetMapping("/{owner}/{petName}/{dateName}")
+    @GetMapping("/{owner}/{petName}/{date}/{name}")
     public MedicationEntity getMedicationData(@RequestHeader(TOKEN) String accessToken,
                                               @PathVariable String owner,
                                               @PathVariable String petName,
-                                              @PathVariable String dateName)
+                                              @PathVariable String date,
+                                              @PathVariable String name)
             throws DatabaseAccessException {
-        return medicationService.getMedicationData(owner, petName, dateName);
+        return medicationService.getMedicationData(owner, petName, date, name);
     }
 
     /**
@@ -135,14 +139,15 @@ public class PetMedicationRestController {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    @GetMapping("/{owner}/{petName}/{dateName}/{field}")
+    @GetMapping("/{owner}/{petName}/{date}/{name}/{field}")
     public Object getMedicationField(@RequestHeader(TOKEN) String accessToken,
                                      @PathVariable String owner,
                                      @PathVariable String petName,
-                                     @PathVariable String dateName,
+                                     @PathVariable String date,
+                                     @PathVariable String name,
                                      @PathVariable String field)
             throws DatabaseAccessException {
-        return medicationService.getMedicationField(owner, petName, dateName, field);
+        return medicationService.getMedicationField(owner, petName, date, name, field);
     }
 
     /**
@@ -155,13 +160,14 @@ public class PetMedicationRestController {
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
      */
-    @PutMapping("/{owner}/{petName}/{dateName}/{field}")
+    @PutMapping("/{owner}/{petName}/{date}/{name}/{field}")
     public void updateMedicationField(@RequestHeader(TOKEN) String accessToken,
                                       @PathVariable String owner,
                                       @PathVariable String petName,
-                                      @PathVariable String dateName,
+                                      @PathVariable String date,
+                                      @PathVariable String name,
                                       @PathVariable String field,
                                       @RequestBody Map<String, Object> valueMap) {
-        medicationService.updateMedicationField(owner, petName, dateName, field, valueMap.get("value"));
+        medicationService.updateMedicationField(owner, petName, date, name, field, valueMap.get("value"));
     }
 }

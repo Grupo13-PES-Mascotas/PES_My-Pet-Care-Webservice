@@ -29,7 +29,7 @@ public class MedicationServiceTest {
     private static MedicationEntity medicationEntity;
     private static String owner;
     private static String petName;
-    private static String dateName;
+    private static String name;
     private static String date;
     private static String date2;
     private static String field;
@@ -47,7 +47,7 @@ public class MedicationServiceTest {
     public static void setUp() {
         medicationList = new ArrayList<>();
         medicationEntity = new MedicationEntity();
-        dateName = "2020-02-13/Cloroform";
+        name = "Cloroform";
         date = "2020-02-13";
         date2 = "2021-02-13";
         owner = "Pepe05";
@@ -58,15 +58,17 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnNothingWhenMedicationCreated() {
-        service.createMedication(owner, petName, dateName, medicationEntity);
-        verify(medicationDao).createMedication(isA(String.class), isA(String.class), isA(String.class),
+        service.createMedication(owner, petName, date, name, medicationEntity);
+        verify(medicationDao).createMedication(isA(String.class), isA(String.class),
+                isA(String.class), isA(String.class),
                 isA(MedicationEntity.class));
     }
 
     @Test
     public void shouldReturnNothingWhenMedicationDeleted() {
-        service.deleteByDateAndName(owner, petName, dateName);
-        verify(medicationDao).deleteByDateAndName(isA(String.class), isA(String.class), isA(String.class));
+        service.deleteByDateAndName(owner, petName, date, name);
+        verify(medicationDao).deleteByDateAndName(isA(String.class), isA(String.class),
+                isA(String.class), isA(String.class));
     }
 
     @Test
@@ -86,8 +88,8 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnMedicationEntityWhenMedicationRetrieved() throws DatabaseAccessException {
-        when(medicationDao.getMedicationData(owner, petName, dateName)).thenReturn(medicationEntity);
-        MedicationEntity medication = service.getMedicationData(owner, petName, dateName);
+        when(medicationDao.getMedicationData(owner, petName, date, name)).thenReturn(medicationEntity);
+        MedicationEntity medication = service.getMedicationData(owner, petName, date, name);
         assertSame(medicationEntity, medication, "Should return a Medication entity");
     }
 
@@ -95,8 +97,8 @@ public class MedicationServiceTest {
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationData(any(String.class),
-                    any(String.class), isA(String.class));
-            service.getMedicationData(owner, petName, dateName);
+                    any(String.class), isA(String.class), isA(String.class));
+            service.getMedicationData(owner, petName, date, name);
         }, getExceptionMsg);
     }
 
@@ -136,8 +138,8 @@ public class MedicationServiceTest {
 
     @Test
     public void shouldReturnMedicationFieldWhenMedicationFieldRetrieved() throws DatabaseAccessException {
-        when(medicationDao.getMedicationField(owner, petName, date, field)).thenReturn(value);
-        Object obtainedValue = service.getMedicationField(owner, petName, date, field);
+        when(medicationDao.getMedicationField(owner, petName, date, name, field)).thenReturn(value);
+        Object obtainedValue = service.getMedicationField(owner, petName, date, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
     }
 
@@ -145,16 +147,16 @@ public class MedicationServiceTest {
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationField(any(String.class),
-                    any(String.class), isA(String.class), isA(String.class));
-            service.getMedicationField(owner, petName, date, field);
+                    any(String.class), isA(String.class), isA(String.class), isA(String.class));
+            service.getMedicationField(owner, petName, date, name, field);
         }, "Should return an exception when retrieving a Medication field fails");
     }
 
     @Test
     public void shouldReturnNothingWhenMedicationFieldUpdated() {
-        service.updateMedicationField(owner, petName, date, field, value);
+        service.updateMedicationField(owner, petName, date, name, field, value);
         verify(medicationDao).updateMedicationField(isA(String.class), isA(String.class),
-                isA(String.class), isA(String.class),
+                isA(String.class), isA(String.class), isA(String.class),
                 isA(Object.class));
     }
 }

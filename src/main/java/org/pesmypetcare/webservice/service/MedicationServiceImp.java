@@ -16,13 +16,14 @@ public class MedicationServiceImp implements MedicationService {
     private MedicationDao medicationDao;
 
     @Override
-    public void createMedication(String owner, String petName, String dateName, MedicationEntity medication) {
-        medicationDao.createMedication(owner, petName, dateName, medication);
+    public void createMedication(String owner, String petName, String date, String name,
+                                 MedicationEntity medication) {
+        medicationDao.createMedication(owner, petName, date, name, medication);
     }
 
     @Override
-    public void deleteByDateAndName(String owner, String petName, String dateName) {
-        medicationDao.deleteByDateAndName(owner, petName, dateName);
+    public void deleteByDateAndName(String owner, String petName, String date, String name) {
+        medicationDao.deleteByDateAndName(owner, petName, date, name);
     }
 
     @Override
@@ -31,9 +32,9 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public MedicationEntity getMedicationData(String owner, String petName, String dateName)
+    public MedicationEntity getMedicationData(String owner, String petName, String date, String name)
             throws DatabaseAccessException {
-        return medicationDao.getMedicationData(owner, petName, dateName);
+        return medicationDao.getMedicationData(owner, petName, date, name);
     }
 
     @Override
@@ -50,13 +51,14 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public Object getMedicationField(String owner, String petName, String dateName, String field)
+    public Object getMedicationField(String owner, String petName, String date, String name, String field)
             throws DatabaseAccessException {
-        return medicationDao.getMedicationField(owner, petName, dateName, field);
+        return medicationDao.getMedicationField(owner, petName, date, name, field);
     }
 
     @Override
-    public void updateMedicationField(String owner, String petName, String dateName, String field, Object value) {
-        medicationDao.updateMedicationField(owner, petName, dateName, field, value);
+    public void updateMedicationField(String owner, String petName, String date, String name, String field,
+                                      Object value) {
+        medicationDao.updateMedicationField(owner, petName, date, name, field, value);
     }
 }

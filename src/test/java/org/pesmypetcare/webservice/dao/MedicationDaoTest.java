@@ -25,10 +25,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
@@ -41,8 +38,10 @@ public class MedicationDaoTest {
     private static String petName;
     private static String date;
     private static String date2;
-    private static String dateName;
+    private static String name;
     private static String field;
+    private static String separator;
+    private static String datename;
     private static int value;
 
 
@@ -91,11 +90,13 @@ public class MedicationDaoTest {
         medEntity = new MedicationEntity();
         owner = "usuario_de_pruebas";
         petName = "linux";
-        date = "26-03-2020";
         date2 = "26-04-2020";
-        dateName = "26-03-2020$Cloroform";
+        date = "26-03-2020";
+        name = "Cloroform";
         field = "duration";
         value = 4;
+        separator = "½";
+        datename = "26-03-2020½Cloroform";
     }
 
     @Test
@@ -108,14 +109,14 @@ public class MedicationDaoTest {
         given(medsRef.document(anyString())).willReturn(medRef);
         given(medRef.set(isA(MedicationEntity.class))).willReturn(null);
 
-        medDao.createMedication(owner, petName, dateName, medEntity);
+        medDao.createMedication(owner, petName, date, name, medEntity);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(dateName));
+        verify(medsRef).document(eq(datename));
         verify(medRef).set(same(medEntity));
     }
 
@@ -129,14 +130,14 @@ public class MedicationDaoTest {
         given(medsRef.document(anyString())).willReturn(medRef);
         given(medRef.delete()).willReturn(null);
 
-        medDao.deleteByDateAndName(owner, petName, dateName);
+        medDao.deleteByDateAndName(owner, petName, date, name);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(dateName));
+        verify(medsRef).document(eq(datename));
         verify(medRef).delete();
     }
 
@@ -210,7 +211,7 @@ public class MedicationDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(MedicationEntity.class)).willReturn(medEntity);
 
-        MedicationEntity med = medDao.getMedicationData(owner, petName, dateName);
+        MedicationEntity med = medDao.getMedicationData(owner, petName, date, name);
 
         assertSame(medEntity, med, "Should return med Entity");
     }
@@ -228,7 +229,7 @@ public class MedicationDaoTest {
             given(futureDocument.get()).willReturn(documentSnapshot);
             given(documentSnapshot.exists()).willReturn(false);
 
-            medDao.getMedicationData(owner, petName, dateName);
+            medDao.getMedicationData(owner, petName, date, name);
         }, DOCUMENT_NOT_EXISTS_EXC_MSG);
     }
 
@@ -245,7 +246,7 @@ public class MedicationDaoTest {
             given(medRef.get()).willReturn(futureDocument);
             willThrow(InterruptedException.class).given(futureDocument).get();
 
-            medDao.getMedicationData(owner, petName, dateName);
+            medDao.getMedicationData(owner, petName, date, name);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -262,7 +263,7 @@ public class MedicationDaoTest {
             willThrow(ExecutionException.class).given(futureDocument).get();
 
 
-            medDao.getMedicationData(owner, petName, dateName);
+            medDao.getMedicationData(owner, petName, date, name);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -381,7 +382,7 @@ public class MedicationDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.get(anyString())).willReturn(value);
 
-        Object medValue = medDao.getMedicationField(owner, petName, dateName, field);
+        Object medValue = medDao.getMedicationField(owner, petName, date, name, field);
 
         assertSame(value, medValue, "Should return field value");
     }
@@ -399,7 +400,7 @@ public class MedicationDaoTest {
             given(futureDocument.get()).willReturn(documentSnapshot);
             given(documentSnapshot.exists()).willReturn(false);
 
-            medDao.getMedicationField(owner, petName, dateName, field);
+            medDao.getMedicationField(owner, petName, date, name, field);
         }, DOCUMENT_NOT_EXISTS_EXC_MSG);
     }
 
@@ -416,7 +417,7 @@ public class MedicationDaoTest {
             given(medRef.get()).willReturn(futureDocument);
             willThrow(InterruptedException.class).given(futureDocument).get();
 
-            medDao.getMedicationField(owner, petName, dateName, field);
+            medDao.getMedicationField(owner, petName, date, name, field);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -432,7 +433,7 @@ public class MedicationDaoTest {
             given(medRef.get()).willReturn(futureDocument);
             willThrow(ExecutionException.class).given(futureDocument).get();
 
-            medDao.getMedicationField(owner, petName, dateName, field);
+            medDao.getMedicationField(owner, petName, date, name, field);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -446,14 +447,14 @@ public class MedicationDaoTest {
         given(medsRef.document(anyString())).willReturn(medRef);
         given(medRef.update(anyString(), any())).willReturn(null);
 
-        medDao.updateMedicationField(owner, petName, dateName, field, value);
+        medDao.updateMedicationField(owner, petName, date, name, field, value);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(MEDICATION_KEY));
-        verify(medsRef).document(same(dateName));
+        verify(medsRef).document(eq(datename));
         verify(medRef).update(same(field), same(value));
     }
 }
