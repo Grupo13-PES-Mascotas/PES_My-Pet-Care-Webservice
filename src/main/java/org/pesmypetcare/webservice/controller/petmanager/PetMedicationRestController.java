@@ -26,8 +26,10 @@ public class PetMedicationRestController {
      * @param medication The Medication entity that contains the attributes of the Medication
      */
     @PostMapping("/{owner}/{petName}/{dateName}")
-    public void createMedication(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                                 @PathVariable String petName, @PathVariable String dateName,
+    public void createMedication(@RequestHeader(TOKEN) String accessToken,
+                                 @PathVariable String owner,
+                                 @PathVariable String petName,
+                                 @PathVariable String dateName,
                                  @RequestBody MedicationEntity medication) {
         medicationService.createMedication(owner, petName, dateName, medication);
     }
@@ -40,8 +42,10 @@ public class PetMedicationRestController {
      * @param dateName date + name of the receipt of the medication
      */
     @DeleteMapping("/{owner}/{petName}/{dateName}")
-    public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                                    @PathVariable String petName, @PathVariable  String dateName) {
+    public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken,
+                                    @PathVariable String owner,
+                                    @PathVariable String petName,
+                                    @PathVariable  String dateName) {
         medicationService.deleteByDateAndName(owner, petName, dateName);
     }
 
@@ -73,7 +77,8 @@ public class PetMedicationRestController {
     public MedicationEntity getMedicationData(@RequestHeader(TOKEN) String accessToken,
                                               @PathVariable String owner,
                                               @PathVariable String petName,
-                                              @PathVariable String dateName) throws DatabaseAccessException {
+                                              @PathVariable String dateName)
+            throws DatabaseAccessException {
         return medicationService.getMedicationData(owner, petName, dateName);
     }
 
@@ -124,7 +129,8 @@ public class PetMedicationRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{dateName}/{field}")
-    public Object getMedicationField(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+    public Object getMedicationField(@RequestHeader(TOKEN) String accessToken,
+                                     @PathVariable String owner,
                                      @PathVariable String petName,
                                      @PathVariable String dateName,
                                      @PathVariable String field)
@@ -143,7 +149,8 @@ public class PetMedicationRestController {
      *      *                key "value"
      */
     @PutMapping("/{owner}/{petName}/{dateName}/{field}")
-    public void updateMedicationField(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+    public void updateMedicationField(@RequestHeader(TOKEN) String accessToken,
+                                      @PathVariable String owner,
                                       @PathVariable String petName,
                                       @PathVariable String dateName,
                                       @PathVariable String field,
