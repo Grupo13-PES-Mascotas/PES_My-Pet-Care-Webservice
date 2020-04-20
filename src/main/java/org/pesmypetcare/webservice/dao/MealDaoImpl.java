@@ -9,7 +9,7 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.pesmypetcare.webservice.factories.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
