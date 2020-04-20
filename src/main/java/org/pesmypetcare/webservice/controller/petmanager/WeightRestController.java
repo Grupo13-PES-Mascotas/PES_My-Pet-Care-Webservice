@@ -116,7 +116,7 @@ public class WeightRestController {
     @PutMapping("/{owner}/{petName}/{petDate}")
     public void updateWeight(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
                              @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
-        weightService.updateWeight(owner, petName, petDate, valueMap.get("value"));
+        weightService.updateWeight(owner, petName, petDate, valueMap.get("weightValue"));
     }
 
 }
