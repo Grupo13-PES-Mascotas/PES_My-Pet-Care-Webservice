@@ -23,7 +23,8 @@ public class MedicationDaoImpl implements MedicationDao {
     private static final String DELETION_FAILED = "deletion-failed";
     private static final String MEDICATION_DOES_NOT_EXIST_EXC = "The med does not exist";
     private static final String INVALID_MEDICATION_EXC = "invalid-med";
-    private static final String DATE_NAME = "dateName";
+    private static final String DATE = "date";
+    private static final String NAME = "name";
     private static final String BODY = "body";
     private static final String SEPARATOR = "$";
 
@@ -98,7 +99,8 @@ public class MedicationDaoImpl implements MedicationDao {
 
     private Map<String, Object> getEachInternalList(QueryDocumentSnapshot medicationDocument) {
         Map<String, Object> internalList = new HashMap<>();
-        internalList.put(DATE_NAME, medicationDocument.getId());
+        internalList.put(DATE, pkToDate(medicationDocument.getId()));
+        internalList.put(NAME, pkToName(medicationDocument.getId()));
         internalList.put(BODY, medicationDocument.toObject(MedicationEntity.class));
         return internalList;
     }
@@ -126,7 +128,8 @@ public class MedicationDaoImpl implements MedicationDao {
             if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0
                     && finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
                 Map<String, Object> internalList = new HashMap<>();
-                internalList.put(DATE_NAME, medDocument.getId());
+                internalList.put(DATE, pkToDate(medDocument.getId()));
+                internalList.put(NAME, pkToName(medDocument.getId()));
                 internalList.put(BODY, medDocument.toObject(MedicationEntity.class));
                 externalList.add(internalList);
             }
@@ -168,5 +171,11 @@ public class MedicationDaoImpl implements MedicationDao {
         String[] parts = pk.split(SEPARATOR);
         return parts[0];
     }
+
+    public String pkToName(String pk) {
+        String[] parts = pk.split(SEPARATOR);
+        return parts[1];
+    }
+
 
 }
