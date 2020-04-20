@@ -12,7 +12,8 @@ public interface MedicationService {
      * Creates a medication eaten by a pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName Date of the receipt of the medication
+     * @param date date of the medication
+     * @param name name of the medication
      * @param medication The medication entity that has the attributes of the medication for the pet.
      */
     void createMedication(String owner, String petName, String date, String name, MedicationEntity medication);
@@ -21,7 +22,8 @@ public interface MedicationService {
      * Deletes all the medication with the specified owner and pet from certain date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName date + name of the receipt of the medication
+     * @param date date of the medication
+     * @param name name of the medication
      */
     void deleteByDateAndName(String owner, String petName, String date, String name);
 
@@ -37,7 +39,8 @@ public interface MedicationService {
      * Gets a medication identified by its pet, date and name.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName pk of the medication.
+     * @param date date of the medication
+     * @param name name of the medication
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -71,7 +74,8 @@ public interface MedicationService {
      * Gets the value for the specified field of the medication on the database.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
-     * @param dateName Date of the medication
+     * @param date date of the medication
+     * @param name name of the medication
      * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -83,7 +87,8 @@ public interface MedicationService {
      * Updates the medication's field.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName Date + name of the medication
+     * @param date date of the medication
+     * @param name name of the medication
      * @param field Name of the field to update
      * @param value Value the field will have
      */
