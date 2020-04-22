@@ -188,7 +188,9 @@ public class UserDaoImpl implements UserDao {
     private void updateUsername(String uid, String newUsername) throws DatabaseAccessException, FirebaseAuthException {
         DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, newUsername);
         if (!usernameDoc.exists()) {
-            updateNameOnSubscriptions((String) usernameDoc.get("username"), newUsername);
+            String username = myAuth.getUser(uid).getDisplayName();
+            updateNameOnSubscriptions(username, newUsername);
+            updateNameOnCreatedGroups(username, newUsername);
             deleteOldUsername(uid);
             saveUsername(uid, newUsername);
             updateDisplayName(uid, newUsername);
@@ -199,7 +201,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Updates the username on all of the user groups the user is subscribed.
+     * Updates the username on all of the groups the user is subscribed.
      * @param username The current username
      * @param newUsername The new username
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -215,6 +217,26 @@ public class UserDaoImpl implements UserDao {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
+        }
+    }
+
+    /**
+     * Updates the username on all of the groups the user has created.
+     * @param username The current username
+     * @param newUsername The new username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void updateNameOnCreatedGroups(String username, String newUsername) throws DatabaseAccessException {
+        Query query = db.collection("groups)").whereEqualTo("creator", username);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                DocumentReference ref = document.getReference();
+                ref.update("creator", newUsername);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("update-failed", "Failure when updating name in created groups");
         }
     }
 
