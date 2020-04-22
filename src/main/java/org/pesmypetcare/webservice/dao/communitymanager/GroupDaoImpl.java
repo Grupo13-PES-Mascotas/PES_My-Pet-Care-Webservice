@@ -73,7 +73,8 @@ public class GroupDaoImpl implements GroupDao {
     public void deleteGroup(String name) throws DatabaseAccessException {
         String id = getGroupId(name);
         batch = db.batch();
-        deleteGroupFromAllTags(id);
+        deleteGroupFromAllTags(id, batch);
+        deleteAllMembers(id, name, batch);
         DocumentReference groupRef = groups.document(id);
         batch.delete(groupRef);
         DocumentReference namesRef = groupsNames.document(name);
@@ -318,14 +319,43 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes a group from all its tags.
      *
      * @param group The group name
+     * @param batch The batch of writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void deleteGroupFromAllTags(String group) throws DatabaseAccessException {
+    private void deleteGroupFromAllTags(String group, WriteBatch batch) throws DatabaseAccessException {
         Query query = tags.whereArrayContains("groups", group);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
+            Map<String, Object> data = new HashMap<>();
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-                batch.delete(document.getReference());
+                data.put("groups", FieldValue.arrayRemove(group));
+                batch.update(document.getReference(), data);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the tags data");
+        }
+    }
+
+    /**
+     * Deletes the all group from members.
+     * @param id The group id
+     * @param name The group name
+     * @param batch The batch of writes to which it belongs
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void deleteAllMembers(String id, String name, WriteBatch batch) throws DatabaseAccessException {
+        Iterable<DocumentReference> documents = groups.document(id).collection("members").listDocuments();
+        for (DocumentReference doc : documents) {
+            batch.delete(doc);
+        }
+        Query query = db.collection("users").whereArrayContains("groupSubscriptions", name);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                data.put("groupSubscriptions", FieldValue.arrayRemove(name));
+                batch.update(document.getReference(), data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
