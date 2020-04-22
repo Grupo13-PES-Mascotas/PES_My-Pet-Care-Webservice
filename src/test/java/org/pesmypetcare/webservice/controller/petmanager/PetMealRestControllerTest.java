@@ -88,7 +88,7 @@ public class PetMealRestControllerTest {
     @Test
     public void deleteAllMealsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllMeals(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName ))
             .andExpect(status().isOk());
     }
 
