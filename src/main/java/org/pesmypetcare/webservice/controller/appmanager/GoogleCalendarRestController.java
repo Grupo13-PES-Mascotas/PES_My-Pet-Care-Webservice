@@ -117,8 +117,8 @@ public class GoogleCalendarRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/event/{owner}/{petName}")
-    public void updateEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner, @PathVariable String petName,
-                     @RequestBody EventEntity eventEntity)
+    public void updateEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+                            @PathVariable String petName, @RequestBody EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException {
         googleCalendarService.updateEvent(accessToken, owner, petName, eventEntity);
     }
@@ -133,9 +133,9 @@ public class GoogleCalendarRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/event/{owner}/{petName}")
-    public void deleteEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner, @PathVariable String petName,
-                     @RequestBody Map<String, Object> body) throws CalendarAccessException
-        ,DatabaseAccessException {
+    public void deleteEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+                            @PathVariable String petName, @RequestBody Map<String, Object> body)
+        throws CalendarAccessException, DatabaseAccessException {
         googleCalendarService.deleteEvent(accessToken, owner, petName, (String) body.get("eventId"));
     }
 
