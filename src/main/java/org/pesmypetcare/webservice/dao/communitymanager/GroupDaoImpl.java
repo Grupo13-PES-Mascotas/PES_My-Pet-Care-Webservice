@@ -11,7 +11,6 @@ import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
-import org.pesmypetcare.webservice.dao.usermanager.UserDaoImpl;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -55,7 +53,7 @@ public class GroupDaoImpl implements GroupDao {
         String name = entity.getName();
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
-        saveUserAsMember(creator, groupRef, batch);
+        saveUserAsMember(userDao.getUid(creator), creator, groupRef, batch);
         userDao.addGroupSubscription(creator, groupRef.getId(), name, batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
@@ -81,7 +79,7 @@ public class GroupDaoImpl implements GroupDao {
     public GroupEntity getGroup(String name) throws DatabaseAccessException {
         String id = getGroupId(name);
         DocumentSnapshot snapshot = getDocumentSnapshot(groups, id);
-        return getGroupEntityAndChangeCreatorUidForUsername(snapshot);
+        return snapshot.toObject(GroupEntity.class);
     }
 
     @Override
@@ -91,7 +89,7 @@ public class GroupDaoImpl implements GroupDao {
             List<GroupEntity> groupList = new ArrayList<>();
             List<QueryDocumentSnapshot> groupDocs = future.get().getDocuments();
             for (QueryDocumentSnapshot group : groupDocs) {
-                groupList.add(getGroupEntityAndChangeCreatorUidForUsername(group));
+                groupList.add(group.toObject(GroupEntity.class));
             }
             return groupList;
         } catch (InterruptedException | ExecutionException e) {
@@ -128,7 +126,7 @@ public class GroupDaoImpl implements GroupDao {
         String groupId = getGroupId(group);
         DocumentReference groupRef = groups.document(groupId);
         batch = db.batch();
-        saveUserAsMember(userUid, groupRef, batch);
+        saveUserAsMember(userUid, username, groupRef, batch);
         userDao.addGroupSubscription(userUid, groupId, group, batch);
         batch.commit();
     }
@@ -190,14 +188,14 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Saves the user as a member of the group.
-     *
-     * @param userUid The user's uid
+     *  @param userUid The user's uid
+     * @param username The user's username
      * @param groupRef The group document reference
      * @param batch The batch of writes to which it belongs
      */
-    private void saveUserAsMember(String userUid, DocumentReference groupRef, WriteBatch batch) {
-        Map<String, Boolean> data = new HashMap<>();
-        data.put("exists", true);
+    private void saveUserAsMember(String userUid, String username, DocumentReference groupRef, WriteBatch batch) {
+        Map<String, String> data = new HashMap<>();
+        data.put("user", username);
         DocumentReference memberRef = groupRef.collection("members").document(userUid);
         batch.set(memberRef, data);
     }
@@ -330,21 +328,6 @@ public class GroupDaoImpl implements GroupDao {
         for (DocumentReference docRef : membersDocRefs) {
             batch.delete(docRef);
         }
-    }
-
-    /**
-     * Gets a group entity from its document snapshot and changes its creator uid for the username.
-     * @param snapshot The group document snapshot
-     * @return The group entity with the creator username instead of the uid
-     * @throws DatabaseAccessException If an error occurs when accessing the database
-     */
-    private GroupEntity getGroupEntityAndChangeCreatorUidForUsername(DocumentSnapshot snapshot)
-        throws DatabaseAccessException {
-        UserDao userDao  = new UserDaoImpl();
-        GroupEntity group = snapshot.toObject(GroupEntity.class);
-        String uid = Objects.requireNonNull(group).getCreator();
-        group.setCreator(userDao.getField(uid, UserDaoImpl.USERNAME_FIELD));
-        return group;
     }
 
     /**
