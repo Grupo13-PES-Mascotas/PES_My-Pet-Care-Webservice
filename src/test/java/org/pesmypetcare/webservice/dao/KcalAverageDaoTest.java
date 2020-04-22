@@ -86,7 +86,7 @@ public class KcalAverageDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "kcalAverageValue";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test

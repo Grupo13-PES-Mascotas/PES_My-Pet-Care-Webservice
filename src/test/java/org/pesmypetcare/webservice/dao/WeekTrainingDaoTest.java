@@ -6,7 +6,8 @@ import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.DocumentSnapshot;import org.junit.jupiter.api.BeforeAll;
+import com.google.cloud.firestore.DocumentSnapshot;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -85,7 +86,7 @@ public class WeekTrainingDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "weekTrainingValue";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test

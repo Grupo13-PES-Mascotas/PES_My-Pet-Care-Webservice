@@ -86,7 +86,7 @@ public class FreqWashDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "freqWashValue";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test
