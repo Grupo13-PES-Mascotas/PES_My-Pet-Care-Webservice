@@ -18,13 +18,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(UserEntity userEntity) {
-        userDao.createUser(userEntity);
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+        userDao.createUser(uid, userEntity);
     }
 
     @Override
-    public void deleteById(String id) throws DatabaseAccessException, FirebaseAuthException {
-        userDao.deleteById(id);
+    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+        userDao.deleteFromDatabase(uid);
+    }
+
+    @Override
+    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException {
+        userDao.deleteById(uid);
     }
 
     @Override
@@ -33,12 +38,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateEmail(String uid, String newEmail) throws FirebaseAuthException {
-        userDao.updateEmail(uid, newEmail);
+    public void updateField(String uid, String field, String newValue)
+        throws FirebaseAuthException, DatabaseAccessException {
+        userDao.updateField(uid, field, newValue);
     }
 
     @Override
-    public void updatePassword(String uid, String newPassword) throws FirebaseAuthException {
-        userDao.updatePassword(uid, newPassword);
+    public boolean existsUsername(String username) throws DatabaseAccessException {
+        return userDao.existsUsername(username);
     }
 }

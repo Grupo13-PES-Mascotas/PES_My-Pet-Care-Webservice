@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -23,28 +25,39 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
+    private static final String USERNAME_FIELD = "username";
+    private static final String EMAIL_FIELD = "email";
+    private static final String PASSWORD_FIELD = "password";
+    private static final String USER_FIELD = "user";
     private static UserEntity userEntity;
+    private static String uid;
     private static String username;
+    private static String newUsername;
     private static String password;
     private static String email;
-    private static final String EMAIL_FIELD = "email";
+    private static Map<String, String> docData;
 
     @Mock
-    private FirebaseAuth auth;
+    private FirebaseAuth myAuth;
     @Mock
-    private CollectionReference usersRef;
+    private CollectionReference users;
     @Mock
-    private DocumentReference docRef;
+    private CollectionReference usedUsernames;
+    @Mock
+    private DocumentReference userRef;
+    @Mock
+    private DocumentReference usernameRef;
+    @Mock
+    private DocumentReference newUsernameRef;
     @Mock
     private PetDaoImpl petDao;
     @Mock
@@ -52,7 +65,11 @@ class UserDaoTest {
     @Mock
     private ApiFuture<DocumentSnapshot> future;
     @Mock
+    private ApiFuture<DocumentSnapshot> newFuture;
+    @Mock
     private DocumentSnapshot snapshot;
+    @Mock
+    private DocumentSnapshot oldSnapshot;
     @Mock
     private UserRecord userRecord;
     @Mock
@@ -64,43 +81,68 @@ class UserDaoTest {
     @BeforeAll
     public static void setUp() {
         password = "123456";
-        username = "username";
+        uid = "123eA2eA4";
+        username = "John";
+        newUsername = "Michael";
         email = "user@email.com";
-        userEntity = new UserEntity(username, email);
+        userEntity = new UserEntity(username, password, email);
+        docData = new HashMap<>();
+        docData.put(USER_FIELD, uid);
     }
 
     @Test
     public void shouldCreateUserAccount() throws FirebaseAuthException {
         dao.createUserAuth(userEntity, password);
-        verify(auth).createUser(isA(UserRecord.CreateRequest.class));
+        verify(myAuth).createUser(isA(UserRecord.CreateRequest.class));
     }
 
     @Test
     public void shouldThrowFirebaseAuthExceptionOnFail() {
         assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(auth).createUser(any(UserRecord.CreateRequest.class));
+            willThrow(FirebaseAuthException.class).given(myAuth).createUser(any(UserRecord.CreateRequest.class));
             dao.createUserAuth(userEntity, password);
         }, "Should throw FirebaseAuthException when the creation fails");
     }
 
     @Test
-    public void shouldCreateUserOnDatabase() {
-        given(usersRef.document(anyString())).willReturn(docRef);
-        given(docRef.set(any(UserEntity.class))).willReturn(null);
-        dao.createUser(userEntity);
-        verify(usersRef).document(same(userEntity.getUsername()));
-        verify(docRef).set(same(userEntity));
+    public void shouldCreateUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException,
+        ExecutionException, InterruptedException {
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
+        given(users.document(anyString())).willReturn(userRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(false);
+        given(usernameRef.set(docData)).willReturn(null);
+        given(userRef.set(any(UserEntity.class))).willReturn(null);
+        given(myAuth.getUser(uid)).willReturn(userRecord);
+        given(userRecord.updateRequest()).willReturn(updateRequest);
+        given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
+
+        dao.createUser(uid, userEntity);
+        verify(usedUsernames, times(2)).document(same(username));
+        verify(usernameRef).set(docData);
+        verify(users).document(same(uid));
+        verify(userRef).set(same(userEntity));
+        verify(myAuth).getUser(same(uid));
+        verify(updateRequest).setDisplayName(same(username));
     }
 
     @Test
-    public void shouldDeleteUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException {
-        given(usersRef.document(anyString())).willReturn(docRef);
+    public void shouldDeleteUser() throws DatabaseAccessException, FirebaseAuthException,
+        ExecutionException, InterruptedException {
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
+        given(usernameRef.delete()).willReturn(null);
         dao.deleteById(username);
         verify(petDao).deleteAllPets(same(username));
-        verify(docRef).delete();
-        verify(auth).deleteUser(same(username));
+        verify(userRef).delete();
+        verify(usernameRef).delete();
+        verify(myAuth).deleteUser(same(username));
     }
 
     @Test
@@ -112,20 +154,26 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldThrowFirebaseAuthExceptionWhenDeleteFromDatabaseFails() {
-        given(usersRef.document(anyString())).willReturn(docRef);
+    public void shouldThrowFirebaseAuthExceptionWhenDeleteFromDatabaseFails()
+        throws ExecutionException, InterruptedException {
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
+        given(usernameRef.delete()).willReturn(null);
         assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(auth).deleteUser(anyString());
+            willThrow(FirebaseAuthException.class).given(myAuth).deleteUser(anyString());
             dao.deleteById(username);
         }, "Should throw DatabaseAccessException when the deletion from Firebase authentication fails");
     }
 
     @Test
     public void shouldReturnUserEntity() throws ExecutionException, InterruptedException, DatabaseAccessException {
-        given(usersRef.document(anyString())).willReturn(docRef);
-        given(docRef.get()).willReturn(future);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(true);
         given(snapshot.toObject(UserEntity.class)).willReturn(userEntity);
@@ -136,8 +184,8 @@ class UserDaoTest {
 
     @Test
     public void shouldFailIfUserDoesNotExist() throws ExecutionException, InterruptedException {
-        given(usersRef.document(anyString())).willReturn(docRef);
-        given(docRef.get()).willReturn(future);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
         assertThrows(DatabaseAccessException.class, () -> dao.getUserData(username),
@@ -145,78 +193,110 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldUpdateEmail() throws FirebaseAuthException {
-        given(auth.getUser(anyString())).willReturn(userRecord);
+    public void shouldUpdateUsername() throws FirebaseAuthException, DatabaseAccessException,
+        ExecutionException, InterruptedException {
+        given(usedUsernames.document(username)).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(oldSnapshot);
+        given(oldSnapshot.exists()).willReturn(true);
+        given(oldSnapshot.get(anyString())).willReturn(uid);
+        given(usedUsernames.document(newUsername)).willReturn(newUsernameRef);
+        given(newUsernameRef.get()).willReturn(newFuture);
+        given(newFuture.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(false);
+        given(myAuth.getUser(anyString())).willReturn(userRecord);
+        given(userRecord.getDisplayName()).willReturn(username);
+        given(usernameRef.delete()).willReturn(null);
+        given(userRecord.updateRequest()).willReturn(updateRequest);
+        given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
+        given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
+
+        dao.updateField(username, USERNAME_FIELD, newUsername);
+        verify(usedUsernames, times(2)).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
+        verify(newUsernameRef).set(docData);
+        verify(myAuth, times(2)).getUser(same(uid));
+        verify(userRecord).getDisplayName();
+        verify(usedUsernames, times(2)).document(same(newUsername));
+        verify(usernameRef).delete();
+        verify(userRecord).updateRequest();
+        verify(updateRequest).setDisplayName(same(newUsername));
+        verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(users).document(same(uid));
+        verify(userRef).update(same(USERNAME_FIELD), same(newUsername));
+    }
+
+    @Test
+    public void shouldUpdateEmail() throws FirebaseAuthException, DatabaseAccessException,
+        ExecutionException, InterruptedException {
+        given(usedUsernames.document(username)).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(oldSnapshot);
+        given(oldSnapshot.exists()).willReturn(true);
+        given(oldSnapshot.get(anyString())).willReturn(uid);
+        given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setEmail(anyString())).willReturn(updateRequest);
-        given(auth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
-        given(usersRef.document(username)).willReturn(docRef);
-        given(docRef.update(EMAIL_FIELD, email)).willReturn(null);
-        dao.updateEmail(username, email);
+        given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
 
+        dao.updateField(username, EMAIL_FIELD, email);
+        verify(usedUsernames).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setEmail(same(email));
-        verify(auth).updateUserAsync(same(updateRequest));
-        verify(usersRef).document(same(username));
-        verify(docRef).update(same(EMAIL_FIELD), same(email));
+        verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(users).document(same(uid));
+        verify(userRef).update(same(EMAIL_FIELD), same(email));
     }
 
     @Test
-    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingEmail() {
-        assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(auth).getUser(username);
-            dao.updateEmail(username, email);
-        }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsNullWhenUpdatingEmail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(auth).getUser(isNull());
-            dao.updateEmail(null, email);
-        }, "Should return IllegalArgumentException if the user id is null");
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsEmptyWhenUpdatingEmail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(auth).getUser(matches("^$"));
-            dao.updateEmail("", email);
-        }, "Should return IllegalArgumentException if the user id is empty");
-    }
-
-    @Test
-    public void shouldUpdatePassword() throws FirebaseAuthException {
-        given(auth.getUser(anyString())).willReturn(userRecord);
+    public void shouldUpdatePassword() throws FirebaseAuthException, DatabaseAccessException,
+        ExecutionException, InterruptedException {
+        given(usedUsernames.document(username)).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(oldSnapshot);
+        given(oldSnapshot.exists()).willReturn(true);
+        given(oldSnapshot.get(anyString())).willReturn(uid);
+        given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setPassword(anyString())).willReturn(updateRequest);
-        given(auth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.update(anyString(), anyString())).willReturn(null);
 
-        dao.updatePassword(username, password);
+        dao.updateField(username, PASSWORD_FIELD, password);
+        verify(usedUsernames).document(same(username));
+        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setPassword(same(password));
-        verify(auth).updateUserAsync(same(updateRequest));
+        verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(users).document(same(uid));
+        verify(userRef).update(same(PASSWORD_FIELD), same(password));
     }
 
     @Test
-    public void shouldFailIfAnErrorOccurredWhileRetrievingTheDataWhenUpdatingPassword() {
+    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingField()
+        throws ExecutionException, InterruptedException {
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(true);
+        given(snapshot.get(anyString())).willReturn(uid);
         assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(auth).getUser(username);
-            dao.updatePassword(username, password);
+            willThrow(FirebaseAuthException.class).given(myAuth).getUser(uid);
+            dao.updateField(username, EMAIL_FIELD, email);
         }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
     }
 
     @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsNullWhenUpdatingPassword() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(auth).getUser(isNull());
-            dao.updatePassword(null, password);
-        }, "Should return IllegalArgumentException if the user id is null");
-    }
-
-    @Test
-    public void shouldFailIfAnErrorOccursWhenUserIdIsEmptyWhenUpdatingPassword() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            willThrow(IllegalArgumentException.class).given(auth).getUser(matches("^$"));
-            dao.updatePassword("", password);
-        }, "Should return IllegalArgumentException if the user id is empty");
+    public void shouldFailWhenUpdatingFieldIfTheUserDoesNotExist() throws ExecutionException, InterruptedException {
+        given(usedUsernames.document(anyString())).willReturn(usernameRef);
+        given(usernameRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(false);
+        assertThrows(DatabaseAccessException.class, () -> dao.updateField(username, EMAIL_FIELD, email),
+            "Should return DatabaseAccessException if the user does not exist");
     }
 }

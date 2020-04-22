@@ -12,9 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +44,6 @@ class MyPetCareRestControllerTest {
             + "  \"username\": \"user1\",\n"
             + "  \"email\": \"user@mail.com\"\n"
             + "}";
-        url = "/signup";
         password = "123456";
         key = "password";
     }
@@ -47,10 +51,21 @@ class MyPetCareRestControllerTest {
     @Test
     public void signUpShouldReturnStatusOK() throws Exception {
         willDoNothing().given(service).createUserAuth(isA(UserEntity.class), isA(String.class));
-        mockMvc.perform(post(url)
+        mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonUser1).param(key, password))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    public void existsUsernameShouldReturnTrueIfUsernameExists() throws Exception {
+        given(service.existsUsername(anyString())).willReturn(true);
+        MvcResult result = mockMvc.perform(get("/usernames")
+            .param("username", "John"))
+            .andExpect(status().isOk()).andReturn();
+
+        assertEquals("{\"exists\":true}", result.getResponse().getContentAsString(),
+            "Should return exists is true");
     }
 
     /*

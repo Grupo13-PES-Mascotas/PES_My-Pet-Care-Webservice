@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.client.util.Base64;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.entity.PetEntity;
@@ -60,7 +61,10 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public void deleteImageByName(String imageName) {
-        storageBucket.get(imageName).delete();
+        Blob image = storageBucket.get(imageName);
+        if (image != null) {
+            image.delete();
+        }
     }
 
     @Override
