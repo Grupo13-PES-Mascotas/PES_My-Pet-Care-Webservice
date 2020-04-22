@@ -33,7 +33,6 @@ public class GoogleCalendarDaoTest {
     private static String accessToken;
     private static String calendarId;
     private static String eventId;
-    private static EventEntity eventEntity;
     private static Calendar calendar;
     private static Event event;
     private static Events eventsModel;
@@ -70,7 +69,6 @@ public class GoogleCalendarDaoTest {
         accessToken = "tokenparatests";
         calendarId = "calendarId";
         eventId = "eventId";
-        eventEntity = new EventEntity();
         calendar = new Calendar();
         calendar.setId("calendarId");
         event = new Event();

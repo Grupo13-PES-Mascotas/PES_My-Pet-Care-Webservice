@@ -8,6 +8,7 @@ import lombok.Data;
 import com.google.api.services.calendar.model.Event;
 import org.pesmypetcare.webservice.jsonhandler.DateTimeHandler;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
 
 /**
@@ -35,10 +36,8 @@ public class EventEntity {
         location = event.getLocation();
         description = event.getDescription();
         color = event.getColorId();
-        emailReminderMinutes = 0;
-        repetitionInterval = 0;
-        startDate = event.getStart().getDate();
-        endDate = event.getEnd().getDate();
+        startDate = event.getStart().getDateTime();
+        endDate = event.getEnd().getDateTime();
     }
 
     public EventEntity(String id, String summary, String description, String location, String color,
