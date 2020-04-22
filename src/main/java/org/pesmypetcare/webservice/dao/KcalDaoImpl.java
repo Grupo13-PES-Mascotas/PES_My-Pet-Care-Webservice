@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.pesmypetcare.webservice.entity.KcalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;

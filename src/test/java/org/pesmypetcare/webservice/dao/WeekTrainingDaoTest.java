@@ -1,8 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
-import org.junit.jupiter.api.BeforeAll;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -127,8 +131,8 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldDeleteAllWeekTrainingsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldDeleteAllWeekTrainingsOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -183,8 +187,8 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldReturnWeekTrainingEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
+    public void shouldReturnWeekTrainingEntityFromDatabaseWhenRequested() throws ExecutionException,
+        InterruptedException, DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -253,8 +257,8 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldReturnAllWeekTrainingsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldReturnAllWeekTrainingsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -273,7 +277,7 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeekTrainingsDataFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetWeekTrainingsDataFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -324,7 +328,7 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeekTrainingsBetweenFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetWeekTrainingsBetweenDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -339,7 +343,7 @@ public class WeekTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllWeekTrainingsBetweenFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetWeekTrainingsBetweenFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);

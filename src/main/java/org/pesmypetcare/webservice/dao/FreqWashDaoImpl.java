@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.pesmypetcare.webservice.entity.FreqWashEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
@@ -56,7 +61,8 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     @Override
-    public FreqWashEntity getFreqWashByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public FreqWashEntity getFreqWashByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
         DocumentReference freqWashRef = freqWashsRef.document(petDate);
         ApiFuture<DocumentSnapshot> future = freqWashRef.get();
@@ -122,7 +128,8 @@ public class FreqWashDaoImpl implements FreqWashDao {
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getAllFreqWashsOfAPetFromDatabase(CollectionReference freqWashsRef, List<Map<String, Object>> externalList)
+    private void getAllFreqWashsOfAPetFromDatabase(CollectionReference freqWashsRef,
+                                                   List<Map<String, Object>> externalList)
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = freqWashsRef.get();
         List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
@@ -135,7 +142,7 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     /**
-     * Gets all the freqWashs of the collection between the initial and final dates without taking them into account and
+     * Gets the freqWashs of the collection between the initial and final dates without taking them into account and
      * puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date

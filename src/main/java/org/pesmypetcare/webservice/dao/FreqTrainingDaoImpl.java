@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.pesmypetcare.webservice.entity.FreqTrainingEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
@@ -56,7 +61,8 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
     }
 
     @Override
-    public FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         CollectionReference freqTrainingsRef = getFreqTrainingsRef(owner, petName);
         DocumentReference freqTrainingRef = freqTrainingsRef.document(petDate);
         ApiFuture<DocumentSnapshot> future = freqTrainingRef.get();
@@ -122,7 +128,8 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getAllFreqTrainingsOfAPetFromDatabase(CollectionReference freqTrainingsRef, List<Map<String, Object>> externalList)
+    private void getAllFreqTrainingsOfAPetFromDatabase(CollectionReference freqTrainingsRef,
+                                                       List<Map<String, Object>> externalList)
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = freqTrainingsRef.get();
         List<QueryDocumentSnapshot> freqTrainingDocuments = future.get().getDocuments();
@@ -135,8 +142,8 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
     }
 
     /**
-     * Gets all the freqTrainings of the collection between the initial and final dates without taking them into account and
-     * puts them in the externalList.
+     * Gets all the freqTrainings of the collection between the initial and final dates without taking them into
+     * account and puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date
      * @param freqTrainingsRef Reference to the collection of freqTrainings

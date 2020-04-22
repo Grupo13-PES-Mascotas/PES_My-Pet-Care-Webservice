@@ -66,7 +66,8 @@ public class PetKcalAverageRestControllerTest {
 
     @Test
     public void createKcalAverageShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).createKcalAverage(anyString(), anyString(), anyString(), isA(KcalAverageEntity.class));
+        willDoNothing().given(service).createKcalAverage(anyString(), anyString(), anyString(),
+            isA(KcalAverageEntity.class));
         mockMvc.perform(post(urlBase + slash + owner + slash + petName + slash + date)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonKcalAverageEntity))
@@ -104,8 +105,8 @@ public class PetKcalAverageRestControllerTest {
 
     @Test
     public void getAllKcalAveragesBetweenShouldReturnMealEntityListAndStatusOk() throws Exception {
-        willReturn(kcalAverageEntityList).given(service).getAllKcalAveragesBetween(anyString(), anyString(), anyString(),
-            anyString());
+        willReturn(kcalAverageEntityList).given(service).getAllKcalAveragesBetween(anyString(), anyString(),
+            anyString(), anyString());
         mockMvc.perform(get(urlBase + slash + owner + slash + petName + "/between/" + date + slash + date2))
             .andExpect(status().isOk());
     }

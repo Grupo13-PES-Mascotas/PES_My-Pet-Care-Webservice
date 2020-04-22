@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,7 +86,7 @@ public class FreqTrainingDaoTest {
         owner = "PericoDeLosPalotes";
         petName = "TupoJohn";
         field = "freqTrainingValue";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test
@@ -127,8 +132,8 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldDeleteAllFreqTrainingsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldDeleteAllFreqTrainingsOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -183,8 +188,8 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldReturnFreqTrainingEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
+    public void shouldReturnFreqTrainingEntityFromDatabaseWhenRequested() throws ExecutionException,
+        InterruptedException, DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -253,8 +258,8 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldReturnAllFreqTrainingsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldReturnAllFreqTrainingsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -273,7 +278,7 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqTrainingsDataFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetFreqTrainingsDataFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -324,7 +329,7 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqTrainingsBetweenFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetFreqTrainingsBetweenDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -339,7 +344,7 @@ public class FreqTrainingDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqTrainingsBetweenFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetFreqTrainingsBetweenFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);

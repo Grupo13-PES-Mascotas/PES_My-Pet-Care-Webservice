@@ -1,7 +1,12 @@
 package org.pesmypetcare.webservice.dao;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.DocumentSnapshot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -183,8 +188,8 @@ public class KcalAverageDaoTest {
     }
 
     @Test
-    public void shouldReturnKcalAverageEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
+    public void shouldReturnKcalAverageEntityFromDatabaseWhenRequested() throws ExecutionException,
+        InterruptedException, DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -253,8 +258,8 @@ public class KcalAverageDaoTest {
     }
 
     @Test
-    public void shouldReturnAllKcalAveragesDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldReturnAllKcalAveragesDataOnDatabaseWhenRequested() throws DatabaseAccessException,
+        ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -324,7 +329,7 @@ public class KcalAverageDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllKcalAveragesBetweenFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetKcalAveragesBetweenFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
@@ -339,7 +344,7 @@ public class KcalAverageDaoTest {
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllKcalAveragesBetweenFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetKcalAveragesBetweenFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);

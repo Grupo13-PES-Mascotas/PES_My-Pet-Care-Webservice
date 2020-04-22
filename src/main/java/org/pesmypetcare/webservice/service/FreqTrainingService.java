@@ -42,7 +42,8 @@ public interface FreqTrainingService {
      * @return The FreqTrainingEntity with the data of freqTraining
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
+    FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException;
 
     /**
      * Gets all the specified freqTrainings of one pet.

@@ -23,8 +23,8 @@ public class FreqTrainingRestController {
      * @param freqTrainingEntity The parameters of freqTraining
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
-    public void createFreqTraining(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody FreqTrainingEntity freqTrainingEntity) {
+    public void createFreqTraining(@PathVariable String owner, @PathVariable String petName,
+                                   @PathVariable String petDate, @RequestBody FreqTrainingEntity freqTrainingEntity) {
         freqTrainingService.createFreqTraining(owner, petName, petDate, freqTrainingEntity);
     }
 
@@ -90,9 +90,10 @@ public class FreqTrainingRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/between/{initialDate}/{finalDate}")
-    public List<Map<String, Object>> getAllFreqTrainingsBetween(@PathVariable String owner, @PathVariable String petName,
-                                                          @PathVariable String initialDate,
-                                                          @PathVariable String finalDate)
+    public List<Map<String, Object>> getAllFreqTrainingsBetween(@PathVariable String owner,
+                                                                @PathVariable String petName,
+                                                                @PathVariable String initialDate,
+                                                                @PathVariable String finalDate)
         throws DatabaseAccessException {
         return freqTrainingService.getAllFreqTrainingsBetween(owner, petName, initialDate, finalDate);
     }
@@ -107,8 +108,9 @@ public class FreqTrainingRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{owner}/{petName}/{petDate}")
-    public void updateFreqTraining(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
+    public void updateFreqTraining(@PathVariable String owner, @PathVariable String petName,
+                                   @PathVariable String petDate, @RequestBody Map<String, Object> valueMap)
+        throws DatabaseAccessException {
         freqTrainingService.updateFreqTraining(owner, petName, petDate, valueMap.get("freqTrainingValue"));
     }
 

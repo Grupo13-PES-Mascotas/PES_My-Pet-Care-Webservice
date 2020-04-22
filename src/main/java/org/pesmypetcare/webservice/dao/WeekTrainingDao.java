@@ -41,7 +41,8 @@ public interface WeekTrainingDao {
      * @return The weekTrainingEntity with the data of weekTraining
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    WeekTrainingEntity getWeekTrainingByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
+    WeekTrainingEntity getWeekTrainingByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException;
 
     /**
      * Gets all the specified weekTrainings of one pet.

@@ -66,7 +66,8 @@ public class PetFreqTrainingRestControllerTest {
 
     @Test
     public void createFreqTrainingShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).createFreqTraining(anyString(), anyString(), anyString(), isA(FreqTrainingEntity.class));
+        willDoNothing().given(service).createFreqTraining(anyString(), anyString(), anyString(),
+            isA(FreqTrainingEntity.class));
         mockMvc.perform(post(urlBase + slash + owner + slash + petName + slash + date)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonFreqTrainingEntity))
@@ -104,8 +105,8 @@ public class PetFreqTrainingRestControllerTest {
 
     @Test
     public void getAllFreqTrainingsBetweenShouldReturnMealEntityListAndStatusOk() throws Exception {
-        willReturn(freqTrainingEntityList).given(service).getAllFreqTrainingsBetween(anyString(), anyString(), anyString(),
-            anyString());
+        willReturn(freqTrainingEntityList).given(service).getAllFreqTrainingsBetween(anyString(), anyString(),
+            anyString(), anyString());
         mockMvc.perform(get(urlBase + slash + owner + slash + petName + "/between/" + date + slash + date2))
             .andExpect(status().isOk());
     }

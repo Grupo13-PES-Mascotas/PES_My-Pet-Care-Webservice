@@ -6,6 +6,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.WeekTrainingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,8 @@ public class WeekTrainingRestController {
      * @param weekTrainingEntity The parameters of weekTraining
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
-    public void createWeekTraining(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody WeekTrainingEntity weekTrainingEntity) {
+    public void createWeekTraining(@PathVariable String owner, @PathVariable String petName,
+                                   @PathVariable String petDate, @RequestBody WeekTrainingEntity weekTrainingEntity) {
         weekTrainingService.createWeekTraining(owner, petName, petDate, weekTrainingEntity);
     }
 
@@ -90,9 +91,10 @@ public class WeekTrainingRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/between/{initialDate}/{finalDate}")
-    public List<Map<String, Object>> getAllWeekTrainingsBetween(@PathVariable String owner, @PathVariable String petName,
-                                                          @PathVariable String initialDate,
-                                                          @PathVariable String finalDate)
+    public List<Map<String, Object>> getAllWeekTrainingsBetween(@PathVariable String owner,
+                                                                @PathVariable String petName,
+                                                                @PathVariable String initialDate,
+                                                                @PathVariable String finalDate)
         throws DatabaseAccessException {
         return weekTrainingService.getAllWeekTrainingsBetween(owner, petName, initialDate, finalDate);
     }
@@ -107,8 +109,9 @@ public class WeekTrainingRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{owner}/{petName}/{petDate}")
-    public void updateWeekTraining(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
+    public void updateWeekTraining(@PathVariable String owner, @PathVariable String petName,
+                                   @PathVariable String petDate, @RequestBody Map<String, Object> valueMap)
+        throws DatabaseAccessException {
         weekTrainingService.updateWeekTraining(owner, petName, petDate, valueMap.get("weekTrainingValue"));
     }
 

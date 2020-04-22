@@ -32,7 +32,8 @@ public class FreqTrainingServiceImpl implements FreqTrainingService {
     }
 
     @Override
-    public FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         return freqTrainingDao.getFreqTrainingByDate(owner, petName, petDate);
     }
 

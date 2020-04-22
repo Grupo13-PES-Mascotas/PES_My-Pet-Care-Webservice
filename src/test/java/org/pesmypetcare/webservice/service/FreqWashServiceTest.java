@@ -86,8 +86,8 @@ public class FreqWashServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetFreqWashRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqWashDao).getFreqWashByDate(any(String.class), any(String.class),
-                isA(String.class));
+            doThrow(DatabaseAccessException.class).when(freqWashDao).getFreqWashByDate(any(String.class),
+                any(String.class), isA(String.class));
             service.getFreqWashByDate(owner, petName, date);
         }, "Should return an exception when retrieving a freqWash fails");
     }
@@ -102,7 +102,8 @@ public class FreqWashServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfFreqWashsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWash(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWash(any(String.class),
+                isA(String.class));
             service.getAllFreqWash(owner, petName);
         }, "Should return an exception when retrieving a set of freqWashs fails");
     }

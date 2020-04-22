@@ -32,7 +32,8 @@ public class WeekTrainingServiceImpl implements WeekTrainingService {
     }
 
     @Override
-    public WeekTrainingEntity getWeekTrainingByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public WeekTrainingEntity getWeekTrainingByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         return weekTrainingDao.getWeekTrainingByDate(owner, petName, petDate);
     }
 

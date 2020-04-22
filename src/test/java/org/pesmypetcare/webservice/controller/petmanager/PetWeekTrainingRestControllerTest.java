@@ -66,7 +66,8 @@ public class PetWeekTrainingRestControllerTest {
 
     @Test
     public void createWeekTrainingShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).createWeekTraining(anyString(), anyString(), anyString(), isA(WeekTrainingEntity.class));
+        willDoNothing().given(service).createWeekTraining(anyString(), anyString(), anyString(),
+            isA(WeekTrainingEntity.class));
         mockMvc.perform(post(urlBase + slash + owner + slash + petName + slash + date)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonWeekTrainingEntity))
@@ -104,8 +105,8 @@ public class PetWeekTrainingRestControllerTest {
 
     @Test
     public void getAllWeekTrainingsBetweenShouldReturnMealEntityListAndStatusOk() throws Exception {
-        willReturn(weekTrainingEntityList).given(service).getAllWeekTrainingsBetween(anyString(), anyString(), anyString(),
-            anyString());
+        willReturn(weekTrainingEntityList).given(service).getAllWeekTrainingsBetween(anyString(), anyString(),
+            anyString(), anyString());
         mockMvc.perform(get(urlBase + slash + owner + slash + petName + "/between/" + date + slash + date2))
             .andExpect(status().isOk());
     }

@@ -23,8 +23,8 @@ public class KcalAverageRestController {
      * @param kcalAverageEntity The parameters of kcalAverage
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
-    public void createKcalAverage(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody KcalAverageEntity kcalAverageEntity) {
+    public void createKcalAverage(@PathVariable String owner, @PathVariable String petName,
+                                  @PathVariable String petDate, @RequestBody KcalAverageEntity kcalAverageEntity) {
         kcalAverageService.createKcalAverage(owner, petName, petDate, kcalAverageEntity);
     }
 
@@ -107,8 +107,9 @@ public class KcalAverageRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{owner}/{petName}/{petDate}")
-    public void updateKcalAverage(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
-                             @RequestBody Map<String, Object> valueMap) throws DatabaseAccessException {
+    public void updateKcalAverage(@PathVariable String owner, @PathVariable String petName,
+                                  @PathVariable String petDate, @RequestBody Map<String, Object> valueMap)
+        throws DatabaseAccessException {
         kcalAverageService.updateKcalAverage(owner, petName, petDate, valueMap.get("kcalAverageValue"));
     }
 

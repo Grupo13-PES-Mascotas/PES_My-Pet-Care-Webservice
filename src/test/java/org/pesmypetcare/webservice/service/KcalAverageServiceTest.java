@@ -86,8 +86,8 @@ public class KcalAverageServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetKcalAverageRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(kcalAverageDao).getKcalAverageByDate(any(String.class), any(String.class),
-                isA(String.class));
+            doThrow(DatabaseAccessException.class).when(kcalAverageDao).getKcalAverageByDate(any(String.class),
+                any(String.class), isA(String.class));
             service.getKcalAverageByDate(owner, petName, date);
         }, "Should return an exception when retrieving a kcalAverageAverage fails");
     }
@@ -102,13 +102,15 @@ public class KcalAverageServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfKcalAveragesRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(kcalAverageDao).getAllKcalAverage(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(kcalAverageDao).getAllKcalAverage(any(String.class),
+                isA(String.class));
             service.getAllKcalAverage(owner, petName);
         }, "Should return an exception when retrieving a set of kcalAverageAverages fails");
     }
 
     @Test
-    public void shouldReturnKcalAverageEntityListWhenGetKcalAveragesBetweenDatesRetrieved() throws DatabaseAccessException {
+    public void shouldReturnKcalAverageEntityListWhenGetKcalAveragesBetweenDatesRetrieved()
+        throws DatabaseAccessException {
         when(kcalAverageDao.getAllKcalAveragesBetween(owner, petName, date, date2)).thenReturn(kcalAverageAverageList);
         List<Map<String, Object>> list = service.getAllKcalAveragesBetween(owner, petName, date, date2);
         assertSame(kcalAverageAverageList, list, "Should return a list of kcalAverageAverage entities");

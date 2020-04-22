@@ -45,7 +45,7 @@ public class WeekTrainingServiceTest {
         date2 = "2021-02-13T10:30:00";
         owner = "TupoJohn";
         petName = "Perico";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test
@@ -86,8 +86,8 @@ public class WeekTrainingServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetWeekTrainingRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(weekTrainingDao).getWeekTrainingByDate(any(String.class), any(String.class),
-                isA(String.class));
+            doThrow(DatabaseAccessException.class).when(weekTrainingDao).getWeekTrainingByDate(any(String.class),
+                any(String.class), isA(String.class));
             service.getWeekTrainingByDate(owner, petName, date);
         }, "Should return an exception when retrieving a weekTraining fails");
     }
@@ -102,13 +102,15 @@ public class WeekTrainingServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfWeekTrainingsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(weekTrainingDao).getAllWeekTraining(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(weekTrainingDao).getAllWeekTraining(any(String.class),
+                isA(String.class));
             service.getAllWeekTraining(owner, petName);
         }, "Should return an exception when retrieving a set of weekTrainings fails");
     }
 
     @Test
-    public void shouldReturnWeekTrainingEntityListWhenGetWeekTrainingsBetweenDatesRetrieved() throws DatabaseAccessException {
+    public void shouldReturnWeekTrainingEntityListWhenGetWeekTrainingsBetweenDatesRetrieved()
+        throws DatabaseAccessException {
         when(weekTrainingDao.getAllWeekTrainingsBetween(owner, petName, date, date2)).thenReturn(weekTrainingList);
         List<Map<String, Object>> list = service.getAllWeekTrainingsBetween(owner, petName, date, date2);
         assertSame(weekTrainingList, list, "Should return a list of weekTraining entities");

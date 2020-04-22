@@ -45,7 +45,7 @@ public class FreqTrainingServiceTest {
         date2 = "2021-02-13T10:30:00";
         owner = "TupoJohn";
         petName = "Perico";
-        value = 9.0 / 2.0;
+        value = 2.0;
     }
 
     @Test
@@ -86,8 +86,8 @@ public class FreqTrainingServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetFreqTrainingRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqTrainingDao).getFreqTrainingByDate(any(String.class), any(String.class),
-                isA(String.class));
+            doThrow(DatabaseAccessException.class).when(freqTrainingDao).getFreqTrainingByDate(any(String.class),
+                any(String.class), isA(String.class));
             service.getFreqTrainingByDate(owner, petName, date);
         }, "Should return an exception when retrieving a freqTraining fails");
     }
@@ -102,13 +102,15 @@ public class FreqTrainingServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfFreqTrainingsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqTrainingDao).getAllFreqTraining(any(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(freqTrainingDao).getAllFreqTraining(any(String.class),
+                isA(String.class));
             service.getAllFreqTraining(owner, petName);
         }, "Should return an exception when retrieving a set of freqTrainings fails");
     }
 
     @Test
-    public void shouldReturnFreqTrainingEntityListWhenGetFreqTrainingsBetweenDatesRetrieved() throws DatabaseAccessException {
+    public void shouldReturnFreqTrainingEntityListWhenGetFreqTrainingsBetweenDatesRetrieved()
+        throws DatabaseAccessException {
         when(freqTrainingDao.getAllFreqTrainingsBetween(owner, petName, date, date2)).thenReturn(freqTrainingList);
         List<Map<String, Object>> list = service.getAllFreqTrainingsBetween(owner, petName, date, date2);
         assertSame(freqTrainingList, list, "Should return a list of freqTraining entities");

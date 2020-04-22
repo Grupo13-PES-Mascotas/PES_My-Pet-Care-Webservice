@@ -32,7 +32,8 @@ public class FreqWashServiceImpl implements FreqWashService {
     }
 
     @Override
-    public FreqWashEntity getFreqWashByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public FreqWashEntity getFreqWashByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         return freqWashDao.getFreqWashByDate(owner, petName, petDate);
     }
 

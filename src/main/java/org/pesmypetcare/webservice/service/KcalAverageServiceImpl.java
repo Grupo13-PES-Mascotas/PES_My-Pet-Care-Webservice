@@ -32,7 +32,8 @@ public class KcalAverageServiceImpl implements KcalAverageService {
     }
 
     @Override
-    public KcalAverageEntity getKcalAverageByDate(String owner, String petName, String petDate) throws DatabaseAccessException {
+    public KcalAverageEntity getKcalAverageByDate(String owner, String petName, String petDate)
+        throws DatabaseAccessException {
         return kcalAverageDao.getKcalAverageByDate(owner, petName, petDate);
     }
 
