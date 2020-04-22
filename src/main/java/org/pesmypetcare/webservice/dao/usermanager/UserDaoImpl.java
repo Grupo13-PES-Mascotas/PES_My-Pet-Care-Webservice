@@ -198,6 +198,12 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /**
+     * Updates the username on all of the user groups the user is subscribed.
+     * @param username The current username
+     * @param newUsername The new username
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
     private void updateNameOnSubscriptions(String username, String newUsername) throws DatabaseAccessException {
         Query query = db.collectionGroup("members").whereEqualTo("user", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();

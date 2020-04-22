@@ -1,5 +1,6 @@
 
 package org.pesmypetcare.webservice.service.communitymanager;
+import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -28,17 +29,17 @@ public interface GroupService {
     /**
      * Gets a group by its name.
      * @param name The group name
-     * @return The group entity
+     * @return The group
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    GroupEntity getGroup(String name) throws DatabaseAccessException;
+    Group getGroup(String name) throws DatabaseAccessException;
 
     /**
      * Gets all groups in database.
      * @return A list with all the groups and its names
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<GroupEntity> getAllGroups() throws DatabaseAccessException;
+    List<Group> getAllGroups() throws DatabaseAccessException;
 
     /**
      * Updates a group field.

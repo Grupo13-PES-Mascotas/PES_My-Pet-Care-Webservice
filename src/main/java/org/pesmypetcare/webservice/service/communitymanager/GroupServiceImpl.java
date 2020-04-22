@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.service.communitymanager;
 
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
+import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -37,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupEntity getGroup(String name) throws DatabaseAccessException {
+    public Group getGroup(String name) throws DatabaseAccessException {
         if (!groupDao.groupNameInUse(name)) {
             throw new DatabaseAccessException("invalid-group-name", "The name does not exist");
         } else {
@@ -46,7 +47,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupEntity> getAllGroups() throws DatabaseAccessException {
+    public List<Group> getAllGroups() throws DatabaseAccessException {
         return groupDao.getAllGroups();
     }
 
