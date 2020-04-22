@@ -28,7 +28,7 @@ class PetServiceTest {
     private static String owner;
     private static String name;
     private static String field;
-    private static GenderType value;
+    private static String value;
 
     @Mock
     private PetDao petDao;
@@ -42,8 +42,8 @@ class PetServiceTest {
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
-        field = "gender";
-        value = GenderType.Female;
+        field = "pathologies";
+        value = "COVID-19";
     }
 
     @Test
