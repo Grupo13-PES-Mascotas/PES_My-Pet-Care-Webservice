@@ -55,16 +55,16 @@ public class GoogleCalendarServiceTest {
     public static void setUp() {
         owner = "My owner";
         petName = "My petName";
-        date = "2020-02-13T10:30:00";
-        date2 = "2020-02-13T12:30:00";
+        date = "2020-02-13T10:30:00.000+01:00";
+        date2 = "2020-02-13T12:30:00.000+01:00";
         eventId = "My eventId";
         calendarId = "My calendarId";
         accessToken = "tokem";
         eventList = new ArrayList<>();
         eventEntity = new EventEntity();
         eventEntity.setId("My eventId");
-        eventEntity.setStartDate(new DateTime(date));
-        eventEntity.setEndDate(new DateTime(date2));
+        eventEntity.setStartDate(date);
+        eventEntity.setEndDate(date2);
         event = new Event();
         event.setId("My eventId");
         EventDateTime start = new EventDateTime()

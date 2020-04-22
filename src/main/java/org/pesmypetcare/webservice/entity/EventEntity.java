@@ -1,12 +1,10 @@
 package org.pesmypetcare.webservice.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import lombok.Data;
 import com.google.api.services.calendar.model.Event;
-import org.pesmypetcare.webservice.jsonhandler.DateTimeHandler;
 
 import java.util.Arrays;
 
@@ -22,10 +20,8 @@ public class EventEntity {
     private String color;
     private Integer emailReminderMinutes;
     private Integer repetitionInterval;
-    @JsonDeserialize(using = DateTimeHandler.class)
-    private DateTime startDate;
-    @JsonDeserialize(using = DateTimeHandler.class)
-    private DateTime endDate;
+    private String startDate;
+    private String endDate;
 
     public EventEntity() { }
 
@@ -35,13 +31,13 @@ public class EventEntity {
         location = event.getLocation();
         description = event.getDescription();
         color = event.getColorId();
-        startDate = event.getStart().getDateTime();
-        endDate = event.getEnd().getDateTime();
+        startDate = event.getStart().getDateTime().toString();
+        endDate = event.getEnd().getDateTime().toString();
     }
 
     public EventEntity(String id, String summary, String description, String location, String color,
                          Integer emailReminderMinutes,
-                       Integer repetitionInterval, DateTime startDate, DateTime endDate) {
+                       Integer repetitionInterval, String startDate, String endDate) {
         this.id = id;
         this.summary = summary;
         this.location = location;
@@ -51,6 +47,7 @@ public class EventEntity {
         this.repetitionInterval = repetitionInterval;
         this.startDate = startDate;
         this.endDate = endDate;
+
     }
 
     public Event convertToEvent() {
@@ -62,12 +59,12 @@ public class EventEntity {
             .setColorId(color);
 
         EventDateTime start = new EventDateTime()
-            .setDateTime(startDate)
+            .setDateTime(new DateTime(startDate))
             .setTimeZone("Europe/Madrid");
         event.setStart(start);
 
         EventDateTime end = new EventDateTime()
-            .setDateTime(endDate)
+            .setDateTime(new DateTime(endDate))
             .setTimeZone("Europe/Madrid");
         event.setEnd(end);
 
