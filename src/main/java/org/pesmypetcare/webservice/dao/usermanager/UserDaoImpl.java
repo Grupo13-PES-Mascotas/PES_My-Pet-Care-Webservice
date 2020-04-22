@@ -188,9 +188,9 @@ public class UserDaoImpl implements UserDao {
     private void updateUsername(String uid, String newUsername) throws DatabaseAccessException, FirebaseAuthException {
         DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, newUsername);
         if (!usernameDoc.exists()) {
-            saveUsername(uid, newUsername);
             updateNameOnSubscriptions((String) usernameDoc.get("username"), newUsername);
             deleteOldUsername(uid);
+            saveUsername(uid, newUsername);
             updateDisplayName(uid, newUsername);
             users.document(uid).update(USERNAME_FIELD, newUsername);
         } else {
