@@ -113,8 +113,9 @@ public class GroupRestController {
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
-    @PutMapping("/subscribe")
-    public void subscribe(@RequestHeader("token") String token, @RequestParam String group, String username) throws DatabaseAccessException {
+    @PostMapping("/subscribe")
+    public void subscribe(@RequestHeader("token") String token, @RequestParam String group,
+                          @RequestParam String username) throws DatabaseAccessException {
         service.subscribe(token, group, username);
     }
 
@@ -126,8 +127,9 @@ public class GroupRestController {
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
-    @PutMapping("/unsubscribe")
-    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group, String username) throws DatabaseAccessException {
+    @DeleteMapping("/unsubscribe")
+    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group,
+                            @RequestParam String username) throws DatabaseAccessException {
         service.unsubscribe(token, group, username);
     }
 }
