@@ -12,4 +12,5 @@ public class PetEntity {
     private Double recommendedKcal;
     private int washFreq;
     private String profileImageLocation;
+    private String calendarId;
 }
