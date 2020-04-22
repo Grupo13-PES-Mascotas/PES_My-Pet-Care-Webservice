@@ -8,7 +8,6 @@ import lombok.Data;
 import com.google.api.services.calendar.model.Event;
 import org.pesmypetcare.webservice.jsonhandler.DateTimeHandler;
 
-import java.sql.SQLOutput;
 import java.util.Arrays;
 
 /**
@@ -28,9 +27,9 @@ public class EventEntity {
     @JsonDeserialize(using = DateTimeHandler.class)
     private DateTime endDate;
 
-    public EventEntity () {}
+    public EventEntity() {}
 
-    public EventEntity (Event event) {
+    public EventEntity(Event event) {
         id = event.getId();
         summary = event.getSummary();
         location = event.getLocation();
@@ -72,11 +71,11 @@ public class EventEntity {
             .setTimeZone("Europe/Madrid");
         event.setEnd(end);
 
-        String[] recurrence = new String[] {"RRULE:FREQ=DAILY;INTERVAL="+repetitionInterval};
+        String[] recurrence = {"RRULE:FREQ=DAILY;INTERVAL=" + repetitionInterval};
         event.setRecurrence(Arrays.asList(recurrence));
 
-        EventReminder[] reminderOverrides = new EventReminder[] {
-            new EventReminder().setMethod("email").setMinutes(emailReminderMinutes),
+        EventReminder[] reminderOverrides = {
+            new EventReminder().setMethod("email").setMinutes(emailReminderMinutes)
         };
         Event.Reminders reminders = new Event.Reminders()
             .setUseDefault(false)

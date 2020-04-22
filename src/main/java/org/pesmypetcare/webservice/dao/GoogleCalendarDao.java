@@ -12,7 +12,7 @@ import java.util.List;
 public interface GoogleCalendarDao {
 
     /**
-     * Creates a Secondary Google Calendar in the account specified by the accessToken
+     * Creates a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendar Calendar to create
      * @throws CalendarAccessException If an error occurs when accessing the calendar
@@ -20,7 +20,7 @@ public interface GoogleCalendarDao {
     String createSecondaryCalendar(String accessToken, Calendar calendar) throws CalendarAccessException;
 
     /**
-     * Deletes a Secondary Google Calendar in the account specified by the accessToken
+     * Deletes a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the created calendar
      * @throws CalendarAccessException If an error occurs when accessing the calendar
@@ -28,7 +28,7 @@ public interface GoogleCalendarDao {
     void deleteSecondaryCalendar(String accessToken, String calendarId) throws CalendarAccessException;
 
     /**
-     * Returns all Calendar Events from a specified Calendar
+     * Returns all Calendar Events from a specified Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the calendar to retrieve
      * @return List containing all the Events from the specified Calendar
@@ -37,7 +37,7 @@ public interface GoogleCalendarDao {
     List<Event> getAllEventsFromCalendar(String accessToken, String calendarId) throws CalendarAccessException;
 
     /**
-     * Creates an Event in a specified Google Calendar
+     * Creates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the calendar where the event is created
      * @param event Event to create
@@ -46,7 +46,7 @@ public interface GoogleCalendarDao {
     void createEvent(String accessToken, String calendarId, Event event) throws CalendarAccessException;
 
     /**
-     * Retrieves an Event in a specified Google Calendar
+     * Retrieves an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the calendar where the event is located
      * @param eventId Id of the event to retrieve
@@ -56,7 +56,7 @@ public interface GoogleCalendarDao {
     Event retrieveEvent(String accessToken, String calendarId, String eventId) throws CalendarAccessException;
 
     /**
-     * Updates an Event in a specified Google Calendar
+     * Updates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the calendar where the event is updated
      * @param eventId Id of the event to update
@@ -66,7 +66,7 @@ public interface GoogleCalendarDao {
     void updateEvent(String accessToken, String calendarId, String eventId, Event event) throws CalendarAccessException;
 
     /**
-     * Deletes an Event in a specified Google Calendar
+     * Deletes an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendarId Id of the calendar where the event is deleted
      * @param eventId Id of the event to delete

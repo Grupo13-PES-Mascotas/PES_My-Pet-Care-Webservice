@@ -29,7 +29,7 @@ public class GoogleCalendarDaoImpl implements GoogleCalendarDao {
         service = factory.initializeService(accessToken);
         Calendar createdCalendar;
         try {
-            createdCalendar=service.calendars().insert(calendar).execute();
+            createdCalendar = service.calendars().insert(calendar).execute();
         } catch (IOException e) {
             throw new CalendarAccessException("Error inserting secondary calendar", e.getMessage());
         }

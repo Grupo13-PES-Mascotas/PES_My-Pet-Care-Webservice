@@ -8,6 +8,7 @@ import com.google.api.client.util.DateTime;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * @author Marc Simó
@@ -24,8 +25,8 @@ public class DateTimeHandler extends StdDeserializer<DateTime> {
 
     @Override
     public DateTime deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
-        String date =  jsonParser.getText();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String date = jsonParser.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
         try {
             return new DateTime(sdf.parse(date));
         } catch (ParseException e) {

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.entity.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.factories.CalendarServiceFactory;
 
@@ -128,7 +127,7 @@ public class GoogleCalendarDaoTest {
         googleCalendarDao.createEvent(accessToken, calendarId, event);
 
         verify(factory).initializeService(same(accessToken));
-        verify(events).insert(same(calendarId),same(event));
+        verify(events).insert(same(calendarId), same(event));
     }
 
     @Test
@@ -167,6 +166,6 @@ public class GoogleCalendarDaoTest {
         googleCalendarDao.deleteEvent(accessToken, calendarId, eventId);
 
         verify(factory).initializeService(same(accessToken));
-        verify(events).delete(same(calendarId),same(eventId));
+        verify(events).delete(same(calendarId), same(eventId));
     }
 }

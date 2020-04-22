@@ -13,7 +13,7 @@ import java.util.List;
 public interface GoogleCalendarService {
 
     /**
-     * Creates a Secondary Google Calendar in the account specified by the accessToken
+     * Creates a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar is created for
@@ -22,7 +22,7 @@ public interface GoogleCalendarService {
     void createSecondaryCalendar(String accessToken, String owner, String petName) throws CalendarAccessException;
 
     /**
-     * Deletes a Secondary Google Calendar in the account specified by the accessToken
+     * Deletes a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -33,7 +33,7 @@ public interface GoogleCalendarService {
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
-     * Returns all Calendar Events from a specified Calendar
+     * Returns all Calendar Events from a specified Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -45,7 +45,7 @@ public interface GoogleCalendarService {
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
-     * Creates an Event in a specified Google Calendar
+     * Creates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -57,7 +57,7 @@ public interface GoogleCalendarService {
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
-     * Retrieves an Event in a specified Google Calendar
+     * Retrieves an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -70,7 +70,7 @@ public interface GoogleCalendarService {
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
-     * Updates an Event in a specified Google Calendar
+     * Updates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
@@ -82,7 +82,7 @@ public interface GoogleCalendarService {
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
-     * Deletes an Event in a specified Google Calendar
+     * Deletes an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param owner Name of the owner of the pet
      * @param petName Name of the pet the calendar belongs to

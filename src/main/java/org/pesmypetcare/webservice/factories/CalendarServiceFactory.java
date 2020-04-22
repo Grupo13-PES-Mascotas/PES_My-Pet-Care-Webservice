@@ -18,17 +18,16 @@ public class CalendarServiceFactory {
     private static final HttpTransport HTTP_TRANSPORT;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     static {
-        HttpTransport temp;
+        HttpTransport temp = null;
         try {
             temp = GoogleNetHttpTransport.newTrustedTransport();
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
-            temp = null;
         }
         HTTP_TRANSPORT = temp;
     }
 
-    private CalendarServiceFactory() {}
+    private CalendarServiceFactory() { }
 
     public static CalendarServiceFactory getInstance() {
         if (instance == null) {
