@@ -96,5 +96,11 @@ public interface UserDao {
      */
     void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch);
 
+    /**
+     * Gets all the user's group subscriptions.
+     * @param username The user's username
+     * @return A list with the group subscriptions
+     * @throws DatabaseAccessException If an error occurs when retrieving the data
+     */
     List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
 }

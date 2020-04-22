@@ -146,8 +146,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<String> getUserSubscriptions(String uid) throws DatabaseAccessException {
-        DocumentSnapshot user = getDocumentSnapshot(users, uid);
+    public List<String> getUserSubscriptions(String username) throws DatabaseAccessException {
+        DocumentSnapshot user = getDocumentSnapshot(users, getUid(username));
         return (List<String>) user.get("groupSubscriptions");
     }
 
