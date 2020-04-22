@@ -26,7 +26,7 @@ public class DateTimeHandler extends StdDeserializer<DateTime> {
     @Override
     public DateTime deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         String date = jsonParser.getText();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         try {
             return new DateTime(sdf.parse(date));
         } catch (ParseException e) {

@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class GoogleCalendarServiceTest {
     private static final String CALENDAR_ID_FIELD = "calendarId";
-    private static List<Event> eventList;
+    private static List<EventEntity> eventList;
     private static EventEntity eventEntity;
     private static Event event;
     private static String accessToken;
@@ -99,7 +99,7 @@ public class GoogleCalendarServiceTest {
     public void shouldReturnAListOfEventsWhenAllEventsFromCalendarRetrieved() throws CalendarAccessException,
         DatabaseAccessException {
         given(petDao.getField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        List<Event> response = service.getAllEventsFromCalendar(accessToken, owner, petName);
+        List<EventEntity> response = service.getAllEventsFromCalendar(accessToken, owner, petName);
         assertEquals(eventList, response, "Should return an array of Event");
     }
 

@@ -68,7 +68,8 @@ public class GoogleCalendarRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
-    public List<Event> getAllEventsFromCalendar(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+    public List<EventEntity> getAllEventsFromCalendar(@RequestHeader(TOKEN) String accessToken,
+                                                    @PathVariable String owner,
                                          @PathVariable String petName)
         throws CalendarAccessException, DatabaseAccessException {
         return googleCalendarService.getAllEventsFromCalendar(accessToken, owner, petName);

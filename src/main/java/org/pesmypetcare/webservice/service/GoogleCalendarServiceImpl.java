@@ -10,6 +10,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,10 +44,15 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public List<Event> getAllEventsFromCalendar(String accessToken, String owner, String petName)
+    public List<EventEntity> getAllEventsFromCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException {
         String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
-        return googleCalendarDao.getAllEventsFromCalendar(accessToken, calendarId);
+        List<Event> eventList = googleCalendarDao.getAllEventsFromCalendar(accessToken, calendarId);
+        List<EventEntity> eventEntityList = new ArrayList<>();
+        for (Event event: eventList) {
+            eventEntityList.add(new EventEntity(event));
+        }
+        return eventEntityList;
     }
 
     @Override

@@ -41,7 +41,7 @@ public interface GoogleCalendarService {
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Event> getAllEventsFromCalendar(String accessToken, String owner, String petName)
+    List<EventEntity> getAllEventsFromCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException;
 
     /**
