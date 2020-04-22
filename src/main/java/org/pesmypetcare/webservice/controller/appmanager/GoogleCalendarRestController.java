@@ -25,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/calendar")
 public class GoogleCalendarRestController {
-    private final String TOKEN = "token";
+    private static final String TOKEN = "token";
 
     @Autowired
     private GoogleCalendarService googleCalendarService;

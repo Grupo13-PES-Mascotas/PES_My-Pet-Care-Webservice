@@ -66,7 +66,7 @@ public class PetMealRestControllerTest {
         date2 = "2021-02-13T10:30:00";
         field = "mealName";
         value = "Asparagus with ketchup";
-        urlBase = "/pet/meal";
+        urlBase = "/meal";
     }
 
     @Test
@@ -81,8 +81,7 @@ public class PetMealRestControllerTest {
     @Test
     public void deleteByDateShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteByDate(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + date)
-            .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + date))
             .andExpect(status().isOk());
     }
 
