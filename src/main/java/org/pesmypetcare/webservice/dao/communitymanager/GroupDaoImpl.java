@@ -56,7 +56,7 @@ public class GroupDaoImpl implements GroupDao {
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
         saveUserAsMember(creator, groupRef, batch);
-        userDao.addGroupSubscription(creator, name, batch);
+        userDao.addGroupSubscription(creator, groupRef.getId(), name, batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
             addGroupToTag(tag, name, batch);
@@ -129,7 +129,7 @@ public class GroupDaoImpl implements GroupDao {
         DocumentReference groupRef = groups.document(groupId);
         batch = db.batch();
         saveUserAsMember(userUid, groupRef, batch);
-        userDao.addGroupSubscription(userUid, group, batch);
+        userDao.addGroupSubscription(userUid, groupId, group, batch);
         batch.commit();
     }
 

@@ -128,8 +128,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addGroupSubscription(String userUid, String groupName, WriteBatch batch) {
-        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupName);
+    public void addGroupSubscription(String userUid, String groupId, String groupName, WriteBatch batch) {
+        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
         Map<String, String> data = new HashMap<>();
         data.put("group", groupName);
         batch.set(subscription, data);

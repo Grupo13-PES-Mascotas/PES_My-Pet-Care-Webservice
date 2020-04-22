@@ -80,15 +80,16 @@ public interface UserDao {
 
     /**
      * Creates an entry of the group in the subscription collection.
-     *  @param userUid The user's uid
+     * @param userUid The user's uid
      * @param groupId The group's id
+     * @param groupName The group's name
      * @param batch The batch of writes to which it belongs
      */
-    void addGroupSubscription(String userUid, String groupId, WriteBatch batch);
+    void addGroupSubscription(String userUid, String groupId, String groupName, WriteBatch batch);
 
     /**
      * Deletes an entry of the group in the subscription collection.
-     *  @param userUid The user's uid
+     * @param userUid The user's uid
      * @param groupId The group's id
      * @param batch The batch of writes to which it belongs
      */
