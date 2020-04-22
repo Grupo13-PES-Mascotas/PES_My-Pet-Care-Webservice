@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.util.List;
+
 /**
  * @author Santiago Del Rey
  */
@@ -66,4 +68,6 @@ public interface UserService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     boolean existsUsername(String username) throws DatabaseAccessException;
+
+    List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException;
 }

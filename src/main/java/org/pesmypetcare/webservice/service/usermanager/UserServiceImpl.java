@@ -7,6 +7,8 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Santiago Del Rey
  */
@@ -44,5 +46,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsUsername(String username) throws DatabaseAccessException {
         return userDao.existsUsername(username);
+    }
+
+    @Override
+    public List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException {
+        return userDao.getUserSubscriptions(username);
     }
 }

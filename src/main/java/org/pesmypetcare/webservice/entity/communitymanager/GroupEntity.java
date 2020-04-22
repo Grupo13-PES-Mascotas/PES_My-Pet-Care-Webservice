@@ -15,4 +15,6 @@ public class GroupEntity {
     private String icon;
     private String description;
     private List<String> tags;
+    private List<String> members;
+    private List<String> forums;
 }

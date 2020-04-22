@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+import java.util.List;
+
 /**
  * @author Santiago Del Rey
  */
@@ -80,18 +82,19 @@ public interface UserDao {
 
     /**
      * Creates an entry of the group in the subscription collection.
-     * @param userUid The user's uid
-     * @param groupId The group's id
+     * @param username The user's username
      * @param groupName The group's name
      * @param batch The batch of writes to which it belongs
      */
-    void addGroupSubscription(String userUid, String groupId, String groupName, WriteBatch batch);
+    void addGroupSubscription(String username, String groupName, WriteBatch batch) throws DatabaseAccessException;
 
     /**
      * Deletes an entry of the group in the subscription collection.
      * @param userUid The user's uid
-     * @param groupId The group's id
+     * @param groupName The group's name
      * @param batch The batch of writes to which it belongs
      */
-    void deleteGroupSubscription(String userUid, String groupId, WriteBatch batch);
+    void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch);
+
+    List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
 }

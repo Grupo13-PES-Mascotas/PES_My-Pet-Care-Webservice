@@ -18,9 +18,12 @@ import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -37,16 +40,19 @@ public class GroupDaoImpl implements GroupDao {
 
     @Autowired
     private UserDao userDao;
+    private final DateTimeFormatter timeFormatter;
 
     public GroupDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
         groups = db.collection("groups");
         groupsNames = db.collection("groups_names");
         tags = db.collection("tags");
+        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
     }
 
     @Override
     public void createGroup(GroupEntity entity) throws DatabaseAccessException {
+        entity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
         batch = db.batch();
         DocumentReference groupRef = groups.document();
         batch.set(groupRef, entity);
@@ -54,7 +60,7 @@ public class GroupDaoImpl implements GroupDao {
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
         saveUserAsMember(userDao.getUid(creator), creator, groupRef, batch);
-        userDao.addGroupSubscription(creator, groupRef.getId(), name, batch);
+        userDao.addGroupSubscription(creator, name, batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
             addGroupToTag(tag, name, batch);
@@ -67,7 +73,6 @@ public class GroupDaoImpl implements GroupDao {
         String id = getGroupId(name);
         batch = db.batch();
         deleteGroupFromAllTags(id);
-        deleteCollection(groups.document(id).collection("members"), batch);
         DocumentReference groupRef = groups.document(id);
         batch.delete(groupRef);
         DocumentReference namesRef = groupsNames.document(name);
@@ -107,6 +112,7 @@ public class GroupDaoImpl implements GroupDao {
             }
             batch = db.batch();
             changeNameInTags(name, newValue, batch);
+            changeNameInSubscription(name, newValue, batch);
             DocumentReference namesRef = groupsNames.document(name);
             batch.delete(namesRef);
             saveGroupName(newValue, id, batch);
@@ -127,7 +133,7 @@ public class GroupDaoImpl implements GroupDao {
         DocumentReference groupRef = groups.document(groupId);
         batch = db.batch();
         saveUserAsMember(userUid, username, groupRef, batch);
-        userDao.addGroupSubscription(userUid, groupId, group, batch);
+        userDao.addGroupSubscription(username, group, batch);
         batch.commit();
     }
 
@@ -188,15 +194,17 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Saves the user as a member of the group.
-     *  @param userUid The user's uid
+     * @param userUid The user's uid
      * @param username The user's username
      * @param groupRef The group document reference
      * @param batch The batch of writes to which it belongs
      */
     private void saveUserAsMember(String userUid, String username, DocumentReference groupRef, WriteBatch batch) {
-        Map<String, String> data = new HashMap<>();
-        data.put("user", username);
         DocumentReference memberRef = groupRef.collection("members").document(userUid);
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", username);
+        batch.set(memberRef, data);
+        data.put("date", timeFormatter.format(LocalDateTime.now()));
         batch.set(memberRef, data);
     }
 
@@ -304,17 +312,28 @@ public class GroupDaoImpl implements GroupDao {
         }
     }
 
+    /**
+     * Changes the name on its subscribers collection.
+     * @param oldName The old name
+     * @param newName The new name
+     * @param batch The batch of writes to which it belongs
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
     private void changeNameInSubscription(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
-        Query query = db.collectionGroup("subscriptions").whereEqualTo("group", oldName);
+        Query query = db.collection("users").whereArrayContains("subscriptions", oldName);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
+            Map<String, Object> data = new HashMap<>();
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-                deleteGroupFromTag(document.getId(), oldName, batch);
-                addGroupToTag(document.getId(), newName, batch);
+                DocumentReference ref = document.getReference();
+                data.put("subscriptions", FieldValue.arrayRemove(oldName));
+                batch.update(ref, data);
+                data.put("subscriptions", FieldValue.arrayUnion(newName));
+                batch.update(ref, data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the tags data");
+            throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
         }
     }
 

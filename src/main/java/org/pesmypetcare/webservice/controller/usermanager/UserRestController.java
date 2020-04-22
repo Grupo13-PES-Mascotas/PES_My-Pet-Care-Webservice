@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,5 +74,10 @@ public class UserRestController {
         throws FirebaseAuthException, DatabaseAccessException {
         String field = value.keySet().iterator().next();
         userService.updateField(token, username, field, value.get(field));
+    }
+
+    @GetMapping("/subscriptions")
+    public List<String> getUserSubscriptions(@RequestHeader String token, @RequestParam String username) throws DatabaseAccessException {
+        return userService.getUserSubscriptions(token, username);
     }
 }

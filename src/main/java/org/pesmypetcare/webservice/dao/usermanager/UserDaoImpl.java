@@ -4,7 +4,10 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -17,10 +20,8 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -42,11 +43,12 @@ public class UserDaoImpl implements UserDao {
     private CollectionReference users;
     private CollectionReference usedUsernames;
     private PetDao petDao;
+    private final Firestore db;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
         myAuth = firebaseFactory.getFirebaseAuth();
-        Firestore db = firebaseFactory.getFirestore();
+        db = firebaseFactory.getFirestore();
         users = db.collection("users");
         usedUsernames = db.collection("used_usernames");
         petDao = new PetDaoImpl();
@@ -128,20 +130,25 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addGroupSubscription(String userUid, String groupId, String groupName, WriteBatch batch) {
-        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
-        Map<String, String> data = new HashMap<>();
-        data.put("group", groupName);
-        batch.set(subscription, data);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
-        data.put("date", dtf.format(LocalDateTime.now()));
-        batch.set(subscription, data);
+    public void addGroupSubscription(String username, String groupName, WriteBatch batch) throws DatabaseAccessException {
+        DocumentReference user = users.document(getUid(username));
+        Map<String, Object> data = new HashMap<>();
+        data.put("groupSubscriptions", FieldValue.arrayUnion(groupName));
+        batch.update(user, data);
     }
 
     @Override
-    public void deleteGroupSubscription(String userUid, String groupId, WriteBatch batch) {
-        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
-        batch.delete(subscription);
+    public void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch) {
+        DocumentReference user = users.document(userUid);
+        Map<String, Object> data = new HashMap<>();
+        data.put("groupSubscriptions", FieldValue.arrayRemove(groupName));
+        batch.update(user, data);
+    }
+
+    @Override
+    public List<String> getUserSubscriptions(String uid) throws DatabaseAccessException {
+        DocumentSnapshot user = getDocumentSnapshot(users, uid);
+        return (List<String>) user.get("groupSubscriptions");
     }
 
     /**
@@ -182,11 +189,26 @@ public class UserDaoImpl implements UserDao {
         DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, newUsername);
         if (!usernameDoc.exists()) {
             saveUsername(uid, newUsername);
+            updateNameOnSubscriptions((String) usernameDoc.get("username"), newUsername);
             deleteOldUsername(uid);
             updateDisplayName(uid, newUsername);
             users.document(uid).update(USERNAME_FIELD, newUsername);
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
+        }
+    }
+
+    private void updateNameOnSubscriptions(String username, String newUsername) throws DatabaseAccessException {
+        Query query = db.collectionGroup("members").whereEqualTo("user", username);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                DocumentReference ref = document.getReference();
+                ref.update("user", newUsername);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
         }
     }
 
