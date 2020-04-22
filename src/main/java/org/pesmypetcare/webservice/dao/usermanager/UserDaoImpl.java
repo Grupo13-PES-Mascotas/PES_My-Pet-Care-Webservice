@@ -17,7 +17,10 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -125,10 +128,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addGroupSubscription(String userUid, String groupId, WriteBatch batch) {
-        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupId);
+    public void addGroupSubscription(String userUid, String groupName, WriteBatch batch) {
+        DocumentReference subscription = users.document(userUid).collection("subscriptions").document(groupName);
         Map<String, String> data = new HashMap<>();
-        data.put("exists", groupId);
+        data.put("group", groupName);
+        batch.set(subscription, data);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
+        data.put("date", dtf.format(LocalDateTime.now()));
         batch.set(subscription, data);
     }
 

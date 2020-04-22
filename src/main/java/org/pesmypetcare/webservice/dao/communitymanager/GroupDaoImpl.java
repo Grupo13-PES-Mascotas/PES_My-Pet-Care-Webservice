@@ -56,7 +56,7 @@ public class GroupDaoImpl implements GroupDao {
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
         saveUserAsMember(creator, groupRef, batch);
-        userDao.addGroupSubscription(creator, groupRef.getId(), batch);
+        userDao.addGroupSubscription(creator, name, batch);
         List<String> tags = entity.getTags();
         for (String tag : tags) {
             addGroupToTag(tag, name, batch);
@@ -129,7 +129,7 @@ public class GroupDaoImpl implements GroupDao {
         DocumentReference groupRef = groups.document(groupId);
         batch = db.batch();
         saveUserAsMember(userUid, groupRef, batch);
-        userDao.addGroupSubscription(userUid, groupId, batch);
+        userDao.addGroupSubscription(userUid, group, batch);
         batch.commit();
     }
 
@@ -294,6 +294,20 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void changeNameInTags(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
         Query query = tags.whereArrayContains("groups", oldName);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                deleteGroupFromTag(document.getId(), oldName, batch);
+                addGroupToTag(document.getId(), newName, batch);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the tags data");
+        }
+    }
+
+    private void changeNameInSubscription(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
+        Query query = db.collectionGroup("subscriptions").whereEqualTo("group", oldName);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
