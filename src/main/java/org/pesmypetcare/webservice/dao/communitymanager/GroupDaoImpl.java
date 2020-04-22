@@ -73,7 +73,7 @@ public class GroupDaoImpl implements GroupDao {
     public void deleteGroup(String name) throws DatabaseAccessException {
         String id = getGroupId(name);
         batch = db.batch();
-        deleteGroupFromAllTags(id, batch);
+        deleteGroupFromAllTags(name, batch);
         deleteAllMembers(id, name, batch);
         DocumentReference groupRef = groups.document(id);
         batch.delete(groupRef);
@@ -359,7 +359,7 @@ public class GroupDaoImpl implements GroupDao {
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the tags data");
+            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the subscriptions data");
         }
     }
 
