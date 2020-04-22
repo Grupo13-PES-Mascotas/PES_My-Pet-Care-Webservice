@@ -54,7 +54,7 @@ public class GoogleCalendarRestController {
     @DeleteMapping("/{owner}/{petName}")
     public void deleteSecondaryCalendar(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                                  @PathVariable String petName)
-        throws CalendarAccessException, DatabaseAccessException{
+        throws CalendarAccessException, DatabaseAccessException {
         googleCalendarService.deleteSecondaryCalendar(accessToken, owner, petName);
     }
 
@@ -70,7 +70,7 @@ public class GoogleCalendarRestController {
     @GetMapping("/{owner}/{petName}")
     public List<Event> getAllEventsFromCalendar(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                                          @PathVariable String petName)
-        throws CalendarAccessException, DatabaseAccessException{
+        throws CalendarAccessException, DatabaseAccessException {
         return googleCalendarService.getAllEventsFromCalendar(accessToken, owner, petName);
     }
 
@@ -86,7 +86,7 @@ public class GoogleCalendarRestController {
     @PostMapping("/event/{owner}/{petName}")
     public void createEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                      @PathVariable String petName, @RequestBody EventEntity eventEntity)
-        throws CalendarAccessException, DatabaseAccessException{
+        throws CalendarAccessException, DatabaseAccessException {
         googleCalendarService.createEvent(accessToken, owner, petName, eventEntity);
     }
 
@@ -103,7 +103,7 @@ public class GoogleCalendarRestController {
     @GetMapping("/event/{owner}/{petName}")
     public EventEntity retrieveEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
                               @PathVariable String petName, @RequestBody Map<String, Object> body)
-        throws CalendarAccessException, DatabaseAccessException{
+        throws CalendarAccessException, DatabaseAccessException {
         return googleCalendarService.retrieveEvent(accessToken, owner, petName, (String) body.get("eventId"));
     }
 
