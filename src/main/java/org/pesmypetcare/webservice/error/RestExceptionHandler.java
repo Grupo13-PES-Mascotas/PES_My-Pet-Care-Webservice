@@ -51,4 +51,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Creates the http response for the InitializationException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(InitializationException.class)
+    protected ResponseEntity<Object> handleIncorrectInitialization(InitializationException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Creates the http response for the InitializationException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(CalendarAccessException.class)
+    protected ResponseEntity<Object> handleIncorrectCalendarAccess(CalendarAccessException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

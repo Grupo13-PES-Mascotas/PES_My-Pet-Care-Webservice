@@ -81,15 +81,14 @@ public class PetMealRestControllerTest {
     @Test
     public void deleteByDateShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteByDate(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + date)
-            .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName + "/" + date))
             .andExpect(status().isOk());
     }
 
     @Test
     public void deleteAllMealsShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteAllMeals(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName))
+        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName ))
             .andExpect(status().isOk());
     }
 
