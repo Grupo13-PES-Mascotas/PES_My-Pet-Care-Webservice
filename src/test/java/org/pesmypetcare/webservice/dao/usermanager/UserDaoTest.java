@@ -8,6 +8,8 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteBatch;
+import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
@@ -100,6 +102,10 @@ class UserDaoTest {
     private Query query;
     @Mock
     private List<QueryDocumentSnapshot> docList;
+    @Mock
+    private WriteBatch batch;
+    @Mock
+    private ApiFuture<List<WriteResult>> batchResult;
 
     @InjectMocks
     private final UserDao dao = new UserDaoImpl();
@@ -124,19 +130,21 @@ class UserDaoTest {
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
-        given(usernameRef.set(docData)).willReturn(null);
-        given(userRef.set(any(UserEntity.class))).willReturn(null);
         given(myAuth.getUser(uid)).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
+        given(db.batch()).willReturn(batch);
+        given(batch.commit()).willReturn(batchResult);
+        given(batchResult.get()).willReturn(null);
 
         dao.createUser(uid, userEntity);
         verify(usedUsernames, times(2)).document(same(username));
-        verify(usernameRef).set(docData);
+        verify(batch).set(usernameRef, docData);
         verify(users).document(same(uid));
-        verify(userRef).set(same(userEntity));
+        verify(batch).set(userRef, userEntity);
         verify(myAuth).getUser(same(uid));
         verify(updateRequest).setDisplayName(same(username));
+        verify(batch).commit();
     }
 
     @Test
@@ -233,12 +241,10 @@ class UserDaoTest {
         given(snapshot.exists()).willReturn(false);
         given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.getDisplayName()).willReturn(username);
-        given(usernameRef.delete()).willReturn(null);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
         given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
         given(users.document(anyString())).willReturn(userRef);
-        given(userRef.update(anyString(), anyString())).willReturn(null);
         given(db.collectionGroup(anyString())).willReturn(query);
         given(db.collection(anyString())).willReturn(groups);
         given(query.whereEqualTo(anyString(), isA(String.class))).willReturn(query);
@@ -251,23 +257,33 @@ class UserDaoTest {
         given(mockIterator.hasNext()).willReturn(true, false);
         given(mockIterator.next()).willReturn(snapshot);
         given(snapshot.getReference()).willReturn(groupRef);
-        given(groupRef.update(anyString(), anyString())).willReturn(null);
+        given(db.batch()).willReturn(batch);
+        given(batch.update(any(DocumentReference.class), any())).willReturn(batch);
+        given(batch.commit()).willReturn(batchResult);
+        given(batchResult.get()).willReturn(null);
 
 
         dao.updateField(username, USERNAME_FIELD, newUsername);
         verify(usedUsernames, times(2)).document(same(username));
         verify(oldSnapshot).get(same(USER_FIELD));
-        verify(newUsernameRef).set(docData);
         verify(myAuth, times(3)).getUser(same(uid));
         verify(userRecord, times(2)).getDisplayName();
         verify(usedUsernames, times(2)).document(same(newUsername));
-        verify(usernameRef).delete();
         verify(userRecord).updateRequest();
         verify(updateRequest).setDisplayName(same(newUsername));
         verify(myAuth).updateUserAsync(same(updateRequest));
-        verify(users).document(same(uid));
-        verify(userRef).update(same(USERNAME_FIELD), same(newUsername));
-        verify(groupRef).update("user", newUsername);
+        verify(users).document(same(uid));;
+        Map<String, Object> data = new HashMap<>();
+        data.put(USER_FIELD, newUsername);
+        verify(batch).update(groupRef, data);
+        verify(batch).delete(same(usernameRef));
+        Map<String, String> data2 = new HashMap<>();
+        data2.put(USER_FIELD, uid);
+        verify(batch).set(newUsernameRef, data2);
+        data = new HashMap<>();
+        data.put(USERNAME_FIELD, newUsername);
+        verify(batch).update(userRef, data);
+        verify(batch).commit();
     }
 
     @Test

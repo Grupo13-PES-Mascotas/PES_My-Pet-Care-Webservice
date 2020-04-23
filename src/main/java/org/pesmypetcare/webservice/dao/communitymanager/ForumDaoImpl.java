@@ -157,6 +157,7 @@ public class ForumDaoImpl implements ForumDao {
     public void postMessage(String parentGroup, String forumName, MessageEntity post) throws DatabaseAccessException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
+        post.setPublicationDate(timeFormatter.format(LocalDateTime.now()));
         DocumentReference messageRef = groups.document(groupId).collection("forums").document(forumId)
             .collection("messages").document();
         messageRef.set(post);
@@ -178,6 +179,7 @@ public class ForumDaoImpl implements ForumDao {
             e.printStackTrace();
             throw new DatabaseAccessException("message-deletion-failed", "Failure when deleting the message");
         }
+        batch.commit();
     }
 
     /**

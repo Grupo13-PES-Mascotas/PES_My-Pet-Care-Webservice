@@ -17,6 +17,7 @@ public interface ForumService {
     void updateName(String parentGroup, String currentName, String newName) throws DatabaseAccessException;
     void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException;
     void postMessage(String token, String parentGroup, String forumName, MessageEntity post) throws DatabaseAccessException;
+    void deleteMessage(String token, String parentGroup, String forumName, String creator, String date) throws DatabaseAccessException;
     //void subscribe(String token, String parentGroup, String forumName, String username) throws DatabaseAccessException;
     //void unsubscribe(String token, String parentGroup, String forumName, String username) throws DatabaseAccessException;
 }

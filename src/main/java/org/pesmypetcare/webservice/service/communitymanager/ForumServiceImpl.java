@@ -83,6 +83,15 @@ public class ForumServiceImpl implements ForumService {
         }
     }
 
+    @Override
+    public void deleteMessage(String token, String parentGroup, String forumName, String creator, String date) throws DatabaseAccessException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DatabaseAccessException("invalid-forum", "The forum does not exist");
+        } else {
+            forumDao.deleteMessage(parentGroup, forumName, creator, date);
+        }
+    }
+
     /*@Override
     public void subscribe(String token, String parentGroup, String forumName, String username) throws DatabaseAccessException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {

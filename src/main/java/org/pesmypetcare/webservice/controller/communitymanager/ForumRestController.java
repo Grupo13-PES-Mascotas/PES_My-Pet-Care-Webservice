@@ -68,6 +68,12 @@ public class ForumRestController {
         service.postMessage(token, parentGroup, forumName, post);
     }
 
+    @DeleteMapping("/{parentGroup}/{forumName}")
+    public void deleteMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
+                            @RequestParam String creator, @RequestParam String date) throws DatabaseAccessException {
+        service.deleteMessage(token, parentGroup, forumName, creator, date);
+    }
+
     /*@PostMapping("/{parentGroup}/subscribe")
     public void subscribe(@RequestHeader String token, @PathVariable String parentGroup, @RequestParam String forumName,
                           @RequestParam String username) throws DatabaseAccessException {

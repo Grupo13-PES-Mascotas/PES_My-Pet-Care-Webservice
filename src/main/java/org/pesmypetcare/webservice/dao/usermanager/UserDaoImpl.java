@@ -58,9 +58,16 @@ public class UserDaoImpl implements UserDao {
     public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
-            saveUsername(uid, username);
-            users.document(uid).set(userEntity);
-            updateDisplayName(uid, username);
+            WriteBatch batch = db.batch();
+            saveUsername(uid, username, batch);
+            batch.set(users.document(uid), userEntity);
+            try {
+                batch.commit().get();
+                updateDisplayName(uid, username);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                throw new DatabaseAccessException("creation-failed", "The user creation failed");
+            }
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }
@@ -199,30 +206,44 @@ public class UserDaoImpl implements UserDao {
         DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, newUsername);
         if (!usernameDoc.exists()) {
             String username = myAuth.getUser(uid).getDisplayName();
-            updateNameOnSubscriptions(username, newUsername);
-            updateNameOnCreatedGroups(username, newUsername);
-            deleteOldUsername(uid);
-            saveUsername(uid, newUsername);
-            updateDisplayName(uid, newUsername);
-            users.document(uid).update(USERNAME_FIELD, newUsername);
+            WriteBatch batch = db.batch();
+            updateNameOnSubscriptions(username, newUsername, batch);
+            updateNameOnCreatedGroups(username, newUsername, batch);
+            updateNameOnCreatedForums(username, newUsername, batch);
+            updateNameOnCreatedMessages(username, newUsername, batch);
+            deleteOldUsername(uid, batch);
+            saveUsername(uid, newUsername, batch);
+            Map<String, Object> data = new HashMap<>();
+            data.put(USERNAME_FIELD, newUsername);
+            batch.update(users.document(uid), data);
+            try {
+                batch.commit().get();
+                updateDisplayName(uid, newUsername);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                throw new DatabaseAccessException("update-failed", "The username update failed");
+            }
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }
     }
 
     /**
-     * Updates the username on all of the groups the user is subscribed.
+     * Updates the username on all the groups the user is subscribed to.
      * @param username The current username
      * @param newUsername The new username
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnSubscriptions(String username, String newUsername) throws DatabaseAccessException {
+    private void updateNameOnSubscriptions(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
         Query query = db.collectionGroup("members").whereEqualTo("user", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
-                ref.update("user", newUsername);
+                Map<String, Object> data = new HashMap<>();
+                data.put("user", newUsername);
+                batch.update(ref, data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
@@ -231,22 +252,71 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Updates the username on all of the groups the user has created.
+     * Updates the username on all the groups the user has created.
      * @param username The current username
      * @param newUsername The new username
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnCreatedGroups(String username, String newUsername) throws DatabaseAccessException {
+    private void updateNameOnCreatedGroups(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
         Query query = db.collection("groups").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
-                ref.update("creator", newUsername);
+                Map<String, Object> data = new HashMap<>();
+                data.put("creator", newUsername);
+                batch.update(ref, data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("update-failed", "Failure when updating name in created groups");
+        }
+    }
+
+    /**
+     * Updates the username on all the forums the user has created.
+     * @param username The current username
+     * @param newUsername The new username
+     * @param batch The batch of writes
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void updateNameOnCreatedForums(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
+        Query query = db.collectionGroup("forums").whereEqualTo("creator", username);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                DocumentReference ref = document.getReference();
+                Map<String, Object> data = new HashMap<>();
+                data.put("creator", newUsername);
+                batch.update(ref, data);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("update-failed", "Failure when updating name in created groups");
+        }
+    }
+
+    /**
+     * Updates the username on all the messages the user has created.
+     * @param username The current username
+     * @param newUsername The new username
+     * @param batch The batch of writes
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void updateNameOnCreatedMessages(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
+        Query query = db.collectionGroup("messages").whereEqualTo("creator", username);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                DocumentReference ref = document.getReference();
+                Map<String, Object> data = new HashMap<>();
+                data.put("creator", newUsername);
+                batch.update(ref, data);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("update-failed", "Failure when updating name in created messages");
         }
     }
 
@@ -280,21 +350,23 @@ public class UserDaoImpl implements UserDao {
     /**
      * Saves the username inside the used usernames collection.
      * @param username The username to save
+     * @param batch The batch of writes
      */
-    private void saveUsername(String uid, String username) {
+    private void saveUsername(String uid, String username, WriteBatch batch) {
         Map<String, String> docData = new HashMap<>();
         docData.put(USER_KEY, uid);
-        usedUsernames.document(username).set(docData);
+        batch.set(usedUsernames.document(username), docData);
     }
 
     /**
      * Deletes the old username from the database.
      * @param uid The unique identifier of the user
+     * @param batch The batch of writes
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    private void deleteOldUsername(String uid) throws FirebaseAuthException {
+    private void deleteOldUsername(String uid, WriteBatch batch) throws FirebaseAuthException {
         String oldUsername = myAuth.getUser(uid).getDisplayName();
-        usedUsernames.document(Objects.requireNonNull(oldUsername)).delete();
+        batch.delete(usedUsernames.document(oldUsername));
     }
 
     /**
