@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDao {
     private CollectionReference users;
     private CollectionReference usedUsernames;
     private PetDao petDao;
-    private final Firestore db;
+    private Firestore db;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
