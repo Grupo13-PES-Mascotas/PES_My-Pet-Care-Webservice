@@ -151,6 +151,16 @@ public class UserDaoImpl implements UserDao {
         return (List<String>) user.get("groupSubscriptions");
     }
 
+    @Override
+    public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch) throws DatabaseAccessException {
+        DocumentReference subscriptions = users.document(getUid(username)).collection("forumSubscriptions")
+            .document(parentGroup + "-" + forumName);
+        Map<String, String> data = new HashMap<>();
+        data.put("group", parentGroup);
+        data.put("forum", forumName);
+        batch.set(subscriptions, data);
+    }
+
     /**
      * Gets the document snapshot for the api future given.
      * @param collection The collection from which to get the document

@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.petmanager;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
@@ -7,7 +7,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import org.pesmypetcare.webservice.entity.WeightEntity;
+import org.pesmypetcare.webservice.entity.petmanager.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.stereotype.Repository;

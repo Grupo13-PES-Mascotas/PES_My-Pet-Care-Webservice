@@ -1,19 +1,21 @@
-package org.pesmypetcare.webservice.service;
 
-import org.pesmypetcare.webservice.entity.MedicationEntity;
+package org.pesmypetcare.webservice.dao.petmanager;
+
+import org.pesmypetcare.webservice.entity.petmanager.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public interface MedicationService {
+
+public interface MedicationDao {
     /**
      * Creates a medication eaten by a pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param date date of the medication
-     * @param name name of the medication
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      * @param medication The medication entity that has the attributes of the medication for the pet.
      */
     void createMedication(String owner, String petName, String date, String name, MedicationEntity medication);
@@ -22,10 +24,11 @@ public interface MedicationService {
      * Deletes all the medication with the specified owner and pet from certain date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param date date of the medication
-     * @param name name of the medication
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      */
     void deleteByDateAndName(String owner, String petName, String date, String name);
+
 
     /**
      * Deletes all the medications of the specified pet from database.
@@ -39,8 +42,8 @@ public interface MedicationService {
      * Gets a medication identified by its pet, date and name.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param date date of the medication
-     * @param name name of the medication
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -74,8 +77,8 @@ public interface MedicationService {
      * Gets the value for the specified field of the medication on the database.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
-     * @param date date of the medication
-     * @param name name of the medication
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -87,12 +90,12 @@ public interface MedicationService {
      * Updates the medication's field.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param date date of the medication
-     * @param name name of the medication
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      * @param field Name of the field to update
      * @param value Value the field will have
      */
-    void updateMedicationField(String owner, String petName, String date, String name, String field,
-                               Object value);
+    void updateMedicationField(String owner, String petName, String date, String name, String field, Object value);
+
 
 }

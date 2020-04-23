@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.petmanager;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.entity.WeightEntity;
+import org.pesmypetcare.webservice.entity.petmanager.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.ArrayList;

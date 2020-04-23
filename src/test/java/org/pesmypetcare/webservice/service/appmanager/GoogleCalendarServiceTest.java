@@ -1,6 +1,7 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.appmanager;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,10 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.google.api.services.calendar.model.Calendar;
-import org.pesmypetcare.webservice.dao.GoogleCalendarDao;
-import org.pesmypetcare.webservice.dao.PetDao;
-import org.pesmypetcare.webservice.entity.EventEntity;
+import org.pesmypetcare.webservice.dao.appmanager.GoogleCalendarDao;
+import org.pesmypetcare.webservice.dao.petmanager.PetDao;
+import org.pesmypetcare.webservice.entity.appmanager.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 

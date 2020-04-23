@@ -92,4 +92,12 @@ public interface GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void unsubscribe(String group, String username) throws DatabaseAccessException;
+
+    /**
+     * Gets the group id.
+     * @param name The group name
+     * @return The group id
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    String getGroupId(String name) throws DatabaseAccessException;
 }

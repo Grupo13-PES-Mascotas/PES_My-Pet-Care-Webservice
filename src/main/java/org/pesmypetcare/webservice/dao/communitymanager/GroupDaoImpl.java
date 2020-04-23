@@ -33,15 +33,14 @@ import java.util.concurrent.ExecutionException;
  */
 @Repository
 public class GroupDaoImpl implements GroupDao {
+    private final DateTimeFormatter timeFormatter;
     private CollectionReference groups;
     private CollectionReference groupsNames;
     private CollectionReference tags;
     private Firestore db;
-    private WriteBatch batch;
 
     @Autowired
     private UserDao userDao;
-    private final DateTimeFormatter timeFormatter;
 
     public GroupDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
@@ -54,7 +53,7 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void createGroup(GroupEntity entity) throws DatabaseAccessException {
         entity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
-        batch = db.batch();
+        WriteBatch batch = db.batch();
         DocumentReference groupRef = groups.document();
         batch.set(groupRef, entity);
         String name = entity.getName();
@@ -72,7 +71,7 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void deleteGroup(String name) throws DatabaseAccessException {
         String id = getGroupId(name);
-        batch = db.batch();
+        WriteBatch batch = db.batch();
         deleteGroupFromAllTags(name, batch);
         deleteAllMembers(id, name, batch);
         DocumentReference groupRef = groups.document(id);
@@ -111,12 +110,15 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void updateField(String name, String field, String newValue) throws DatabaseAccessException {
         String id = getGroupId(name);
-        groups.document(id).update(field, newValue);
+        WriteBatch batch = db.batch();
+        DocumentReference group = groups.document(id);
+        Map<String, Object> data= new HashMap<>();
+        data.put(field, newValue);
+        batch.update(group, data);
         if ("name".equals(field)) {
             if (groupNameInUse(newValue)) {
                 throw new DatabaseAccessException("invalid-group-name", "The name is already in use");
             }
-            batch = db.batch();
             changeNameInTags(name, newValue, batch);
             changeNameInSubscription(name, newValue, batch);
             DocumentReference namesRef = groupsNames.document(name);
@@ -137,7 +139,7 @@ public class GroupDaoImpl implements GroupDao {
         String userUid = userDao.getUid(username);
         String groupId = getGroupId(group);
         DocumentReference groupRef = groups.document(groupId);
-        batch = db.batch();
+        WriteBatch batch = db.batch();
         saveUserAsMember(userUid, username, groupRef, batch);
         userDao.addGroupSubscription(username, group, batch);
         batch.commit();
@@ -148,7 +150,7 @@ public class GroupDaoImpl implements GroupDao {
         String userUid = userDao.getUid(username);
         String groupId = getGroupId(group);
         DocumentReference groupRef = groups.document(groupId);
-        batch = db.batch();
+        WriteBatch batch = db.batch();
         deleteUserFromMember(userUid, groupRef, batch);
         userDao.deleteGroupSubscription(userUid, group, batch);
         batch.commit();
@@ -159,7 +161,7 @@ public class GroupDaoImpl implements GroupDao {
         String id = getGroupId(group);
         DocumentReference groupRef = groups.document(id);
         Map<String, Object> data = new HashMap<>();
-        batch = db.batch();
+        WriteBatch batch = db.batch();
         if (deletedTags != null) {
             data.put("tags", FieldValue.arrayRemove(deletedTags.toArray()));
             batch.update(groupRef, data);
@@ -191,6 +193,12 @@ public class GroupDaoImpl implements GroupDao {
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException("list-error", "The groups could not be retrieved");
         }
+    }
+
+    @Override
+    public String getGroupId(String name) throws DatabaseAccessException {
+        DocumentSnapshot snapshot = getDocumentSnapshot(groupsNames, name);
+        return (String) snapshot.get("group");
     }
 
     /**
@@ -408,7 +416,6 @@ public class GroupDaoImpl implements GroupDao {
             throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
         }
     }
-
     /**
      * Deletes the specified collection.
      * @param collection The collection to delete
@@ -419,16 +426,5 @@ public class GroupDaoImpl implements GroupDao {
         for (DocumentReference docRef : membersDocRefs) {
             batch.delete(docRef);
         }
-    }
-
-    /**
-     * Gets the group id.
-     * @param name The group name
-     * @return The group id
-     * @throws DatabaseAccessException If an error occurs when accessing the database
-     */
-    private String getGroupId(String name) throws DatabaseAccessException {
-        DocumentSnapshot snapshot = getDocumentSnapshot(groupsNames, name);
-        return (String) snapshot.get("group");
     }
 }

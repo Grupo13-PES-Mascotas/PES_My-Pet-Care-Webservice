@@ -1,10 +1,10 @@
-package org.pesmypetcare.webservice.entity;
+package org.pesmypetcare.webservice.entity.appmanager;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import lombok.Data;
-import com.google.api.services.calendar.model.Event;
 
 import java.util.Arrays;
 

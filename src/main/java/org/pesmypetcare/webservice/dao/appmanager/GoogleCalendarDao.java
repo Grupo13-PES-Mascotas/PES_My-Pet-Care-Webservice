@@ -1,8 +1,8 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.appmanager;
 
 import com.google.api.services.calendar.model.Calendar;
-import org.pesmypetcare.webservice.error.CalendarAccessException;
 import com.google.api.services.calendar.model.Event;
+import org.pesmypetcare.webservice.error.CalendarAccessException;
 
 import java.util.List;
 

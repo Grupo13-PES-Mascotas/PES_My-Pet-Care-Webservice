@@ -1,12 +1,13 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service.petmanager;
 
-import org.pesmypetcare.webservice.entity.WeightEntity;
+import org.pesmypetcare.webservice.entity.petmanager.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface WeightDao {
+public interface WeightService {
+
     /**
      * Creates a weight of the pet on the database.
      * @param owner Username of the owner of the pet

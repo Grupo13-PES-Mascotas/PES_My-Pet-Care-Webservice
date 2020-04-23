@@ -103,4 +103,6 @@ public interface UserDao {
      * @throws DatabaseAccessException If an error occurs when retrieving the data
      */
     List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
+
+    void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch) throws DatabaseAccessException;
 }

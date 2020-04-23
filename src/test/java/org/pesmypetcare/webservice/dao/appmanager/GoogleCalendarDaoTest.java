@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.appmanager;
 
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.Event;

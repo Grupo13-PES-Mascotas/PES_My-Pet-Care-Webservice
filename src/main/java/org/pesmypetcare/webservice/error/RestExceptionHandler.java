@@ -26,6 +26,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         FirebaseAuthException ex) {
         String errorMessage = new FirebaseExceptionHandler().getErrorMessage(ex.getErrorCode());
         ErrorBody errorBody = new ErrorBody(errorMessage, ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
@@ -37,6 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorBody errorBody = new ErrorBody("Invalid argument", ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
@@ -48,6 +50,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DatabaseAccessException.class)
     protected ResponseEntity<Object> handleInvalidAccessToDatabase(DatabaseAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -59,6 +62,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InitializationException.class)
     protected ResponseEntity<Object> handleIncorrectInitialization(InitializationException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -70,6 +74,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CalendarAccessException.class)
     protected ResponseEntity<Object> handleIncorrectCalendarAccess(CalendarAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

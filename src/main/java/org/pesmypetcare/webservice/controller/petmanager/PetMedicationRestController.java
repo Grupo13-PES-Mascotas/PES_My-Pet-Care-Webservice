@@ -1,8 +1,8 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
-import org.pesmypetcare.webservice.entity.MedicationEntity;
+import org.pesmypetcare.webservice.entity.petmanager.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.MedicationService;
+import org.pesmypetcare.webservice.service.petmanager.MedicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +48,8 @@ public class PetMedicationRestController {
      * @param accessToken oauth2 token needed to access the Database
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName date + name of the receipt of the medication
+     * @param date Date of the Medication
+     * @param name Name of the Medication
      */
     @DeleteMapping("/{owner}/{petName}/{date}/{name}")
     public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken,
@@ -79,7 +80,8 @@ public class PetMedicationRestController {
      * @param accessToken oauth2 token needed to access the Database
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName Date of the Medication
+     * @param date Date of the Medication
+     * @param name Name of the Medication
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -134,7 +136,8 @@ public class PetMedicationRestController {
      * @param accessToken oauth2 token needed to access the Database
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
-     * @param dateName date + name of the Medication
+     * @param date Date of the Medication
+     * @param name Name of the Medication
      * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -155,7 +158,8 @@ public class PetMedicationRestController {
      * @param accessToken oauth2 token needed to access the Database
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param dateName Date + name of the Medication
+     * @param date Date of the Medication
+     * @param name Name of the Medication
      * @param field Name of the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
