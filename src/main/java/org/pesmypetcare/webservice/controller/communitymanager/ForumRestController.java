@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.controller.communitymanager;
 
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,12 @@ public class ForumRestController {
                            @PathVariable String forumName,
                            @RequestBody Map<String , List<String>> tags) throws DatabaseAccessException {
         service.updateTags(parentGroup, forumName, tags.get("new"), tags.get("deleted"));
+    }
+
+    @PostMapping("/{parentGroup}/{forumName}")
+    public void postMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
+                            @RequestBody MessageEntity post) throws DatabaseAccessException {
+        service.postMessage(token, parentGroup, forumName, post);
     }
 
     /*@PostMapping("/{parentGroup}/subscribe")

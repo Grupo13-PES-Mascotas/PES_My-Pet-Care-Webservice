@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.service.communitymanager;
 import org.pesmypetcare.webservice.dao.communitymanager.ForumDao;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,15 @@ public class ForumServiceImpl implements ForumService {
             throw new DatabaseAccessException("invalid-forum-name", "The forum does not exist");
         } else {
             forumDao.updateTags(parentGroup, forumName, newTags, deletedTags);
+        }
+    }
+
+    @Override
+    public void postMessage(String token, String parentGroup, String forumName, MessageEntity post) throws DatabaseAccessException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DatabaseAccessException("invalid-forum", "The forum does not exist");
+        } else {
+            forumDao.postMessage(parentGroup, forumName, post);
         }
     }
 

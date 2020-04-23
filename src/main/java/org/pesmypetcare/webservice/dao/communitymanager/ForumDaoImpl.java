@@ -12,6 +12,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,33 @@ public class ForumDaoImpl implements ForumDao {
             addNewTags(forumName, newTags, forumRef, batch);
         }
         batch.commit();
+    }
+
+    @Override
+    public void postMessage(String parentGroup, String forumName, MessageEntity post) throws DatabaseAccessException {
+        String groupId = groupDao.getGroupId(parentGroup);
+        String forumId = getForumId(parentGroup, forumName);
+        DocumentReference messageRef = groups.document(groupId).collection("forums").document(forumId)
+            .collection("messages").document();
+        messageRef.set(post);
+    }
+
+    @Override
+    public void deleteMessage(String parentGroup, String forumName, String creator, String date) throws DatabaseAccessException {
+        String groupId = groupDao.getGroupId(parentGroup);
+        String forumId = getForumId(parentGroup, forumName);
+        Query query = groups.document(groupId).collection("forums").document(forumId)
+            .collection("messages").whereEqualTo("creator", creator).whereEqualTo("publicationDate", date);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        WriteBatch batch = db.batch();
+        try {
+            for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
+                batch.delete(document.getReference());
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("message-deletion-failed", "Failure when deleting the message");
+        }
     }
 
     /**

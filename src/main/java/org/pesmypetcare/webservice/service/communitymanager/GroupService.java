@@ -87,4 +87,12 @@ public interface GroupService {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     void unsubscribe(String token, String group, String username) throws DatabaseAccessException;
+
+    /**
+     * Checks whether a group name is already in use or not.
+     * @param name The group name
+     * @return True if the name is being used
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    boolean groupNameInUse(String name) throws DatabaseAccessException;
 }

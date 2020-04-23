@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,5 +132,19 @@ public class GroupRestController {
     public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group,
                             @RequestParam String username) throws DatabaseAccessException {
         service.unsubscribe(token, group, username);
+    }
+
+    /**
+     * Checks if a group exists.
+     *
+     * @param group The group name
+     * @return True if the group exists
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    @GetMapping("/groups")
+    public Map<String, Boolean> existsGroup(@RequestParam String group) throws DatabaseAccessException {
+        Map<String, Boolean> resp = new HashMap<>();
+        resp.put("exists", service.groupNameInUse(group));
+        return resp;
     }
 }

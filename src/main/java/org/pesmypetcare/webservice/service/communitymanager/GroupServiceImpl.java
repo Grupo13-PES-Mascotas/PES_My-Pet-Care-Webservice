@@ -91,4 +91,9 @@ public class GroupServiceImpl implements GroupService {
             groupDao.unsubscribe(group, username);
         }
     }
+
+    @Override
+    public boolean groupNameInUse(String name) throws DatabaseAccessException {
+        return groupDao.groupNameInUse(name);
+    }
 }
