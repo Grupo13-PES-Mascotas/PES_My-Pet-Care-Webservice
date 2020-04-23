@@ -227,7 +227,7 @@ public class UserDaoImpl implements UserDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void updateNameOnCreatedGroups(String username, String newUsername) throws DatabaseAccessException {
-        Query query = db.collection("groups)").whereEqualTo("creator", username);
+        Query query = db.collection("groups").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
