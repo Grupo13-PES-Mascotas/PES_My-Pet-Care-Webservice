@@ -28,6 +28,7 @@ public class WeekTrainingRestController {
      * Creates a weekTraining of the pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
+     * @param petDate Creation date of the instance
      * @param weekTrainingEntity The parameters of weekTraining
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
@@ -89,7 +90,7 @@ public class WeekTrainingRestController {
     }
 
     /**
-     * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
+     * Gets the data from all the weektrainings by the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date

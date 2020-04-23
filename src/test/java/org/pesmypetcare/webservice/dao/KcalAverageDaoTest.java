@@ -201,9 +201,9 @@ public class KcalAverageDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(KcalAverageEntity.class)).willReturn(kcalAverageEntity);
 
-        KcalAverageEntity meal = kcalAverageDao.getKcalAverageByDate(owner, petName, date);
+        KcalAverageEntity kcalAverage = kcalAverageDao.getKcalAverageByDate(owner, petName, date);
 
-        assertSame(kcalAverageEntity, meal, "Should return Meal Entity");
+        assertSame(kcalAverageEntity, kcalAverage, "Should return KcalAverage Entity");
     }
 
     @Test
@@ -274,7 +274,7 @@ public class KcalAverageDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = kcalAverageDao.getAllKcalAverage(owner, petName);
-        assertEquals(kcalAverageList, list, "Should return a List containing all meals Data");
+        assertEquals(kcalAverageList, list, "Should return a List containing all kcalAverages Data");
     }
 
     @Test
@@ -325,7 +325,7 @@ public class KcalAverageDaoTest {
 
         List<Map<String, Object>> list = kcalAverageDao.getAllKcalAveragesBetween(owner, petName, date, date2);
 
-        assertEquals(kcalAverageList, list, "Should return a List containing all meals between two dates");
+        assertEquals(kcalAverageList, list, "Should return a List containing all kcalAverages between two dates");
     }
 
     @Test

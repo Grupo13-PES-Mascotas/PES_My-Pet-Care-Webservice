@@ -201,9 +201,9 @@ public class FreqTrainingDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(FreqTrainingEntity.class)).willReturn(freqTrainingEntity);
 
-        FreqTrainingEntity meal = freqTrainingDao.getFreqTrainingByDate(owner, petName, date);
+        FreqTrainingEntity freqTraining = freqTrainingDao.getFreqTrainingByDate(owner, petName, date);
 
-        assertSame(freqTrainingEntity, meal, "Should return Meal Entity");
+        assertSame(freqTrainingEntity, freqTraining, "Should return FreqTraining Entity");
     }
 
     @Test
@@ -274,7 +274,7 @@ public class FreqTrainingDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = freqTrainingDao.getAllFreqTraining(owner, petName);
-        assertEquals(freqTrainingList, list, "Should return a List containing all meals Data");
+        assertEquals(freqTrainingList, list, "Should return a List containing all freqTrainings Data");
     }
 
     @Test
@@ -325,7 +325,7 @@ public class FreqTrainingDaoTest {
 
         List<Map<String, Object>> list = freqTrainingDao.getAllFreqTrainingsBetween(owner, petName, date, date2);
 
-        assertEquals(freqTrainingList, list, "Should return a List containing all meals between two dates");
+        assertEquals(freqTrainingList, list, "Should return a List containing all freqtraining between two dates");
     }
 
     @Test

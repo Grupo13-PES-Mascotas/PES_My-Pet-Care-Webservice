@@ -201,9 +201,9 @@ public class WeekTrainingDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(WeekTrainingEntity.class)).willReturn(weekTrainingEntity);
 
-        WeekTrainingEntity meal = weekTrainingDao.getWeekTrainingByDate(owner, petName, date);
+        WeekTrainingEntity weekTraining = weekTrainingDao.getWeekTrainingByDate(owner, petName, date);
 
-        assertSame(weekTrainingEntity, meal, "Should return Meal Entity");
+        assertSame(weekTrainingEntity, weekTraining, "Should return WeekTraining Entity");
     }
 
     @Test
@@ -274,7 +274,7 @@ public class WeekTrainingDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = weekTrainingDao.getAllWeekTraining(owner, petName);
-        assertEquals(weekTrainingList, list, "Should return a List containing all meals Data");
+        assertEquals(weekTrainingList, list, "Should return a List containing all weekTrainings Data");
     }
 
     @Test
@@ -325,7 +325,7 @@ public class WeekTrainingDaoTest {
 
         List<Map<String, Object>> list = weekTrainingDao.getAllWeekTrainingsBetween(owner, petName, date, date2);
 
-        assertEquals(weekTrainingList, list, "Should return a List containing all meals between two dates");
+        assertEquals(weekTrainingList, list, "Should return a List containing all weekTrainings between two dates");
     }
 
     @Test

@@ -54,7 +54,7 @@ public interface FreqTrainingDao {
     List<Map<String, Object>> getAllFreqTraining(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
+     * Gets the data from all the freqtrainings by the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date

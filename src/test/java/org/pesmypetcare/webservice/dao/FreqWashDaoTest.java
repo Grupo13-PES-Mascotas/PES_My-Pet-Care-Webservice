@@ -201,9 +201,9 @@ public class FreqWashDaoTest {
         given(documentSnapshot.exists()).willReturn(true);
         given(documentSnapshot.toObject(FreqWashEntity.class)).willReturn(freqWashEntity);
 
-        FreqWashEntity meal = freqWashDao.getFreqWashByDate(owner, petName, date);
+        FreqWashEntity freqWash = freqWashDao.getFreqWashByDate(owner, petName, date);
 
-        assertSame(freqWashEntity, meal, "Should return Meal Entity");
+        assertSame(freqWashEntity, freqWash, "Should return FreqWash Entity");
     }
 
     @Test
@@ -274,7 +274,7 @@ public class FreqWashDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = freqWashDao.getAllFreqWash(owner, petName);
-        assertEquals(freqWashList, list, "Should return a List containing all meals Data");
+        assertEquals(freqWashList, list, "Should return a List containing all freqwash Data");
     }
 
     @Test
@@ -325,7 +325,7 @@ public class FreqWashDaoTest {
 
         List<Map<String, Object>> list = freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
 
-        assertEquals(freqWashList, list, "Should return a List containing all meals between two dates");
+        assertEquals(freqWashList, list, "Should return a List containing all freqwash between two dates");
     }
 
     @Test
