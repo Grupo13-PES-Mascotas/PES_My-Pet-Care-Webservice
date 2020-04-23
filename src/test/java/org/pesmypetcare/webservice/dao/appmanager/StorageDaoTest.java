@@ -30,8 +30,6 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Santiago Del Rey
  */
-@SpringBootTest
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class StorageDaoTest {
     private static final String CONTENT_TYPE = "image/png";

@@ -26,8 +26,6 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Santiago Del Rey
  */
-@SpringBootTest
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class StorageServiceTest {
     private static ImageEntity imageEntity;
