@@ -26,6 +26,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
+/**
+ * @author Santiago Del Rey
+ */
 @ExtendWith(MockitoExtension.class)
 class StorageDaoTest {
     private static final String CONTENT_TYPE = "image/png";

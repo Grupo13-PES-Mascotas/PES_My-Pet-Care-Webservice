@@ -1,9 +1,8 @@
-package org.pesmypetcare.webservice.firebaseservice;
+package org.pesmypetcare.webservice.firebaseservice.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.FieldPath;
-import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.WriteBatch;
 import org.springframework.lang.NonNull;
@@ -11,22 +10,14 @@ import org.springframework.lang.NonNull;
 /**
  * @author Santiago Del Rey
  */
-public class FirestoreCollectionAdapter {
-    private Firestore db;
-
-    public FirestoreCollectionAdapter() {
-        db = FirebaseFactory.getInstance().getFirestore();
-    }
-
+public interface FirestoreCollection {
     /**
      * Gets a CollectionReference that refers to the collection at the specified path.
      *
      * @param path A slash-separated path to a collection
      * @return The CollectionReference instance
      */
-    public CollectionReference getCollectionReference(@NonNull String path) {
-        return db.collection(path);
-    }
+    CollectionReference getCollectionReference(@NonNull String path);
 
     /**
      * The id of a collection refers to the last component of path pointing to a collection.
@@ -34,9 +25,7 @@ public class FirestoreCollectionAdapter {
      * @param path A slash-separated path to a collection
      * @return The ID of the collection
      */
-    public String getCollectionId(@NonNull String path) {
-        return db.collection(path).getId();
-    }
+    String getCollectionId(@NonNull String path);
 
     /**
      * A reference to the Document to which this Collection belongs to.
@@ -44,9 +33,7 @@ public class FirestoreCollectionAdapter {
      * @param path A slash-separated path to a collection
      * @return The DocumentReference instance
      */
-    public DocumentReference getCollectionParent(@NonNull String path) {
-        return db.collection(path).getParent();
-    }
+    DocumentReference getCollectionParent(@NonNull String path);
 
     /**
      * Retrieves the list of documents in this collection.
@@ -57,9 +44,7 @@ public class FirestoreCollectionAdapter {
      * @param path A slash-separated path to a collection
      * @return The list of documents in this collection
      */
-    public Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path) {
-        return db.collection(path).listDocuments();
-    }
+    Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
 
     /**
      * Creates and returns a new Query that includes all documents in the database that are contained in a
@@ -68,9 +53,7 @@ public class FirestoreCollectionAdapter {
      *                    the last segment of its path will be included. Cannot contain a slash.
      * @return The created Query
      */
-    public Query getCollectionGroup(@NonNull String collectionId) {
-        return db.collectionGroup(collectionId);
-    }
+    Query getCollectionGroup(@NonNull String collectionId);
 
     /**
      * Deletes the Collection referred to by this path.
@@ -78,16 +61,7 @@ public class FirestoreCollectionAdapter {
      * @param path A slash-separated path to a collection
      * @param batch The batch where to write
      */
-    public void deleteCollection(@NonNull String path, @NonNull WriteBatch batch) {
-        Iterable<DocumentReference> documents = getCollectionReference(path).listDocuments();
-        for (DocumentReference doc : documents) {
-            Iterable<CollectionReference> innerCollections = doc.listCollections();
-            for (CollectionReference innerCollection : innerCollections) {
-                deleteCollection(innerCollection.getPath(), batch);
-            }
-            batch.delete(doc);
-        }
-    }
+    void deleteCollection(@NonNull String path, @NonNull WriteBatch batch);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -98,10 +72,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
-                                          @NonNull Object value) {
-        return db.collection(collectionPath).whereEqualTo(field, value);
-    }
+    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
+                                   @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -112,10 +84,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                          @NonNull Object value) {
-        return db.collection(collectionPath).whereEqualTo(fieldPath, value);
-    }
+    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
+                                   @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -126,10 +96,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
-                                                @NonNull Object value) {
-        return db.collection(collectionPath).whereArrayContains(field, value);
-    }
+    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
+                                         @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -140,10 +108,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                                @NonNull Object value) {
-        return db.collection(collectionPath).whereArrayContains(fieldPath, value);
-    }
+    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
+                                         @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -155,10 +121,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull String field,
-                                                         @NonNull Object value) {
-        return db.collectionGroup(collectionId).whereEqualTo(field, value);
-    }
+    Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull String field,
+                                                  @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -170,10 +134,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                         @NonNull Object value) {
-        return db.collectionGroup(collectionId).whereEqualTo(fieldPath, value);
-    }
+    Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull FieldPath fieldPath,
+                                                  @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -185,10 +147,8 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull String field,
-                                                               @NonNull Object value) {
-        return db.collectionGroup(collectionId).whereArrayContains(field, value);
-    }
+    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull String field,
+                                                        @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -200,8 +160,6 @@ public class FirestoreCollectionAdapter {
      * @param value The value for comparison
      * @return The created Query
      */
-    public Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
-                                                               @NonNull FieldPath fieldPath, @NonNull Object value) {
-        return db.collectionGroup(collectionId).whereArrayContains(fieldPath, value);
-    }
+    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
+                                                        @NonNull FieldPath fieldPath, @NonNull Object value);
 }

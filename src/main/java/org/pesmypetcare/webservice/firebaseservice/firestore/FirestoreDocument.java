@@ -1,12 +1,10 @@
-package org.pesmypetcare.webservice.firebaseservice;
+package org.pesmypetcare.webservice.firebaseservice.firestore;
 
-import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
-import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -16,27 +14,18 @@ import org.springframework.lang.Nullable;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Santiago Del Rey
  */
-public class FirestoreDocumentAdapter {
-    private Firestore db;
-
-    public FirestoreDocumentAdapter() {
-        db = FirebaseFactory.getInstance().getFirestore();
-    }
-
+public interface FirestoreDocument {
     /**
      * Gets a DocumentReference that refers to the document at the specified path.
      *
      * @param path A slash-separated path to a document
      * @return The DocumentReference instance
      */
-    public DocumentReference getDocumentReference(@NonNull String path) {
-        return db.document(path);
-    }
+    DocumentReference getDocumentReference(@NonNull String path);
 
     /**
      * The id of a document refers to the last component of path pointing to a document.
@@ -44,9 +33,7 @@ public class FirestoreDocumentAdapter {
      * @param path A slash-separated path to a document
      * @return The ID of the document
      */
-    public String getDocumentId(@NonNull String path) {
-        return getDocumentReference(path).getId();
-    }
+    String getDocumentId(@NonNull String path);
 
     /**
      * A reference to the Collection to which this Document belongs to.
@@ -54,9 +41,7 @@ public class FirestoreDocumentAdapter {
      * @param path A slash-separated path to a document
      * @return The CollectionReference instance
      */
-    public CollectionReference getDocumentParent(@NonNull String path) {
-        return getDocumentReference(path).getParent();
-    }
+    CollectionReference getDocumentParent(@NonNull String path);
 
     /**
      * A snapshot to the Document referenced by this path.
@@ -66,20 +51,8 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public DocumentSnapshot getDocumentSnapshot(@NonNull String path)
-        throws DatabaseAccessException, DocumentException {
-        ApiFuture<DocumentSnapshot> future = db.document(path).get();
-        try {
-            DocumentSnapshot snapshot = future.get();
-            if (!documentSnapshotExists(snapshot)) {
-                throw new DocumentException("invalid-path", "The document does not exist");
-            }
-            return snapshot;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
-        }
-    }
+    DocumentSnapshot getDocumentSnapshot(@NonNull String path)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document. Returns false if the document does not exist.
@@ -87,9 +60,7 @@ public class FirestoreDocumentAdapter {
      * @param snapshot The DocumentSnapshot instance
      * @return Whether the document existed in this snapshot
      */
-    public boolean documentSnapshotExists(@NonNull DocumentSnapshot snapshot) {
-        return snapshot.exists();
-    }
+    boolean documentSnapshotExists(@NonNull DocumentSnapshot snapshot);
 
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
@@ -99,10 +70,7 @@ public class FirestoreDocumentAdapter {
      * @param fields A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void createDocument(@NonNull String path, @NonNull Map<String, Object> fields,@NonNull WriteBatch batch) {
-        DocumentReference ref = db.collection(path).document();
-        batch.create(ref, fields);
-    }
+    void createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
@@ -112,10 +80,7 @@ public class FirestoreDocumentAdapter {
      * @param pojo A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch) {
-        DocumentReference ref = db.collection(path).document();
-        batch.create(ref, pojo);
-    }
+    void createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
@@ -125,10 +90,7 @@ public class FirestoreDocumentAdapter {
      * @param fields A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Map<String, Object> fields,@NonNull WriteBatch batch) {
-        DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
-        batch.create(ref, fields);
-    }
+    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
@@ -138,10 +100,7 @@ public class FirestoreDocumentAdapter {
      * @param pojo A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo, @NonNull WriteBatch batch) {
-        DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
-        batch.create(ref, pojo);
-    }
+    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo, @NonNull WriteBatch batch);
 
     /**
      * Overwrites the document referred to by this path.
@@ -151,10 +110,7 @@ public class FirestoreDocumentAdapter {
      * @param fields A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
-        DocumentReference doc = getDocumentReference(path);
-        batch.set(doc, fields);
-    }
+    void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Overwrites the document referred to by this path.
@@ -164,10 +120,7 @@ public class FirestoreDocumentAdapter {
      * @param pojo A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void setDocumentField(@NonNull String path, @NonNull Object pojo , @NonNull WriteBatch batch) {
-        DocumentReference doc = getDocumentReference(path);
-        batch.set(doc, pojo);
-    }
+    void setDocumentField(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
 
     /**
      * Updates fields in the document referred to by this DocumentReference.
@@ -177,21 +130,14 @@ public class FirestoreDocumentAdapter {
      * @param fields A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    public void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
-        DocumentReference doc = getDocumentReference(path);
-        batch.update(doc, fields);
-    }
+    void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Deletes the document referred to by this path. If the document has inner collections they will be also deleted.
      * @param path A slash-separated path to a document
      * @param batch The batch where to write
      */
-    public void deleteDocument(@NonNull String path, @NonNull WriteBatch batch) {
-        DocumentReference doc = getDocumentReference(path);
-        deleteDocumentCollections(doc, batch);
-        batch.delete(doc);
-    }
+    void deleteDocument(@NonNull String path, @NonNull WriteBatch batch);
 
     /**
      * Returns the value at the field or null if the field doesn't exist.
@@ -202,9 +148,7 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public Object getDocumentField(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).get(field);
-    }
+    Object getDocumentField(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value at the field or null if the field doesn't exist.
@@ -215,9 +159,7 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).get(fieldPath);
-    }
+    Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a double.
@@ -230,9 +172,7 @@ public class FirestoreDocumentAdapter {
      * @throws RuntimeException If the value is not a Number
      */
     @Nullable
-    public Double getDoubleFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getDouble(field);
-    }
+    Double getDoubleFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a Date.
@@ -244,9 +184,7 @@ public class FirestoreDocumentAdapter {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a Date
      */
-    public Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getDate(field);
-    }
+    Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a boolean.
@@ -259,9 +197,7 @@ public class FirestoreDocumentAdapter {
      * @throws RuntimeException If the value is not a Boolean
      */
     @Nullable
-    public Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getBoolean(field);
-    }
+    Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a GeoPoint.
@@ -273,9 +209,7 @@ public class FirestoreDocumentAdapter {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a GeoPoint
      */
-    public GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getGeoPoint(field);
-    }
+    GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a String.
@@ -287,9 +221,7 @@ public class FirestoreDocumentAdapter {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a String
      */
-    public String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getString(field);
-    }
+    String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a Timestamp.
@@ -301,9 +233,7 @@ public class FirestoreDocumentAdapter {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a Date
      */
-    public Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getTimestamp(field);
-    }
+    Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the fields of the document as a Map.
@@ -314,9 +244,7 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public Map<String, Object> getDocumentData(@NonNull String path) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).getData();
-    }
+    Map<String, Object> getDocumentData(@NonNull String path) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the contents of the document converted to a POJO.
@@ -327,9 +255,7 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).toObject(valueType);
-    }
+    <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document.
@@ -340,9 +266,7 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public boolean documentContains(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).contains(field);
-    }
+    boolean documentContains(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document.
@@ -353,23 +277,5 @@ public class FirestoreDocumentAdapter {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException {
-        return getDocumentSnapshot(path).contains(fieldPath);
-    }
-
-    /**
-     * Deletes all the document inner collections referred to by this DocumentReference.
-     * @param reference The DocumentReference to delete
-     * @param batch The batch where to write
-     */
-    private void deleteDocumentCollections(@NonNull DocumentReference reference, @NonNull WriteBatch batch) {
-        Iterable<CollectionReference> collections = reference.listCollections();
-        for (CollectionReference collection : collections) {
-            Iterable<DocumentReference> documents = collection.listDocuments();
-            for (DocumentReference document : documents) {
-                deleteDocumentCollections(document, batch);
-                batch.delete(document);
-            }
-        }
-    }
+    boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException;
 }

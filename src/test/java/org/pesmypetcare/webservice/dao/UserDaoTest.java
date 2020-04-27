@@ -32,6 +32,9 @@ import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+/**
+ * @author Santiago Del Rey
+ */
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
     private static final String USERNAME_FIELD = "username";
