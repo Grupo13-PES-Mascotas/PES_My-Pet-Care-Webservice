@@ -49,7 +49,7 @@ public class FirestoreDocumentAdapter {
     }
 
     /**
-     * A reference to the Collection to which this DocumentReference belongs to.
+     * A reference to the Collection to which this Document belongs to.
      *
      * @param path A slash-separated path to a document
      * @return The CollectionReference instance
@@ -59,7 +59,7 @@ public class FirestoreDocumentAdapter {
     }
 
     /**
-     * A snapshot to the Document to which this DocumentReference belongs to.
+     * A snapshot to the Document referenced by this path.
      *
      * @param path A slash-separated path to a document
      * @return The DocumentSnapshot instance
