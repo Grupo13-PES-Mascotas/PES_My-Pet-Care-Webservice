@@ -3,7 +3,7 @@ package org.pesmypetcare.webservice.error;
 /**
  * @author Santiago Del Rey
  */
-public class DatabaseAccessException extends Exception {
+public class DocumentException extends Exception {
     private final String errorCode;
 
     /**
@@ -11,7 +11,7 @@ public class DatabaseAccessException extends Exception {
      * @param errorCode The error code for the exception
      * @param detailedMessage A clarifying description of the error
      */
-    public DatabaseAccessException(String errorCode, String detailedMessage) {
+    public DocumentException(String errorCode, String detailedMessage) {
         super(detailedMessage);
         this.errorCode = errorCode;
     }
