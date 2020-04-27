@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 @Service
 public class PetServiceImpl implements PetService {
     @Autowired
@@ -20,7 +23,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name) {
+    public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException {
         petDao.deleteByOwnerAndName(owner, name);
     }
 

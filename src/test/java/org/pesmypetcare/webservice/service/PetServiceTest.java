@@ -28,7 +28,7 @@ class PetServiceTest {
     private static String owner;
     private static String name;
     private static String field;
-    private static GenderType value;
+    private static String value;
 
     @Mock
     private PetDao petDao;
@@ -42,8 +42,8 @@ class PetServiceTest {
         pet = new PetEntity();
         owner = "OwnerUsername";
         name = "PetName";
-        field = "gender";
-        value = GenderType.Female;
+        field = "pathologies";
+        value = "COVID-19";
     }
 
     @Test
@@ -53,7 +53,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenPetDeleted() {
+    public void shouldReturnNothingWhenPetDeleted() throws DatabaseAccessException {
         service.deleteByOwnerAndName(owner, name);
         verify(petDao).deleteByOwnerAndName(isA(String.class), isA(String.class));
     }
@@ -90,8 +90,8 @@ class PetServiceTest {
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException {
         when(petDao.getAllPetsData(owner)).thenReturn(pets);
-        List<Map<String, Object>> lista = service.getAllPetsData(owner);
-        assertSame(pets, lista, "Should return a list of pet entities");
+        List<Map<String, Object>> list = service.getAllPetsData(owner);
+        assertSame(pets, list, "Should return a list of pet entities");
     }
 
     @Test
@@ -110,9 +110,17 @@ class PetServiceTest {
     }
 
     @Test
+    public void shouldReturnDatabaseAccessExceptionWhenGetPetFieldRequestFails() {
+        assertThrows(DatabaseAccessException.class, () -> {
+            doThrow(DatabaseAccessException.class).when(petDao).getField(any(String.class), any(String.class),
+                any(String.class));
+            service.getField(owner, name, field);
+        }, "Should return an exception when retrieving a pet field fails");
+    }
+
+    @Test
     public void shouldReturnNothingWhenPetFieldUpdated() {
         service.updateField(owner, name, field, value);
         verify(petDao).updateField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }
-
 }

@@ -53,14 +53,13 @@ class PetRestControllerTest {
         jsonPetEntity = "{\n"
             + "  \"gender\": \"Male\",\n"
             + "  \"breed\":\"Chihuahua\",\n"
-            + "  \"weight\": 10.0,\n"
             + "  \"birth\":\"2017-12-27T00:00:00.000+0000\",\n"
             + "  \"patologies\": \"amnesia\",\n"
-            + "  \"recommendedKcal\": 300.0,\n"
-            + "  \"washFreq\": 3\n"
+            + "  \"needs\": \"vitaminC\",\n"
+            + "  \"recommendedKcal\": 300.0\n"
             + "}";
         jsonField = "{\n" +
-            "  \"gender\": \"Other\"\n" +
+            "  \"value\": \"Other\"\n" +
             "} ";
         petEntity = new PetEntity();
         petEntityList = new ArrayList<>();

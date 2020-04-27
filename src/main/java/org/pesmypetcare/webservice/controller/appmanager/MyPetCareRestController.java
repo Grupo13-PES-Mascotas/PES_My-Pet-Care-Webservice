@@ -1,13 +1,19 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class MyPetCareRestController {
@@ -16,15 +22,28 @@ public class MyPetCareRestController {
 
     /**
      * Given a username, an email and a password creates the user on the data base.
-     * @param user The entity that contains the username and the email for the new account
-     * @param password The password for the new account
-     * @throws FirebaseAuthException If a user tries to create an account with an existing username or
-     * email, or with an invalid email
+     * @param user The request body that contains the username, password and email for the new account
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @PostMapping("/signup")
-    public void signUp(@RequestBody UserEntity user, @RequestParam String password)
-        throws FirebaseAuthException {
-        //userService.createUserAuth(user, password);
-        userService.createUser(user);
+    public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException {
+        ObjectMapper mapper = new ObjectMapper();
+        UserEntity userEntity = mapper.convertValue(user.get("user"), UserEntity.class);
+        userService.createUser((String) user.get("uid"), userEntity);
+    }
+
+    /**
+     * Checks if a username is already in use.
+     * @param username The username to check
+     * @return True if the username is in use
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    @GetMapping("/usernames")
+    public Map<String, Boolean> usernameAlreadyInUse(@RequestParam String username) throws DatabaseAccessException {
+        boolean exists = userService.existsUsername(username);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return response;
     }
 }

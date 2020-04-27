@@ -6,6 +6,9 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 public interface PetDao {
 
     /**
@@ -21,7 +24,7 @@ public interface PetDao {
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      */
-    void deleteByOwnerAndName(String owner, String name);
+    void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException;
 
     /**
      * Deletes all the pets of the specified owner from database.

@@ -25,11 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class UserRestControllerTest {
-    private static String urlBase;
+    private static final String URL = "/users/PotatoMaster";
     private static String username;
     private static UserEntity userEntity;
-    private static String jsonEmail;
-    private static String jsonPassword;
+    private static String jsonUpdate;
+    private static String token;
+    private static String myToken;
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,46 +40,38 @@ class UserRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        urlBase = "/users";
         username = "PotatoMaster";
+        token = "token";
+        myToken = "my-token";
         userEntity = new UserEntity();
-        jsonEmail = "{\n"
-            + "  \"newEmail\": \"xavi@nanako.com\"\n"
-            + "} ";
-        jsonPassword = "{\n"
-            + "  \"newPasswordl\": \"hiufdahs\"\n"
+        jsonUpdate = "{\n"
+            + "  \"email\": \"xavi@nanako.com\"\n"
             + "} ";
     }
 
     @Test
     public void deleteAccountShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteById(anyString());
-        mockMvc.perform(delete(urlBase + "/" + username + "/delete"))
+        mockMvc.perform(delete(URL)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getUserDataShouldReturnUserDataAndStatusOk() throws Exception {
         willReturn(userEntity).given(service).getUserData(username);
-        mockMvc.perform(get(urlBase + "/" + username))
+        mockMvc.perform(get(URL)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 
     @Test
-    public void updateEmailShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateEmail(anyString(), anyString());
-        mockMvc.perform(put(urlBase + "/" + username + "/update/email")
+    public void updateFieldShouldReturnStatusOk() throws Exception {
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
+        mockMvc.perform(put(URL)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonEmail))
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    public void updatePasswordShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updatePassword(anyString(), anyString());
-        mockMvc.perform(put(urlBase + "/" + username + "/update/password")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonPassword))
+            .content(jsonUpdate)
+            .header(token, myToken))
             .andExpect(status().isOk());
     }
 }

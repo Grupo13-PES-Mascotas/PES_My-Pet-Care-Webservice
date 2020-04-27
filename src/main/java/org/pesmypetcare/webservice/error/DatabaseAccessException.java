@@ -4,7 +4,7 @@ public class DatabaseAccessException extends Exception {
     private final String errorCode;
 
     /**
-     * Creates a database access exception with the specifies error code and detailed message.
+     * Creates a database access exception with the specified error code and detailed message.
      * @param errorCode The error code for the exception
      * @param detailedMessage A clarifying description of the error
      */

@@ -16,17 +16,26 @@ public interface UserService {
 
     /**
      * Creates a user on the data base.
-     * @param userEntity The entity that contains the uid, username and email of the user
+     * @param uid The unique identifier of the user
+     * @param userEntity The entity that contains the username, password and email for the new user
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void createUser(UserEntity userEntity);
+    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
+
+    /**
+     * Deletes a user from database.
+     * @param uid The unique identifier of the user
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void deleteFromDatabase(String uid) throws DatabaseAccessException;
 
     /**
      * Deletes the user with the specified uid from the data base.
-     * @param id The uid of the user to delete
+     * @param uid The unique identifier of the user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    void deleteById(String id) throws DatabaseAccessException, FirebaseAuthException;
+    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException;
 
 
     /**
@@ -38,18 +47,19 @@ public interface UserService {
     UserEntity getUserData(String uid) throws DatabaseAccessException;
 
     /**
-     * Updates the user's email.
+     * Updates a user field.
      * @param uid The unique identifier of the user
-     * @param newEmail The new email for the account
+     * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateEmail(String uid, String newEmail) throws FirebaseAuthException;
+    void updateField(String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
 
     /**
-     * Updates the user's username.
-     * @param uid The unique identifier of the user
-     * @param newPassword The new password for the account
-     * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * Checks if a username is already in use.
+     * @param username The username to check
+     * @return True if the username is already in use
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updatePassword(String uid, String newPassword) throws FirebaseAuthException;
+    boolean existsUsername(String username) throws DatabaseAccessException;
 }

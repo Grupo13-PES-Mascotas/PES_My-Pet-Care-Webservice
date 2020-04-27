@@ -26,10 +26,13 @@ public class PetDaoImpl implements PetDao {
     private final String INVALID_PET_EXC;
     private CollectionReference usersRef;
 
+    private StorageDao storageDao;
+
     public PetDaoImpl() {
         Firestore db;
         db = FirebaseFactory.getInstance().getFirestore();
         usersRef = db.collection("users");
+        storageDao = new StorageDaoImpl(this);
 
         PETS_KEY = "pets";
         DELFAIL_KEY = "deletion-failed";
@@ -37,16 +40,32 @@ public class PetDaoImpl implements PetDao {
         INVALID_PET_EXC = "invalid-pet";
     }
 
+    /**
+     * Gets the storage dao.
+     * @return The storage dao
+     */
+    public StorageDao getStorageDao() {
+        return storageDao;
+    }
+
     @Override
     public void createPet(String owner, String name, PetEntity petEntity) {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
+        DocumentReference petRef = usersRef.document(owner).
+                collection(PETS_KEY).document(name);
         petRef.set(petEntity);
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name) {
+    public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        petRef.delete();
+        try {
+            ApiFuture<DocumentSnapshot> petDoc = petRef.get();
+            String imageLocation = (String) petDoc.get().get("profileImageLocation");
+            deleteProfileImage(imageLocation);
+            petRef.delete();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
     }
 
     @Override
@@ -56,6 +75,8 @@ public class PetDaoImpl implements PetDao {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
+                String imageLocation = (String) petDocument.get("profileImageLocation");
+                deleteProfileImage(imageLocation);
                 petDocument.getReference().delete();
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -118,5 +139,15 @@ public class PetDaoImpl implements PetDao {
     public void updateField(String owner, String name, String field, Object value) {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.update(field, value);
+    }
+
+    /**
+     * Deletes the pet profile image.
+     * @param imageLocation The image location
+     */
+    private void deleteProfileImage(String imageLocation) {
+        if (imageLocation != null) {
+            storageDao.deleteImageByName(imageLocation);
+        }
     }
 }

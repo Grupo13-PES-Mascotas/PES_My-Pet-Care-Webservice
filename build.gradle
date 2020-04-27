@@ -1,13 +1,13 @@
 plugins {
     id 'org.springframework.boot' version '2.2.6.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.asciidoctor.jvm.convert' version '3.1.0'
+    id 'org.asciidoctor.jvm.convert' version '3.2.0'
     id 'java'
     id 'jacoco'
 }
 
 group = 'org.pesmypetcare'
-version = '1.0.0'
+version = '2.0.0'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -25,6 +25,7 @@ ext {
 }
 
 dependencies {
+    compile 'com.google.apis:google-api-services-calendar:v3-rev20200315-1.30.9'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.google.firebase:firebase-admin:6.12.2'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
