@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.service;
 
-import com.google.api.services.calendar.model.Event;
 import org.pesmypetcare.webservice.entity.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
