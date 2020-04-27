@@ -73,16 +73,17 @@ public class FirestoreCollectionAdapter {
     }
 
     /**
-     * Deletes the Collection referred to by this CollectionReference.
-     * @param collection The CollectionReference to delete
+     * Deletes the Collection referred to by this path.
+     *
+     * @param path A slash-separated path to a collection
      * @param batch The batch where to write
      */
-    public void deleteCollection(@NonNull CollectionReference collection, @NonNull WriteBatch batch) {
-        Iterable<DocumentReference> documents = collection.listDocuments();
+    public void deleteCollection(@NonNull String path, @NonNull WriteBatch batch) {
+        Iterable<DocumentReference> documents = getCollectionReference(path).listDocuments();
         for (DocumentReference doc : documents) {
             Iterable<CollectionReference> innerCollections = doc.listCollections();
             for (CollectionReference innerCollection : innerCollections) {
-                deleteCollection(innerCollection, batch);
+                deleteCollection(innerCollection.getPath(), batch);
             }
             batch.delete(doc);
         }
