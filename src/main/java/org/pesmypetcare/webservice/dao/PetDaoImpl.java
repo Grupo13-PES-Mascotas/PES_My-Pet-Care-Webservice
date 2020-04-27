@@ -53,7 +53,6 @@ public class PetDaoImpl implements PetDao {
         DocumentReference petRef = usersRef.document(owner).
                 collection(PETS_KEY).document(name);
         petRef.set(petEntity);
-        System.out.println("Pet created");
     }
 
     @Override

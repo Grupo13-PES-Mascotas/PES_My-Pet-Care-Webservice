@@ -41,7 +41,7 @@ public class MedicationServiceTest {
     private MedicationDao medicationDao;
 
     @InjectMocks
-    private MedicationService service = new MedicationServiceImp();
+    private MedicationService service = new MedicationServiceImpl();
 
     @BeforeAll
     public static void setUp() {

@@ -279,7 +279,7 @@ public class WeightDaoTest {
         given(it.hasNext()).willReturn(false);
 
         List<Map<String, Object>> list = weightDao.getAllWeight(owner, petName);
-        assertEquals(weightList, list, "Should return a List containing all meals Data");
+        assertEquals(weightList, list, "Should return a list containing all weights data");
     }
 
     @Test
@@ -330,7 +330,7 @@ public class WeightDaoTest {
 
         List<Map<String, Object>> list = weightDao.getAllWeightsBetween(owner, petName, date, date2);
 
-        assertEquals(weightList, list, "Should return a List containing all meals between two dates");
+        assertEquals(weightList, list, "Should return a list containing all weights between two dates");
     }
 
     @Test

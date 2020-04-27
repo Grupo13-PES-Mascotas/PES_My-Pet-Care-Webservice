@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class MedicationServiceImp implements MedicationService {
+public class MedicationServiceImpl implements MedicationService {
     @Autowired
     private MedicationDao medicationDao;
 
