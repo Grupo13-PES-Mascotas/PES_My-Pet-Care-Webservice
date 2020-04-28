@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class MedicationServiceImp implements MedicationService {
@@ -39,14 +38,14 @@ public class MedicationServiceImp implements MedicationService {
 
     @Override
     public List<Map<String, Object>> getAllMedicationData(String owner, String petName)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+        throws DatabaseAccessException {
         return medicationDao.getAllMedicationData(owner, petName);
     }
 
     @Override
     public List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName,
                                                                     String initialDate, String finalDate)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+        throws DatabaseAccessException {
         return medicationDao.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
