@@ -120,7 +120,7 @@ public interface FirestoreDocument {
      * @param pojo A map of the fields and values for the document
      * @param batch The batch where to write
      */
-    void setDocumentField(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
+    void setDocumentFields(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
 
     /**
      * Updates fields in the document referred to by this DocumentReference.
