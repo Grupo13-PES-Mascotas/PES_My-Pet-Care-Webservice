@@ -46,7 +46,7 @@ test {
     useJUnitPlatform()
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sourcesJar(type: Jar, dependsOn: assemble) {
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
