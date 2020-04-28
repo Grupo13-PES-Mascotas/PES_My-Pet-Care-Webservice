@@ -46,9 +46,13 @@ test {
     useJUnitPlatform()
 }
 
-task sourcesJar(type: Jar, dependsOn: assemble) {
+task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
+}
+
+install {
+    dependsOn assemble
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
