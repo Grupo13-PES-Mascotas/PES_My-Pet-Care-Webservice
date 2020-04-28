@@ -6,6 +6,7 @@ import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.WriteBatch;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Santiago Del Rey
@@ -17,6 +18,7 @@ public interface FirestoreCollection {
      * @param path A slash-separated path to a collection
      * @return The CollectionReference instance
      */
+    @NonNull
     CollectionReference getCollectionReference(@NonNull String path);
 
     /**
@@ -25,6 +27,7 @@ public interface FirestoreCollection {
      * @param path A slash-separated path to a collection
      * @return The ID of the collection
      */
+    @NonNull
     String getCollectionId(@NonNull String path);
 
     /**
@@ -33,6 +36,7 @@ public interface FirestoreCollection {
      * @param path A slash-separated path to a collection
      * @return The DocumentReference instance
      */
+    @Nullable
     DocumentReference getCollectionParent(@NonNull String path);
 
     /**
@@ -44,6 +48,7 @@ public interface FirestoreCollection {
      * @param path A slash-separated path to a collection
      * @return The list of documents in this collection
      */
+    @NonNull
     Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
 
     /**
@@ -72,8 +77,9 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
-                                   @NonNull Object value);
+                                   @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -84,8 +90,9 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                   @NonNull Object value);
+                                   @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -96,6 +103,7 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
                                          @NonNull Object value);
 
@@ -108,6 +116,7 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
                                          @NonNull Object value);
 
@@ -121,8 +130,9 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull String field,
-                                                  @NonNull Object value);
+                                                  @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -134,8 +144,9 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                  @NonNull Object value);
+                                                  @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -147,6 +158,7 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull String field,
                                                         @NonNull Object value);
 
@@ -160,6 +172,7 @@ public interface FirestoreCollection {
      * @param value The value for comparison
      * @return The created Query
      */
+    @NonNull
     Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
                                                         @NonNull FieldPath fieldPath, @NonNull Object value);
 }

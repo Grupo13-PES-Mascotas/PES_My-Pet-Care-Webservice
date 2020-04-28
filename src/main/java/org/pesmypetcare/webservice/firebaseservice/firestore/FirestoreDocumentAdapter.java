@@ -31,21 +31,25 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
         db = FirebaseFactory.getInstance().getFirestore();
     }
 
+    @NonNull
     @Override
     public DocumentReference getDocumentReference(@NonNull String path) {
         return db.document(path);
     }
 
+    @NonNull
     @Override
     public String getDocumentId(@NonNull String path) {
         return getDocumentReference(path).getId();
     }
 
+    @NonNull
     @Override
     public CollectionReference getDocumentParent(@NonNull String path) {
         return getDocumentReference(path).getParent();
     }
 
+    @NonNull
     @Override
     public DocumentSnapshot getDocumentSnapshot(@NonNull String path)
         throws DatabaseAccessException, DocumentException {
@@ -98,7 +102,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void setDocumentField(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch) {
+    public void setDocumentFields(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch) {
         DocumentReference doc = getDocumentReference(path);
         batch.set(doc, pojo);
     }
@@ -116,22 +120,25 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
         batch.delete(doc);
     }
 
+    @Nullable
     @Override
     public Object getDocumentField(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).get(field);
     }
 
+    @Nullable
     @Override
     public Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).get(fieldPath);
     }
 
-    @Override
     @Nullable
+    @Override
     public Double getDoubleFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getDouble(field);
     }
 
+    @Nullable
     @Override
     public Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getDate(field);
@@ -143,26 +150,31 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
         return getDocumentSnapshot(path).getBoolean(field);
     }
 
+    @Nullable
     @Override
     public GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getGeoPoint(field);
     }
 
+    @Nullable
     @Override
     public String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getString(field);
     }
 
+    @Nullable
     @Override
     public Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getTimestamp(field);
     }
 
+    @Nullable
     @Override
     public Map<String, Object> getDocumentData(@NonNull String path) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getData();
     }
 
+    @Nullable
     @Override
     public <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).toObject(valueType);

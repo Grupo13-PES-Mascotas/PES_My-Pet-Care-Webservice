@@ -25,6 +25,7 @@ public interface FirestoreDocument {
      * @param path A slash-separated path to a document
      * @return The DocumentReference instance
      */
+    @NonNull
     DocumentReference getDocumentReference(@NonNull String path);
 
     /**
@@ -33,6 +34,7 @@ public interface FirestoreDocument {
      * @param path A slash-separated path to a document
      * @return The ID of the document
      */
+    @NonNull
     String getDocumentId(@NonNull String path);
 
     /**
@@ -41,6 +43,7 @@ public interface FirestoreDocument {
      * @param path A slash-separated path to a document
      * @return The CollectionReference instance
      */
+    @NonNull
     CollectionReference getDocumentParent(@NonNull String path);
 
     /**
@@ -51,6 +54,7 @@ public interface FirestoreDocument {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
+    @NonNull
     DocumentSnapshot getDocumentSnapshot(@NonNull String path)
         throws DatabaseAccessException, DocumentException;
 
@@ -159,6 +163,7 @@ public interface FirestoreDocument {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
+    @Nullable
     Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -184,6 +189,7 @@ public interface FirestoreDocument {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a Date
      */
+    @Nullable
     Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -209,6 +215,7 @@ public interface FirestoreDocument {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a GeoPoint
      */
+    @Nullable
     GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -221,6 +228,7 @@ public interface FirestoreDocument {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a String
      */
+    @Nullable
     String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -233,6 +241,7 @@ public interface FirestoreDocument {
      * @throws DocumentException When the document does not exist
      * @throws RuntimeException If the value is not a Date
      */
+    @Nullable
     Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -244,6 +253,7 @@ public interface FirestoreDocument {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
+    @Nullable
     Map<String, Object> getDocumentData(@NonNull String path) throws DatabaseAccessException, DocumentException;
 
     /**
@@ -255,6 +265,7 @@ public interface FirestoreDocument {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
+    @Nullable
     <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException;
 
     /**
