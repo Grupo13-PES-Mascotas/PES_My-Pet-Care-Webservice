@@ -81,7 +81,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DocumentException.class)
     protected ResponseEntity<Object> handleInvalidDocumentRequest(DocumentException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
-        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
     }
 
 }
