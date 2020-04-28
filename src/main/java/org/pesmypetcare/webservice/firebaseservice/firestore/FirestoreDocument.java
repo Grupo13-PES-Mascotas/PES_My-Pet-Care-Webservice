@@ -52,11 +52,10 @@ public interface FirestoreDocument {
      * @param path A slash-separated path to a document
      * @return The DocumentSnapshot instance
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
     @NonNull
-    DocumentSnapshot getDocumentSnapshot(@NonNull String path)
-        throws DatabaseAccessException, DocumentException;
+    DocumentSnapshot getDocumentSnapshot(@NonNull String path) throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document. Returns false if the document does not exist.
@@ -70,9 +69,9 @@ public interface FirestoreDocument {
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
      *
-     * @param path A slash-separated path to a document
+     * @param path   A slash-separated path to a document
      * @param fields A map of the fields and values for the document
-     * @param batch The batch where to write
+     * @param batch  The batch where to write
      */
     void createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
@@ -80,8 +79,8 @@ public interface FirestoreDocument {
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
      *
-     * @param path A slash-separated path to a document
-     * @param pojo A map of the fields and values for the document
+     * @param path  A slash-separated path to a document
+     * @param pojo  A map of the fields and values for the document
      * @param batch The batch where to write
      */
     void createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
@@ -89,30 +88,32 @@ public interface FirestoreDocument {
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
      *
-     * @param id The ID the document will have
+     * @param id             The ID the document will have
      * @param collectionPath A slash-separated path to a collection
-     * @param fields A map of the fields and values for the document
-     * @param batch The batch where to write
+     * @param fields         A map of the fields and values for the document
+     * @param batch          The batch where to write
      */
-    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
+    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Map<String, Object> fields,
+                              @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
      *
-     * @param id The ID the document will have
+     * @param id             The ID the document will have
      * @param collectionPath A slash-separated path to a collection
-     * @param pojo A map of the fields and values for the document
-     * @param batch The batch where to write
+     * @param pojo           A map of the fields and values for the document
+     * @param batch          The batch where to write
      */
-    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo, @NonNull WriteBatch batch);
+    void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo,
+                              @NonNull WriteBatch batch);
 
     /**
      * Overwrites the document referred to by this path.
      * If the document doesn't exist yet, it will be created. If a document already exists, it will be overwritten.
      *
-     * @param path A slash-separated path to a document
+     * @param path   A slash-separated path to a document
      * @param fields A map of the fields and values for the document
-     * @param batch The batch where to write
+     * @param batch  The batch where to write
      */
     void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
@@ -120,8 +121,8 @@ public interface FirestoreDocument {
      * Overwrites the document referred to by this path.
      * If the document doesn't exist yet, it will be created. If a document already exists, it will be overwritten.
      *
-     * @param path A slash-separated path to a document
-     * @param pojo A map of the fields and values for the document
+     * @param path  A slash-separated path to a document
+     * @param pojo  A map of the fields and values for the document
      * @param batch The batch where to write
      */
     void setDocumentFields(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
@@ -130,15 +131,16 @@ public interface FirestoreDocument {
      * Updates fields in the document referred to by this DocumentReference.
      * If the document doesn't exist yet, the update will fail.
      *
-     * @param path A slash-separated path to a document
+     * @param path   A slash-separated path to a document
      * @param fields A map of the fields and values for the document
-     * @param batch The batch where to write
+     * @param batch  The batch where to write
      */
     void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Deletes the document referred to by this path. If the document has inner collections they will be also deleted.
-     * @param path A slash-separated path to a document
+     *
+     * @param path  A slash-separated path to a document
      * @param batch The batch where to write
      */
     void deleteDocument(@NonNull String path, @NonNull WriteBatch batch);
@@ -146,103 +148,111 @@ public interface FirestoreDocument {
     /**
      * Returns the value at the field or null if the field doesn't exist.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value at the given field or null
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
-    Object getDocumentField(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    Object getDocumentField(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value at the field or null if the field doesn't exist.
      *
-     * @param path A slash-separated path to a document
+     * @param path      A slash-separated path to a document
      * @param fieldPath The path to the field
      * @return The value at the given field or null
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
     @Nullable
-    Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException;
+    Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a double.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a Number
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a Number
      */
     @Nullable
-    Double getDoubleFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    Double getDoubleFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a Date.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a Date
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a Date
      */
     @Nullable
-    Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    Date getDateFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a boolean.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a Boolean
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a Boolean
      */
     @Nullable
-    Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a GeoPoint.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a GeoPoint
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a GeoPoint
      */
     @Nullable
-    GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a String.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a String
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a String
      */
     @Nullable
-    String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    String getStringFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the value of the field as a Timestamp.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return The value of the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     * @throws RuntimeException If the value is not a Date
+     * @throws DocumentException       When the document does not exist
+     * @throws RuntimeException        If the value is not a Date
      */
     @Nullable
-    Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns the fields of the document as a Map.
@@ -251,7 +261,7 @@ public interface FirestoreDocument {
      * @param path A slash-separated path to a document
      * @return The fields of the document as a Map
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
     @Nullable
     Map<String, Object> getDocumentData(@NonNull String path) throws DatabaseAccessException, DocumentException;
@@ -259,34 +269,37 @@ public interface FirestoreDocument {
     /**
      * Returns the contents of the document converted to a POJO.
      *
-     * @param path A slash-separated path to a document
+     * @param path      A slash-separated path to a document
      * @param valueType The Java class to create
      * @return The contents of the document in an object of type T
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
     @Nullable
-    <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException;
+    <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document.
      *
-     * @param path A slash-separated path to a document
+     * @param path  A slash-separated path to a document
      * @param field The path to the field
      * @return True if the field exists
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
-    boolean documentContains(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException;
+    boolean documentContains(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Returns whether or not the field exists in the document.
      *
-     * @param path A slash-separated path to a document
+     * @param path      A slash-separated path to a document
      * @param fieldPath The path to the field
      * @return True if the field exists
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException       When the document does not exist
      */
-    boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException;
+    boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath)
+        throws DatabaseAccessException, DocumentException;
 }

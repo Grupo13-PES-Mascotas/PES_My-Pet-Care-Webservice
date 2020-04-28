@@ -84,19 +84,22 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath,
+                                     @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         batch.create(ref, fields);
     }
 
     @Override
-    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo, @NonNull WriteBatch batch) {
+    public void createDocumentWithId(@NonNull String id, @NonNull String collectionPath, @NonNull Object pojo,
+                                     @NonNull WriteBatch batch) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         batch.create(ref, pojo);
     }
 
     @Override
-    public void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields,
+                                  @NonNull WriteBatch batch) {
         DocumentReference doc = getDocumentReference(path);
         batch.set(doc, fields);
     }
@@ -108,7 +111,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields,
+                                     @NonNull WriteBatch batch) {
         DocumentReference doc = getDocumentReference(path);
         batch.update(doc, fields);
     }
@@ -122,49 +126,57 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
 
     @Nullable
     @Override
-    public Object getDocumentField(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public Object getDocumentField(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).get(field);
     }
 
     @Nullable
     @Override
-    public Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException {
+    public Object getDocumentField(@NonNull String path, @NonNull FieldPath fieldPath)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).get(fieldPath);
     }
 
     @Nullable
     @Override
-    public Double getDoubleFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public Double getDoubleFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getDouble(field);
     }
 
     @Nullable
     @Override
-    public Date getDateFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public Date getDateFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getDate(field);
     }
 
     @Override
     @Nullable
-    public Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public Boolean getBooleanFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getBoolean(field);
     }
 
     @Nullable
     @Override
-    public GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public GeoPoint getGeoPointFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getGeoPoint(field);
     }
 
     @Nullable
     @Override
-    public String getStringFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public String getStringFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getString(field);
     }
 
     @Nullable
     @Override
-    public Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public Timestamp getTimestampFromDocument(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).getTimestamp(field);
     }
 
@@ -176,24 +188,28 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
 
     @Nullable
     @Override
-    public <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType) throws DatabaseAccessException, DocumentException {
+    public <T> T getDocumentDataAsObject(@NonNull String path, @NonNull Class<T> valueType)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).toObject(valueType);
     }
 
     @Override
-    public boolean documentContains(@NonNull String path, @NonNull String field) throws DatabaseAccessException, DocumentException {
+    public boolean documentContains(@NonNull String path, @NonNull String field)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).contains(field);
     }
 
     @Override
-    public boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath) throws DatabaseAccessException, DocumentException {
+    public boolean documentContains(@NonNull String path, @NonNull FieldPath fieldPath)
+        throws DatabaseAccessException, DocumentException {
         return getDocumentSnapshot(path).contains(fieldPath);
     }
 
     /**
      * Deletes all the document inner collections referred to by this DocumentReference.
+     *
      * @param reference The DocumentReference to delete
-     * @param batch The batch where to write
+     * @param batch     The batch where to write
      */
     private void deleteDocumentCollections(@NonNull DocumentReference reference, @NonNull WriteBatch batch) {
         Iterable<CollectionReference> collections = reference.listCollections();
