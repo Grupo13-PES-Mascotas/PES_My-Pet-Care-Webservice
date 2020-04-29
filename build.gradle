@@ -7,7 +7,7 @@ plugins {
     id 'io.franzbecker.gradle-lombok' version '3.3.0'
     id 'java'
     id 'jacoco'
-    id 'maven-publish'
+    id 'maven'
 }
 
 group='com.github.Grupo13-PES-Mascotas'
