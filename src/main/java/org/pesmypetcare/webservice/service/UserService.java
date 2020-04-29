@@ -5,6 +5,9 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+/**
+ * @author Santiago Del Rey
+ */
 public interface UserService {
     /**
      * Creates the user authentication profile.
@@ -19,6 +22,7 @@ public interface UserService {
      * @param uid The unique identifier of the user
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
 
@@ -49,6 +53,7 @@ public interface UserService {
     /**
      * Updates a user field.
      * @param uid The unique identifier of the user
+     * @param field The field to update
      * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database

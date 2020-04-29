@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Repository
 public class StorageDaoImpl implements StorageDao {
     private final String CONTENT_TYPE = "image/png";

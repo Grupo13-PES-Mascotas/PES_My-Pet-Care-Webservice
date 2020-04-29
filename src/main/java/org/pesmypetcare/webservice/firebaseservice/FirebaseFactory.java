@@ -14,6 +14,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * @author Santiago Del Rey
+ */
 public class FirebaseFactory {
     private static FirebaseFactory instance;
     private GoogleCredentials googleCredentials;

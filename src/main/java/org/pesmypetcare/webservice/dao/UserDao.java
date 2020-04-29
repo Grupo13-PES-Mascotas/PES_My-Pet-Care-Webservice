@@ -4,6 +4,9 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
+/**
+ * @author Santiago Del Rey
+ */
 public interface UserDao {
     /**
      * Creates the user authentication profile.
@@ -48,6 +51,7 @@ public interface UserDao {
     /**
      * Updates a user field.
      * @param username The user's username
+     * @param field The field to update
      * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database

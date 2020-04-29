@@ -6,6 +6,9 @@ import org.pesmypetcare.webservice.form.StorageForm;
 
 import java.util.Map;
 
+/**
+ * @author Santiago Del Rey
+ */
 public interface StorageService {
     /**
      * Saves an image to the storage.

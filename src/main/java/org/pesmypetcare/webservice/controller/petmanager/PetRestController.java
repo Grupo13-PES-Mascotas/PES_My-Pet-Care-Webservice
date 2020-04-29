@@ -37,6 +37,7 @@ public class PetRestController {
      * Deletes the pet with the specified owner and name from the database.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{name}")
     public void deleteByOwnerAndName(@PathVariable String owner,

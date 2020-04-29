@@ -1,9 +1,9 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
 
-import org.pesmypetcare.webservice.service.WeightService;
 import org.pesmypetcare.webservice.entity.WeightEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.service.WeightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +27,7 @@ public class WeightRestController {
      * Creates a weight of the pet on the database.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
+     * @param petDate Date of weight instance
      * @param weightEntity The parameters of weight
      */
     @PostMapping("/{owner}/{petName}/{petDate}")

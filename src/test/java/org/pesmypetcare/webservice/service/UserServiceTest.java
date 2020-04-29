@@ -19,6 +19,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Santiago Del Rey
+ */
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     private static final String EMAIL_FIELD = "email";

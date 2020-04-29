@@ -2,6 +2,9 @@ package org.pesmypetcare.webservice.form;
 
 import lombok.Data;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Data
 public class StorageForm {
     private String path;

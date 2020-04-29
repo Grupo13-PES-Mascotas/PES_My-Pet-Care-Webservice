@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -68,6 +71,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleIncorrectCalendarAccess(CalendarAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Creates the http response for the DocumentException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(DocumentException.class)
+    protected ResponseEntity<Object> handleInvalidDocumentRequest(DocumentException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
     }
 
 }
