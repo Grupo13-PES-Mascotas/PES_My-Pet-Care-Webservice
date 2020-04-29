@@ -83,6 +83,36 @@ class FirestoreDocumentAdapterTest {
         pojo = new UserEntity();
     }
 
+    @Test
+    public void documentSnapshotExists() {
+        given(documentSnapshot.exists()).willReturn(true);
+
+        assertTrue(adapter.documentSnapshotExists(documentSnapshot),
+                   "Should return true when the document snapshot " + "exists");
+    }
+
+    @Test
+    public void createDocument() {
+        given(db.collection(anyString())).willReturn(collectionReference);
+        given(collectionReference.document()).willReturn(documentReference);
+        given(batch.create(any(DocumentReference.class), anyMap())).willReturn(batch);
+
+        adapter.createDocument(collectionPath, fields, batch);
+        verify(collectionReference).document();
+        verify(batch).create(same(documentReference), anyMap());
+    }
+
+    @Test
+    public void createDocumentFromPojo() {
+        given(db.collection(anyString())).willReturn(collectionReference);
+        given(collectionReference.document()).willReturn(documentReference);
+        given(batch.create(any(DocumentReference.class), any(pojo.getClass()))).willReturn(batch);
+
+        adapter.createDocument(collectionPath, pojo, batch);
+        verify(collectionReference).document();
+        verify(batch).create(same(documentReference), same(pojo));
+    }
+
     @Nested
     class UsesDbDocument {
         @BeforeEach
@@ -210,14 +240,13 @@ class FirestoreDocumentAdapterTest {
                     given(future.get()).willReturn(documentSnapshot);
                     given(documentSnapshot.exists()).willReturn(true);
                 } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
                     throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
                 }
 
                 aDouble = 2.0;
                 aDate = new Date();
                 aBoolean = true;
-                aGeoPoint = new GeoPoint(2.3, 43.0);
+                aGeoPoint = new GeoPoint(2.3, 1.0);
                 aTimestamp = Timestamp.now();
                 fieldPath = FieldPath.of(field);
             }
@@ -234,7 +263,7 @@ class FirestoreDocumentAdapterTest {
 
                 Object result = adapter.getDocumentField(documentPath, field);
                 assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
-                    + "document located at" + documentPath);
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -243,7 +272,7 @@ class FirestoreDocumentAdapterTest {
 
                 Object result = adapter.getDocumentField(documentPath, fieldPath);
                 assertEquals(aString, result, "Should return " + aString + " as the value in " + fieldPath + " in the "
-                    + "document located at" + documentPath);
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -252,7 +281,7 @@ class FirestoreDocumentAdapterTest {
 
                 Double result = adapter.getDoubleFromDocument(documentPath, field);
                 assertEquals(aDouble, result, "Should return " + aDouble + " as the value of the " + field + " in the "
-                    + "document located at" + documentPath);
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -261,7 +290,7 @@ class FirestoreDocumentAdapterTest {
 
                 Date result = adapter.getDateFromDocument(documentPath, field);
                 assertEquals(aDate, result, "Should return " + aDate + " as the value of the " + field + " in the "
-                    + "document located at" + documentPath);
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -271,7 +300,7 @@ class FirestoreDocumentAdapterTest {
                 Boolean result = adapter.getBooleanFromDocument(documentPath, field);
                 assertEquals(aBoolean, result,
                              "Should return " + aBoolean + " as the value of the " + field + " in the "
-                                 + "document located at" + documentPath);
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -281,7 +310,7 @@ class FirestoreDocumentAdapterTest {
                 GeoPoint result = adapter.getGeoPointFromDocument(documentPath, field);
                 assertEquals(aGeoPoint, result,
                              "Should return " + aGeoPoint + " as the value of the " + field + " in the "
-                                 + "document located at" + documentPath);
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -290,7 +319,7 @@ class FirestoreDocumentAdapterTest {
 
                 String result = adapter.getStringFromDocument(documentPath, field);
                 assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
-                    + "document located at" + documentPath);
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -300,7 +329,7 @@ class FirestoreDocumentAdapterTest {
                 Timestamp result = adapter.getTimestampFromDocument(documentPath, field);
                 assertEquals(aTimestamp, result,
                              "Should return " + aTimestamp + " as the value of the " + field + " in the "
-                                 + "document located at" + documentPath);
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -309,7 +338,7 @@ class FirestoreDocumentAdapterTest {
 
                 Map<String, Object> result = adapter.getDocumentData(documentPath);
                 assertEquals(fields, result,
-                             "Should return " + fields + " as the data stored in the document located at"
+                             "Should return " + fields + " as the data stored in the document located at "
                                  + documentPath);
             }
 
@@ -328,7 +357,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.contains(anyString())).willReturn(true);
 
                 assertTrue(adapter.documentContains(documentPath, field),
-                           "Should return true if the document " + "contains the field " + field);
+                           "Should return true if the document contains the field " + field);
             }
 
             @Test
@@ -336,38 +365,8 @@ class FirestoreDocumentAdapterTest {
                 lenient().when(documentSnapshot.contains(fieldPath)).thenReturn(true);
 
                 assertTrue(adapter.documentContains(documentPath, fieldPath),
-                           "Should return true if the document " + "contains the field in " + fieldPath);
+                           "Should return true if the document contains the field in " + fieldPath);
             }
         }
-    }
-
-    @Test
-    public void documentSnapshotExists() {
-        given(documentSnapshot.exists()).willReturn(true);
-
-        assertTrue(adapter.documentSnapshotExists(documentSnapshot),
-                   "Should return true when the document snapshot " + "exists");
-    }
-
-    @Test
-    public void createDocument() {
-        given(db.collection(anyString())).willReturn(collectionReference);
-        given(collectionReference.document()).willReturn(documentReference);
-        given(batch.create(any(DocumentReference.class), anyMap())).willReturn(batch);
-
-        adapter.createDocument(collectionPath, fields, batch);
-        verify(collectionReference).document();
-        verify(batch).create(same(documentReference), anyMap());
-    }
-
-    @Test
-    public void createDocumentFromPojo() {
-        given(db.collection(anyString())).willReturn(collectionReference);
-        given(collectionReference.document()).willReturn(documentReference);
-        given(batch.create(any(DocumentReference.class), any(pojo.getClass()))).willReturn(batch);
-
-        adapter.createDocument(collectionPath, pojo, batch);
-        verify(collectionReference).document();
-        verify(batch).create(same(documentReference), same(pojo));
     }
 }

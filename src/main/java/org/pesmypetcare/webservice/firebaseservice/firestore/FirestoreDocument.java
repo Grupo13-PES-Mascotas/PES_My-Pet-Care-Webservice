@@ -87,21 +87,25 @@ public interface FirestoreDocument {
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *  @param collectionPath A slash-separated path to a collection
+     *
+     * @param collectionPath A slash-separated path to a collection
      * @param id             The ID the document will have
      * @param fields         A map of the fields and values for the document
      * @param batch          The batch where to write
      */
-    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
+    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Map<String, Object> fields,
+                              @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *  @param collectionPath A slash-separated path to a collection
+     *
+     * @param collectionPath A slash-separated path to a collection
      * @param id             The ID the document will have
      * @param pojo           A map of the fields and values for the document
      * @param batch          The batch where to write
      */
-    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo, @NonNull WriteBatch batch);
+    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
+                              @NonNull WriteBatch batch);
 
     /**
      * Overwrites the document referred to by this path.
