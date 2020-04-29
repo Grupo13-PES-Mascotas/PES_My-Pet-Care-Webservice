@@ -54,6 +54,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+install {
+    dependsOn assemble
+}
+
 task delombok(type: DelombokTask, dependsOn: compileJava) {
     ext.outputDir = file("$buildDir/delombok")
     outputs.dir(outputDir)
