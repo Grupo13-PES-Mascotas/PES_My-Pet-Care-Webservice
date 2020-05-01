@@ -68,13 +68,13 @@ public class FreqWashServiceTest {
     @Test
     public void shouldReturnNothingWhenAllFreqWashsDeleted() throws DatabaseAccessException {
         service.deleteAllFreqWashs(owner, petName);
-        verify(freqWashDao).deleteAllFreqWashs(isA(String.class), isA(String.class));
+        verify(freqWashDao).deleteAllFreqWashes(isA(String.class), isA(String.class));
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenAllFreqWashDeleteFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqWashDao).deleteAllFreqWashs(any(String.class),
+            doThrow(DatabaseAccessException.class).when(freqWashDao).deleteAllFreqWashes(any(String.class),
                 isA(String.class));
             service.deleteAllFreqWashs(owner, petName);
         }, "Should return a database access exception when a freqWash deletion fails");
@@ -98,7 +98,7 @@ public class FreqWashServiceTest {
 
     @Test
     public void shouldReturnMealEntityListWhenGetSetOfFreqWashsRetrieved() throws DatabaseAccessException {
-        when(freqWashDao.getAllFreqWash(owner, petName)).thenReturn(freqWashList);
+        when(freqWashDao.getAllFreqWashes(owner, petName)).thenReturn(freqWashList);
         List<Map<String, Object>> list = service.getAllFreqWash(owner, petName);
         assertSame(freqWashList, list, "Should return a list of freqWashs entities");
     }
@@ -106,7 +106,7 @@ public class FreqWashServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfFreqWashsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWash(any(String.class),
+            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWashes(any(String.class),
                 isA(String.class));
             service.getAllFreqWash(owner, petName);
         }, "Should return an exception when retrieving a set of freqWashs fails");
@@ -114,7 +114,7 @@ public class FreqWashServiceTest {
 
     @Test
     public void shouldReturnFreqWashEntityListWhenGetFreqWashsBetweenDatesRetrieved() throws DatabaseAccessException {
-        when(freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2)).thenReturn(freqWashList);
+        when(freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2)).thenReturn(freqWashList);
         List<Map<String, Object>> list = service.getAllFreqWashsBetween(owner, petName, date, date2);
         assertSame(freqWashList, list, "Should return a list of freqWash entities");
     }
@@ -122,7 +122,7 @@ public class FreqWashServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetFreqWashsBetweenDatesRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWashsBetween(any(String.class),
+            doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWashesBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllFreqWashsBetween(owner, petName, date, date2);
         }, "Should return an exception when retrieving a set of freqWashs between dates fails");

@@ -22,7 +22,7 @@ public interface FreqWashDao {
      * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void deleteAllFreqWashs(String owner, String petName) throws DatabaseAccessException;
+    void deleteAllFreqWashes(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Deletes the freqWash with the specified pet and date.
@@ -50,7 +50,7 @@ public interface FreqWashDao {
      * @return The list with all of the freqWashs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<String, Object>> getAllFreqWash(String owner, String petName) throws DatabaseAccessException;
+    List<Map<String, Object>> getAllFreqWashes(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
@@ -61,8 +61,8 @@ public interface FreqWashDao {
      * @return The List containing all the freqWashs in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<String, Object>> getAllFreqWashsBetween(String owner, String petName, String initialDate,
-                                                 String finalDate) throws DatabaseAccessException;
+    List<Map<String, Object>> getAllFreqWashesBetween(String owner, String petName, String initialDate,
+                                                      String finalDate) throws DatabaseAccessException;
 
     /**
      * Updates one of the freqWashs specified with the date and the pet name.

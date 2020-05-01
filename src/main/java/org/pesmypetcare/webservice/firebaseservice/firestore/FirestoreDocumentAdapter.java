@@ -213,7 +213,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
      * Deletes all the document inner collections referred to by this DocumentReference.
      *
      * @param reference The DocumentReference to delete
-     * @param batch     The batch where to write
+     * @param batch The batch where to write
      */
     private void deleteDocumentCollections(@NonNull DocumentReference reference, @NonNull WriteBatch batch) {
         Iterable<CollectionReference> collections = reference.listCollections();

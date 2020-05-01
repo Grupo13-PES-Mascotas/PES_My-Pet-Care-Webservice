@@ -68,8 +68,10 @@ public class EventEntity {
             .setTimeZone("Europe/Madrid");
         event.setEnd(end);
 
-        String[] recurrence = {"RRULE:FREQ=DAILY;INTERVAL=" + repetitionInterval};
-        event.setRecurrence(Arrays.asList(recurrence));
+        if (repetitionInterval == null || repetitionInterval > 0) {
+            String[] recurrence = {"RRULE:FREQ=DAILY;INTERVAL=" + repetitionInterval};
+            event.setRecurrence(Arrays.asList(recurrence));
+        }
 
         EventReminder[] reminderOverrides = {
             new EventReminder().setMethod("email").setMinutes(emailReminderMinutes)

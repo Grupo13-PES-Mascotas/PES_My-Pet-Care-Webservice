@@ -47,7 +47,7 @@ public class FreqWashDaoTest {
     private static String field;
     private static final String USERS_KEY = "users";
     private static final String PETS_KEY = "pets";
-    private static final String FREQWASHS_KEY = "freqWashs";
+    private static final String FREQWASHS_KEY = "freqWashes";
     private final String EXCECUTION_EXC_MSG = "Should throw DatabaseAccessException when ExecutionException received";
     private final String INTERRUPTED_EXC_MSG = "Should throw DatabaseAccessException when InterruptedException "
         + "received";
@@ -65,7 +65,7 @@ public class FreqWashDaoTest {
     @Mock
     private DocumentReference petRef;
     @Mock
-    private CollectionReference freqWashsRef;
+    private CollectionReference freqWashesRef;
     @Mock
     private DocumentReference freqWashRef;
     @Mock
@@ -77,7 +77,7 @@ public class FreqWashDaoTest {
     @Mock
     private DocumentSnapshot documentSnapshot;
     @Mock
-    private List<QueryDocumentSnapshot> freqWashsDocuments;
+    private List<QueryDocumentSnapshot> freqWashesDocuments;
     @Mock
     private Iterator<QueryDocumentSnapshot> it;
 
@@ -102,8 +102,8 @@ public class FreqWashDaoTest {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
         given(freqWashRef.set(isA(FreqWashEntity.class))).willReturn(null);
 
         freqWashDao.createFreqWash(owner, petName, date, freqWashEntity);
@@ -113,7 +113,7 @@ public class FreqWashDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(FREQWASHS_KEY));
-        verify(freqWashsRef).document(same(date));
+        verify(freqWashesRef).document(same(date));
         verify(freqWashRef).set(same(freqWashEntity));
     }
 
@@ -123,8 +123,8 @@ public class FreqWashDaoTest {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
         given(freqWashRef.delete()).willReturn(null);
 
         freqWashDao.deleteFreqWashByDate(owner, petName, date);
@@ -134,34 +134,34 @@ public class FreqWashDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(FREQWASHS_KEY));
-        verify(freqWashsRef).document(same(date));
+        verify(freqWashesRef).document(same(date));
         verify(freqWashRef).delete();
     }
 
     @Test
-    public void shouldDeleteAllFreqWashsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
+    public void shouldDeleteAllFreqWashesOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
         InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.get()).willReturn(futureQuery);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.get()).willReturn(futureQuery);
         given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(freqWashsDocuments);
-        given(freqWashsDocuments.iterator()).willReturn(it);
+        given(querySnapshot.getDocuments()).willReturn(freqWashesDocuments);
+        given(freqWashesDocuments.iterator()).willReturn(it);
 
-        freqWashDao.deleteAllFreqWashs(owner, petName);
+        freqWashDao.deleteAllFreqWashes(owner, petName);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(FREQWASHS_KEY));
-        verify(freqWashsRef).get();
+        verify(freqWashesRef).get();
         verify(futureQuery).get();
         verify(querySnapshot).getDocuments();
-        verify(freqWashsDocuments).iterator();
+        verify(freqWashesDocuments).iterator();
     }
 
     @Test
@@ -171,11 +171,11 @@ public class FreqWashDaoTest {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.deleteAllFreqWashs(owner, petName);
+            freqWashDao.deleteAllFreqWashes(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -186,11 +186,11 @@ public class FreqWashDaoTest {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.deleteAllFreqWashs(owner, petName);
+            freqWashDao.deleteAllFreqWashes(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -201,8 +201,8 @@ public class FreqWashDaoTest {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
         given(freqWashRef.get()).willReturn(futureDocument);
         given(futureDocument.get()).willReturn(documentSnapshot);
         given(documentSnapshot.exists()).willReturn(true);
@@ -220,8 +220,8 @@ public class FreqWashDaoTest {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
             given(freqWashRef.get()).willReturn(futureDocument);
             given(futureDocument.get()).willReturn(documentSnapshot);
             given(documentSnapshot.exists()).willReturn(false);
@@ -238,8 +238,8 @@ public class FreqWashDaoTest {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
             given(freqWashRef.get()).willReturn(futureDocument);
             willThrow(InterruptedException.class).given(futureDocument).get();
 
@@ -254,8 +254,8 @@ public class FreqWashDaoTest {
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
             given(freqWashRef.get()).willReturn(futureDocument);
             willThrow(ExecutionException.class).given(futureDocument).get();
 
@@ -265,103 +265,103 @@ public class FreqWashDaoTest {
     }
 
     @Test
-    public void shouldReturnAllFreqWashsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
+    public void shouldReturnAllFreqWashesDataOnDatabaseWhenRequested() throws DatabaseAccessException,
         ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.get()).willReturn(futureQuery);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.get()).willReturn(futureQuery);
         given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(freqWashsDocuments);
-        given(freqWashsDocuments.iterator()).willReturn(it);
+        given(querySnapshot.getDocuments()).willReturn(freqWashesDocuments);
+        given(freqWashesDocuments.iterator()).willReturn(it);
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = freqWashDao.getAllFreqWash(owner, petName);
+        List<Map<String, Object>> list = freqWashDao.getAllFreqWashes(owner, petName);
         assertEquals(freqWashList, list, "Should return a List containing all freqwash Data");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashsDataFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashesDataFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWash(owner, petName);
+            freqWashDao.getAllFreqWashes(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashsDataFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashesDataFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWash(owner, petName);
+            freqWashDao.getAllFreqWashes(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
     @Test
-    public void shouldReturnAllFreqWashsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
+    public void shouldReturnAllFreqWashesBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
         ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.get()).willReturn(futureQuery);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.get()).willReturn(futureQuery);
         given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(freqWashsDocuments);
-        given(freqWashsDocuments.iterator()).willReturn(it);
+        given(querySnapshot.getDocuments()).willReturn(freqWashesDocuments);
+        given(freqWashesDocuments.iterator()).willReturn(it);
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+        List<Map<String, Object>> list = freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
 
         assertEquals(freqWashList, list, "Should return a List containing all freqwash between two dates");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashsBetweenFromDatabaseReceivesInterruptedException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashesBetweenFromDatabaseReceivesInterruptedException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+            freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
         }, INTERRUPTED_EXC_MSG);
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashsBetweenFromDatabaseReceivesExecutionException() {
+    public void shouldThrowDatabaseAccessExceptionWhenGetAllFreqWashesBetweenFromDatabaseReceivesExecutionException() {
         assertThrows(DatabaseAccessException.class, () -> {
             given(db.collection(anyString())).willReturn(usersRef);
             given(usersRef.document(anyString())).willReturn(ownerRef);
             given(ownerRef.collection(anyString())).willReturn(petsRef);
             given(petsRef.document(anyString())).willReturn(petRef);
-            given(petRef.collection(anyString())).willReturn(freqWashsRef);
-            given(freqWashsRef.get()).willReturn(futureQuery);
+            given(petRef.collection(anyString())).willReturn(freqWashesRef);
+            given(freqWashesRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+            freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -371,8 +371,8 @@ public class FreqWashDaoTest {
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
         given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.collection(anyString())).willReturn(freqWashsRef);
-        given(freqWashsRef.document(anyString())).willReturn(freqWashRef);
+        given(petRef.collection(anyString())).willReturn(freqWashesRef);
+        given(freqWashesRef.document(anyString())).willReturn(freqWashRef);
         given(freqWashRef.update(anyString(), any())).willReturn(null);
 
         freqWashDao.updateFreqWash(owner, petName, date, value);
@@ -382,7 +382,7 @@ public class FreqWashDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(petName));
         verify(petRef).collection(same(FREQWASHS_KEY));
-        verify(freqWashsRef).document(same(date));
+        verify(freqWashesRef).document(same(date));
         verify(freqWashRef).update(same(field), same(value));
     }
 }

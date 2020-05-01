@@ -23,7 +23,7 @@ public class FreqWashServiceImpl implements FreqWashService {
 
     @Override
     public void deleteAllFreqWashs(String owner, String petName) throws DatabaseAccessException {
-        freqWashDao.deleteAllFreqWashs(owner, petName);
+        freqWashDao.deleteAllFreqWashes(owner, petName);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class FreqWashServiceImpl implements FreqWashService {
 
     @Override
     public List<Map<String, Object>> getAllFreqWash(String owner, String petName) throws DatabaseAccessException {
-        return freqWashDao.getAllFreqWash(owner, petName);
+        return freqWashDao.getAllFreqWashes(owner, petName);
     }
 
     @Override
     public List<Map<String, Object>> getAllFreqWashsBetween(String owner, String petName, String initialDate,
                                                           String finalDate) throws DatabaseAccessException {
-        return freqWashDao.getAllFreqWashsBetween(owner, petName, initialDate, finalDate);
+        return freqWashDao.getAllFreqWashesBetween(owner, petName, initialDate, finalDate);
     }
 
     @Override
