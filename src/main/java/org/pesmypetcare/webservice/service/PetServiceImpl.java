@@ -43,12 +43,47 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Object getField(String owner, String name, String field) throws DatabaseAccessException {
+    public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException {
         return petDao.getField(owner, name, field);
     }
 
     @Override
-    public void updateField(String owner, String name, String field, Object value) {
+    public void updateSimpleField(String owner, String name, String field, Object value) {
         petDao.updateField(owner, name, field, value);
+    }
+
+    @Override
+    public void deleteMapField(String owner, String name, String field) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public Map<String, Object> getMapField(String owner, String name, String field) throws DatabaseAccessException {
+        return null;
+    }
+
+    @Override
+    public void addMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public void deleteMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public void updateMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public Object getMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getMapFieldElementsBetweenKeys(String owner, String name, String field, String key1, String key2) throws DatabaseAccessException {
+        return null;
     }
 }

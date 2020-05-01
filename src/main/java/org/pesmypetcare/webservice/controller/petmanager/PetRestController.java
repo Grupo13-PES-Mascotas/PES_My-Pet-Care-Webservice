@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 @RestController
 @RequestMapping("/pet")
 public class PetRestController {
@@ -98,7 +101,7 @@ public class PetRestController {
     @ResponseStatus(HttpStatus.OK)
     public Object getSimpleField(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException {
-        return petService.getField(owner, name, field);
+        return petService.getSimpleField(owner, name, field);
     }
 
     /**
@@ -113,7 +116,7 @@ public class PetRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSimpleField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap) {
-        petService.updateField(owner, name, field, valueMap.get("value"));
+        petService.updateSimpleField(owner, name, field, valueMap.get("value"));
     }
 
     /**
@@ -176,7 +179,7 @@ public class PetRestController {
     public void deleteMapFieldElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key)
         throws DatabaseAccessException {
-        return petService.deleteMapFieldElement(owner, name, field, key);
+        petService.deleteMapFieldElement(owner, name, field, key);
     }
 
     /**
@@ -194,7 +197,7 @@ public class PetRestController {
                                         @PathVariable String field, @PathVariable String key,
                                       @RequestBody Object body) throws DatabaseAccessException {
         PetEntity.checkKeyAndBody(field,key,body);
-        return petService.updateMapFieldElement(owner, name, field, key, body);
+        petService.updateMapFieldElement(owner, name, field, key, body);
     }
 
     /**

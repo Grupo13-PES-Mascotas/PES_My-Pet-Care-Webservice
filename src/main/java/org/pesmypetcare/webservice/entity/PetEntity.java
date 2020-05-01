@@ -5,6 +5,9 @@ import lombok.Data;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 @Data
 public class PetEntity {
     private GenderType gender;

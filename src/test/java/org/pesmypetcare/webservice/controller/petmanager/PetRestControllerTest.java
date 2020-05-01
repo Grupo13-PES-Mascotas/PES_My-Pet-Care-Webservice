@@ -110,14 +110,14 @@ class PetRestControllerTest {
 
     @Test
     public void getFieldShouldReturnFieldValueAndStatusOk() throws Exception {
-        willReturn(value).given(service).getField(anyString(), anyString(), anyString());
+        willReturn(value).given(service).getSimpleField(anyString(), anyString(), anyString());
         mockMvc.perform(get(urlBase + "/" + owner + "/" + name + "/" + field))
             .andExpect(status().isOk());
     }
 
     @Test
     public void updateFieldShouldReturnStatusOk() throws Exception {
-        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateSimpleField(anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(put(urlBase + "/" + owner + "/" + name + "/" + field)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonField))

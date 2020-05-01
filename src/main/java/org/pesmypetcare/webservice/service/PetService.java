@@ -2,10 +2,21 @@ package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 public interface PetService {
 
     /**
@@ -56,7 +67,7 @@ public interface PetService {
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    Object getField(String owner, String name, String field) throws DatabaseAccessException;
+    Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException;
 
     /**
      * Updates the pet's field.
@@ -65,5 +76,84 @@ public interface PetService {
      * @param field Name of the field to update
      * @param value Value the field will have
      */
-    void updateField(String owner, String name, String field, Object value);
+    void updateSimpleField(String owner, String name, String field, Object value);
+
+    /**
+     * Deletes the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pet
+     * @param name Name of the pet
+     * @param field Name of the field to delete
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void deleteMapField(String owner, String name, String field) throws DatabaseAccessException;
+
+    /**
+     * Gets the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pet
+     * @param name Name of the pet
+     * @param field Name of the field to retrieve
+     * @return The map from the field on the database
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    Map<String, Object> getMapField(String owner, String name, String field) throws DatabaseAccessException;
+
+    /**
+     * Adds an element to the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @param field Name of the field
+     * @param key Key of the new element to be added
+     * @param body Element to be added
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void addMapFieldElement(String owner, String name, String field, String key,  Object body)
+        throws DatabaseAccessException;
+
+    /**
+     * Deletes an element from the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @param field Name of the field
+     * @param key Key of the element to delete
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void deleteMapFieldElement(String owner, String name, String field, String key)
+        throws DatabaseAccessException;
+
+    /**
+     * Updates an element from the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @param field Name of the field
+     * @param key Key of the element to update
+     * @param body Update of the element
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    void updateMapFieldElement(String owner, String name, String field, String key, Object body)
+        throws DatabaseAccessException;
+
+    /**
+     * Gets an element from the map for the specified field of the pet on the database.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @param field Name of the field
+     * @param key Key of the element
+     * @return Element assigned to the key
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    Object getMapFieldElement(String owner, String name, String field, String key)
+        throws DatabaseAccessException;
+
+    /**
+     * Gets all the elements between the keys from the map for the specified field.
+     * @param owner Username of the owner of the pets
+     * @param name Name of the pet
+     * @param field Name of the field
+     * @param key1 Start key (This one included)
+     * @param key2 End Key (This one included)
+     * @return The map containing the elements between the keys
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    Map<String, Object> getMapFieldElementsBetweenKeys(String owner, String name, String field, String key1,
+                                                              String key2) throws DatabaseAccessException;
 }

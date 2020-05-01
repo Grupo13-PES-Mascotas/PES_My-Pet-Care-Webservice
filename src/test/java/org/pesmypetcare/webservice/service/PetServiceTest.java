@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.PetDao;
-import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
@@ -105,7 +104,7 @@ class PetServiceTest {
     @Test
     public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException {
         when(petDao.getField(owner, name, field)).thenReturn(value);
-        Object obtainedValue = service.getField(owner, name, field);
+        Object obtainedValue = service.getSimpleField(owner, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
     }
 
@@ -114,13 +113,13 @@ class PetServiceTest {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(petDao).getField(any(String.class), any(String.class),
                 any(String.class));
-            service.getField(owner, name, field);
+            service.getSimpleField(owner, name, field);
         }, "Should return an exception when retrieving a pet field fails");
     }
 
     @Test
     public void shouldReturnNothingWhenPetFieldUpdated() {
-        service.updateField(owner, name, field, value);
+        service.updateSimpleField(owner, name, field, value);
         verify(petDao).updateField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }
 }
