@@ -1,8 +1,8 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.petmanager;
 
 
-import org.pesmypetcare.webservice.dao.FreqWashDao;
-import org.pesmypetcare.webservice.entity.FreqWashEntity;
+import org.pesmypetcare.webservice.dao.petmanager.FreqWashDao;
+import org.pesmypetcare.webservice.entity.petmanager.FreqWashEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.petmanager;
 
 
-import org.pesmypetcare.webservice.dao.KcalAverageDao;
-import org.pesmypetcare.webservice.entity.KcalAverageEntity;
+import org.pesmypetcare.webservice.dao.petmanager.KcalAverageDao;
+import org.pesmypetcare.webservice.entity.petmanager.KcalAverageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

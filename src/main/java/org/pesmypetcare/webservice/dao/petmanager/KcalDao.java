@@ -1,13 +1,12 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.dao.petmanager;
 
-import org.pesmypetcare.webservice.entity.KcalEntity;
+import org.pesmypetcare.webservice.entity.petmanager.KcalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface KcalService {
-
+public interface KcalDao {
     /**
      * Creates a kcal of the pet on the database.
      * @param owner Username of the owner of the pet
@@ -39,7 +38,7 @@ public interface KcalService {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param petDate Date of the kcal instance
-     * @return The KcalEntity with the data of kcal
+     * @return The kcalEntity with the data of kcal
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     KcalEntity getKcalByDate(String owner, String petName, String petDate) throws DatabaseAccessException;

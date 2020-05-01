@@ -1,12 +1,13 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service.petmanager;
 
-import org.pesmypetcare.webservice.entity.KcalAverageEntity;
+import org.pesmypetcare.webservice.entity.petmanager.KcalAverageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface KcalAverageDao {
+public interface KcalAverageService {
+
     /**
      * Creates a kcalAverage of the pet on the database.
      * @param owner Username of the owner of the pet
@@ -38,7 +39,7 @@ public interface KcalAverageDao {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param petDate Date of the kcalAverage instance
-     * @return The kcalAverageEntity with the data of kcalAverage
+     * @return The KcalAverageEntity with the data of kcalAverage
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     KcalAverageEntity getKcalAverageByDate(String owner, String petName, String petDate) throws DatabaseAccessException;

@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.dao.WeekTrainingDao;
-import org.pesmypetcare.webservice.entity.WeekTrainingEntity;
+import org.pesmypetcare.webservice.dao.petmanager.WeekTrainingDao;
+import org.pesmypetcare.webservice.entity.petmanager.WeekTrainingEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.service.petmanager.WeekTrainingService;
+import org.pesmypetcare.webservice.service.petmanager.WeekTrainingServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class WeekTrainingServiceTest {

@@ -1,12 +1,13 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service.petmanager;
 
-import org.pesmypetcare.webservice.entity.FreqTrainingEntity;
+import org.pesmypetcare.webservice.entity.petmanager.FreqTrainingEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
 
-public interface FreqTrainingDao {
+public interface FreqTrainingService {
+
     /**
      * Creates a freqTraining of the pet on the database.
      * @param owner Username of the owner of the pet
@@ -38,7 +39,7 @@ public interface FreqTrainingDao {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param petDate Date of the freqTraining instance
-     * @return The freqTrainingEntity with the data of freqTraining
+     * @return The FreqTrainingEntity with the data of freqTraining
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     FreqTrainingEntity getFreqTrainingByDate(String owner, String petName, String petDate)
@@ -54,7 +55,7 @@ public interface FreqTrainingDao {
     List<Map<String, Object>> getAllFreqTraining(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the freqtrainings by the pet between the initial and final date not including them.
+     * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param initialDate Initial Date

@@ -68,43 +68,43 @@ public interface FirestoreDocument {
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
-     *
-     * @param path   A slash-separated path to a document
+     *  @param path   A slash-separated path to a document
      * @param fields A map of the fields and values for the document
      * @param batch  The batch where to write
+     * @return The document reference of the created document
      */
-    void createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
+    DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
-     *
-     * @param path  A slash-separated path to a document
+     *  @param path  A slash-separated path to a document
      * @param pojo  A map of the fields and values for the document
      * @param batch The batch where to write
+     * @return The document reference of the created document
      */
-    void createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
+    DocumentReference createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *
-     * @param collectionPath A slash-separated path to a collection
+     *  @param collectionPath A slash-separated path to a collection
      * @param id             The ID the document will have
      * @param fields         A map of the fields and values for the document
      * @param batch          The batch where to write
+     * @return The document reference of the created document
      */
-    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Map<String, Object> fields,
+    DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Map<String, Object> fields,
                               @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *
-     * @param collectionPath A slash-separated path to a collection
+     *  @param collectionPath A slash-separated path to a collection
      * @param id             The ID the document will have
      * @param pojo           A map of the fields and values for the document
      * @param batch          The batch where to write
+     * @return The document reference of the created document
      */
-    void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
+    DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
                               @NonNull WriteBatch batch);
 
     /**
