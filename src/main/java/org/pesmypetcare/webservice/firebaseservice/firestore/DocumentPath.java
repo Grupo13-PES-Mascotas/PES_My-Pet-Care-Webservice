@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.firebaseservice.firestore;
 
-import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import org.springframework.lang.NonNull;
 
 /**
@@ -8,9 +7,11 @@ import org.springframework.lang.NonNull;
  */
 public class DocumentPath {
     private static final int[] NUMBERS = {3, 4};
+
     private DocumentPath() {
         throw new UnsupportedOperationException();
     }
+
     /**
      * Builds the path to the desired document.
      * <p>
@@ -23,14 +24,13 @@ public class DocumentPath {
      *     String path = DocumentPath.of(Collections.forumsNames, "Dogs", "Huskies");
      *     String path = DocumentPath.of(Collections.pets, "yIoqQ6OepwRaadAOz2EdeIhikOX2", "Rex");
      * </pre></blockquote>
+     *
      * @param collection The collection where the document is stored
      * @param ids The ids the builder should use, going from the most outer one to the inner one
      * @return The path to a document
-     * @throws WrongNumberArgsException When the number of ids does not match the required to build the path requested
      */
     @NonNull
-    public static String of(@NonNull Collections collection, @NonNull String... ids)
-        throws WrongNumberArgsException {
+    public static String of(@NonNull Collections collection, @NonNull String... ids) {
         checkProvidedIds(ids);
         switch (collection) {
             case groups:
@@ -65,8 +65,8 @@ public class DocumentPath {
         }
         for (int i = 0; i < ids.length; ++i) {
             if (ids[i] == null || ids[i].isEmpty()) {
-                throw new IllegalArgumentException("Invalid ID at argument " + (i + 1) + ". IDs must not "
-                    + "be null or empty.");
+                throw new IllegalArgumentException(
+                    "Invalid ID at argument " + (i + 1) + ". IDs must not " + "be null or empty.");
             }
         }
     }
@@ -77,11 +77,9 @@ public class DocumentPath {
      * @param collection The collection type where the document is stored
      * @param ids The ids the builder should use, going from the most outer one to the inner one
      * @return The path to a document
-     * @throws WrongNumberArgsException When the number of ids does not match the required to build the path requested
      */
     @NonNull
-    private static StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids)
-        throws WrongNumberArgsException {
+    private static StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(1, ids.length);
         switch (collection) {
             case groups:
@@ -105,11 +103,9 @@ public class DocumentPath {
      * @param collection The collection type where the document is stored
      * @param ids The ids the builder should use, going from the most outer one to the inner one
      * @return The path to a document
-     * @throws WrongNumberArgsException When the number of ids does not match the required to build the path requested
      */
     @NonNull
-    private static StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids)
-        throws WrongNumberArgsException {
+    private static StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(2, ids.length);
         switch (collection) {
             case forums:
@@ -131,11 +127,9 @@ public class DocumentPath {
      * @param collection The collection type where the document is stored
      * @param ids The ids the builder should use, going from the most outer one to the inner one
      * @return The path to a document
-     * @throws WrongNumberArgsException When the number of ids does not match the required to build the path requested
      */
     @NonNull
-    private static StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids)
-        throws WrongNumberArgsException {
+    private static StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         if (collection.equals(Collections.medications)) {
             throwExceptionIfWrongNumArgs(NUMBERS[1], ids.length);
         } else {
@@ -400,11 +394,11 @@ public class DocumentPath {
      *
      * @param numExpected The number of argument expected
      * @param numArgs The number of arguments received
-     * @throws WrongNumberArgsException When the number of arguments does not match the expected
      */
-    private static void throwExceptionIfWrongNumArgs(int numExpected, int numArgs) throws WrongNumberArgsException {
+    private static void throwExceptionIfWrongNumArgs(int numExpected, int numArgs) {
         if (numExpected != numArgs) {
-            throw new WrongNumberArgsException("Expected " + numExpected + " arguments instead of " + numArgs);
+            throw new IllegalArgumentException(
+                "Wrong number of arguments. Expected " + numExpected + " arguments " + "instead " + "of " + numArgs);
         }
     }
 }
