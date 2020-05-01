@@ -68,7 +68,7 @@ public class EventEntity {
             .setTimeZone("Europe/Madrid");
         event.setEnd(end);
 
-        if (repetitionInterval > 0) {
+        if (repetitionInterval == null || repetitionInterval > 0) {
             String[] recurrence = {"RRULE:FREQ=DAILY;INTERVAL=" + repetitionInterval};
             event.setRecurrence(Arrays.asList(recurrence));
         }
