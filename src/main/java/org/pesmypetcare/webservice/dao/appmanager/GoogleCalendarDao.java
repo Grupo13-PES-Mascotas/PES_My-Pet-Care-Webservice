@@ -15,6 +15,7 @@ public interface GoogleCalendarDao {
      * Creates a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
      * @param calendar Calendar to create
+     * @return The calendar id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      */
     String createSecondaryCalendar(String accessToken, Calendar calendar) throws CalendarAccessException;

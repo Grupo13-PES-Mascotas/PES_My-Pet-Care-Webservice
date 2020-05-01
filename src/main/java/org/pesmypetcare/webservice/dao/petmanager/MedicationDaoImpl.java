@@ -81,7 +81,7 @@ public class MedicationDaoImpl implements MedicationDao {
 
     @Override
     public List<Map<String, Object>> getAllMedicationData(String owner, String petName)
-            throws DatabaseAccessException {
+        throws DatabaseAccessException {
         CollectionReference medicationsRef = getMedicationsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         ApiFuture<QuerySnapshot> future = medicationsRef.get();
@@ -108,7 +108,7 @@ public class MedicationDaoImpl implements MedicationDao {
     @Override
     public List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName,
                                                               String initialDate, String finalDate)
-            throws DatabaseAccessException {
+        throws DatabaseAccessException {
         CollectionReference medsRef = getMedicationsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {

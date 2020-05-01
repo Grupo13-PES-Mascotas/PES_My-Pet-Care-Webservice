@@ -6,7 +6,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 
 public interface MedicationDao {
@@ -57,8 +56,7 @@ public interface MedicationDao {
      * @return The List containing all the medications of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    List<Map<String, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException,
-            ExecutionException, InterruptedException;
+    List<Map<String, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the medications of the pet between the initial and final date not including them.
@@ -70,8 +68,7 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
-                                                              String finalDate) throws DatabaseAccessException,
-            ExecutionException, InterruptedException;
+                                                              String finalDate) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field of the medication on the database.

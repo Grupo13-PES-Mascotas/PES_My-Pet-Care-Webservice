@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/medication")
@@ -107,7 +106,7 @@ public class PetMedicationRestController {
     public List<Map<String, Object>> getAllMedicationData(@RequestHeader(TOKEN) String accessToken,
                                                           @PathVariable String owner,
                                                           @PathVariable String petName)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+            throws DatabaseAccessException {
         return medicationService.getAllMedicationData(owner, petName);
     }
 
@@ -127,7 +126,7 @@ public class PetMedicationRestController {
                                                                     @PathVariable String petName,
                                                                     @PathVariable String initialDate,
                                                                     @PathVariable String finalDate)
-            throws DatabaseAccessException, ExecutionException, InterruptedException {
+            throws DatabaseAccessException {
         return medicationService.getAllMedicationsBetween(owner, petName, initialDate, finalDate);
     }
 
@@ -137,7 +136,7 @@ public class PetMedicationRestController {
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
      * @param date Date of the Medication
-     * @param name Name of the Medication
+     * @param name  Name of the Medication
      * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -159,7 +158,7 @@ public class PetMedicationRestController {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param date Date of the Medication
-     * @param name Name of the Medication
+     * @param name  Name of the Medication
      * @param field Name of the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
