@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.controller.communitymanager;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,19 +31,20 @@ public class ForumRestController {
 
     @PostMapping("/{parentGroup}")
     public void createForum(@PathVariable String parentGroup,
-                            @RequestBody ForumEntity forumEntity) throws DatabaseAccessException {
+                            @RequestBody ForumEntity forumEntity) throws DatabaseAccessException, DocumentException {
         service.createForum(parentGroup, forumEntity);
     }
 
     @DeleteMapping("/{parentGroup}")
     public void deleteForum(@PathVariable String parentGroup,
-                            @RequestParam String forum) throws DatabaseAccessException {
+                            @RequestParam String forum) throws DatabaseAccessException, DocumentException {
         service.deleteForum(parentGroup, forum);
     }
 
     @GetMapping("/{parentGroup}")
     public Object getForums(@PathVariable String parentGroup,
-                            @RequestParam(defaultValue = "all") String forum) throws DatabaseAccessException {
+                            @RequestParam(defaultValue = "all") String forum)
+        throws DatabaseAccessException, DocumentException {
         if ("all".equals(forum)) {
             return service.getAllForumsFromGroup(parentGroup);
         }
@@ -51,26 +53,28 @@ public class ForumRestController {
 
     @PutMapping("/{parentGroup}/{forum}")
     public void updateName(@PathVariable String parentGroup, @PathVariable String forum,
-                           @RequestParam String newName) throws DatabaseAccessException {
+                           @RequestParam String newName) throws DatabaseAccessException, DocumentException {
         service.updateName(parentGroup, forum, newName);
     }
 
     @PutMapping("/tags/{parentGroup}/{forumName}")
     public void updateTags(@PathVariable String parentGroup,
                            @PathVariable String forumName,
-                           @RequestBody Map<String , List<String>> tags) throws DatabaseAccessException {
+                           @RequestBody Map<String , List<String>> tags)
+        throws DatabaseAccessException, DocumentException {
         service.updateTags(parentGroup, forumName, tags.get("new"), tags.get("deleted"));
     }
 
     @PostMapping("/{parentGroup}/{forumName}")
     public void postMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
-                            @RequestBody MessageEntity post) throws DatabaseAccessException {
+                            @RequestBody MessageEntity post) throws DatabaseAccessException, DocumentException {
         service.postMessage(token, parentGroup, forumName, post);
     }
 
     @DeleteMapping("/{parentGroup}/{forumName}")
     public void deleteMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
-                            @RequestParam String creator, @RequestParam String date) throws DatabaseAccessException {
+                            @RequestParam String creator, @RequestParam String date)
+        throws DatabaseAccessException, DocumentException {
         service.deleteMessage(token, parentGroup, forumName, creator, date);
     }
 

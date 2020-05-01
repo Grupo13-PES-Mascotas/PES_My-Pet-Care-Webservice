@@ -16,8 +16,10 @@ import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.pesmypetcare.webservice.firebaseservice.firestore.Collections;
 import org.pesmypetcare.webservice.firebaseservice.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.firebaseservice.firestore.FirestoreDocument;
+import org.pesmypetcare.webservice.firebaseservice.firestore.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -59,11 +61,9 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public boolean forumNameInUse(String parentGroup, String forumName)
-        throws DatabaseAccessException {
+    public boolean forumNameInUse(String parentGroup, String forumName) throws DatabaseAccessException {
         try {
-            firestoreDocument
-                .getDocumentSnapshot("groups_names/" + parentGroup + "/forums/" + forumName);
+            firestoreDocument.getDocumentSnapshot(Path.of(Collections.groupsNames, parentGroup, forumName));
             return true;
         } catch (DocumentException e) {
             return false;
@@ -75,9 +75,11 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         forumEntity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
         WriteBatch batch = db.batch();
-        String parentId = firestoreDocument.getStringFromDocument("gourps_names/" + parentGroup, "group");
+        String parentId = firestoreDocument
+            .getStringFromDocument(Path.of(Collections.groupsNames, parentGroup), "group");
         firestoreDocument.createDocument("groups/" + parentId + "/forums", forumEntity, batch);
-        DocumentReference forumRef = firestoreDocument.createDocument("groups/" + parentId + "/forums", forumEntity, batch);
+        DocumentReference forumRef = firestoreDocument
+            .createDocument("groups/" + parentId + "/forums", forumEntity, batch);
         String name = forumEntity.getName();
         saveForumName(parentGroup, name, forumRef.getId(), batch);
         //String creator = forumEntity.getCreator();
@@ -104,8 +106,8 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public ForumEntity getForum(String parentGroup, String forumName) throws DatabaseAccessException,
-        DocumentException {
+    public ForumEntity getForum(String parentGroup, String forumName)
+        throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         CollectionReference forums = groups.document(groupId).collection("forums");
@@ -198,16 +200,16 @@ public class ForumDaoImpl implements ForumDao {
 
     /**
      * Gets a document snapshot from a collection.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @return The document snapshot
      * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException If the document does not exist
+     * @throws DocumentException       If the document does not exist
      */
     private DocumentSnapshot getForumSnapshot(String parentGroup, String forumName)
         throws DatabaseAccessException, DocumentException {
-        return firestoreDocument
-            .getDocumentSnapshot("groups/" + parentGroup + "/forums/" + forumName);
+        return firestoreDocument.getDocumentSnapshot("groups/" + parentGroup + "/forums/" + forumName);
     }
 
     private void saveForumName(String parentGroup, String name, String id, WriteBatch batch) {
@@ -280,7 +282,7 @@ public class ForumDaoImpl implements ForumDao {
     /**
      * Deletes an entry in the tag collection for the forum.
      *
-     * @param tag   The tag
+     * @param tag The tag
      * @param forum The forum name
      * @param batch The batch of writes to which it belongs
      */

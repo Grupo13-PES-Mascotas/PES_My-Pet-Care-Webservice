@@ -5,76 +5,8 @@ import org.springframework.lang.NonNull;
 /**
  * @author Santiago Del Rey
  */
-public class DocumentPath {
+public class DocumentPath extends PathBuilder {
     private static final int[] NUMBERS = {3, 4};
-
-    private DocumentPath() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Builds the path to the desired document.
-     * <p>
-     * There must be as many IDs as documents should be crossed until the desired document. Also, the IDs must be in
-     * the same order they need to be accessed to reach the final document.
-     * <p>
-     * Here are some examples of how the method should be used:
-     * <blockquote><pre>
-     *     String path = DocumentPath.of(Collections.groupsNames, "Dogs");
-     *     String path = DocumentPath.of(Collections.forumsNames, "Dogs", "Huskies");
-     *     String path = DocumentPath.of(Collections.pets, "yIoqQ6OepwRaadAOz2EdeIhikOX2", "Rex");
-     * </pre></blockquote>
-     *
-     * @param collection The collection where the document is stored
-     * @param ids The ids the builder should use, going from the most outer one to the inner one
-     * @return The path to a document
-     */
-    @NonNull
-    public static String of(@NonNull Collections collection, @NonNull String... ids) {
-        checkProvidedIds(ids);
-        switch (collection) {
-            case groups:
-            case groupsNames:
-            case tags:
-            case usernames:
-            case users:
-                return buildOneLevelPath(collection, ids).toString();
-            case forums:
-            case forumsNames:
-            case pets:
-            case members:
-                return buildTwoLevelPath(collection, ids).toString();
-            case messages:
-            case kcals:
-            case meals:
-            case weights:
-            case freqWashes:
-            case medications:
-            case freqTrainings:
-            case kcalsAverages:
-            case weekTrainings:
-                return buildThreeLevelPath(collection, ids).toString();
-            default:
-                throw new EnumConstantNotPresentException(Collections.class, collection.name());
-        }
-    }
-
-    /**
-     * Checks that the array is not empty and its elements are not null or empty.
-     * @param ids The array with the ids
-     * @throws IllegalArgumentException When the array is empty or any of its elements is null or empty
-     */
-    private static void checkProvidedIds(@NonNull String[] ids) {
-        if (ids.length == 0) {
-            throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
-        }
-        for (int i = 0; i < ids.length; ++i) {
-            if (ids[i] == null || ids[i].isEmpty()) {
-                throw new IllegalArgumentException(
-                    "Invalid ID at argument " + (i + 1) + ". IDs must not " + "be null or empty.");
-            }
-        }
-    }
 
     /**
      * Builds a path to a document stored in a root collection.
@@ -84,7 +16,7 @@ public class DocumentPath {
      * @return The path to a document
      */
     @NonNull
-    private static StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(1, ids.length);
         switch (collection) {
             case groups:
@@ -110,7 +42,7 @@ public class DocumentPath {
      * @return The path to a document
      */
     @NonNull
-    private static StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(2, ids.length);
         switch (collection) {
             case forums:
@@ -134,7 +66,7 @@ public class DocumentPath {
      * @return The path to a document
      */
     @NonNull
-    private static StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         if (collection.equals(Collections.medications)) {
             throwExceptionIfWrongNumArgs(NUMBERS[1], ids.length);
         } else {
@@ -202,7 +134,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds a path to a forum.
+     * Builds a path to a member.
      *
      * @param groupId The group ID
      * @param memberId The member ID
@@ -225,7 +157,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds a path to a group name.
+     * Builds a path to a forum name.
      *
      * @param groupName The group name
      * @param forumName The forum name
@@ -296,7 +228,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a average kcals entry.
+     * Builds the path to an average kcals entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -392,18 +324,5 @@ public class DocumentPath {
     private static StringBuilder buildPathToKcal(@NonNull String userId, @NonNull String petName,
                                                  @NonNull String date) {
         return buildPathToPet(userId, petName).append("/kcals/").append(date);
-    }
-
-    /**
-     * Throws a WrongNumberArgsException if the number of arguments does not match the expected.
-     *
-     * @param numExpected The number of argument expected
-     * @param numArgs The number of arguments received
-     */
-    private static void throwExceptionIfWrongNumArgs(int numExpected, int numArgs) {
-        if (numExpected != numArgs) {
-            throw new IllegalArgumentException(
-                "Wrong number of arguments. Expected " + numExpected + " arguments " + "instead " + "of " + numArgs);
-        }
     }
 }

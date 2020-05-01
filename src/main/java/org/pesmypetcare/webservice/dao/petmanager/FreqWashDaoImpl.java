@@ -41,7 +41,7 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     @Override
-    public void deleteAllFreqWashs(String owner, String petName) throws DatabaseAccessException {
+    public void deleteAllFreqWashes(String owner, String petName) throws DatabaseAccessException {
         CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
         try {
             ApiFuture<QuerySnapshot> future = freqWashsRef.get();
@@ -79,7 +79,7 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     @Override
-    public List<Map<String, Object>> getAllFreqWash(String owner, String petName) throws DatabaseAccessException {
+    public List<Map<String, Object>> getAllFreqWashes(String owner, String petName) throws DatabaseAccessException {
         CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
@@ -91,7 +91,7 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     @Override
-    public List<Map<String, Object>> getAllFreqWashsBetween(String owner, String petName, String initialDate,
+    public List<Map<String, Object>> getAllFreqWashesBetween(String owner, String petName, String initialDate,
                                                           String finalDate) throws DatabaseAccessException {
         CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
