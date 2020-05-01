@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.firebaseservice.firestore;
 
-import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,45 +18,45 @@ class DocumentPathTest {
     private final String date = "2020-04-09T20:34:00";
 
     @Test
-    public void buildGroupPath() throws WrongNumberArgsException {
+    public void buildGroupPath() {
         String path = DocumentPath.of(Collections.groups, groupId);
         assertEquals("groups/" + groupId, path, "Should return the path to the group.");
     }
 
     @Test
-    public void buildGroupNamePath() throws WrongNumberArgsException {
+    public void buildGroupNamePath() {
         String path = DocumentPath.of(Collections.groupsNames, groupName);
         assertEquals("groups_names/" + groupName, path, "Should return the path to the forum.");
     }
 
     @Test
-    public void buildTagPath() throws WrongNumberArgsException {
+    public void buildTagPath() {
         String tag = "huskies";
         String path = DocumentPath.of(Collections.tags, tag);
         assertEquals("tags/" + tag, path, "Should return the path to the tag.");
     }
 
     @Test
-    public void buildUsernamePath() throws WrongNumberArgsException {
+    public void buildUsernamePath() {
         String username = "John";
         String path = DocumentPath.of(Collections.usernames, username);
         assertEquals("used_usernames/" + username, path, "Should return the path to the username.");
     }
 
     @Test
-    public void buildUserPath() throws WrongNumberArgsException {
+    public void buildUserPath() {
         String path = DocumentPath.of(Collections.users, userId);
         assertEquals("users/" + userId, path, "Should return the path to the user.");
     }
 
     @Test
-    public void buildForumPath() throws WrongNumberArgsException {
+    public void buildForumPath() {
         String path = DocumentPath.of(Collections.forums, groupId, forumId);
         assertEquals("groups/" + groupId + "/forums/" + forumId, path, "Should return the path to the forum.");
     }
 
     @Test
-    public void buildForumNamePath() throws WrongNumberArgsException {
+    public void buildForumNamePath() {
         String forumName = "Huskies";
         String path = DocumentPath.of(Collections.forumsNames, groupName, forumName);
         assertEquals("groups_names/" + groupName + "/forums/" + forumName, path,
@@ -65,54 +64,54 @@ class DocumentPathTest {
     }
 
     @Test
-    public void buildPetPath() throws WrongNumberArgsException {
+    public void buildPetPath() {
         String path = DocumentPath.of(Collections.pets, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName, path, "Should return the path to the pet.");
     }
 
     @Test
-    public void buildMemberPath() throws WrongNumberArgsException {
+    public void buildMemberPath() {
         String path = DocumentPath.of(Collections.members, groupId, userId);
         assertEquals("groups/" + groupId + "/members/" + userId, path, "Should return the path to the member.");
     }
 
     @Test
-    public void buildMessagePath() throws WrongNumberArgsException {
+    public void buildMessagePath() {
         String path = DocumentPath.of(Collections.messages, groupId, forumId, messageId);
         assertEquals("groups/" + groupId + "/forums/" + forumId + "/messages/" + messageId, path,
             "Should return the path to the message.");
     }
 
     @Test
-    public void buildKcalEntryPath() throws WrongNumberArgsException {
+    public void buildKcalEntryPath() {
         String path = DocumentPath.of(Collections.kcals, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/kcals/" + date, path,
             "Should return the path to the kcal entry.");
     }
 
     @Test
-    public void buildMealEntryPath() throws WrongNumberArgsException {
+    public void buildMealEntryPath() {
         String path = DocumentPath.of(Collections.meals, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/meals/" + date, path,
             "Should return the path to the meal entry.");
     }
 
     @Test
-    public void buildWeightEntryPath() throws WrongNumberArgsException {
+    public void buildWeightEntryPath() {
         String path = DocumentPath.of(Collections.weights, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/weights/" + date, path,
             "Should return the path to the weight entry.");
     }
 
     @Test
-    public void buildFrequencyOfWashesEntryPath() throws WrongNumberArgsException {
+    public void buildFrequencyOfWashesEntryPath() {
         String path = DocumentPath.of(Collections.freqWashes, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes/" + date, path,
             "Should return the path to the frequency of washes entry.");
     }
 
     @Test
-    public void buildMedicationEntryPath() throws WrongNumberArgsException {
+    public void buildMedicationEntryPath() {
         String medicationName = "painkillers";
         String path = DocumentPath.of(Collections.medications, userId, petName, date, medicationName);
         assertEquals("users/" + userId + "/pets/" + petName + "/medications/" + date + "½" + medicationName, path,
@@ -120,21 +119,21 @@ class DocumentPathTest {
     }
 
     @Test
-    public void buildFrequencyOfTrainingEntryPath() throws WrongNumberArgsException {
+    public void buildFrequencyOfTrainingEntryPath() {
         String path = DocumentPath.of(Collections.freqTrainings, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings/" + date, path,
             "Should return the path to the frequency of training entry.");
     }
 
     @Test
-    public void buildAverageKcalEntryPath() throws WrongNumberArgsException {
+    public void buildAverageKcalEntryPath() {
         String path = DocumentPath.of(Collections.kcalsAverages, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/kcalsAverages/" + date, path,
             "Should return the path to the average kcal entry.");
     }
 
     @Test
-    public void buildWeekTrainingEntryPath() throws WrongNumberArgsException {
+    public void buildWeekTrainingEntryPath() {
         String path = DocumentPath.of(Collections.weekTrainings, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/weekTrainings/" + date, path,
             "Should return the path to the week training entry.");
@@ -142,7 +141,7 @@ class DocumentPathTest {
 
     @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
-        assertThrows(WrongNumberArgsException.class, () -> DocumentPath.of(Collections.forums, groupId), "Should fail"
+        assertThrows(IllegalArgumentException.class, () -> DocumentPath.of(Collections.forums, groupId), "Should fail"
             + " when the number of arguments passed is not the same as the required for the requested document.");
     }
 
