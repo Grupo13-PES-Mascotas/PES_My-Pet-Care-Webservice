@@ -10,6 +10,9 @@ public class DocumentPath {
     /**
      * Builds the path to the desired document.
      * <p>
+     * There must be as many IDs as documents should be crossed until the desired document. Also, the IDs must be in
+     * the same order they need to be accessed to reach the final document.
+     * <p>
      * Here are some examples of how the method should be used:
      * <blockquote><pre>
      *     String path = DocumentPath.of(Collections.groupsNames, "Dogs");
@@ -24,6 +27,7 @@ public class DocumentPath {
     @NonNull
     public static String of(@NonNull Collections collection, @NonNull String... ids)
         throws WrongNumberArgsException {
+        checkProvidedIds(ids);
         switch (collection) {
             case groups:
             case groupsNames:
@@ -48,6 +52,18 @@ public class DocumentPath {
                 return buildThreeLevelPath(collection, ids).toString();
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
+        }
+    }
+
+    private static void checkProvidedIds(@NonNull String[] ids) {
+        if (ids.length <= 0) {
+            throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
+        }
+        for (int i = 0; i < ids.length; ++i) {
+            if (ids[i] == null || ids[i].isEmpty()) {
+                throw new IllegalArgumentException("Invalid ID at argument " + (i + 1) + ". IDs must not "
+                    + "be null or empty.");
+            }
         }
     }
 
@@ -263,7 +279,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a week training registry.
+     * Builds the path to a week training entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -277,7 +293,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a average kcals registry.
+     * Builds the path to a average kcals entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -291,7 +307,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a frequency of training registry.
+     * Builds the path to a frequency of training entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -305,7 +321,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a medication registry.
+     * Builds the path to a medication entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -320,7 +336,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a frequency of wash registry.
+     * Builds the path to a frequency of wash entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -334,7 +350,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a weight registry.
+     * Builds the path to a weight entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -348,7 +364,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a meal registry.
+     * Builds the path to a meal entry.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -362,7 +378,7 @@ public class DocumentPath {
     }
 
     /**
-     * Builds the path to a kcal registry.
+     * Builds the path to a kcal entry.
      *
      * @param userId The user ID
      * @param petName The pet name
