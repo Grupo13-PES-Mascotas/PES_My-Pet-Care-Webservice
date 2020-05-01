@@ -3,10 +3,10 @@ package org.pesmypetcare.webservice.dao;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
@@ -144,7 +149,7 @@ public class FreqWashDaoTest {
         given(querySnapshot.getDocuments()).willReturn(freqWashsDocuments);
         given(freqWashsDocuments.iterator()).willReturn(it);
 
-        freqWashDao.deleteAllFreqWashs(owner, petName);
+        freqWashDao.deleteAllFreqWashes(owner, petName);
 
         verify(db).collection(same(USERS_KEY));
         verify(usersRef).document(same(owner));
@@ -168,7 +173,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.deleteAllFreqWashs(owner, petName);
+            freqWashDao.deleteAllFreqWashes(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -183,7 +188,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.deleteAllFreqWashs(owner, petName);
+            freqWashDao.deleteAllFreqWashes(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -273,7 +278,7 @@ public class FreqWashDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = freqWashDao.getAllFreqWash(owner, petName);
+        List<Map<String, Object>> list = freqWashDao.getAllFreqWashes(owner, petName);
         assertEquals(freqWashList, list, "Should return a List containing all freqwash Data");
     }
 
@@ -288,7 +293,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWash(owner, petName);
+            freqWashDao.getAllFreqWashes(owner, petName);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -303,7 +308,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWash(owner, petName);
+            freqWashDao.getAllFreqWashes(owner, petName);
         }, EXCECUTION_EXC_MSG);
     }
 
@@ -323,7 +328,7 @@ public class FreqWashDaoTest {
         given(it.hasNext()).willReturn(true);
         given(it.hasNext()).willReturn(false);
 
-        List<Map<String, Object>> list = freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+        List<Map<String, Object>> list = freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
 
         assertEquals(freqWashList, list, "Should return a List containing all freqwash between two dates");
     }
@@ -339,7 +344,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(InterruptedException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+            freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
         }, INTERRUPTED_EXC_MSG);
     }
 
@@ -354,7 +359,7 @@ public class FreqWashDaoTest {
             given(freqWashsRef.get()).willReturn(futureQuery);
             willThrow(ExecutionException.class).given(futureQuery).get();
 
-            freqWashDao.getAllFreqWashsBetween(owner, petName, date, date2);
+            freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2);
         }, EXCECUTION_EXC_MSG);
     }
 
