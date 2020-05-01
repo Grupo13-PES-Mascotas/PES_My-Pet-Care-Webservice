@@ -7,6 +7,10 @@ import org.springframework.lang.NonNull;
  * @author Santiago Del Rey
  */
 public class DocumentPath {
+    private static final int[] NUMBERS = {3, 4};
+    private DocumentPath() {
+        throw new UnsupportedOperationException();
+    }
     /**
      * Builds the path to the desired document.
      * <p>
@@ -133,9 +137,9 @@ public class DocumentPath {
     private static StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids)
         throws WrongNumberArgsException {
         if (collection.equals(Collections.medications)) {
-            throwExceptionIfWrongNumArgs(4, ids.length);
+            throwExceptionIfWrongNumArgs(NUMBERS[1], ids.length);
         } else {
-            throwExceptionIfWrongNumArgs(3, ids.length);
+            throwExceptionIfWrongNumArgs(NUMBERS[0], ids.length);
         }
         switch (collection) {
             case messages:
@@ -149,7 +153,7 @@ public class DocumentPath {
             case freqWashes:
                 return buildPathToFreqWash(ids[0], ids[1], ids[2]);
             case medications:
-                return buildPathToMedication(ids[0], ids[1], ids[2], ids[3]);
+                return buildPathToMedication(ids[0], ids[1], ids[2], ids[NUMBERS[0]]);
             case freqTrainings:
                 return buildPathToFreqTraining(ids[0], ids[1], ids[2]);
             case kcalsAverages:
