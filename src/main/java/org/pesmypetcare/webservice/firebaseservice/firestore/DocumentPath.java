@@ -59,8 +59,13 @@ public class DocumentPath {
         }
     }
 
+    /**
+     * Checks that the array is not empty and its elements are not null or empty.
+     * @param ids The array with the ids
+     * @throws IllegalArgumentException When the array is empty or any of its elements is null or empty
+     */
     private static void checkProvidedIds(@NonNull String[] ids) {
-        if (ids.length <= 0) {
+        if (ids.length == 0) {
             throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
         }
         for (int i = 0; i < ids.length; ++i) {
