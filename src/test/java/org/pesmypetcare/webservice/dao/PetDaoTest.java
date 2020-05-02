@@ -256,7 +256,7 @@ class PetDaoTest {
         documentExists(true);
         given(documentSnapshot.get(anyString())).willReturn(value);
 
-        Object petValue = petDao.getField(owner, name, field);
+        Object petValue = petDao.getSimpleField(owner, name, field);
 
         assertSame(value, petValue, "Should return field value");
     }
@@ -266,7 +266,7 @@ class PetDaoTest {
         assertThrows(DatabaseAccessException.class, () -> {
             documentExists(false);
 
-            petDao.getField(owner, name, field);
+            petDao.getSimpleField(owner, name, field);
         }, "Should throw DatabaseAccessException when the retrieve from database fails because document"
             + NOT_EXISTS_STR);
     }
@@ -277,7 +277,7 @@ class PetDaoTest {
         assertThrows(DatabaseAccessException.class, () -> {
             throwInterruptionExceptionMock();
 
-            petDao.getField(owner, name, field);
+            petDao.getSimpleField(owner, name, field);
         }, INTERRUPTED_RETR_EXC);
     }
 
@@ -286,7 +286,7 @@ class PetDaoTest {
         assertThrows(DatabaseAccessException.class, () -> {
             throwExecutionExceptionMock();
 
-            petDao.getField(owner, name, field);
+            petDao.getSimpleField(owner, name, field);
         }, EXECUTION_RETR_EXC);
     }
 
@@ -297,7 +297,7 @@ class PetDaoTest {
         given(petsRef.document(anyString())).willReturn(petRef);
         given(petRef.update(anyString(), any())).willReturn(null);
 
-        petDao.updateField(owner, name, field, value);
+        petDao.updateSimpleField(owner, name, field, value);
 
         verify(usersRef).document(same(owner));
         verify(ownerRef).collection(same(PETS_KEY));

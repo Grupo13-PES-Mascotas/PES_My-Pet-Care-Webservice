@@ -121,7 +121,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Object getField(String owner, String name, String field) throws DatabaseAccessException {
+    public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         ApiFuture<DocumentSnapshot> future = petRef.get();
         DocumentSnapshot petDoc;
@@ -137,9 +137,44 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void updateField(String owner, String name, String field, Object value) {
+    public void updateSimpleField(String owner, String name, String field, Object value) {
         DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
         petRef.update(field, value);
+    }
+
+    @Override
+    public void deleteMapField(String owner, String name, String field) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public Map<String, Object> getMapField(String owner, String name, String field) throws DatabaseAccessException {
+        return null;
+    }
+
+    @Override
+    public void addMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public void deleteMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public void updateMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
+
+    }
+
+    @Override
+    public Object getMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getMapFieldElementsBetweenKeys(String owner, String name, String field, String key1, String key2) throws DatabaseAccessException {
+        return null;
     }
 
     /**

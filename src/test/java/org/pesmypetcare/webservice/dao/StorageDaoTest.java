@@ -78,7 +78,7 @@ class StorageDaoTest {
     @Test
     public void uploadPetImage() {
         dao.uploadPetImage(owner, imageEntity);
-        verify(petDao).updateField(owner, petName, "profileImageLocation", formPath);
+        verify(petDao).updateSimpleField(owner, petName, "profileImageLocation", formPath);
         verify(bucket).create(formPath, img, CONTENT_TYPE);
     }
 

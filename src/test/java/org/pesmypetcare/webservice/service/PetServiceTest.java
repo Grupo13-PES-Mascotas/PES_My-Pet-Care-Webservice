@@ -103,7 +103,7 @@ class PetServiceTest {
 
     @Test
     public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException {
-        when(petDao.getField(owner, name, field)).thenReturn(value);
+        when(petDao.getSimpleField(owner, name, field)).thenReturn(value);
         Object obtainedValue = service.getSimpleField(owner, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
     }
@@ -111,7 +111,7 @@ class PetServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetPetFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(petDao).getField(any(String.class), any(String.class),
+            doThrow(DatabaseAccessException.class).when(petDao).getSimpleField(any(String.class), any(String.class),
                 any(String.class));
             service.getSimpleField(owner, name, field);
         }, "Should return an exception when retrieving a pet field fails");
@@ -120,6 +120,6 @@ class PetServiceTest {
     @Test
     public void shouldReturnNothingWhenPetFieldUpdated() {
         service.updateSimpleField(owner, name, field, value);
-        verify(petDao).updateField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
+        verify(petDao).updateSimpleField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }
 }

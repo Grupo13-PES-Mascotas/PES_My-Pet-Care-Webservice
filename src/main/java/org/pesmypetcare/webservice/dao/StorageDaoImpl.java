@@ -45,7 +45,7 @@ public class StorageDaoImpl implements StorageDao {
         String imageName = image.getImgName();
         String path = image.getUid() + "/pets/" + image.getImgName();
         String name = imageName.substring(0, imageName.indexOf('-'));
-        petDao.updateField(owner, name, "profileImageLocation", path);
+        petDao.updateSimpleField(owner, name, "profileImageLocation", path);
         storageBucket.create(path, image.getImg(), CONTENT_TYPE);
     }
 

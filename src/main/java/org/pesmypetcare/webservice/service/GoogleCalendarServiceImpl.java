@@ -32,21 +32,21 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         calendar.setSummary("My Pet Care: " + petName);
         calendar.setTimeZone("Europe/Madrid");
         String calendarId = googleCalendarDao.createSecondaryCalendar(accessToken, calendar);
-        petDao.updateField(owner, petName, CALENDAR_ID, calendarId);
+        petDao.updateSimpleField(owner, petName, CALENDAR_ID, calendarId);
     }
 
     @Override
     public void deleteSecondaryCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         googleCalendarDao.deleteSecondaryCalendar(accessToken, calendarId);
-        petDao.updateField(owner, petName, CALENDAR_ID, null);
+        petDao.updateSimpleField(owner, petName, CALENDAR_ID, null);
     }
 
     @Override
     public List<EventEntity> getAllEventsFromCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         List<Event> eventList = googleCalendarDao.getAllEventsFromCalendar(accessToken, calendarId);
         List<EventEntity> eventEntityList = new ArrayList<>();
         for (Event event: eventList) {
@@ -58,14 +58,14 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void createEvent(String accessToken, String owner, String petName, EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         googleCalendarDao.createEvent(accessToken, calendarId, eventEntity.convertToEvent());
     }
 
     @Override
     public EventEntity retrieveEvent(String accessToken, String owner, String petName, String eventId)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         Event event = googleCalendarDao.retrieveEvent(accessToken, calendarId, eventId);
         return new EventEntity(event);
     }
@@ -73,14 +73,14 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void updateEvent(String accessToken, String owner, String petName, EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         googleCalendarDao.updateEvent(accessToken, calendarId, eventEntity.getId(), eventEntity.convertToEvent());
     }
 
     @Override
     public void deleteEvent(String accessToken, String owner, String petName, String eventId)
         throws CalendarAccessException, DatabaseAccessException {
-        String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
+        String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         googleCalendarDao.deleteEvent(accessToken, calendarId, eventId);
     }
 }
