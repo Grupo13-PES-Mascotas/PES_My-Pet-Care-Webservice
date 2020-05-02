@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
@@ -29,6 +29,11 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
 
     public FirestoreDocumentAdapter() {
         db = FirebaseFactory.getInstance().getFirestore();
+    }
+
+    @Override
+    public WriteBatch batch() {
+        return db.batch();
     }
 
     @NonNull
@@ -72,29 +77,34 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields,
+                                            @NonNull WriteBatch batch) {
         DocumentReference ref = db.collection(path).document();
         batch.create(ref, fields);
+        return ref;
     }
 
     @Override
-    public void createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch) {
+    public DocumentReference createDocument(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch) {
         DocumentReference ref = db.collection(path).document();
         batch.create(ref, pojo);
+        return ref;
     }
 
     @Override
-    public void createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
-                                     @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                                  @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         batch.create(ref, fields);
+        return ref;
     }
 
     @Override
-    public void createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
-                                     @NonNull WriteBatch batch) {
+    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                                  @NonNull Object pojo, @NonNull WriteBatch batch) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         batch.create(ref, pojo);
+        return ref;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -20,6 +20,11 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
 
     public FirestoreCollectionAdapter() {
         db = FirebaseFactory.getInstance().getFirestore();
+    }
+
+    @Override
+    public WriteBatch batch() {
+        return db.batch();
     }
 
     @NonNull

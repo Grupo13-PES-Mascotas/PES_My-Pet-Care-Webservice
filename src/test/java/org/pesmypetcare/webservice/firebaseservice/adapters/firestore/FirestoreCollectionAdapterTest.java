@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -112,8 +112,8 @@ class FirestoreCollectionAdapterTest {
         public void getDocumentsWhereFieldEqualToValue() {
             given(collectionReference.whereEqualTo(same(field), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, field, value);
-            assertEquals(query, result, "Should return all documents from " + collectionPath + " where " + field
-                + " is equals to " + value);
+            assertEquals(query, result,
+                "Should return all documents from " + collectionPath + " where " + field + " is equals to " + value);
         }
 
         @Test
@@ -121,8 +121,8 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.whereEqualTo(same(fieldPath), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, fieldPath, value);
             assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where " + field + " in "
-                             + fieldPath + " is equals to " + value);
+                "Should return all documents from " + collectionPath + " where " + field + " in " + fieldPath
+                    + " is equals to " + value);
         }
 
         @Test
@@ -130,8 +130,8 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.whereArrayContains(same(array), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereArrayContains(collectionPath, array, value);
             assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where the array " + array
-                             + " contains " + value);
+                "Should return all documents from " + collectionPath + " where the array " + array + " contains "
+                    + value);
         }
 
         @Test
@@ -139,8 +139,8 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.whereArrayContains(same(arrayPath), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereArrayContains(collectionPath, arrayPath, value);
             assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where the array" + array + " in "
-                             + arrayPath + " contains " + value);
+                "Should return all documents from " + collectionPath + " where the array" + array + " in " + arrayPath
+                    + " contains " + value);
         }
     }
 
@@ -163,8 +163,8 @@ class FirestoreCollectionAdapterTest {
             given(query.whereEqualTo(same(field), same(value))).willReturn(query);
             Query result = collectionAdapter.getCollectionGroupDocumentsWhereEqualTo(collectionGroup, field, value);
             assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " where "
-                             + field + " is equals to " + value);
+                "Should return all documents from the collections whose id is " + collectionGroup + " where " + field
+                    + " is equals to " + value);
         }
 
         @Test
@@ -172,8 +172,8 @@ class FirestoreCollectionAdapterTest {
             given(query.whereEqualTo(same(fieldPath), same(value))).willReturn(query);
             Query result = collectionAdapter.getCollectionGroupDocumentsWhereEqualTo(collectionGroup, fieldPath, value);
             assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " where "
-                             + field + " in " + fieldPath + " is equals to " + value);
+                "Should return all documents from the collections whose id is " + collectionGroup + " where " + field
+                    + " in " + fieldPath + " is equals to " + value);
         }
 
         @Test
@@ -182,8 +182,8 @@ class FirestoreCollectionAdapterTest {
             Query result = collectionAdapter
                 .getCollectionGroupDocumentsWhereArrayContains(collectionGroup, array, value);
             assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " and the "
-                             + "array" + array + " contains " + value);
+                "Should return all documents from the collections whose id is " + collectionGroup + " and the "
+                    + "array" + array + " contains " + value);
         }
 
         @Test
@@ -192,8 +192,8 @@ class FirestoreCollectionAdapterTest {
             Query result = collectionAdapter
                 .getCollectionGroupDocumentsWhereArrayContains(collectionGroup, arrayPath, value);
             assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup
-                             + " and have the " + "array" + array + " in " + arrayPath + " which contains " + value);
+                "Should return all documents from the collections whose id is " + collectionGroup + " and have the "
+                    + "array" + array + " in " + arrayPath + " which contains " + value);
         }
     }
 }
