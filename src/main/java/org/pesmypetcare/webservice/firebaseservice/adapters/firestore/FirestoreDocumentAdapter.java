@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
@@ -29,6 +29,11 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
 
     public FirestoreDocumentAdapter() {
         db = FirebaseFactory.getInstance().getFirestore();
+    }
+
+    @Override
+    public WriteBatch batch() {
+        return db.batch();
     }
 
     @NonNull

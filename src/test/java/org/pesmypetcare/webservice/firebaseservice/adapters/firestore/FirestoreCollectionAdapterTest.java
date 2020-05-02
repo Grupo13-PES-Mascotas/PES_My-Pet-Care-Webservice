@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -78,7 +78,7 @@ class FirestoreCollectionAdapterTest {
         public void getCollectionParent() {
             given(collectionReference.getParent()).willReturn(documentReference);
             DocumentReference reference = collectionAdapter.getCollectionParent(collectionPath);
-            assertEquals(documentReference, reference, "Should return the parent document reference of the collection");
+            assertEquals(documentReference, reference, "Should return the parent document reference ofDocument the collection");
         }
 
         @Test

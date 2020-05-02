@@ -111,10 +111,10 @@ public class WeekTrainingDaoImpl implements WeekTrainingDao {
     }
 
     /**
-     * Return the weekTraining collection of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return Return the weekTraining collection of one pet
+     * Return the weekTraining collection ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return Return the weekTraining collection ofDocument one pet
      */
     public CollectionReference getWeekTrainingsRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName)
@@ -122,8 +122,8 @@ public class WeekTrainingDaoImpl implements WeekTrainingDao {
     }
 
     /**
-     * Gets all the weekTrainings of the collection and puts them in the externalList.
-     * @param weekTrainingsRef Reference to the collection of weekTrainings
+     * Gets all the weekTrainings ofDocument the collection and puts them in the externalList.
+     * @param weekTrainingsRef Reference to the collection ofDocument weekTrainings
      * @param externalList list that will contain all the weekTrainings
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -142,11 +142,11 @@ public class WeekTrainingDaoImpl implements WeekTrainingDao {
     }
 
     /**
-     * Gets all the weekTrainings of the collection between the initial and final dates without taking
+     * Gets all the weekTrainings ofDocument the collection between the initial and final dates without taking
      * them into account and puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param weekTrainingsRef Reference to the collection of weekTrainings
+     * @param weekTrainingsRef Reference to the collection ofDocument weekTrainings
      * @param externalList list that will contain all the weekTrainings
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

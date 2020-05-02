@@ -100,7 +100,7 @@ public class KcalAverageServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfKcalAveragesRetrieved() throws DatabaseAccessException {
         when(kcalAverageDao.getAllKcalAverage(owner, petName)).thenReturn(kcalAverageAverageList);
         List<Map<String, Object>> list = service.getAllKcalAverage(owner, petName);
-        assertSame(kcalAverageAverageList, list, "Should return a list of kcalAverageAverages entities");
+        assertSame(kcalAverageAverageList, list, "Should return a list ofDocument kcalAverageAverages entities");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class KcalAverageServiceTest {
             doThrow(DatabaseAccessException.class).when(kcalAverageDao).getAllKcalAverage(any(String.class),
                 isA(String.class));
             service.getAllKcalAverage(owner, petName);
-        }, "Should return an exception when retrieving a set of kcalAverageAverages fails");
+        }, "Should return an exception when retrieving a set ofDocument kcalAverageAverages fails");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class KcalAverageServiceTest {
         throws DatabaseAccessException {
         when(kcalAverageDao.getAllKcalAveragesBetween(owner, petName, date, date2)).thenReturn(kcalAverageAverageList);
         List<Map<String, Object>> list = service.getAllKcalAveragesBetween(owner, petName, date, date2);
-        assertSame(kcalAverageAverageList, list, "Should return a list of kcalAverageAverage entities");
+        assertSame(kcalAverageAverageList, list, "Should return a list ofDocument kcalAverageAverage entities");
     }
 
     @Test
@@ -126,7 +126,7 @@ public class KcalAverageServiceTest {
             doThrow(DatabaseAccessException.class).when(kcalAverageDao).getAllKcalAveragesBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllKcalAveragesBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set of kcalAverageAverages between dates fails");
+        }, "Should return an exception when retrieving a set ofDocument kcalAverageAverages between dates fails");
     }
 
     @Test

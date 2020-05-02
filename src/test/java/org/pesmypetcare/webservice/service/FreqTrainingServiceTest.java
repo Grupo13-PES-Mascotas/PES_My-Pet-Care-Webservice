@@ -100,7 +100,7 @@ public class FreqTrainingServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfFreqTrainingsRetrieved() throws DatabaseAccessException {
         when(freqTrainingDao.getAllFreqTraining(owner, petName)).thenReturn(freqTrainingList);
         List<Map<String, Object>> list = service.getAllFreqTraining(owner, petName);
-        assertSame(freqTrainingList, list, "Should return a list of freqTrainings entities");
+        assertSame(freqTrainingList, list, "Should return a list ofDocument freqTrainings entities");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class FreqTrainingServiceTest {
             doThrow(DatabaseAccessException.class).when(freqTrainingDao).getAllFreqTraining(any(String.class),
                 isA(String.class));
             service.getAllFreqTraining(owner, petName);
-        }, "Should return an exception when retrieving a set of freqTrainings fails");
+        }, "Should return an exception when retrieving a set ofDocument freqTrainings fails");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class FreqTrainingServiceTest {
         throws DatabaseAccessException {
         when(freqTrainingDao.getAllFreqTrainingsBetween(owner, petName, date, date2)).thenReturn(freqTrainingList);
         List<Map<String, Object>> list = service.getAllFreqTrainingsBetween(owner, petName, date, date2);
-        assertSame(freqTrainingList, list, "Should return a list of freqTraining entities");
+        assertSame(freqTrainingList, list, "Should return a list ofDocument freqTraining entities");
     }
 
     @Test
@@ -126,7 +126,7 @@ public class FreqTrainingServiceTest {
             doThrow(DatabaseAccessException.class).when(freqTrainingDao).getAllFreqTrainingsBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllFreqTrainingsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set of freqTrainings between dates fails");
+        }, "Should return an exception when retrieving a set ofDocument freqTrainings between dates fails");
     }
 
     @Test

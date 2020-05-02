@@ -100,7 +100,7 @@ public class GoogleCalendarServiceTest {
         DatabaseAccessException {
         given(petDao.getField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         List<EventEntity> response = service.getAllEventsFromCalendar(accessToken, owner, petName);
-        assertEquals(eventList, response, "Should return an array of Event");
+        assertEquals(eventList, response, "Should return an array ofDocument Event");
     }
 
     @Test

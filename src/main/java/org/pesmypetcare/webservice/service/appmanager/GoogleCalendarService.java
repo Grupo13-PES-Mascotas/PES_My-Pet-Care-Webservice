@@ -14,8 +14,8 @@ public interface GoogleCalendarService {
     /**
      * Creates a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar is created for
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar is created for
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      */
     void createSecondaryCalendar(String accessToken, String owner, String petName) throws CalendarAccessException;
@@ -23,8 +23,8 @@ public interface GoogleCalendarService {
     /**
      * Deletes a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -34,8 +34,8 @@ public interface GoogleCalendarService {
     /**
      * Returns all Calendar Events from a specified Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @return List containing all the Events from the specified Calendar
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -46,8 +46,8 @@ public interface GoogleCalendarService {
     /**
      * Creates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @param eventEntity Event to create
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -58,9 +58,9 @@ public interface GoogleCalendarService {
     /**
      * Retrieves an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to retrieve
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
+     * @param eventId Id ofDocument the event to retrieve
      * @return Event retrieved
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -71,8 +71,8 @@ public interface GoogleCalendarService {
     /**
      * Updates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @param eventEntity New Event that overwrites the past event with the same id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -83,9 +83,9 @@ public interface GoogleCalendarService {
     /**
      * Deletes an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
-     * @param eventId Id of the event to delete
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
+     * @param eventId Id ofDocument the event to delete
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */

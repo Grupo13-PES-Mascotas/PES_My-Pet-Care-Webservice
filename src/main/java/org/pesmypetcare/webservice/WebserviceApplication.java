@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebserviceApplication {
 
     /**
-     * Starter of the service.
+     * Starter ofDocument the service.
      * @param args Arguments for the service.
      */
     public static void main(String[] args) {

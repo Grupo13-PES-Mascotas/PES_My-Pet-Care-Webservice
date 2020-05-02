@@ -24,11 +24,11 @@ public class KcalRestController {
     private KcalService kcalService;
 
     /**
-     * Creates a kcal of the pet on the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Creation date of the instance
-     * @param kcalEntity The parameters of kcal
+     * Creates a kcal ofDocument the pet on the database.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Creation date ofDocument the instance
+     * @param kcalEntity The parameters ofDocument kcal
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
     public void createKcal(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
@@ -37,9 +37,9 @@ public class KcalRestController {
     }
 
     /**
-     * Deletes all kcals of the pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * Deletes all kcals ofDocument the pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -50,9 +50,9 @@ public class KcalRestController {
 
     /**
      * Deletes the kcal with the specified pet and date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the kcal instance
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the kcal instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
@@ -62,11 +62,11 @@ public class KcalRestController {
     }
 
     /**
-     * Get one kcal of the pet with the specified date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the kcal instance
-     * @return The KcalEntity with the data of kcal
+     * Get one kcal ofDocument the pet with the specified date.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the kcal instance
+     * @return The KcalEntity with the data ofDocument kcal
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{petDate}")
@@ -76,10 +76,10 @@ public class KcalRestController {
     }
 
     /**
-     * Gets all the specified kcals of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return The list with all of the kcals
+     * Gets all the specified kcals ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return The list with all ofDocument the kcals
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
@@ -89,9 +89,9 @@ public class KcalRestController {
     }
 
     /**
-     * Gets the data from all the kcal of the pet between the initial and final date not including them.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * Gets the data from all the kcal ofDocument the pet between the initial and final date not including them.
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the kcals in the specified time
@@ -106,10 +106,10 @@ public class KcalRestController {
     }
 
     /**
-     * Updates one of the kcals specified with the date and the pet name.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the kcal instance
+     * Updates one ofDocument the kcals specified with the date and the pet name.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the kcal instance
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database

@@ -14,7 +14,7 @@ public interface UserService {
     /**
      * Creates a user on the data base.
      *
-     * @param uid The unique identifier of the user
+     * @param uid The unique identifier ofDocument the user
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -25,7 +25,7 @@ public interface UserService {
      * Deletes a user from database.
      *
      * @param token The user's personal access token
-     * @param uid The unique identifier of the user
+     * @param uid The unique identifier ofDocument the user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void deleteFromDatabase(String token, String uid) throws DatabaseAccessException;
@@ -34,7 +34,7 @@ public interface UserService {
      * Deletes the user with the specified uid from the data base.
      *
      * @param token The user's personal access token
-     * @param uid The unique identifier of the user
+     * @param uid The unique identifier ofDocument the user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
@@ -42,10 +42,10 @@ public interface UserService {
 
 
     /**
-     * Gets the data of the specified user.
+     * Gets the data ofDocument the specified user.
      *
      * @param token The user's personal access token
-     * @param uid The unique identifier of the user
+     * @param uid The unique identifier ofDocument the user
      * @return The UserEntity with the users data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -55,7 +55,7 @@ public interface UserService {
      * Updates a user field.
      *
      * @param token The user's personal access token
-     * @param uid The unique identifier of the user
+     * @param uid The unique identifier ofDocument the user
      * @param field The field to update
      * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data

@@ -111,10 +111,10 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
     }
 
     /**
-     * Return the freqTraining collection of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return Return the freqTraining collection of one pet
+     * Return the freqTraining collection ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return Return the freqTraining collection ofDocument one pet
      */
     public CollectionReference getFreqTrainingsRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName)
@@ -122,8 +122,8 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
     }
 
     /**
-     * Gets all the freqTrainings of the collection and puts them in the externalList.
-     * @param freqTrainingsRef Reference to the collection of freqTrainings
+     * Gets all the freqTrainings ofDocument the collection and puts them in the externalList.
+     * @param freqTrainingsRef Reference to the collection ofDocument freqTrainings
      * @param externalList list that will contain all the freqTrainings
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -142,11 +142,11 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
     }
 
     /**
-     * Gets all the freqTrainings of the collection between the initial and final dates without taking them into
+     * Gets all the freqTrainings ofDocument the collection between the initial and final dates without taking them into
      * account and puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param freqTrainingsRef Reference to the collection of freqTrainings
+     * @param freqTrainingsRef Reference to the collection ofDocument freqTrainings
      * @param externalList list that will contain all the freqTrainings
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

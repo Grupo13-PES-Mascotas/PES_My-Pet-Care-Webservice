@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
@@ -262,7 +262,7 @@ class FirestoreDocumentAdapterTest {
                 willReturn(aString).given(documentSnapshot).get(anyString());
 
                 Object result = adapter.getDocumentField(documentPath, field);
-                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
+                assertEquals(aString, result, "Should return " + aString + " as the value ofDocument the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -280,7 +280,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDouble(anyString())).willReturn(aDouble);
 
                 Double result = adapter.getDoubleFromDocument(documentPath, field);
-                assertEquals(aDouble, result, "Should return " + aDouble + " as the value of the " + field + " in the "
+                assertEquals(aDouble, result, "Should return " + aDouble + " as the value ofDocument the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -289,7 +289,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDate(anyString())).willReturn(aDate);
 
                 Date result = adapter.getDateFromDocument(documentPath, field);
-                assertEquals(aDate, result, "Should return " + aDate + " as the value of the " + field + " in the "
+                assertEquals(aDate, result, "Should return " + aDate + " as the value ofDocument the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -299,7 +299,7 @@ class FirestoreDocumentAdapterTest {
 
                 Boolean result = adapter.getBooleanFromDocument(documentPath, field);
                 assertEquals(aBoolean, result,
-                             "Should return " + aBoolean + " as the value of the " + field + " in the "
+                             "Should return " + aBoolean + " as the value ofDocument the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -309,7 +309,7 @@ class FirestoreDocumentAdapterTest {
 
                 GeoPoint result = adapter.getGeoPointFromDocument(documentPath, field);
                 assertEquals(aGeoPoint, result,
-                             "Should return " + aGeoPoint + " as the value of the " + field + " in the "
+                             "Should return " + aGeoPoint + " as the value ofDocument the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -318,7 +318,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getString(anyString())).willReturn(aString);
 
                 String result = adapter.getStringFromDocument(documentPath, field);
-                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
+                assertEquals(aString, result, "Should return " + aString + " as the value ofDocument the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -328,7 +328,7 @@ class FirestoreDocumentAdapterTest {
 
                 Timestamp result = adapter.getTimestampFromDocument(documentPath, field);
                 assertEquals(aTimestamp, result,
-                             "Should return " + aTimestamp + " as the value of the " + field + " in the "
+                             "Should return " + aTimestamp + " as the value ofDocument the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -348,7 +348,7 @@ class FirestoreDocumentAdapterTest {
 
                 UserEntity result = adapter.getDocumentDataAsObject(documentPath, UserEntity.class);
                 assertEquals(pojo, result,
-                             "Should return a pojo of type " + pojo.getClass().getSimpleName() + " as the data "
+                             "Should return a pojo ofDocument type " + pojo.getClass().getSimpleName() + " as the data "
                                  + "stored in the document located at " + documentPath);
             }
 

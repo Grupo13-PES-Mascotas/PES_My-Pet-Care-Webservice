@@ -90,8 +90,8 @@ public class MealDaoImpl implements MealDao {
     }
 
     /**
-     * Gets all the meals of the collection and puts them in the externalList.
-     * @param mealsRef Reference to the collection of meals
+     * Gets all the meals ofDocument the collection and puts them in the externalList.
+     * @param mealsRef Reference to the collection ofDocument meals
      * @param externalList list that will contain all the meals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -122,11 +122,11 @@ public class MealDaoImpl implements MealDao {
     }
 
     /**
-     * Gets all the meals of the collection between the initial and final dates without taking them into account and
+     * Gets all the meals ofDocument the collection between the initial and final dates without taking them into account and
      * puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param mealsRef Reference to the collection of meals
+     * @param mealsRef Reference to the collection ofDocument meals
      * @param externalList list that will contain all the meals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

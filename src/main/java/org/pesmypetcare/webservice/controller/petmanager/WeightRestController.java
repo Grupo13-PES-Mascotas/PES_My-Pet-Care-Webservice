@@ -24,11 +24,11 @@ public class WeightRestController {
     private WeightService weightService;
 
     /**
-     * Creates a weight of the pet on the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of weight instance
-     * @param weightEntity The parameters of weight
+     * Creates a weight ofDocument the pet on the database.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument weight instance
+     * @param weightEntity The parameters ofDocument weight
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
     public void createWeight(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
@@ -37,9 +37,9 @@ public class WeightRestController {
     }
 
     /**
-     * Deletes all weights of the pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * Deletes all weights ofDocument the pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -50,9 +50,9 @@ public class WeightRestController {
 
     /**
      * Deletes the weight with the specified pet and date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weight instance
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weight instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
@@ -62,11 +62,11 @@ public class WeightRestController {
     }
 
     /**
-     * Get one weight of the pet with the specified date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weight instance
-     * @return The WeightEntity with the data of weight
+     * Get one weight ofDocument the pet with the specified date.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weight instance
+     * @return The WeightEntity with the data ofDocument weight
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{petDate}")
@@ -76,10 +76,10 @@ public class WeightRestController {
     }
 
     /**
-     * Gets all the specified weights of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return The list with all of the weights
+     * Gets all the specified weights ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return The list with all ofDocument the weights
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
@@ -90,8 +90,8 @@ public class WeightRestController {
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the weights in the specified time
@@ -106,10 +106,10 @@ public class WeightRestController {
     }
 
     /**
-     * Updates one of the weights specified with the date and the pet name.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weight instance
+     * Updates one ofDocument the weights specified with the date and the pet name.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weight instance
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database

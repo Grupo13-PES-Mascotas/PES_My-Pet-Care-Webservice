@@ -24,11 +24,11 @@ public class FreqWashRestController {
     private FreqWashService freqWashService;
 
     /**
-     * Creates a freqWash of the pet on the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Creation date of the instance
-     * @param freqWashEntity The parameters of freqWash
+     * Creates a freqWash ofDocument the pet on the database.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Creation date ofDocument the instance
+     * @param freqWashEntity The parameters ofDocument freqWash
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
     public void createFreqWash(@PathVariable String owner, @PathVariable String petName, @PathVariable String petDate,
@@ -37,9 +37,9 @@ public class FreqWashRestController {
     }
 
     /**
-     * Deletes all freqWashs of the pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * Deletes all freqWashs ofDocument the pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -50,9 +50,9 @@ public class FreqWashRestController {
 
     /**
      * Deletes the freqWash with the specified pet and date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the freqWash instance
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the freqWash instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
@@ -62,11 +62,11 @@ public class FreqWashRestController {
     }
 
     /**
-     * Get one freqWash of the pet with the specified date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the freqWash instance
-     * @return The FreqWashEntity with the data of freqWash
+     * Get one freqWash ofDocument the pet with the specified date.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the freqWash instance
+     * @return The FreqWashEntity with the data ofDocument freqWash
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{petDate}")
@@ -76,10 +76,10 @@ public class FreqWashRestController {
     }
 
     /**
-     * Gets all the specified freqWashs of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return The list with all of the freqWashs
+     * Gets all the specified freqWashs ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return The list with all ofDocument the freqWashs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
@@ -90,8 +90,8 @@ public class FreqWashRestController {
 
     /**
      * Gets the data from all the freqwashes by the pet between the initial and final date not including them.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the freqWashs in the specified time
@@ -106,10 +106,10 @@ public class FreqWashRestController {
     }
 
     /**
-     * Updates one of the freqWashs specified with the date and the pet name.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the freqWash instance
+     * Updates one ofDocument the freqWashs specified with the date and the pet name.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the freqWash instance
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database

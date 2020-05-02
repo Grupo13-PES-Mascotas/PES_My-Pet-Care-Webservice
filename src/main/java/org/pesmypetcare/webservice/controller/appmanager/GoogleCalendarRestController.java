@@ -32,8 +32,8 @@ public class GoogleCalendarRestController {
     /**
      * Creates a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar is created for
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar is created for
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      */
     @PostMapping("/{owner}/{petName}")
@@ -45,8 +45,8 @@ public class GoogleCalendarRestController {
     /**
      * Deletes a Secondary Google Calendar in the account specified by the accessToken.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -60,8 +60,8 @@ public class GoogleCalendarRestController {
     /**
      * Returns all Calendar Events from a specified Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @return List containing all the Events from the specified Calendar
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -77,8 +77,8 @@ public class GoogleCalendarRestController {
     /**
      * Creates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @param eventEntity Event to create
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -93,9 +93,9 @@ public class GoogleCalendarRestController {
     /**
      * Retrieves an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
-     * @param body Body of the request containing the id of the event to retrieve with key eventId assigned
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
+     * @param body Body ofDocument the request containing the id ofDocument the event to retrieve with key eventId assigned
      * @return Event retrieved
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -110,8 +110,8 @@ public class GoogleCalendarRestController {
     /**
      * Updates an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
      * @param eventEntity New Event that overwrites the past event with the same id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -126,9 +126,9 @@ public class GoogleCalendarRestController {
     /**
      * Deletes an Event in a specified Google Calendar.
      * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
-     * @param petName Name of the pet the calendar belongs to
-     * @param body Body of the request containing the id of the event to delete with key eventId assigned
+     * @param owner Name ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet the calendar belongs to
+     * @param body Body ofDocument the request containing the id ofDocument the event to delete with key eventId assigned
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */

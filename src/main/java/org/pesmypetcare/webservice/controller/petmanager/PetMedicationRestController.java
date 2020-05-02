@@ -27,11 +27,11 @@ public class PetMedicationRestController {
     /**
      * Creates a Medication eaten by a pet on the database.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     * @param name Name of the Medication
-     * @param medication The Medication entity that contains the attributes of the Medication
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param date Date ofDocument the Medication
+     * @param name Name ofDocument the Medication
+     * @param medication The Medication entity that contains the attributes ofDocument the Medication
      */
     @PostMapping("/{owner}/{petName}/{date}/{name}")
     public void createMedication(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
@@ -45,10 +45,10 @@ public class PetMedicationRestController {
     /**
      * Deletes all the medication with the specified owner and pet from certain date.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     * @param name Name of the Medication
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param date Date ofDocument the Medication
+     * @param name Name ofDocument the Medication
      */
     @DeleteMapping("/{owner}/{petName}/{date}/{name}")
     public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken,
@@ -60,10 +60,10 @@ public class PetMedicationRestController {
     }
 
     /**
-     * Deletes all the Medications of the specified pet from database.
+     * Deletes all the Medications ofDocument the specified pet from database.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -77,10 +77,10 @@ public class PetMedicationRestController {
     /**
      * Gets a Medication identified by its pet and date.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     * @param name Name of the Medication
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param date Date ofDocument the Medication
+     * @param name Name ofDocument the Medication
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -97,8 +97,8 @@ public class PetMedicationRestController {
     /**
      * Gets the data from all the specified Medications from the database identified by its pet.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @return The List containing all the Medications from the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -113,8 +113,8 @@ public class PetMedicationRestController {
     /**
      * Gets the data from all the Medications eaten by the pet between the initial and final date not including them.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the Medications eaten by the pet in the specified time
@@ -131,13 +131,13 @@ public class PetMedicationRestController {
     }
 
     /**
-     * Gets the value for the specified field of the Medication on the database.
+     * Gets the value for the specified field ofDocument the Medication on the database.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     * @param name  Name of the Medication
-     * @param field Name of the field to retrieve the value from
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
+     * @param date Date ofDocument the Medication
+     * @param name  Name ofDocument the Medication
+     * @param field Name ofDocument the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -155,11 +155,11 @@ public class PetMedicationRestController {
     /**
      * Updates the Medication's field.
      * @param accessToken oauth2 token needed to access the Database
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param date Date of the Medication
-     * @param name  Name of the Medication
-     * @param field Name of the field to update
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param date Date ofDocument the Medication
+     * @param name  Name ofDocument the Medication
+     * @param field Name ofDocument the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
      */

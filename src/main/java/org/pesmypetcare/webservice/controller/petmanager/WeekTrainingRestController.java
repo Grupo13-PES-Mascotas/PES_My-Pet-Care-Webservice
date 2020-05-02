@@ -24,11 +24,11 @@ public class WeekTrainingRestController {
     private WeekTrainingService weekTrainingService;
 
     /**
-     * Creates a weekTraining of the pet on the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Creation date of the instance
-     * @param weekTrainingEntity The parameters of weekTraining
+     * Creates a weekTraining ofDocument the pet on the database.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Creation date ofDocument the instance
+     * @param weekTrainingEntity The parameters ofDocument weekTraining
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
     public void createWeekTraining(@PathVariable String owner, @PathVariable String petName,
@@ -37,9 +37,9 @@ public class WeekTrainingRestController {
     }
 
     /**
-     * Deletes all weekTrainings of the pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * Deletes all weekTrainings ofDocument the pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -50,9 +50,9 @@ public class WeekTrainingRestController {
 
     /**
      * Deletes the weekTraining with the specified pet and date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weekTraining instance
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weekTraining instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
@@ -62,11 +62,11 @@ public class WeekTrainingRestController {
     }
 
     /**
-     * Get one weekTraining of the pet with the specified date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weekTraining instance
-     * @return The WeekTrainingEntity with the data of weekTraining
+     * Get one weekTraining ofDocument the pet with the specified date.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weekTraining instance
+     * @return The WeekTrainingEntity with the data ofDocument weekTraining
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{petDate}")
@@ -76,10 +76,10 @@ public class WeekTrainingRestController {
     }
 
     /**
-     * Gets all the specified weekTrainings of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return The list with all of the weekTrainings
+     * Gets all the specified weekTrainings ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return The list with all ofDocument the weekTrainings
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
@@ -90,8 +90,8 @@ public class WeekTrainingRestController {
 
     /**
      * Gets the data from all the weektrainings by the pet between the initial and final date not including them.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the weekTrainings in the specified time
@@ -107,10 +107,10 @@ public class WeekTrainingRestController {
     }
 
     /**
-     * Updates one of the weekTrainings specified with the date and the pet name.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @param petDate Date of the weekTraining instance
+     * Updates one ofDocument the weekTrainings specified with the date and the pet name.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @param petDate Date ofDocument the weekTraining instance
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database

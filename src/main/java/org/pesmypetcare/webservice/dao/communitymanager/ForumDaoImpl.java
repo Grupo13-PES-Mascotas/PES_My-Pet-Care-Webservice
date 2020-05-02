@@ -16,10 +16,10 @@ import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
-import org.pesmypetcare.webservice.firebaseservice.firestore.Collections;
-import org.pesmypetcare.webservice.firebaseservice.firestore.FirestoreCollection;
-import org.pesmypetcare.webservice.firebaseservice.firestore.FirestoreDocument;
-import org.pesmypetcare.webservice.firebaseservice.firestore.Path;
+import org.pesmypetcare.webservice.firebaseservice.adapters.firestore.FirestoreCollection;
+import org.pesmypetcare.webservice.firebaseservice.adapters.firestore.FirestoreDocument;
+import org.pesmypetcare.webservice.firebaseservice.builders.Collections;
+import org.pesmypetcare.webservice.firebaseservice.builders.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -63,7 +63,7 @@ public class ForumDaoImpl implements ForumDao {
     @Override
     public boolean forumNameInUse(String parentGroup, String forumName) throws DatabaseAccessException {
         try {
-            firestoreDocument.getDocumentSnapshot(Path.of(Collections.groupsNames, parentGroup, forumName));
+            firestoreDocument.getDocumentSnapshot(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
             return true;
         } catch (DocumentException e) {
             return false;
@@ -74,12 +74,11 @@ public class ForumDaoImpl implements ForumDao {
     public void createForum(String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
         forumEntity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
-        WriteBatch batch = db.batch();
+        WriteBatch batch = firestoreDocument.batch();
         String parentId = firestoreDocument
-            .getStringFromDocument(Path.of(Collections.groupsNames, parentGroup), "group");
-        firestoreDocument.createDocument("groups/" + parentId + "/forums", forumEntity, batch);
+            .getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup), "group");
         DocumentReference forumRef = firestoreDocument
-            .createDocument("groups/" + parentId + "/forums", forumEntity, batch);
+            .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
         saveForumName(parentGroup, name, forumRef.getId(), batch);
         //String creator = forumEntity.getCreator();
@@ -135,7 +134,7 @@ public class ForumDaoImpl implements ForumDao {
     public void updateName(String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
         if (forumNameInUse(parentGroup, newName)) {
-            throw new DatabaseAccessException("invalid-forum-name", "The name is already in use");
+            throw new DatabaseAccessException("invalid-request", "The name is already in use");
         }
         WriteBatch batch = db.batch();
         String forumId = getForumId(parentGroup, currentName);
@@ -215,7 +214,7 @@ public class ForumDaoImpl implements ForumDao {
     private void saveForumName(String parentGroup, String name, String id, WriteBatch batch) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("forum", id);
-        firestoreDocument.updateDocumentFields("group_names/" + parentGroup + "/forums/" + name, docData, batch);
+        firestoreDocument.createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData, batch);
     }
 
     private void saveUserAsMember(String userUid, String username, DocumentReference forumRef, WriteBatch batch) {
@@ -230,7 +229,7 @@ public class ForumDaoImpl implements ForumDao {
     private void addForumToTag(String tag, String name, WriteBatch batch) throws DatabaseAccessException {
         Map<String, Object> data = new HashMap<>();
         data.put("forums", FieldValue.arrayUnion(name));
-        String path = buildTagPath(tag);
+        String path = Path.ofDocument(Collections.tags, tag);
         try {
             firestoreDocument.getDocumentSnapshot(path);
             firestoreDocument.setDocumentFields(path, data, batch);
@@ -238,11 +237,6 @@ public class ForumDaoImpl implements ForumDao {
             firestoreDocument.updateDocumentFields(path, data, batch);
         }
     }
-
-    private String buildTagPath(String tag) {
-        return "tags/" + tag;
-    }
-
 
     private String getForumId(String groupName, String forumName) throws DatabaseAccessException, DocumentException {
         CollectionReference groupRef = groupsNames.document(groupName).collection("forums");
@@ -284,7 +278,7 @@ public class ForumDaoImpl implements ForumDao {
      *
      * @param tag The tag
      * @param forum The forum name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void deleteForumFromTag(String tag, String forum, WriteBatch batch) {
         DocumentReference tagRef = tags.document(tag);

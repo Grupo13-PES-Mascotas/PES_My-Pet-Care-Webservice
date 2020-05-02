@@ -100,7 +100,7 @@ public class FreqWashServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfFreqWashsRetrieved() throws DatabaseAccessException {
         when(freqWashDao.getAllFreqWashes(owner, petName)).thenReturn(freqWashList);
         List<Map<String, Object>> list = service.getAllFreqWash(owner, petName);
-        assertSame(freqWashList, list, "Should return a list of freqWashs entities");
+        assertSame(freqWashList, list, "Should return a list ofDocument freqWashs entities");
     }
 
     @Test
@@ -109,14 +109,14 @@ public class FreqWashServiceTest {
             doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWashes(any(String.class),
                 isA(String.class));
             service.getAllFreqWash(owner, petName);
-        }, "Should return an exception when retrieving a set of freqWashs fails");
+        }, "Should return an exception when retrieving a set ofDocument freqWashs fails");
     }
 
     @Test
     public void shouldReturnFreqWashEntityListWhenGetFreqWashsBetweenDatesRetrieved() throws DatabaseAccessException {
         when(freqWashDao.getAllFreqWashesBetween(owner, petName, date, date2)).thenReturn(freqWashList);
         List<Map<String, Object>> list = service.getAllFreqWashsBetween(owner, petName, date, date2);
-        assertSame(freqWashList, list, "Should return a list of freqWash entities");
+        assertSame(freqWashList, list, "Should return a list ofDocument freqWash entities");
     }
 
     @Test
@@ -125,7 +125,7 @@ public class FreqWashServiceTest {
             doThrow(DatabaseAccessException.class).when(freqWashDao).getAllFreqWashesBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllFreqWashsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set of freqWashs between dates fails");
+        }, "Should return an exception when retrieving a set ofDocument freqWashs between dates fails");
     }
 
     @Test

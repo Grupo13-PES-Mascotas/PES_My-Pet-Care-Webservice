@@ -11,7 +11,8 @@ import java.util.List;
  * @author Santiago Del Rey
  */
 public interface ForumService {
-    void createForum(String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
+    void createForum(String parentGroup, ForumEntity forumEntity)
+        throws DatabaseAccessException, DocumentException;
     void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException;
     ForumEntity getForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException;
     List<ForumEntity> getAllForumsFromGroup(String parentGroup) throws DatabaseAccessException;

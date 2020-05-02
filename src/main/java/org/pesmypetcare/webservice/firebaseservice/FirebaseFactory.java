@@ -34,8 +34,8 @@ public class FirebaseFactory {
     }
 
     /**
-     * Gets the instance of the factory.
-     * @return The instance of the factory
+     * Gets the instance ofDocument the factory.
+     * @return The instance ofDocument the factory
      */
     public static FirebaseFactory getInstance() {
         if (instance == null) {
@@ -84,7 +84,7 @@ public class FirebaseFactory {
 
     /**
      * Gets the Firebase options for the service.
-     * @param googleCredentials The Google credentials of the service
+     * @param googleCredentials The Google credentials ofDocument the service
      * @return The Firebase options for the service
      */
     private FirebaseOptions getFirebaseOptions(GoogleCredentials googleCredentials) {

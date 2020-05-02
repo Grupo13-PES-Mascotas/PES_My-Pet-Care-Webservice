@@ -13,7 +13,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,8 +33,7 @@ public class MedicationServiceTest {
     private static String date2;
     private static String field;
     private static int value;
-    private static String getExceptionMsg = "Should return an exception when retrieving a"
-            + "Medication fails";
+    private static String getExceptionMsg = "Should return an exception when retrieving a" + "Medication fails";
 
     @Mock
     private MedicationDao medicationDao;
@@ -59,16 +57,16 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnNothingWhenMedicationCreated() {
         service.createMedication(owner, petName, date, name, medicationEntity);
-        verify(medicationDao).createMedication(isA(String.class), isA(String.class),
-                isA(String.class), isA(String.class),
+        verify(medicationDao)
+            .createMedication(isA(String.class), isA(String.class), isA(String.class), isA(String.class),
                 isA(MedicationEntity.class));
     }
 
     @Test
     public void shouldReturnNothingWhenMedicationDeleted() {
         service.deleteByDateAndName(owner, petName, date, name);
-        verify(medicationDao).deleteByDateAndName(isA(String.class), isA(String.class),
-                isA(String.class), isA(String.class));
+        verify(medicationDao)
+            .deleteByDateAndName(isA(String.class), isA(String.class), isA(String.class), isA(String.class));
     }
 
     @Test
@@ -80,8 +78,8 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenAllMedicationDeleteFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medicationDao).deleteAllMedications(any(String.class),
-                    isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao)
+                                                  .deleteAllMedications(any(String.class), isA(String.class));
             service.deleteAllMedications(owner, petName);
         }, "Should return a database access exception when a Medication deletion fails");
     }
@@ -96,44 +94,45 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationData(any(String.class),
-                    any(String.class), isA(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao)
+                                                  .getMedicationData(any(String.class), any(String.class),
+                                                      isA(String.class), isA(String.class));
             service.getMedicationData(owner, petName, date, name);
         }, getExceptionMsg);
     }
 
     @Test
-    public void shouldReturnMedicationEntityListWhenGetSetOfMedicationsRetrieved() throws DatabaseAccessException,
-            ExecutionException, InterruptedException {
+    public void shouldReturnMedicationEntityListWhenGetSetOfMedicationsRetrieved() throws DatabaseAccessException {
         when(medicationDao.getAllMedicationData(owner, petName)).thenReturn(medicationList);
         List<Map<String, Object>> list = service.getAllMedicationData(owner, petName);
-        assertSame(medicationList, list, "Should return a list of Medication entities");
+        assertSame(medicationList, list, "Should return a list ofDocument Medication entities");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfMedicationsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationData(any(String.class),
-                    isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao)
+                                                  .getAllMedicationData(any(String.class), isA(String.class));
             service.getAllMedicationData(owner, petName);
         }, getExceptionMsg);
     }
 
     @Test
-    public void shouldReturnMedEntityListWhenGetMedsBetweenDatesRetrieved() throws DatabaseAccessException,
-            ExecutionException, InterruptedException {
+    public void shouldReturnMedEntityListWhenGetMedsBetweenDatesRetrieved() throws DatabaseAccessException {
         when(medicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(medicationList);
         List<Map<String, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);
-        assertSame(medicationList, list, "Should return a list of Medication entities between the stated dates");
+        assertSame(medicationList, list,
+            "Should return a list ofDocument Medication entities between the stated dates");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationsBetweenDatesRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medicationDao).getAllMedicationsBetween(any(String.class),
-                    isA(String.class), isA(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao)
+                                                  .getAllMedicationsBetween(any(String.class), isA(String.class),
+                                                      isA(String.class), isA(String.class));
             service.getAllMedicationsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set of Medications between dates fails");
+        }, "Should return an exception when retrieving a set ofDocument Medications between dates fails");
     }
 
     @Test
@@ -146,8 +145,9 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedicationFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medicationDao).getMedicationField(any(String.class),
-                    any(String.class), isA(String.class), isA(String.class), isA(String.class));
+            doThrow(DatabaseAccessException.class).when(medicationDao)
+                                                  .getMedicationField(any(String.class), any(String.class),
+                                                      isA(String.class), isA(String.class), isA(String.class));
             service.getMedicationField(owner, petName, date, name, field);
         }, "Should return an exception when retrieving a Medication field fails");
     }
@@ -155,8 +155,8 @@ public class MedicationServiceTest {
     @Test
     public void shouldReturnNothingWhenMedicationFieldUpdated() {
         service.updateMedicationField(owner, petName, date, name, field, value);
-        verify(medicationDao).updateMedicationField(isA(String.class), isA(String.class),
-                isA(String.class), isA(String.class), isA(String.class),
-                isA(Object.class));
+        verify(medicationDao)
+            .updateMedicationField(isA(String.class), isA(String.class), isA(String.class), isA(String.class),
+                isA(String.class), isA(Object.class));
     }
 }

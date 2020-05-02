@@ -202,11 +202,11 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     /**
-     * Saves the user as a member of the group.
+     * Saves the user as a member ofDocument the group.
      * @param userUid The user's uid
      * @param username The user's username
      * @param groupRef The group document reference
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void saveUserAsMember(String userUid, String username, DocumentReference groupRef, WriteBatch batch) {
         DocumentReference memberRef = groupRef.collection("members").document(userUid);
@@ -221,7 +221,7 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes a user membership.
      * @param userUid The user uid
      * @param groupRef The group reference
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void deleteUserFromMember(String userUid, DocumentReference groupRef, WriteBatch batch) {
         DocumentReference memberRef = groupRef.collection("members").document(userUid);
@@ -282,7 +282,7 @@ public class GroupDaoImpl implements GroupDao {
      * Saves the group name in database.
      * @param name The group name
      * @param groupId The group id to which the name belongs
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void saveGroupName(String name, String groupId, WriteBatch batch) {
         DocumentReference namesRef = groupsNames.document(name);
@@ -295,7 +295,7 @@ public class GroupDaoImpl implements GroupDao {
      * Creates an entry in the tag collection for the group.
      * @param tag The tag
      * @param groupId The group id
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void addGroupToTag(String tag, String groupId, WriteBatch batch) throws DatabaseAccessException {
@@ -314,7 +314,7 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes an entry in the tag collection for the group.
      * @param tag The tag
      * @param group The group name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void deleteGroupFromTag(String tag, String group, WriteBatch batch) {
         DocumentReference tagRef = tags.document(tag);
@@ -327,7 +327,7 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes a group from all its tags.
      *
      * @param group The group name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void deleteGroupFromAllTags(String group, WriteBatch batch) throws DatabaseAccessException {
@@ -349,7 +349,7 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes the all group from members.
      * @param id The group id
      * @param name The group name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void deleteAllMembers(String id, String name, WriteBatch batch) throws DatabaseAccessException {
@@ -375,7 +375,7 @@ public class GroupDaoImpl implements GroupDao {
      * Updates the group name in all its tags.
      * @param oldName The old name
      * @param newName The new name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void changeNameInTags(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
@@ -396,7 +396,7 @@ public class GroupDaoImpl implements GroupDao {
      * Changes the name on its subscribers collection.
      * @param oldName The old name
      * @param newName The new name
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void changeNameInSubscription(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
@@ -419,7 +419,7 @@ public class GroupDaoImpl implements GroupDao {
     /**
      * Deletes the specified collection.
      * @param collection The collection to delete
-     * @param batch The batch of writes to which it belongs
+     * @param batch The batch ofDocument writes to which it belongs
      */
     private void deleteCollection(CollectionReference collection, WriteBatch batch) {
         Iterable<DocumentReference> membersDocRefs = collection.listDocuments();

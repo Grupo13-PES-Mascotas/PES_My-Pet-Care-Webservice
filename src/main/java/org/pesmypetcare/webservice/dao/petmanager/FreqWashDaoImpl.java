@@ -36,15 +36,15 @@ public class FreqWashDaoImpl implements FreqWashDao {
 
     @Override
     public void createFreqWash(String owner, String petName, String date, FreqWashEntity freqWashEntity) {
-        DocumentReference freqWashRef = getFreqWashsRef(owner, petName).document(date);
+        DocumentReference freqWashRef = getFreqWashesRef(owner, petName).document(date);
         freqWashRef.set(freqWashEntity);
     }
 
     @Override
     public void deleteAllFreqWashes(String owner, String petName) throws DatabaseAccessException {
-        CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
+        CollectionReference freqWashesRef = getFreqWashesRef(owner, petName);
         try {
-            ApiFuture<QuerySnapshot> future = freqWashsRef.get();
+            ApiFuture<QuerySnapshot> future = freqWashesRef.get();
             List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
             for (QueryDocumentSnapshot freqWashDocument : freqWashDocuments) {
                 freqWashDocument.getReference().delete();
@@ -56,15 +56,15 @@ public class FreqWashDaoImpl implements FreqWashDao {
 
     @Override
     public void deleteFreqWashByDate(String owner, String petName, String petDate) {
-        DocumentReference freqWashRef = getFreqWashsRef(owner, petName).document(petDate);
+        DocumentReference freqWashRef = getFreqWashesRef(owner, petName).document(petDate);
         freqWashRef.delete();
     }
 
     @Override
     public FreqWashEntity getFreqWashByDate(String owner, String petName, String petDate)
         throws DatabaseAccessException {
-        CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
-        DocumentReference freqWashRef = freqWashsRef.document(petDate);
+        CollectionReference freqWashesRef = getFreqWashesRef(owner, petName);
+        DocumentReference freqWashRef = freqWashesRef.document(petDate);
         ApiFuture<DocumentSnapshot> future = freqWashRef.get();
         DocumentSnapshot mealDoc;
         try {
@@ -80,10 +80,10 @@ public class FreqWashDaoImpl implements FreqWashDao {
 
     @Override
     public List<Map<String, Object>> getAllFreqWashes(String owner, String petName) throws DatabaseAccessException {
-        CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
+        CollectionReference freqWashesRef = getFreqWashesRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
-            getAllFreqWashsOfAPetFromDatabase(freqWashsRef, externalList);
+            getAllFreqWashesOfAPetFromDatabase(freqWashesRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
@@ -93,10 +93,10 @@ public class FreqWashDaoImpl implements FreqWashDao {
     @Override
     public List<Map<String, Object>> getAllFreqWashesBetween(String owner, String petName, String initialDate,
                                                           String finalDate) throws DatabaseAccessException {
-        CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
+        CollectionReference freqWashesRef = getFreqWashesRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
-            getFreqWashsBetweenDatesFromDatabase(initialDate, finalDate, freqWashsRef, externalList);
+            getFreqWashesBetweenDatesFromDatabase(initialDate, finalDate, freqWashesRef, externalList);
         } catch (InterruptedException | ExecutionException e) {
             throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
         }
@@ -105,33 +105,33 @@ public class FreqWashDaoImpl implements FreqWashDao {
 
     @Override
     public void updateFreqWash(String owner, String petName, String petDate, Object value) {
-        CollectionReference freqWashsRef = getFreqWashsRef(owner, petName);
-        DocumentReference freqWashRef = freqWashsRef.document(petDate);
+        CollectionReference freqWashesRef = getFreqWashesRef(owner, petName);
+        DocumentReference freqWashRef = freqWashesRef.document(petDate);
         freqWashRef.update("freqWashValue", value);
     }
 
     /**
-     * Return the freqWash collection of one pet.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
-     * @return Return the freqWash collection of one pet
+     * Return the freqWash collection ofDocument one pet.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
+     * @return Return the freqWash collection ofDocument one pet
      */
-    public CollectionReference getFreqWashsRef(String owner, String petName) {
+    public CollectionReference getFreqWashesRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName)
-            .collection("freqWashs");
+            .collection("freqWashes");
     }
 
     /**
-     * Gets all the freqWashs of the collection and puts them in the externalList.
-     * @param freqWashsRef Reference to the collection of freqWashs
-     * @param externalList list that will contain all the freqWashs
+     * Gets all the freqWashes ofDocument the collection and puts them in the externalList.
+     * @param freqWashesRef Reference to the collection ofDocument freqWashes
+     * @param externalList list that will contain all the freqWashes
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getAllFreqWashsOfAPetFromDatabase(CollectionReference freqWashsRef,
+    private void getAllFreqWashesOfAPetFromDatabase(CollectionReference freqWashesRef,
                                                    List<Map<String, Object>> externalList)
         throws InterruptedException, ExecutionException {
-        ApiFuture<QuerySnapshot> future = freqWashsRef.get();
+        ApiFuture<QuerySnapshot> future = freqWashesRef.get();
         List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot freqWashDocument : freqWashDocuments) {
             Map<String, Object> internalList = new HashMap<>();
@@ -142,19 +142,19 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     /**
-     * Gets the freqWashs of the collection between the initial and final dates without taking them into account and
+     * Gets the freqWashes ofDocument the collection between the initial and final dates without taking them into account and
      * puts them in the externalList.
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param freqWashsRef Reference to the collection of freqWashs
-     * @param externalList list that will contain all the freqWashs
+     * @param freqWashesRef Reference to the collection ofDocument freqWashes
+     * @param externalList list that will contain all the freqWashes
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getFreqWashsBetweenDatesFromDatabase(String initialDate, String finalDate,
-                                                    CollectionReference freqWashsRef, List<Map<String,
+    private void getFreqWashesBetweenDatesFromDatabase(String initialDate, String finalDate,
+                                                    CollectionReference freqWashesRef, List<Map<String,
         Object>> externalList) throws InterruptedException, ExecutionException {
-        ApiFuture<QuerySnapshot> future = freqWashsRef.get();
+        ApiFuture<QuerySnapshot> future = freqWashesRef.get();
         List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot freqWashDocument : freqWashDocuments) {
             String date = freqWashDocument.getId();

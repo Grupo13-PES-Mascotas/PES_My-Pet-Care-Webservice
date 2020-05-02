@@ -24,10 +24,10 @@ public class PetMealRestController {
 
     /**
      * Creates a meal eaten by a pet on the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @param date Date the meal was eaten
-     * @param meal The meal entity that contains the attributes of the meal eaten by the pet
+     * @param meal The meal entity that contains the attributes ofDocument the meal eaten by the pet
      */
     @PostMapping("/{owner}/{petName}/{date}")
     public void createMeal(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
@@ -37,8 +37,8 @@ public class PetMealRestController {
 
     /**
      * Deletes the pet with the specified owner and name from the database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @param date Date the meal was eaten
      */
     @DeleteMapping("/{owner}/{petName}/{date}")
@@ -47,9 +47,9 @@ public class PetMealRestController {
     }
 
     /**
-     * Deletes all the meals of the specified pet from database.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * Deletes all the meals ofDocument the specified pet from database.
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -60,8 +60,8 @@ public class PetMealRestController {
 
     /**
      * Gets a meal identified by its pet and date.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @param date Date the meal was eaten
      * @return The MealEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -74,8 +74,8 @@ public class PetMealRestController {
 
     /**
      * Gets the data from all the specified meals from the database identified by its pet.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @return The List containing all the meals from the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -87,8 +87,8 @@ public class PetMealRestController {
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the meals eaten by the pet in the specified time
@@ -102,11 +102,11 @@ public class PetMealRestController {
     }
 
     /**
-     * Gets the value for the specified field of the meal on the database.
-     * @param owner Username of the owner of the pets
-     * @param petName Name of the pet
+     * Gets the value for the specified field ofDocument the meal on the database.
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param petName Name ofDocument the pet
      * @param date Date the meal was eaten
-     * @param field Name of the field to retrieve the value from
+     * @param field Name ofDocument the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -118,10 +118,10 @@ public class PetMealRestController {
 
     /**
      * Updates the meal's field.
-     * @param owner Username of the owner of the pet
-     * @param petName Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param petName Name ofDocument the pet
      * @param date Date the meal was eaten
-     * @param field Name of the field to update
+     * @param field Name ofDocument the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
      */

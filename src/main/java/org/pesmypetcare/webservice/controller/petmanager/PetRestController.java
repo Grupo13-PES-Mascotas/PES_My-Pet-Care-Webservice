@@ -24,9 +24,9 @@ public class PetRestController {
 
     /**
      * Creates a pet on the data base.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
-     * @param pet The pet entity that contains the attributes of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param name Name ofDocument the pet
+     * @param pet The pet entity that contains the attributes ofDocument the pet
      */
     @PostMapping("/{owner}/{name}")
     public void createPet(@PathVariable String owner, @PathVariable String name, @RequestBody PetEntity pet) {
@@ -35,8 +35,8 @@ public class PetRestController {
 
     /**
      * Deletes the pet with the specified owner and name from the database.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param name Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{name}")
@@ -46,8 +46,8 @@ public class PetRestController {
     }
 
     /**
-     * Deletes all the pets of the specified owner from database.
-     * @param owner Username of the owner of the pets
+     * Deletes all the pets ofDocument the specified owner from database.
+     * @param owner Username ofDocument the owner ofDocument the pets
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}")
@@ -57,9 +57,9 @@ public class PetRestController {
 
     /**
      * Gets a pet identified by its name and owner.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
-     * @return The PetEntity of the owner pet data
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param name Name ofDocument the pet
+     * @return The PetEntity ofDocument the owner pet data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{name}")
@@ -69,7 +69,7 @@ public class PetRestController {
 
     /**
      * Gets the data from all the specified pets from the database.
-     * @param owner Username of the owner of the pets
+     * @param owner Username ofDocument the owner ofDocument the pets
      * @return The List containing all the owner pets data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -79,10 +79,10 @@ public class PetRestController {
     }
 
     /**
-     * Gets the value for the specified field of the pet on the database.
-     * @param owner Username of the owner of the pets
-     * @param name Name of the pet
-     * @param field Name of the field to retrieve the value from
+     * Gets the value for the specified field ofDocument the pet on the database.
+     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param name Name ofDocument the pet
+     * @param field Name ofDocument the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -94,9 +94,9 @@ public class PetRestController {
 
     /**
      * Updates the pet's field.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
-     * @param field Name of the field to update
+     * @param owner Username ofDocument the owner ofDocument the pet
+     * @param name Name ofDocument the pet
+     * @param field Name ofDocument the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                key "value"
      */
