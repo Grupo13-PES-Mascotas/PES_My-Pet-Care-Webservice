@@ -2,6 +2,7 @@ package org.pesmypetcare.webservice.dao;
 
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface PetDao {
      * @param name Name of the pet
      * @param petEntity The pet entity that contains the attributes of the pet
      */
-    void createPet(String owner, String name, PetEntity petEntity);
+    void createPet(String owner, String name, PetEntity petEntity) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the pet with the specified owner and name from the database.
@@ -25,7 +26,7 @@ public interface PetDao {
      * @param name Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException;
+    void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes all the pets of the specified owner from database.
