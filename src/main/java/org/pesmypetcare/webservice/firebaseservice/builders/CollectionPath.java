@@ -1,0 +1,255 @@
+package org.pesmypetcare.webservice.firebaseservice.builders;
+
+import org.springframework.lang.NonNull;
+
+/**
+ * @author Santiago Del Rey
+ */
+class CollectionPath extends PathBuilder {
+    /**
+     * Builds a path to a root collection.
+     *
+     * @param collection The collection type
+     * @return The path to the collection
+     */
+    @NonNull
+    String buildRootCollectionPath(@NonNull Collections collection) {
+        switch (collection) {
+            case groups:
+                return "groups";
+            case groupsNames:
+                return "groups_names";
+            case tags:
+                return "tags";
+            case usernames:
+                return "used_usernames";
+            case users:
+                return "users";
+            default:
+                throw new EnumConstantNotPresentException(Collections.class, collection.name());
+        }
+    }
+
+    /**
+     * Builds a path to a collection stored one level down the hierarchy.
+     *
+     * @param collection The collection type
+     * @param ids The ids the builder should use, going from the most outer one to the inner one
+     * @return The path to the collection
+     */
+    @NonNull
+    StringBuilder buildTwoLevelPath(Collections collection, String[] ids) {
+        throwExceptionIfWrongNumArgs(1, ids.length);
+        switch (collection) {
+            case forums:
+                return buildPathToForumsCollection(ids[0]);
+            case forumsNames:
+                return buildPathToForumNamesCollection(ids[0]);
+            case pets:
+                return buildPathToPetsCollection(ids[0]);
+            case members:
+                return buildPathToMembersCollection(ids[0]);
+            default:
+                throw new EnumConstantNotPresentException(Collections.class, collection.name());
+        }
+    }
+
+    /**
+     * Builds a path to a collection stored two levels down in the hierarchy.
+     *
+     * @param collection The collection type
+     * @param ids The ids the builder should use, going from the most outer one to the inner one
+     * @return The path to the collection
+     */
+    @NonNull
+    StringBuilder buildThreeLevelPath(Collections collection, String[] ids) {
+        if (collection.equals(Collections.medications)) {
+            throwExceptionIfWrongNumArgs(2, ids.length);
+        }
+        switch (collection) {
+            case messages:
+                return buildPathToMessagesCollection(ids[0], ids[1]);
+            case kcals:
+                return buildPathToKcalsCollection(ids[0], ids[1]);
+            case meals:
+                return buildPathToMealsCollection(ids[0], ids[1]);
+            case weights:
+                return buildPathToWeightsCollection(ids[0], ids[1]);
+            case freqWashes:
+                return buildPathToFreqWashesCollection(ids[0], ids[1]);
+            case medications:
+                return buildPathToMedicationsCollection(ids[0], ids[1]);
+            case freqTrainings:
+                return buildPathToFreqTrainingsCollection(ids[0], ids[1]);
+            case kcalsAverages:
+                return buildPathToKcalsAveragesCollection(ids[0], ids[1]);
+            case weekTrainings:
+                return buildPathToWeekTrainingsCollection(ids[0], ids[1]);
+            default:
+                throw new EnumConstantNotPresentException(Collections.class, collection.name());
+        }
+    }
+
+    /**
+     * Builds a path to a collection ofDocument forums.
+     *
+     * @param groupId The group ID
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToForumsCollection(@NonNull String groupId) {
+        return new StringBuilder("groups/").append(groupId).append("/forums");
+    }
+
+    /**
+     * Builds a path to a collection ofDocument messages.
+     *
+     * @param groupId The group ID
+     * @param forumId The forum ID
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToMessagesCollection(@NonNull String groupId, @NonNull String forumId) {
+        return buildPathToForumsCollection(groupId).append('/').append(forumId).append("/messages");
+    }
+
+    /**
+     * Builds a path to a collection ofDocument members.
+     *
+     * @param groupId The group ID
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToMembersCollection(@NonNull String groupId) {
+        return new StringBuilder("groups/").append(groupId).append("/members");
+    }
+
+    /**
+     * Builds a path to a collection ofDocument forum names.
+     *
+     * @param groupName The group name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToForumNamesCollection(@NonNull String groupName) {
+        return new StringBuilder("groups_names/").append(groupName).append("/forums");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument pets.
+     *
+     * @param userId The user ID
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToPetsCollection(@NonNull String userId) {
+        return new StringBuilder("users/").append(userId).append("/pets");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument week training entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToWeekTrainingsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/weekTrainings");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument average kcals entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToKcalsAveragesCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/kcalsAverages");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument frequency ofDocument training entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToFreqTrainingsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/freqTrainings");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument medication entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToMedicationsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/medications");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument frequency ofDocument wash entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToFreqWashesCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/freqWashes");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument weight entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToWeightsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/weights");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument meal entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToMealsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/meals");
+    }
+
+    /**
+     * Builds the path to a collection ofDocument kcal entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToKcalsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/kcals");
+    }
+
+    /**
+     * Builds the path to a pet.
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    private static StringBuilder buildPathToPet(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPetsCollection(userId).append('/').append(petName);
+    }
+
+}
