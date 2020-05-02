@@ -127,14 +127,14 @@ public class Path {
     }
 
     /**
-     * Checks if the collection is one of the root collections
+     * Checks if the collection is one of the root collections.
      *
      * @param collection The collection
      * @return True if it is a root collection
      */
     private static boolean isRootCollection(Collections collection) {
-        return (collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
+        return collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
             .equals(Collections.tags) || collection.equals(Collections.usernames) || collection
-            .equals(Collections.users));
+            .equals(Collections.users);
     }
 }

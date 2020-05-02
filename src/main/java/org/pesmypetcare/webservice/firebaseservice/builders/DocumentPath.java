@@ -5,7 +5,7 @@ import org.springframework.lang.NonNull;
 /**
  * @author Santiago Del Rey
  */
-public class DocumentPath extends PathBuilder {
+class DocumentPath extends PathBuilder {
     private static final int[] NUMBERS = {3, 4};
 
     /**
@@ -16,7 +16,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(1, ids.length);
         switch (collection) {
             case groups:
@@ -42,7 +42,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(2, ids.length);
         switch (collection) {
             case forums:
@@ -66,7 +66,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         if (collection.equals(Collections.medications)) {
             throwExceptionIfWrongNumArgs(NUMBERS[1], ids.length);
         } else {

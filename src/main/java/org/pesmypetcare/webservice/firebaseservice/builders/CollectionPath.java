@@ -13,7 +13,7 @@ class CollectionPath extends PathBuilder {
      * @return The path to the collection
      */
     @NonNull
-    String buildRootCollectionPath(@NonNull Collections collection) {
+    public String buildRootCollectionPath(@NonNull Collections collection) {
         switch (collection) {
             case groups:
                 return "groups";
@@ -38,7 +38,7 @@ class CollectionPath extends PathBuilder {
      * @return The path to the collection
      */
     @NonNull
-    StringBuilder buildTwoLevelPath(Collections collection, String[] ids) {
+    public StringBuilder buildTwoLevelPath(Collections collection, String[] ids) {
         throwExceptionIfWrongNumArgs(1, ids.length);
         switch (collection) {
             case forums:
@@ -62,7 +62,7 @@ class CollectionPath extends PathBuilder {
      * @return The path to the collection
      */
     @NonNull
-    StringBuilder buildThreeLevelPath(Collections collection, String[] ids) {
+    public StringBuilder buildThreeLevelPath(Collections collection, String[] ids) {
         if (collection.equals(Collections.medications)) {
             throwExceptionIfWrongNumArgs(2, ids.length);
         }
