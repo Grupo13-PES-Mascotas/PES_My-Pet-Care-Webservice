@@ -48,9 +48,9 @@ public class ForumDaoImpl implements ForumDao {
     @Autowired
     private GroupDao groupDao;
     @Autowired
-    private FirestoreDocument firestoreDocument;
+    private FirestoreDocument documentAdapter;
     @Autowired
-    private FirestoreCollection firestoreCollection;
+    private FirestoreCollection collectionAdapter;
 
     public ForumDaoImpl() {
         db = FirebaseFactory.getInstance().getFirestore();
@@ -63,7 +63,7 @@ public class ForumDaoImpl implements ForumDao {
     @Override
     public boolean forumNameInUse(String parentGroup, String forumName) throws DatabaseAccessException {
         try {
-            firestoreDocument.getDocumentSnapshot(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
+            documentAdapter.getDocumentSnapshot(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
             return true;
         } catch (DocumentException e) {
             return false;
@@ -74,10 +74,10 @@ public class ForumDaoImpl implements ForumDao {
     public void createForum(String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
         forumEntity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
-        WriteBatch batch = firestoreDocument.batch();
-        String parentId = firestoreDocument
+        WriteBatch batch = documentAdapter.batch();
+        String parentId = documentAdapter
             .getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup), "group");
-        DocumentReference forumRef = firestoreDocument
+        DocumentReference forumRef = documentAdapter
             .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
         saveForumName(parentGroup, name, forumRef.getId(), batch);
@@ -95,7 +95,7 @@ public class ForumDaoImpl implements ForumDao {
     public void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
-        WriteBatch batch = db.batch();
+        WriteBatch batch = documentAdapter.batch();
         deleteForumFromAllTags(forumName, batch);
         DocumentReference forumRef = groups.document(groupId).collection("forums").document(forumId);
         batch.delete(forumRef);
@@ -208,13 +208,14 @@ public class ForumDaoImpl implements ForumDao {
      */
     private DocumentSnapshot getForumSnapshot(String parentGroup, String forumName)
         throws DatabaseAccessException, DocumentException {
-        return firestoreDocument.getDocumentSnapshot("groups/" + parentGroup + "/forums/" + forumName);
+        return documentAdapter.getDocumentSnapshot("groups/" + parentGroup + "/forums/" + forumName);
     }
 
     private void saveForumName(String parentGroup, String name, String id, WriteBatch batch) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("forum", id);
-        firestoreDocument.createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData, batch);
+        documentAdapter
+            .createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData, batch);
     }
 
     private void saveUserAsMember(String userUid, String username, DocumentReference forumRef, WriteBatch batch) {
@@ -231,21 +232,20 @@ public class ForumDaoImpl implements ForumDao {
         data.put("forums", FieldValue.arrayUnion(name));
         String path = Path.ofDocument(Collections.tags, tag);
         try {
-            firestoreDocument.getDocumentSnapshot(path);
-            firestoreDocument.setDocumentFields(path, data, batch);
+            documentAdapter.getDocumentSnapshot(path);
+            documentAdapter.setDocumentFields(path, data, batch);
         } catch (DocumentException e) {
-            firestoreDocument.updateDocumentFields(path, data, batch);
+            documentAdapter.updateDocumentFields(path, data, batch);
         }
     }
 
     private String getForumId(String groupName, String forumName) throws DatabaseAccessException, DocumentException {
-        CollectionReference groupRef = groupsNames.document(groupName).collection("forums");
-        DocumentSnapshot snapshot = getForumSnapshot(groupName, forumName);
-        return (String) snapshot.get("forum");
+        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.forumsNames, groupName, forumName),
+            "forum");
     }
 
     private void deleteForumFromAllTags(String forum, WriteBatch batch) throws DatabaseAccessException {
-        Query query = tags.whereArrayContains("forums", forum);
+        Query query = collectionAdapter.getDocumentsWhereArrayContains(Path.ofCollection(Collections.tags), "forums", forum);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             Map<String, Object> data = new HashMap<>();
