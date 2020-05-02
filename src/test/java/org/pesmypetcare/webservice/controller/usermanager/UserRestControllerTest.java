@@ -53,11 +53,11 @@ class UserRestControllerTest {
     }
 
     @Test
-    public void deleteAccountShouldReturnStatusOk() throws Exception {
+    public void deleteAccountShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteById(anyString());
         mockMvc.perform(delete(URL)
             .header(token, myToken))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -69,12 +69,12 @@ class UserRestControllerTest {
     }
 
     @Test
-    public void updateFieldShouldReturnStatusOk() throws Exception {
+    public void updateFieldShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
         mockMvc.perform(put(URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonUpdate)
             .header(token, myToken))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 }

@@ -3,13 +3,13 @@ package org.pesmypetcare.webservice.dao;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import org.pesmypetcare.webservice.entity.KcalAverageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

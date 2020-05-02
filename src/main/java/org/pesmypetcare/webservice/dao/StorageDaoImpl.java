@@ -6,8 +6,8 @@ import com.google.cloud.storage.Bucket;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
 import org.pesmypetcare.webservice.form.StorageForm;
+import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

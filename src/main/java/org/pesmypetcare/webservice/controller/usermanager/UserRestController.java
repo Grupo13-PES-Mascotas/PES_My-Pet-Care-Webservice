@@ -5,6 +5,7 @@ import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -35,6 +37,7 @@ public class UserRestController {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @DeleteMapping("/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAccount(@RequestHeader("token") String token, @PathVariable String username,
                               @RequestParam(required = false) boolean db)
         throws DatabaseAccessException, FirebaseAuthException {
@@ -67,6 +70,7 @@ public class UserRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @PutMapping("/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateField(@RequestHeader("token") String token, @PathVariable String username,
                             @RequestBody Map<String, String> value)
         throws FirebaseAuthException, DatabaseAccessException {
