@@ -103,7 +103,7 @@ class PathTest {
     public void buildForumNamesCollectionPath() {
         String path = Path.ofCollection(Collections.forumsNames, groupName);
         assertEquals("groups_names/" + groupName + "/forums", path,
-            "Should return the path to the collection ofDocument forum names.");
+            "Should return the path to the collectionof forum names.");
     }
 
     @Test
@@ -190,14 +190,14 @@ class PathTest {
     public void buildFrequencyOfWashesEntryPath() {
         String path = Path.ofDocument(Collections.freqWashes, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes/" + date, path,
-            "Should return the path to the frequency ofDocument washes entry.");
+            "Should return the path to the frequencyof washes entry.");
     }
 
     @Test
     public void buildFrequencyOfWashesEntriesCollectionPath() {
         String path = Path.ofCollection(Collections.freqWashes, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes", path,
-            "Should return the path to the frequency ofDocument washes entries collection.");
+            "Should return the path to the frequencyof washes entries collection.");
     }
 
     @Test
@@ -219,14 +219,14 @@ class PathTest {
     public void buildFrequencyOfTrainingEntryPath() {
         String path = Path.ofDocument(Collections.freqTrainings, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings/" + date, path,
-            "Should return the path to the frequency ofDocument training entry.");
+            "Should return the path to the frequencyof training entry.");
     }
 
     @Test
     public void buildFrequencyOfTrainingEntriesCollectionPath() {
         String path = Path.ofCollection(Collections.freqTrainings, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings", path,
-            "Should return the path to the frequency ofDocument training entries collection.");
+            "Should return the path to the frequencyof training entries collection.");
     }
 
     @Test
@@ -260,7 +260,7 @@ class PathTest {
     @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
         assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums), "Should fail"
-            + " when the number ofDocument arguments passed is not the same as the required for the requested "
+            + " when the numberof arguments passed is not the same as the required for the requested "
             + "document.");
     }
 
@@ -274,6 +274,6 @@ class PathTest {
     public void shouldFailIfAnyOfTheIdsIsNull() {
         assertThrows(IllegalArgumentException.class,
             () -> Path.ofDocument(Collections.messages, groupId, null, messageId),
-            "Should fail when the any ofDocument the ids passed is null.");
+            "Should fail when the anyof the ids passed is null.");
     }
 }
