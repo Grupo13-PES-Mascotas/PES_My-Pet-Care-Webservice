@@ -5,16 +5,16 @@ package org.pesmypetcare.webservice.firebaseservice.builders;
  */
 public abstract class PathBuilder {
     /**
-     * Throws a WrongNumberArgsException if the number ofDocument arguments does not match the expected.
+     * Throws a WrongNumberArgsException if the number of arguments does not match the expected.
      *
-     * @param numExpected The number ofDocument argument expected
-     * @param numArgs The number ofDocument arguments received
+     * @param numExpected The number of argument expected
+     * @param numArgs The number of arguments received
      */
     protected void throwExceptionIfWrongNumArgs(int numExpected, int numArgs) {
         if (numExpected != numArgs && (numExpected - 1) != numArgs) {
             throw new IllegalArgumentException(
-                "Wrong number ofDocument arguments. Expected " + (numExpected - 1) + " or " + numExpected + " arguments "
-                    + "instead" + " ofDocument " + numArgs);
+                "Wrong number of arguments. Expected " + (numExpected - 1) + " or " + numExpected
+                    + " arguments instead of " + numArgs);
         }
     }
 }

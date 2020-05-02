@@ -218,7 +218,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -232,7 +232,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -242,11 +242,11 @@ public class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a frequency ofDocument training entry.
+     * Builds the path to a frequency of training entry.
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -260,7 +260,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @param medicationName The medication name
      * @return The path
      */
@@ -271,11 +271,11 @@ public class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a frequency ofDocument wash entry.
+     * Builds the path to a frequency of wash entry.
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -289,7 +289,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -303,7 +303,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -317,7 +317,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull

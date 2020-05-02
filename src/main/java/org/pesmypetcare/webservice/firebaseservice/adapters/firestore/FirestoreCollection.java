@@ -27,10 +27,10 @@ public interface FirestoreCollection {
     CollectionReference getCollectionReference(@NonNull String path);
 
     /**
-     * The id ofDocument a collection refers to the last component ofDocument path pointing to a collection.
+     * The id of a collection refers to the last component of the path pointing to a collection.
      *
      * @param path A slash-separated path to a collection
-     * @return The ID ofDocument the collection
+     * @return The ID of the collection
      */
     @NonNull
     String getCollectionId(@NonNull String path);
@@ -45,13 +45,13 @@ public interface FirestoreCollection {
     DocumentReference getCollectionParent(@NonNull String path);
 
     /**
-     * Retrieves the list ofDocument documents in this collection.
+     * Retrieves the list of documents in this collection.
      * The document references returned may include references to "missing documents", i.e. document locations that have
      * no document present but which contain subcollections with documents. Attempting to read such a document reference
      * (e.g. via `get()` or `onSnapshot()`) will return a `DocumentSnapshot` whose `exists()` method returns false.
      *
      * @param path A slash-separated path to a collection
-     * @return The list ofDocument documents in this collection
+     * @return The list of documents in this collection
      */
     @NonNull
     Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
@@ -60,7 +60,7 @@ public interface FirestoreCollection {
      * Creates and returns a new Query that includes all documents in the database that are contained in a
      * collection or subcollection with the given {@code collectionId}.
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                    the last segment ofDocument its path will be included. Cannot contain a slash.
+     *                    the last segment of its path will be included. Cannot contain a slash.
      * @return The created Query
      */
     Query getCollectionGroup(@NonNull String collectionId);
@@ -78,7 +78,7 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field The name ofDocument the field to compare
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -91,7 +91,7 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param fieldPath The name ofDocument the field to compare
+     * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -104,7 +104,7 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field The name ofDocument the field to compare
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */

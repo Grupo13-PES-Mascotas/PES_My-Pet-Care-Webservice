@@ -21,9 +21,11 @@ import java.util.Map;
 public interface FirestoreDocument {
     /**
      * Gets a Firestore WriteBatch instance that can be used to combine multiple writes.
+     *
      * @return A WriteBatch that operates on this Firestore client
      */
     WriteBatch batch();
+
     /**
      * Gets a DocumentReference that refers to the document at the specified path.
      *
@@ -34,10 +36,10 @@ public interface FirestoreDocument {
     DocumentReference getDocumentReference(@NonNull String path);
 
     /**
-     * The id ofDocument a document refers to the last component ofDocument path pointing to a document.
+     * The id of a document refers to the last component of the path pointing to a document.
      *
      * @param path A slash-separated path to a document
-     * @return The ID ofDocument the document
+     * @return The ID of the document
      */
     @NonNull
     String getDocumentId(@NonNull String path);
@@ -73,18 +75,21 @@ public interface FirestoreDocument {
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
-     *  @param path   A slash-separated path to a document
+     *
+     * @param path A slash-separated path to a document
      * @param fields A map ofDocument the fields and values for the document
-     * @param batch  The batch where to write
+     * @param batch The batch where to write
      * @return The document reference ofDocument the created document
      */
-    DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
+    DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields,
+                                     @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location with an auto-generated id.
      * It fails the write if the document exists.
-     *  @param path  A slash-separated path to a document
-     * @param pojo  A map ofDocument the fields and values for the document
+     *
+     * @param path A slash-separated path to a document
+     * @param pojo A map ofDocument the fields and values for the document
      * @param batch The batch where to write
      * @return The document reference ofDocument the created document
      */
@@ -92,33 +97,35 @@ public interface FirestoreDocument {
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *  @param collectionPath A slash-separated path to a collection
-     * @param id             The ID the document will have
-     * @param fields         A map ofDocument the fields and values for the document
-     * @param batch          The batch where to write
+     *
+     * @param collectionPath A slash-separated path to a collection
+     * @param id The ID the document will have
+     * @param fields A map ofDocument the fields and values for the document
+     * @param batch The batch where to write
      * @return The document reference ofDocument the created document
      */
-    DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Map<String, Object> fields,
-                              @NonNull WriteBatch batch);
+    DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                           @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Creates a new Document at the paths's location. It fails the write if the document exists.
-     *  @param collectionPath A slash-separated path to a collection
-     * @param id             The ID the document will have
-     * @param pojo           A map ofDocument the fields and values for the document
-     * @param batch          The batch where to write
+     *
+     * @param collectionPath A slash-separated path to a collection
+     * @param id The ID the document will have
+     * @param pojo A map ofDocument the fields and values for the document
+     * @param batch The batch where to write
      * @return The document reference ofDocument the created document
      */
     DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
-                              @NonNull WriteBatch batch);
+                                           @NonNull WriteBatch batch);
 
     /**
      * Overwrites the document referred to by this path.
      * If the document doesn't exist yet, it will be created. If a document already exists, it will be overwritten.
      *
-     * @param path   A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param fields A map ofDocument the fields and values for the document
-     * @param batch  The batch where to write
+     * @param batch The batch where to write
      */
     void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
@@ -126,8 +133,8 @@ public interface FirestoreDocument {
      * Overwrites the document referred to by this path.
      * If the document doesn't exist yet, it will be created. If a document already exists, it will be overwritten.
      *
-     * @param path  A slash-separated path to a document
-     * @param pojo  A map ofDocument the fields and values for the document
+     * @param path A slash-separated path to a document
+     * @param pojo A map ofDocument the fields and values for the document
      * @param batch The batch where to write
      */
     void setDocumentFields(@NonNull String path, @NonNull Object pojo, @NonNull WriteBatch batch);
@@ -136,16 +143,16 @@ public interface FirestoreDocument {
      * Updates fields in the document referred to by this DocumentReference.
      * If the document doesn't exist yet, the update will fail.
      *
-     * @param path   A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param fields A map ofDocument the fields and values for the document
-     * @param batch  The batch where to write
+     * @param batch The batch where to write
      */
     void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch);
 
     /**
      * Deletes the document referred to by this path. If the document has inner collections they will be also deleted.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param batch The batch where to write
      */
     void deleteDocument(@NonNull String path, @NonNull WriteBatch batch);
@@ -153,7 +160,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value at the field or null if the field doesn't exist.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value at the given field or null
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -165,7 +172,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value at the field or null if the field doesn't exist.
      *
-     * @param path      A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param fieldPath The path to the field
      * @return The value at the given field or null
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -178,7 +185,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a double.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -192,7 +199,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a Date.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -206,7 +213,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a boolean.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -220,7 +227,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a GeoPoint.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -234,7 +241,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a String.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -248,7 +255,7 @@ public interface FirestoreDocument {
     /**
      * Returns the value ofDocument the field as a Timestamp.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return The value ofDocument the field
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -274,7 +281,7 @@ public interface FirestoreDocument {
     /**
      * Returns the contents ofDocument the document converted to a POJO.
      *
-     * @param path      A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param valueType The Java class to create
      * @return The contents ofDocument the document in an object ofDocument type T
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -287,7 +294,7 @@ public interface FirestoreDocument {
     /**
      * Returns whether or not the field exists in the document.
      *
-     * @param path  A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param field The path to the field
      * @return True if the field exists
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -299,7 +306,7 @@ public interface FirestoreDocument {
     /**
      * Returns whether or not the field exists in the document.
      *
-     * @param path      A slash-separated path to a document
+     * @param path A slash-separated path to a document
      * @param fieldPath The path to the field
      * @return True if the field exists
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails

@@ -115,17 +115,26 @@ public class Path {
      * @throws IllegalArgumentException When the array is empty or any ofDocument its elements is null or empty
      */
     private static void checkProvidedIds(Collections collection, @NonNull String[] ids) {
-        if (ids.length == 0) {
-            if (!(collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
-                .equals(Collections.tags) || collection.equals(Collections.usernames) || collection.equals(Collections.users))) {
-                throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
-            }
+        if (ids.length == 0 && !isRootCollection(collection)) {
+            throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
         }
         for (int i = 0; i < ids.length; ++i) {
             if (ids[i] == null || ids[i].isEmpty()) {
                 throw new IllegalArgumentException(
-                    "Invalid ID at argument " + (i + 1) + ". IDs must not " + "be null or empty.");
+                    "Invalid ID at argument " + (i + 1) + ". IDs must not be null or empty.");
             }
         }
+    }
+
+    /**
+     * Checks if the collection is one of the root collections
+     *
+     * @param collection The collection
+     * @return True if it is a root collection
+     */
+    private static boolean isRootCollection(Collections collection) {
+        return (collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
+            .equals(Collections.tags) || collection.equals(Collections.usernames) || collection
+            .equals(Collections.users));
     }
 }

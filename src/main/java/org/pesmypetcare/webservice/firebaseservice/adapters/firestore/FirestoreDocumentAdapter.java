@@ -77,7 +77,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields, @NonNull WriteBatch batch) {
+    public DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields,
+                                            @NonNull WriteBatch batch) {
         DocumentReference ref = db.collection(path).document();
         batch.create(ref, fields);
         return ref;
@@ -99,8 +100,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id, @NonNull Object pojo,
-                                                  @NonNull WriteBatch batch) {
+    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                                  @NonNull Object pojo, @NonNull WriteBatch batch) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         batch.create(ref, pojo);
         return ref;

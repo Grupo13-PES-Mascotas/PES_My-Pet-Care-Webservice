@@ -91,7 +91,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds a path to a collection ofDocument forums.
+     * Builds a path to a collection of forums.
      *
      * @param groupId The group ID
      * @return The path
@@ -102,7 +102,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds a path to a collection ofDocument messages.
+     * Builds a path to a collection of messages.
      *
      * @param groupId The group ID
      * @param forumId The forum ID
@@ -114,7 +114,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds a path to a collection ofDocument members.
+     * Builds a path to a collection of members.
      *
      * @param groupId The group ID
      * @return The path
@@ -125,7 +125,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds a path to a collection ofDocument forum names.
+     * Builds a path to a collection of forum names.
      *
      * @param groupName The group name
      * @return The path
@@ -136,7 +136,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument pets.
+     * Builds the path to a collection of pets.
      *
      * @param userId The user ID
      * @return The path
@@ -147,7 +147,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument week training entries.
+     * Builds the path to a collection of week training entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -159,7 +159,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument average kcals entries.
+     * Builds the path to a collection of average kcals entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -171,7 +171,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument frequency ofDocument training entries.
+     * Builds the path to a collection of frequency of training entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -183,7 +183,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument medication entries.
+     * Builds the path to a collection of medication entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -195,7 +195,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument frequency ofDocument wash entries.
+     * Builds the path to a collection of frequency of wash entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -207,7 +207,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument weight entries.
+     * Builds the path to a collection of weight entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -219,7 +219,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument meal entries.
+     * Builds the path to a collection of meal entries.
      *
      * @param userId The user ID
      * @param petName The pet name
@@ -231,7 +231,7 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection ofDocument kcal entries.
+     * Builds the path to a collection of kcal entries.
      *
      * @param userId The user ID
      * @param petName The pet name

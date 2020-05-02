@@ -260,7 +260,8 @@ class PathTest {
     @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
         assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums), "Should fail"
-            + " when the number ofDocument arguments passed is not the same as the required for the requested document.");
+            + " when the number ofDocument arguments passed is not the same as the required for the requested "
+            + "document.");
     }
 
     @Test
@@ -271,7 +272,8 @@ class PathTest {
 
     @Test
     public void shouldFailIfAnyOfTheIdsIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.messages, groupId, null, messageId),
+        assertThrows(IllegalArgumentException.class,
+            () -> Path.ofDocument(Collections.messages, groupId, null, messageId),
             "Should fail when the any ofDocument the ids passed is null.");
     }
 }
