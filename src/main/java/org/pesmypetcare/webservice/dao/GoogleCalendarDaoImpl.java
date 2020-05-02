@@ -4,7 +4,7 @@ import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
-import org.pesmypetcare.webservice.firebaseservice.CalendarServiceFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.CalendarServiceFactory;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;

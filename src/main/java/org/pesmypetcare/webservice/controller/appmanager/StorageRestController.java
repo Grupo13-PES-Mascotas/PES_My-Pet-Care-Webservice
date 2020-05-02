@@ -5,6 +5,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -35,6 +37,7 @@ public class StorageRestController {
      * @param image The image entity containing the image, its path and name
      */
     @PutMapping("/image")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void saveImage(@RequestHeader(TOKEN) String token, @RequestBody ImageEntity image) {
         storage.saveImage(image);
     }
@@ -46,6 +49,7 @@ public class StorageRestController {
      * @param image The image entity containing the image, its path and name
      */
     @PutMapping("/image/{user}/pets")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void savePetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                              @RequestBody ImageEntity image) {
         storage.savePetImage(user, image);
@@ -105,6 +109,7 @@ public class StorageRestController {
      * @param storageForm A form with the image name and its path
      */
     @DeleteMapping("/image")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(@RequestHeader(TOKEN) String token, @RequestBody StorageForm storageForm) {
         storage.deleteImage(storageForm);
     }

@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice;
+package org.pesmypetcare.webservice.thirdpartyservices;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;

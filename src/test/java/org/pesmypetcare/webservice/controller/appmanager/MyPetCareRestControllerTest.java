@@ -52,12 +52,12 @@ class MyPetCareRestControllerTest {
     }
 
     @Test
-    public void signUpShouldReturnStatusOK() throws Exception {
+    public void signUpShouldReturnStatusCreated() throws Exception {
         willDoNothing().given(service).createUserAuth(isA(UserEntity.class), isA(String.class));
         mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonUser1).param(key, password))
-            .andExpect(status().isOk());
+            .andExpect(status().isCreated());
     }
 
     @Test

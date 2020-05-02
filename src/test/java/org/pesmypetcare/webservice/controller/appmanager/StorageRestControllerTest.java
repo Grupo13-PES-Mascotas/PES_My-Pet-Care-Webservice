@@ -73,23 +73,23 @@ class StorageRestControllerTest {
     }
 
     @Test
-    public void saveImage() throws Exception {
+    public void saveImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).saveImage(any(ImageEntity.class));
         mockMvc.perform(put(BASE_URL)
             .header(TOKEN, myToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test
-    public void savePetImage() throws Exception {
+    public void savePetImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).savePetImage(anyString(), any(ImageEntity.class));
         mockMvc.perform(put(BASE_URL + PETS_PICTURES_LOCATION)
             .header(TOKEN, myToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -140,13 +140,13 @@ class StorageRestControllerTest {
     }
 
     @Test
-    public void deleteImage() throws Exception {
+    public void deleteImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteImage(any(StorageForm.class));
         mockMvc.perform(delete(BASE_URL)
             .header(TOKEN, myToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(form))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     private String getContentAsString(MvcResult response) throws UnsupportedEncodingException {
