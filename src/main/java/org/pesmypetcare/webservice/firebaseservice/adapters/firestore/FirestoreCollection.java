@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.firestore;
+package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
@@ -13,6 +13,11 @@ import org.springframework.lang.Nullable;
  */
 public interface FirestoreCollection {
     /**
+     * Gets a Firestore WriteBatch instance that can be used to combine multiple writes.
+     * @return A WriteBatch that operates on this Firestore client
+     */
+    WriteBatch batch();
+    /**
      * Gets a CollectionReference that refers to the collection at the specified path.
      *
      * @param path A slash-separated path to a collection
@@ -22,7 +27,7 @@ public interface FirestoreCollection {
     CollectionReference getCollectionReference(@NonNull String path);
 
     /**
-     * The id of a collection refers to the last component of path pointing to a collection.
+     * The id of a collection refers to the last component of the path pointing to a collection.
      *
      * @param path A slash-separated path to a collection
      * @return The ID of the collection
