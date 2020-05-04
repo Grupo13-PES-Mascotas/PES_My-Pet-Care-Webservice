@@ -77,7 +77,7 @@ public interface FirestoreCollection {
      * collection or subcollection with the given {@code collectionId}.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @return The created Query
      */
     Query getCollectionGroup(@NonNull String collectionId);
@@ -85,7 +85,7 @@ public interface FirestoreCollection {
     /**
      * Deletes the Collection referred to by this path.
      *
-     * @param path  A slash-separated path to a collection
+     * @param path A slash-separated path to a collection
      * @param batch The batch where to write
      */
     void deleteCollection(@NonNull String path, @NonNull WriteBatch batch);
@@ -95,8 +95,8 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field          The name of the field to compare
-     * @param value          The value for comparison
+     * @param field The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -107,8 +107,8 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param fieldPath      The name of the field to compare
-     * @param value          The value for comparison
+     * @param fieldPath The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -120,8 +120,8 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field          The name of the field to compare
-     * @param value          The value for comparison
+     * @param field The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -132,8 +132,8 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param fieldPath      The name of the field to compare
-     * @param value          The value for comparison
+     * @param fieldPath The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -145,9 +145,9 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
-     * @param field        The name of the field to compare
-     * @param value        The value for comparison
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param field The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -159,9 +159,9 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
-     * @param fieldPath    The name of the field to compare
-     * @param value        The value for comparison
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param fieldPath The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -173,9 +173,9 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
-     * @param field        The name of the field to compare
-     * @param value        The value for comparison
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param field The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
@@ -187,9 +187,9 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
-     * @param fieldPath    The name of the field to compare
-     * @param value        The value for comparison
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param fieldPath The name of the field to compare
+     * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
