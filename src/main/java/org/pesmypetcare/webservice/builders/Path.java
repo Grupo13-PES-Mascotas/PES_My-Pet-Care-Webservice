@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.builders;
+package org.pesmypetcare.webservice.builders;
 
 import org.springframework.lang.NonNull;
 

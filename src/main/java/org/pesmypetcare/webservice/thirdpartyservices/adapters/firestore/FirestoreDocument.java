@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
+package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;

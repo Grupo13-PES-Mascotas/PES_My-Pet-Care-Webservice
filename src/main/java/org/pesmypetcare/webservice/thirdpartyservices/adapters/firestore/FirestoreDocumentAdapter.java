@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
+package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
@@ -11,7 +11,7 @@ import com.google.cloud.firestore.GeoPoint;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
