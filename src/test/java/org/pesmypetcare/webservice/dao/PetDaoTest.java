@@ -34,7 +34,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
     private static final List<Map<String, Object>> PET_LIST = new ArrayList<>();
-    private static final List<DocumentSnapshot> petSnapshotList = new ArrayList<>();
+    private static final List<DocumentSnapshot> PET_SNAPSHOT_LIST = new ArrayList<>();
     private static final PetEntity PET_ENTITY = new PetEntity();
     private static final String OWNER = "OwnerUsername";
     private static final String OWNER_ID = "OwnerId";
@@ -87,7 +87,7 @@ class PetDaoTest {
     public void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(petSnapshotList);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
         given(batch.commit()).willReturn(null);
 
         petDao.deleteAllPets(OWNER);
@@ -110,7 +110,7 @@ class PetDaoTest {
     public void shouldReturnAllPetsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(petSnapshotList);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
         List<Map<String, Object>> list = petDao.getAllPetsData(OWNER);
 
@@ -154,7 +154,7 @@ class PetDaoTest {
     public void shouldGetFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(petSnapshotList);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
         List<Map<String, Object>> list = petDao.getFieldCollection(OWNER, PET_NAME, COLLECTION_FIELD);
 
@@ -166,7 +166,7 @@ class PetDaoTest {
         throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(petSnapshotList);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
         List<Map<String, Object>> list = petDao.getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, COLLECTION_FIELD,
             KEY_1, KEY_2);

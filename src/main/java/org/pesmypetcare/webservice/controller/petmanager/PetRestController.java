@@ -198,7 +198,7 @@ public class PetRestController {
                                         @PathVariable String field, @PathVariable String key,
                                      @RequestBody Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        PetEntity.checkKeyAndBody(field,key,body);
+        PetEntity.checkKeyAndBody(field, key, body);
         petService.addFieldCollectionElement(owner, name, field, key, body);
     }
 
