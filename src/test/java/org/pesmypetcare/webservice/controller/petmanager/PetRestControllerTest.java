@@ -150,7 +150,8 @@ class PetRestControllerTest {
     public void addFieldCollectionElementShouldReturnStatusCreated() throws Exception {
         willDoNothing().given(service).addFieldCollectionElement(anyString(), anyString(), anyString(), anyString(),
             any(Map.class));
-        mockMvc.perform(post(urlBase + "/" + owner + "/" + name + "/collection/" + collectionField + "/" + key1)
+        mockMvc.perform(post(urlBase + "/" + owner + "/" + name + "/collection/" + collectionField + "/"
+            + key1)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonCollectionField))
             .andExpect(status().isCreated());
@@ -167,7 +168,8 @@ class PetRestControllerTest {
     public void updateFieldCollectionElementShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateFieldCollectionElement(anyString(), anyString(), anyString(),
             anyString(), any(Map.class));
-        mockMvc.perform(put(urlBase + "/" + owner + "/" + name + "/collection/" + collectionField + "/" + key1)
+        mockMvc.perform(put(urlBase + "/" + owner + "/" + name + "/collection/" + collectionField + "/"
+            + key1)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonCollectionField))
             .andExpect(status().isNoContent());

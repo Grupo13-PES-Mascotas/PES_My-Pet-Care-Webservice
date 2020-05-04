@@ -84,7 +84,8 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException, DocumentException {
+    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved()
+        throws DatabaseAccessException, DocumentException {
         when(petDao.getAllPetsData(owner)).thenReturn(petList);
         List<Map<String, Object>> list = service.getAllPetsData(owner);
         assertSame(petList, list, "Should return a list of pet entities");
@@ -143,7 +144,8 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenFieldCollectionElementAdded() throws DatabaseAccessException, DocumentException {
+    public void shouldReturnNothingWhenFieldCollectionElementAdded()
+        throws DatabaseAccessException, DocumentException {
         service.addFieldCollectionElement(owner, name, field, key1, collectionElementBody);
         verify(petDao).addFieldCollectionElement(same(owner), same(name), same(field), same(key1),
             same(collectionElementBody));

@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.builders;
 
-import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.lang.NonNull;
 
 /**
@@ -123,7 +122,7 @@ public class Path {
      */
     public static Collections collectionOfField(String collectionName) {
         for (Collections c : Collections.values()) {
-            if (c.name().equals(collectionName)){
+            if (c.name().equals(collectionName)) {
                 return c;
             }
         }

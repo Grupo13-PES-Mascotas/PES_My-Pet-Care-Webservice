@@ -3,18 +3,9 @@ package org.pesmypetcare.webservice.service;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Marc Simó
@@ -87,7 +78,8 @@ public interface PetService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    void updateSimpleField(String owner, String name, String field, Object value) throws DatabaseAccessException, DocumentException;
+    void updateSimpleField(String owner, String name, String field, Object value)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the map for the specified field of the pet on the database.
@@ -97,7 +89,8 @@ public interface PetService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    void deleteFieldCollection(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
+    void deleteFieldCollection(String owner, String name, String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets the map for the specified field of the pet on the database.
@@ -108,7 +101,8 @@ public interface PetService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, Object>> getFieldCollection(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
+    List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets all the elements between the keys from the map for the specified field.
@@ -121,8 +115,9 @@ public interface PetService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String owner, String name, String field, String key1,
-                                                                    String key2) throws DatabaseAccessException, DocumentException;
+    List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String owner, String name, String field,
+                                                                    String key1, String key2)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Adds an element to the map for the specified field of the pet on the database.
