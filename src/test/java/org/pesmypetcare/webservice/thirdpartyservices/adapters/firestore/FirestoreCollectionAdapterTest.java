@@ -1,11 +1,13 @@
 package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
@@ -57,6 +60,8 @@ class FirestoreCollectionAdapterTest {
     private Iterable<CollectionReference> collectionReferences;
     @Mock
     private Query query;
+    @Mock
+    private ApiFuture<QuerySnapshot> apiFuture;
 
     @InjectMocks
     private FirestoreCollection collectionAdapter = new FirestoreCollectionAdapter();
@@ -137,37 +142,44 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getDocumentsWhereFieldEqualToValue() {
             given(collectionReference.whereEqualTo(same(field), same(value))).willReturn(query);
-            Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, field, value);
-            assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where " + field + " is equals to "
-                             + value);
+            given(query.get()).willReturn(apiFuture);
+            ApiFuture<QuerySnapshot> result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, field, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from " + collectionPath + " where " + field + " is equals to " + value);
         }
 
         @Test
         public void getDocumentsWhereFieldFromFieldPathEqualToValue() {
             given(collectionReference.whereEqualTo(same(fieldPath), same(value))).willReturn(query);
-            Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, fieldPath, value);
-            assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where " + field + " in " + fieldPath
-                             + " is equals to " + value);
+            given(query.get()).willReturn(apiFuture);
+            ApiFuture<QuerySnapshot> result = collectionAdapter
+                .getDocumentsWhereEqualTo(collectionPath, fieldPath, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from " + collectionPath + " where " + field + " in " + fieldPath
+                    + " is equals to " + value);
         }
 
         @Test
         public void getDocumentsWhereArrayContainsValue() {
             given(collectionReference.whereArrayContains(same(array), same(value))).willReturn(query);
-            Query result = collectionAdapter.getDocumentsWhereArrayContains(collectionPath, array, value);
-            assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where the array " + array
-                             + " contains " + value);
+            given(query.get()).willReturn(apiFuture);
+
+            ApiFuture<QuerySnapshot> result = collectionAdapter
+                .getDocumentsWhereArrayContains(collectionPath, array, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from " + collectionPath + " where the array " + array + " contains "
+                    + value);
         }
 
         @Test
         public void getDocumentsWhereArrayFromFieldPathContainsValue() {
             given(collectionReference.whereArrayContains(same(arrayPath), same(value))).willReturn(query);
-            Query result = collectionAdapter.getDocumentsWhereArrayContains(collectionPath, arrayPath, value);
-            assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where the array" + array + " in "
-                             + arrayPath + " contains " + value);
+            given(query.get()).willReturn(apiFuture);
+            ApiFuture<QuerySnapshot> result = collectionAdapter
+                .getDocumentsWhereArrayContains(collectionPath, arrayPath, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from " + collectionPath + " where the array" + array + " in " + arrayPath
+                    + " contains " + value);
         }
     }
 
@@ -188,39 +200,55 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getCollectionGroupDocumentsWhereFieldEqualToValue() {
             given(query.whereEqualTo(same(field), same(value))).willReturn(query);
-            Query result = collectionAdapter.getCollectionGroupDocumentsWhereEqualTo(collectionGroup, field, value);
-            assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " where "
-                             + field + " is equals to " + value);
+            given(query.get()).willReturn(apiFuture);
+
+            ApiFuture<QuerySnapshot> result = collectionAdapter
+                .getCollectionGroupDocumentsWhereEqualTo(collectionGroup, field, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from the collections whose id is " + collectionGroup + " where " + field
+                    + " is equals to " + value);
         }
 
         @Test
         public void getCollectionGroupDocumentsWhereFieldFromFieldPathEqualToValue() {
             given(query.whereEqualTo(same(fieldPath), same(value))).willReturn(query);
-            Query result = collectionAdapter.getCollectionGroupDocumentsWhereEqualTo(collectionGroup, fieldPath, value);
-            assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " where "
-                             + field + " in " + fieldPath + " is equals to " + value);
+            given(query.get()).willReturn(apiFuture);
+
+            ApiFuture<QuerySnapshot> result = collectionAdapter
+                .getCollectionGroupDocumentsWhereEqualTo(collectionGroup, fieldPath, value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from the collections whose id is " + collectionGroup + " where " + field
+                    + " in " + fieldPath + " is equals to " + value);
         }
 
         @Test
         public void getCollectionGroupDocumentsWhereArrayContainsValue() {
             given(query.whereArrayContains(same(array), same(value))).willReturn(query);
-            Query result = collectionAdapter
+            given(query.get()).willReturn(apiFuture);
+
+            ApiFuture<QuerySnapshot> result = collectionAdapter
                 .getCollectionGroupDocumentsWhereArrayContains(collectionGroup, array, value);
-            assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup + " and the "
-                             + "array" + array + " contains " + value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from the collections whose id is " + collectionGroup + " and the "
+                    + "array" + array + " contains " + value);
         }
 
         @Test
         public void getCollectionGroupDocumentsWhereArrayFromFieldPathContainsValue() {
             given(query.whereArrayContains(same(arrayPath), same(value))).willReturn(query);
-            Query result = collectionAdapter
+            given(query.get()).willReturn(apiFuture);
+
+            ApiFuture<QuerySnapshot> result = collectionAdapter
                 .getCollectionGroupDocumentsWhereArrayContains(collectionGroup, arrayPath, value);
-            assertEquals(query, result,
-                         "Should return all documents from the collections whose id is " + collectionGroup
-                             + " and have the " + "array" + array + " in " + arrayPath + " which contains " + value);
+            assertEquals(apiFuture, result,
+                "Should return all documents from the collections whose id is " + collectionGroup + " and have the "
+                    + "array" + array + " in " + arrayPath + " which contains " + value);
         }
+    }
+
+    @Test
+    public void checkArgumentsShouldThrowExceptionWhenOddNumberOfArguments() {
+        assertThrows(IllegalArgumentException.class,
+            () -> collectionAdapter.getDocumentsWhereEqualTo(collectionGroup, arrayPath, value, arrayPath));
     }
 }
