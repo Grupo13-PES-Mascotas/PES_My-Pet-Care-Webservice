@@ -1,12 +1,12 @@
 package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.FieldPath;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.WriteBatch;
+import com.google.cloud.firestore.*;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * @author Santiago Del Rey
@@ -55,6 +55,16 @@ public interface FirestoreCollection {
      */
     @NonNull
     Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
+
+    /**
+     * Retrieves the list of document snapshots in this collection.
+     * @param path A slash-separated path to a collection
+     * @return The list of document snapshots in this collection
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     */
+    @NonNull
+    List<DocumentSnapshot> listAllCollectionDocumentSnapshots(@NonNull String path)
+        throws DatabaseAccessException;
 
     /**
      * Creates and returns a new Query that includes all documents in the database that are contained in a

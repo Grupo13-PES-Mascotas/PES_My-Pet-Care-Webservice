@@ -1,11 +1,8 @@
 package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.FieldPath;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.WriteBatch;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import org.graalvm.compiler.lir.alloc.lsra.LinearScan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,12 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,6 +40,8 @@ class FirestoreCollectionAdapterTest {
 
     @Mock
     private Firestore db;
+    @Mock
+    private FirestoreDocument documentAdapter;
     @Mock
     private CollectionReference collectionReference;
     @Mock
@@ -86,6 +89,25 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.listDocuments()).willReturn(documentReferences);
             Iterable<DocumentReference> documents = collectionAdapter.listAllCollectionDocuments(collectionPath);
             assertEquals(documentReferences, documents, "Should return an iterable with all the collection documents");
+        }
+
+        @Test
+        public void listAllCollectionDocumentSnapshots()
+            throws DatabaseAccessException, DocumentException {
+            given(collectionReference.listDocuments()).willReturn(documentReferences);
+            Iterator documentIterator = mock(Iterator.class);
+            given(documentReferences.iterator()).willReturn(documentIterator);
+            given(documentIterator.hasNext()).willReturn(true, false);
+            given(documentIterator.next()).willReturn(documentReference);
+            given(documentReference.getPath()).willReturn(collectionPath);
+            DocumentSnapshot snapshot = mock(DocumentSnapshot.class);
+            given(documentAdapter.getDocumentSnapshot(anyString())).willReturn(snapshot);
+
+            List<DocumentSnapshot> snapshots = collectionAdapter.listAllCollectionDocumentSnapshots(collectionPath);
+            List<DocumentSnapshot> expected = new ArrayList<>();
+            expected.add(snapshot);
+
+            assertEquals(expected, snapshots, "Should return a list with all the document snapshots in the collection");
         }
 
         @Test

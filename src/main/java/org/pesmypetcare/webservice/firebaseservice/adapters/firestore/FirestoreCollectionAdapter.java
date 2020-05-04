@@ -1,15 +1,16 @@
 package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.FieldPath;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.WriteBatch;
+import com.google.cloud.firestore.*;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Santiago Del Rey
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class FirestoreCollectionAdapter implements FirestoreCollection {
     private Firestore db;
+    @Autowired
+    private FirestoreDocument documentAdapter;
 
     public FirestoreCollectionAdapter() {
         db = FirebaseFactory.getInstance().getFirestore();
@@ -49,6 +52,20 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
     @Override
     public Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path) {
         return db.collection(path).listDocuments();
+    }
+
+    @NonNull
+    @Override
+    public List<DocumentSnapshot> listAllCollectionDocumentSnapshots(@NonNull String path)
+        throws DatabaseAccessException {
+        Iterable<DocumentReference> iterable = listAllCollectionDocuments(path);
+        List<DocumentSnapshot> snapshots = new ArrayList<>();
+        for (DocumentReference doc : iterable) {
+            try {
+                snapshots.add(documentAdapter.getDocumentSnapshot(doc.getPath()));
+            } catch (DocumentException ignore) { }
+        }
+        return snapshots;
     }
 
     @Override
