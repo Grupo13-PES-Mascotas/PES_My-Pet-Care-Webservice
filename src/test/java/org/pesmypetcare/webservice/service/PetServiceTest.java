@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.service;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +11,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,28 +26,21 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
-    private static List<Map<String, Object>> pets;
-    private static PetEntity pet;
-    private static String owner;
-    private static String name;
-    private static String field;
-    private static String value;
+    private static final List<Map<String, Object>> petList = new ArrayList<>();
+    private static final Map<String, Object> collectionElementBody = new HashMap<>();
+    private static final PetEntity pet = new PetEntity();
+    private static final String owner = "OwnerUsername";
+    private static final String name = "PetName";
+    private static final String field = "pathologies";
+    private static final String value = "COVID-19";
+    private static final String key1 = "1996-01-08T12:20:30";
+    private static final String key2 = "1996-01-08T15:20:30";
 
     @Mock
     private PetDao petDao;
 
     @InjectMocks
     private PetService service = new PetServiceImpl();
-
-    @BeforeAll
-    public static void setUp() {
-        pets = new ArrayList<>();
-        pet = new PetEntity();
-        owner = "OwnerUsername";
-        name = "PetName";
-        field = "pathologies";
-        value = "COVID-19";
-    }
 
     @Test
     public void shouldReturnNothingWhenPetCreated() throws DatabaseAccessException, DocumentException {
@@ -92,9 +85,9 @@ class PetServiceTest {
 
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException, DocumentException {
-        when(petDao.getAllPetsData(owner)).thenReturn(pets);
+        when(petDao.getAllPetsData(owner)).thenReturn(petList);
         List<Map<String, Object>> list = service.getAllPetsData(owner);
-        assertSame(pets, list, "Should return a list of pet entities");
+        assertSame(petList, list, "Should return a list of pet entities");
     }
 
     @Test
@@ -106,7 +99,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException, DocumentException {
+    public void shouldReturnPetSimpleFieldWhenPetFieldRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getSimpleField(owner, name, field)).thenReturn(value);
         Object obtainedValue = service.getSimpleField(owner, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
@@ -122,8 +115,59 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenPetFieldUpdated() throws DatabaseAccessException, DocumentException {
+    public void shouldReturnNothingWhenPetSimpleFieldUpdated() throws DatabaseAccessException, DocumentException {
         service.updateSimpleField(owner, name, field, value);
-        verify(petDao).updateSimpleField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
+        verify(petDao).updateSimpleField(same(owner), same(name), same(field), same(value));
+    }
+
+    @Test
+    public void shouldReturnNothingWhenFieldCollectionDeleted() throws DatabaseAccessException, DocumentException {
+        service.deleteFieldCollection(owner, name, field);
+        verify(petDao).deleteFieldCollection(same(owner), same(name), same(field));
+    }
+
+    @Test
+    public void shouldReturnListWhenFieldCollectionRetrieved() throws DatabaseAccessException, DocumentException {
+        when(petDao.getFieldCollection(anyString(), anyString(), anyString())).thenReturn(petList);
+        List<Map<String, Object>> list = service.getFieldCollection(owner, name, field);
+        assertSame(petList, list, "Should return a list of pet entities");
+    }
+
+    @Test
+    public void shouldReturnListWhenFieldCollectionElementsBetweenKeysRetrieved() throws DatabaseAccessException,
+        DocumentException {
+        when(petDao.getFieldCollectionElementsBetweenKeys(anyString(), anyString(), anyString(), anyString(),
+            anyString())).thenReturn(petList);
+        List<Map<String, Object>> list = service.getFieldCollectionElementsBetweenKeys(owner, name, field, key1, key2);
+        assertSame(petList, list, "Should return a list of pet entities");
+    }
+
+    @Test
+    public void shouldReturnNothingWhenFieldCollectionElementAdded() throws DatabaseAccessException, DocumentException {
+        service.addFieldCollectionElement(owner, name, field, key1, collectionElementBody);
+        verify(petDao).addFieldCollectionElement(same(owner), same(name), same(field), same(key1),
+            same(collectionElementBody));
+    }
+
+    @Test
+    public void shouldReturnNothingWhenFieldCollectionElementDeleted() throws DatabaseAccessException,
+        DocumentException {
+        service.deleteFieldCollectionElement(owner, name, field, key1);
+        verify(petDao).deleteFieldCollectionElement(same(owner), same(name), same(field), same(key1));
+    }
+
+    @Test
+    public void shouldReturnNothingWhenFieldCollectionElementUpdated() throws DatabaseAccessException,
+        DocumentException {
+        service.updateFieldCollectionElement(owner, name, field, key1, collectionElementBody);
+        verify(petDao).updateFieldCollectionElement(same(owner), same(name), same(field), same(key1),
+            same(collectionElementBody));
+    }
+
+    @Test
+    public void shouldReturnMapWhenFieldCollectionElementRetrieved() throws DatabaseAccessException,
+        DocumentException {
+        service.getFieldCollectionElement(owner, name, field, key1);
+        verify(petDao).getFieldCollectionElement(same(owner), same(name), same(field), same(key1));
     }
 }

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -34,7 +33,7 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static List<Map<String, Object>> petList = new ArrayList<>();
+    private static final List<Map<String, Object>> petList = new ArrayList<>();
     private static final List<DocumentSnapshot> petSnapshotList = new ArrayList<>();
     private static final PetEntity petEntity = new PetEntity();
     private static final String owner = "OwnerUsername";
