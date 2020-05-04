@@ -235,7 +235,7 @@ public void updateFieldCollectionElement(@PathVariable String owner, @PathVariab
                                         @PathVariable String field, @PathVariable String key,
                                       @RequestBody Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        PetEntity.checkKeyAndBody(field,key,body);
+        PetEntity.checkKeyAndBody(field, key, body);
         petService.updateFieldCollectionElement(owner, name, field, key, body);
     }
 

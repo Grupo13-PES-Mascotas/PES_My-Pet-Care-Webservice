@@ -1,7 +1,6 @@
 package org.pesmypetcare.webservice.dao;
 
 import org.pesmypetcare.webservice.entity.ImageEntity;
-import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;

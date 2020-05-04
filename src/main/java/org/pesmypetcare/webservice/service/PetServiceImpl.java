@@ -26,7 +26,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public void deleteByOwnerAndName(String owner, String name)
-        throws DatabaseAccessException, DocumentException{
+        throws DatabaseAccessException, DocumentException {
         petDao.deleteByOwnerAndName(owner, name);
     }
 

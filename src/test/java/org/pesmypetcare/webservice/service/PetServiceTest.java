@@ -26,15 +26,15 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
-    private static final List<Map<String, Object>> petList = new ArrayList<>();
-    private static final Map<String, Object> collectionElementBody = new HashMap<>();
-    private static final PetEntity pet = new PetEntity();
-    private static final String owner = "OwnerUsername";
-    private static final String name = "PetName";
-    private static final String field = "pathologies";
-    private static final String value = "COVID-19";
-    private static final String key1 = "1996-01-08T12:20:30";
-    private static final String key2 = "1996-01-08T15:20:30";
+    private static final List<Map<String, Object>> PET_LIST = new ArrayList<>();
+    private static final Map<String, Object> COLLECTION_ELEMENT_BODY = new HashMap<>();
+    private static final PetEntity PET_ENTITY = new PetEntity();
+    private static final String OWNER = "OwnerUsername";
+    private static final String PET_NAME = "PetName";
+    private static final String FIELD = "pathologies";
+    private static final String VALUE = "COVID-19";
+    private static final String KEY_1 = "1996-01-08T12:20:30";
+    private static final String KEY_2 = "1996-01-08T15:20:30";
 
     @Mock
     private PetDao petDao;
@@ -44,19 +44,19 @@ class PetServiceTest {
 
     @Test
     public void shouldReturnNothingWhenPetCreated() throws DatabaseAccessException, DocumentException {
-        service.createPet(owner, name, pet);
+        service.createPet(OWNER, PET_NAME, PET_ENTITY);
         verify(petDao).createPet(isA(String.class), isA(String.class), isA(PetEntity.class));
     }
 
     @Test
     public void shouldReturnNothingWhenPetDeleted() throws DatabaseAccessException, DocumentException {
-        service.deleteByOwnerAndName(owner, name);
+        service.deleteByOwnerAndName(OWNER, PET_NAME);
         verify(petDao).deleteByOwnerAndName(isA(String.class), isA(String.class));
     }
 
     @Test
     public void shouldReturnNothingWhenAllPetsDeleted() throws DatabaseAccessException, DocumentException {
-        service.deleteAllPets(owner);
+        service.deleteAllPets(OWNER);
         verify(petDao).deleteAllPets(isA(String.class));
     }
 
@@ -64,46 +64,46 @@ class PetServiceTest {
     public void shouldReturnDatabaseAccessExceptionWhenDeleteFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(petDao).deleteAllPets(any(String.class));
-            service.deleteAllPets(owner);
+            service.deleteAllPets(OWNER);
         }, "Should return a database access exception when a pet deletion fails");
     }
 
     @Test
     public void shouldReturnPetEntityWhenPetRetrieved() throws DatabaseAccessException, DocumentException {
-        when(petDao.getPetData(owner, name)).thenReturn(pet);
-        PetEntity entity = service.getPetData(owner, name);
-        assertSame(pet, entity, "Should return a pet entity");
+        when(petDao.getPetData(OWNER, PET_NAME)).thenReturn(PET_ENTITY);
+        PetEntity entity = service.getPetData(OWNER, PET_NAME);
+        assertSame(PET_ENTITY, entity, "Should return a pet entity");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetPetRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(petDao).getPetData(any(String.class), any(String.class));
-            service.getPetData(owner, name);
+            service.getPetData(OWNER, PET_NAME);
         }, "Should return an exception when retrieving a pet fails");
     }
 
     @Test
     public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved()
         throws DatabaseAccessException, DocumentException {
-        when(petDao.getAllPetsData(owner)).thenReturn(petList);
-        List<Map<String, Object>> list = service.getAllPetsData(owner);
-        assertSame(petList, list, "Should return a list of pet entities");
+        when(petDao.getAllPetsData(OWNER)).thenReturn(PET_LIST);
+        List<Map<String, Object>> list = service.getAllPetsData(OWNER);
+        assertSame(PET_LIST, list, "Should return a list of pet entities");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetSetOfPetsRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(petDao).getAllPetsData(any(String.class));
-            service.getAllPetsData(owner);
+            service.getAllPetsData(OWNER);
         }, "Should return an exception when retrieving a set of pets fails");
     }
 
     @Test
     public void shouldReturnPetSimpleFieldWhenPetFieldRetrieved() throws DatabaseAccessException, DocumentException {
-        when(petDao.getSimpleField(owner, name, field)).thenReturn(value);
-        Object obtainedValue = service.getSimpleField(owner, name, field);
-        assertSame(value, obtainedValue, "Should return an Object");
+        when(petDao.getSimpleField(OWNER, PET_NAME, FIELD)).thenReturn(VALUE);
+        Object obtainedValue = service.getSimpleField(OWNER, PET_NAME, FIELD);
+        assertSame(VALUE, obtainedValue, "Should return an Object");
     }
 
     @Test
@@ -111,65 +111,65 @@ class PetServiceTest {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(petDao).getSimpleField(any(String.class), any(String.class),
                 any(String.class));
-            service.getSimpleField(owner, name, field);
+            service.getSimpleField(OWNER, PET_NAME, FIELD);
         }, "Should return an exception when retrieving a pet field fails");
     }
 
     @Test
     public void shouldReturnNothingWhenPetSimpleFieldUpdated() throws DatabaseAccessException, DocumentException {
-        service.updateSimpleField(owner, name, field, value);
-        verify(petDao).updateSimpleField(same(owner), same(name), same(field), same(value));
+        service.updateSimpleField(OWNER, PET_NAME, FIELD, VALUE);
+        verify(petDao).updateSimpleField(same(OWNER), same(PET_NAME), same(FIELD), same(VALUE));
     }
 
     @Test
     public void shouldReturnNothingWhenFieldCollectionDeleted() throws DatabaseAccessException, DocumentException {
-        service.deleteFieldCollection(owner, name, field);
-        verify(petDao).deleteFieldCollection(same(owner), same(name), same(field));
+        service.deleteFieldCollection(OWNER, PET_NAME, FIELD);
+        verify(petDao).deleteFieldCollection(same(OWNER), same(PET_NAME), same(FIELD));
     }
 
     @Test
     public void shouldReturnListWhenFieldCollectionRetrieved() throws DatabaseAccessException, DocumentException {
-        when(petDao.getFieldCollection(anyString(), anyString(), anyString())).thenReturn(petList);
-        List<Map<String, Object>> list = service.getFieldCollection(owner, name, field);
-        assertSame(petList, list, "Should return a list of pet entities");
+        when(petDao.getFieldCollection(anyString(), anyString(), anyString())).thenReturn(PET_LIST);
+        List<Map<String, Object>> list = service.getFieldCollection(OWNER, PET_NAME, FIELD);
+        assertSame(PET_LIST, list, "Should return a list of pet entities");
     }
 
     @Test
     public void shouldReturnListWhenFieldCollectionElementsBetweenKeysRetrieved() throws DatabaseAccessException,
         DocumentException {
         when(petDao.getFieldCollectionElementsBetweenKeys(anyString(), anyString(), anyString(), anyString(),
-            anyString())).thenReturn(petList);
-        List<Map<String, Object>> list = service.getFieldCollectionElementsBetweenKeys(owner, name, field, key1, key2);
-        assertSame(petList, list, "Should return a list of pet entities");
+            anyString())).thenReturn(PET_LIST);
+        List<Map<String, Object>> list = service.getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, FIELD, KEY_1, KEY_2);
+        assertSame(PET_LIST, list, "Should return a list of pet entities");
     }
 
     @Test
     public void shouldReturnNothingWhenFieldCollectionElementAdded()
         throws DatabaseAccessException, DocumentException {
-        service.addFieldCollectionElement(owner, name, field, key1, collectionElementBody);
-        verify(petDao).addFieldCollectionElement(same(owner), same(name), same(field), same(key1),
-            same(collectionElementBody));
+        service.addFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
+        verify(petDao).addFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1),
+            same(COLLECTION_ELEMENT_BODY));
     }
 
     @Test
     public void shouldReturnNothingWhenFieldCollectionElementDeleted() throws DatabaseAccessException,
         DocumentException {
-        service.deleteFieldCollectionElement(owner, name, field, key1);
-        verify(petDao).deleteFieldCollectionElement(same(owner), same(name), same(field), same(key1));
+        service.deleteFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1);
+        verify(petDao).deleteFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1));
     }
 
     @Test
     public void shouldReturnNothingWhenFieldCollectionElementUpdated() throws DatabaseAccessException,
         DocumentException {
-        service.updateFieldCollectionElement(owner, name, field, key1, collectionElementBody);
-        verify(petDao).updateFieldCollectionElement(same(owner), same(name), same(field), same(key1),
-            same(collectionElementBody));
+        service.updateFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
+        verify(petDao).updateFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1),
+            same(COLLECTION_ELEMENT_BODY));
     }
 
     @Test
     public void shouldReturnMapWhenFieldCollectionElementRetrieved() throws DatabaseAccessException,
         DocumentException {
-        service.getFieldCollectionElement(owner, name, field, key1);
-        verify(petDao).getFieldCollectionElement(same(owner), same(name), same(field), same(key1));
+        service.getFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1);
+        verify(petDao).getFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1));
     }
 }

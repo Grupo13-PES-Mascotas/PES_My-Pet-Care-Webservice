@@ -42,7 +42,7 @@ public class PetEntity {
     public static void checkKeyAndBody(String field, String key, Map<String, Object> body) {
         if ("meals".equals(field)) {
             checkDateFormat(key);
-            if ( body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
+            if (body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
             }
             if (!(body.get("kcal") instanceof Double) || !(body.get("mealName") instanceof String)) {
@@ -51,14 +51,16 @@ public class PetEntity {
         }
         else if ("trainings".equals(field) || "washes".equals(field) || "weights".equals(field)) {
             checkDateFormat(key);
-            if ( body.size() != 1 || !body.containsKey("value")){
+            if (body.size() != 1 || !body.containsKey("value")) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
             }
             if (!(body.get("value") instanceof Integer)) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
             }
         }
-        else throw new IllegalArgumentException("Field does not exists");
+        else {
+            throw new IllegalArgumentException("Field does not exists");
+        }
     }
 
     /**
