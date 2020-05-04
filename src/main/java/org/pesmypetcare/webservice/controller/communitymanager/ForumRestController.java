@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,7 @@ public class ForumRestController {
 
     /**
      * Creates a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumEntity The forum entity with the forum data
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -40,13 +42,14 @@ public class ForumRestController {
      */
     @PostMapping("/{parentGroup}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createForum(@PathVariable String parentGroup,
-                            @RequestBody ForumEntity forumEntity) throws DatabaseAccessException, DocumentException {
+    public void createForum(@PathVariable String parentGroup, @RequestBody ForumEntity forumEntity)
+        throws DatabaseAccessException, DocumentException {
         service.createForum(parentGroup, forumEntity);
     }
 
     /**
      * Deletes a forum.
+     *
      * @param parentGroup The parent group name
      * @param forum The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -54,13 +57,14 @@ public class ForumRestController {
      */
     @DeleteMapping("/{parentGroup}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteForum(@PathVariable String parentGroup,
-                            @RequestParam String forum) throws DatabaseAccessException, DocumentException {
+    public void deleteForum(@PathVariable String parentGroup, @RequestParam String forum)
+        throws DatabaseAccessException, DocumentException {
         service.deleteForum(parentGroup, forum);
     }
 
     /**
      * Gets all the forums from a group if request param forum not specified, otherwise returns the specified forum.
+     *
      * @param parentGroup The parent group name
      * @param forum The forum name
      * @return A list of all the forums in a group or the forum requested
@@ -68,8 +72,8 @@ public class ForumRestController {
      * @throws DocumentException When the group does not exist
      */
     @GetMapping("/{parentGroup}")
-    public Object getForums(@PathVariable String parentGroup,
-                            @RequestParam(defaultValue = "all") String forum)
+    @ResponseBody
+    public Object getForums(@PathVariable String parentGroup, @RequestParam(defaultValue = "all") String forum)
         throws DatabaseAccessException, DocumentException {
         if ("all".equals(forum)) {
             return service.getAllForumsFromGroup(parentGroup);
@@ -79,6 +83,7 @@ public class ForumRestController {
 
     /**
      * Updates a forum's name.
+     *
      * @param parentGroup The parent group name
      * @param forum The fourm name
      * @param newName The new name
@@ -87,13 +92,14 @@ public class ForumRestController {
      */
     @PutMapping("/{parentGroup}/{forum}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateName(@PathVariable String parentGroup, @PathVariable String forum,
-                           @RequestParam String newName) throws DatabaseAccessException, DocumentException {
+    public void updateName(@PathVariable String parentGroup, @PathVariable String forum, @RequestParam String newName)
+        throws DatabaseAccessException, DocumentException {
         service.updateName(parentGroup, forum, newName);
     }
 
     /**
      * Updates the list of tags of a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param tags A map with the lists of new tags and the deleted ones
@@ -102,15 +108,15 @@ public class ForumRestController {
      */
     @PutMapping("/tags/{parentGroup}/{forumName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTags(@PathVariable String parentGroup,
-                           @PathVariable String forumName,
-                           @RequestBody Map<String , List<String>> tags)
+    public void updateTags(@PathVariable String parentGroup, @PathVariable String forumName,
+                           @RequestBody Map<String, List<String>> tags)
         throws DatabaseAccessException, DocumentException {
         service.updateTags(parentGroup, forumName, tags.get("new"), tags.get("deleted"));
     }
 
     /**
      * Posts a message in a forum.
+     *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
@@ -120,13 +126,15 @@ public class ForumRestController {
      */
     @PostMapping("/{parentGroup}/{forumName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void postMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
-                            @RequestBody MessageEntity messageEntity) throws DatabaseAccessException, DocumentException {
+    public void postMessage(@RequestHeader String token, @PathVariable String parentGroup,
+                            @PathVariable String forumName, @RequestBody MessageEntity messageEntity)
+        throws DatabaseAccessException, DocumentException {
         service.postMessage(token, parentGroup, forumName, messageEntity);
     }
 
     /**
      * Deletes a message from a forum.
+     *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
@@ -137,8 +145,8 @@ public class ForumRestController {
      */
     @DeleteMapping("/{parentGroup}/{forumName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMessage(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forumName,
-                            @RequestParam String creator, @RequestParam String date)
+    public void deleteMessage(@RequestHeader String token, @PathVariable String parentGroup,
+                              @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
         throws DatabaseAccessException, DocumentException {
         service.deleteMessage(token, parentGroup, forumName, creator, date);
     }
