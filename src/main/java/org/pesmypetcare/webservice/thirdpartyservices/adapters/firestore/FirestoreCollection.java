@@ -2,11 +2,15 @@ package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.WriteBatch;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * @author Santiago Del Rey
@@ -14,9 +18,11 @@ import org.springframework.lang.Nullable;
 public interface FirestoreCollection {
     /**
      * Gets a Firestore WriteBatch instance that can be used to combine multiple writes.
+     *
      * @return A WriteBatch that operates on this Firestore client
      */
     WriteBatch batch();
+
     /**
      * Gets a CollectionReference that refers to the collection at the specified path.
      *
@@ -57,10 +63,21 @@ public interface FirestoreCollection {
     Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
 
     /**
+     * Retrieves the list of document snapshots in this collection.
+     *
+     * @param path A slash-separated path to a collection
+     * @return The list of document snapshots in this collection
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     */
+    @NonNull
+    List<DocumentSnapshot> listAllCollectionDocumentSnapshots(@NonNull String path) throws DatabaseAccessException;
+
+    /**
      * Creates and returns a new Query that includes all documents in the database that are contained in a
      * collection or subcollection with the given {@code collectionId}.
+     *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                    the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @return The created Query
      */
     Query getCollectionGroup(@NonNull String collectionId);
@@ -83,8 +100,7 @@ public interface FirestoreCollection {
      * @return The created Query
      */
     @NonNull
-    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
-                                   @Nullable Object value);
+    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field, @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
@@ -109,8 +125,7 @@ public interface FirestoreCollection {
      * @return The created Query
      */
     @NonNull
-    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
-                                         @NonNull Object value);
+    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field, @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
@@ -130,7 +145,7 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
@@ -144,7 +159,7 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
@@ -158,7 +173,7 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
@@ -172,12 +187,12 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment of its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
-                                                        @NonNull FieldPath fieldPath, @NonNull Object value);
+    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull FieldPath fieldPath,
+                                                        @NonNull Object value);
 }
