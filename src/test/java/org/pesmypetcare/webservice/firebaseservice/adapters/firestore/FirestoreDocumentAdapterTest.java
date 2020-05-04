@@ -29,14 +29,17 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.lenient;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * @author Santiago Del Rey
@@ -85,7 +88,7 @@ class FirestoreDocumentAdapterTest {
         given(documentSnapshot.exists()).willReturn(true);
 
         assertTrue(adapter.documentSnapshotExists(documentSnapshot),
-            "Should return true when the document snapshot " + "exists");
+                   "Should return true when the document snapshot " + "exists");
     }
 
     @Test
@@ -378,9 +381,8 @@ class FirestoreDocumentAdapterTest {
                 willReturn(aString).given(documentSnapshot).get(anyString());
 
                 Object result = adapter.getDocumentField(documentPath, field);
-                assertEquals(aString, result,
-                    "Should return " + aString + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -388,9 +390,8 @@ class FirestoreDocumentAdapterTest {
                 lenient().when(documentSnapshot.get(fieldPath)).thenReturn(aString);
 
                 Object result = adapter.getDocumentField(documentPath, fieldPath);
-                assertEquals(aString, result,
-                    "Should return " + aString + " as the value in " + fieldPath + " in the " + "document located at "
-                        + documentPath);
+                assertEquals(aString, result, "Should return " + aString + " as the value in " + fieldPath + " in the "
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -398,9 +399,8 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDouble(anyString())).willReturn(aDouble);
 
                 Double result = adapter.getDoubleFromDocument(documentPath, field);
-                assertEquals(aDouble, result,
-                    "Should return " + aDouble + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                assertEquals(aDouble, result, "Should return " + aDouble + " as the value of the " + field + " in the "
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -408,9 +408,8 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDate(anyString())).willReturn(aDate);
 
                 Date result = adapter.getDateFromDocument(documentPath, field);
-                assertEquals(aDate, result,
-                    "Should return " + aDate + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                assertEquals(aDate, result, "Should return " + aDate + " as the value of the " + field + " in the "
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -419,8 +418,8 @@ class FirestoreDocumentAdapterTest {
 
                 Boolean result = adapter.getBooleanFromDocument(documentPath, field);
                 assertEquals(aBoolean, result,
-                    "Should return " + aBoolean + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                             "Should return " + aBoolean + " as the value of the " + field + " in the "
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -429,8 +428,8 @@ class FirestoreDocumentAdapterTest {
 
                 GeoPoint result = adapter.getGeoPointFromDocument(documentPath, field);
                 assertEquals(aGeoPoint, result,
-                    "Should return " + aGeoPoint + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                             "Should return " + aGeoPoint + " as the value of the " + field + " in the "
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -438,9 +437,8 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getString(anyString())).willReturn(aString);
 
                 String result = adapter.getStringFromDocument(documentPath, field);
-                assertEquals(aString, result,
-                    "Should return " + aString + " as the value of the " + field + " in the " + "document located at "
-                        + documentPath);
+                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
+                    + "document located at " + documentPath);
             }
 
             @Test
@@ -449,8 +447,8 @@ class FirestoreDocumentAdapterTest {
 
                 Timestamp result = adapter.getTimestampFromDocument(documentPath, field);
                 assertEquals(aTimestamp, result,
-                    "Should return " + aTimestamp + " as the value of the " + field + " in the "
-                        + "document located at " + documentPath);
+                             "Should return " + aTimestamp + " as the value of the " + field + " in the "
+                                 + "document located at " + documentPath);
             }
 
             @Test
@@ -459,7 +457,8 @@ class FirestoreDocumentAdapterTest {
 
                 Map<String, Object> result = adapter.getDocumentData(documentPath);
                 assertEquals(fields, result,
-                    "Should return " + fields + " as the data stored in the document located at " + documentPath);
+                             "Should return " + fields + " as the data stored in the document located at "
+                                 + documentPath);
             }
 
             @Test
@@ -468,8 +467,8 @@ class FirestoreDocumentAdapterTest {
 
                 UserEntity result = adapter.getDocumentDataAsObject(documentPath, UserEntity.class);
                 assertEquals(pojo, result,
-                    "Should return a pojo of type " + pojo.getClass().getSimpleName() + " as the data "
-                        + "stored in the document located at " + documentPath);
+                             "Should return a pojo of type " + pojo.getClass().getSimpleName() + " as the data "
+                                 + "stored in the document located at " + documentPath);
             }
 
             @Test
@@ -477,7 +476,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.contains(anyString())).willReturn(true);
 
                 assertTrue(adapter.documentContains(documentPath, field),
-                    "Should return true if the document contains the field " + field);
+                           "Should return true if the document contains the field " + field);
             }
 
             @Test
@@ -485,7 +484,7 @@ class FirestoreDocumentAdapterTest {
                 lenient().when(documentSnapshot.contains(fieldPath)).thenReturn(true);
 
                 assertTrue(adapter.documentContains(documentPath, fieldPath),
-                    "Should return true if the document contains the field in " + fieldPath);
+                           "Should return true if the document contains the field in " + fieldPath);
             }
         }
     }

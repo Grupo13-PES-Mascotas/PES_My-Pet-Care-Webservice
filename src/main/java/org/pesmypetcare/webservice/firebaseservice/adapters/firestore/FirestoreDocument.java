@@ -252,8 +252,8 @@ public interface FirestoreDocument {
      * @param value               The first value to set.
      * @param moreFieldsAndValues String and Object pairs with more fields to be set.
      */
-    public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path, @NonNull String field,
-                                     @Nullable Object value, Object... moreFieldsAndValues);
+    void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path, @NonNull String field,
+                              @Nullable Object value, Object... moreFieldsAndValues);
 
     /**
      * Updates the fields in the document referred to by this path. If the document
@@ -264,8 +264,8 @@ public interface FirestoreDocument {
      * @param value               The first value to set.
      * @param moreFieldsAndValues String and Object pairs with more fields to be set.
      */
-    public void updateDocumentFields(@NonNull String path, @NonNull String field,
-                                     @Nullable Object value, Object... moreFieldsAndValues);
+    void updateDocumentFields(@NonNull String path, @NonNull String field, @Nullable Object value,
+                              Object... moreFieldsAndValues);
 
     /**
      * Deletes the document referred to by this path. If the document has inner collections they will be also deleted.

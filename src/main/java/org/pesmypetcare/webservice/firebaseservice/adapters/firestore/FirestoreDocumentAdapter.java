@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+;
+
 /**
  * @author Santiago Del Rey
  */
@@ -85,7 +87,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocument(String path, Map<String, Object> fields) {
+    public DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields) {
         DocumentReference ref = db.collection(path).document();
         ref.create(fields);
         return ref;
@@ -99,7 +101,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocument(String path, Object pojo) {
+    public DocumentReference createDocument(@NonNull String path, @NonNull Object pojo) {
         DocumentReference ref = db.collection(path).document();
         ref.create(pojo);
         return ref;
@@ -114,7 +116,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocumentWithId(String collectionPath, String id, Map<String, Object> fields) {
+    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                                  @NonNull Map<String, Object> fields) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         ref.create(fields);
         return ref;
@@ -129,7 +132,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public DocumentReference createDocumentWithId(String collectionPath, String id, Object pojo) {
+    public DocumentReference createDocumentWithId(@NonNull String collectionPath, @NonNull String id,
+                                                  @NonNull Object pojo) {
         DocumentReference ref = getDocumentReference(collectionPath + "/" + id);
         ref.create(pojo);
         return ref;
@@ -143,7 +147,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void setDocumentFields(String path, Map<String, Object> fields) {
+    public void setDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields) {
         getDocumentReference(path).set(fields);
     }
 
@@ -154,7 +158,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void setDocumentFields(String path, Object pojo) {
+    public void setDocumentFields(@NonNull String path, @NonNull Object pojo) {
         getDocumentReference(path).set(pojo);
     }
 
@@ -166,33 +170,33 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void updateDocumentFields(String path, Map<String, Object> fields) {
+    public void updateDocumentFields(@NonNull String path, @NonNull Map<String, Object> fields) {
         getDocumentReference(path).update(fields);
     }
 
     @Override
-    public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path,
-                                     @NonNull FieldPath fieldPath, @Nullable Object value,
-                                     Object... moreFieldsAndValues) {
+    public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path, @NonNull FieldPath fieldPath,
+                                     @Nullable Object value, Object... moreFieldsAndValues) {
         DocumentReference doc = getDocumentReference(path);
         batch.update(doc, fieldPath, value, moreFieldsAndValues);
     }
 
     @Override
-    public void updateDocumentFields(String path, FieldPath fieldPath, Object value, Object... moreFieldsAndValues) {
+    public void updateDocumentFields(@NonNull String path, @NonNull FieldPath fieldPath, @Nullable Object value,
+                                     Object... moreFieldsAndValues) {
         getDocumentReference(path).update(fieldPath, value, moreFieldsAndValues);
     }
 
     @Override
-    public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path,
-                                     @NonNull String field, @Nullable Object value,
-                                     Object... moreFieldsAndValues) {
+    public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path, @NonNull String field,
+                                     @Nullable Object value, Object... moreFieldsAndValues) {
         DocumentReference doc = getDocumentReference(path);
         batch.update(doc, field, value, moreFieldsAndValues);
     }
 
     @Override
-    public void updateDocumentFields(String path, String field, Object value, Object... moreFieldsAndValues) {
+    public void updateDocumentFields(@NonNull String path, @NonNull String field, @Nullable Object value,
+                                     Object... moreFieldsAndValues) {
         getDocumentReference(path).update(field, value, moreFieldsAndValues);
     }
 
@@ -204,8 +208,8 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
-    public void deleteDocument(String path) {
-        DocumentReference doc =getDocumentReference(path);
+    public void deleteDocument(@NonNull String path) {
+        DocumentReference doc = getDocumentReference(path);
         deleteDocumentCollections(doc);
         doc.delete();
     }
