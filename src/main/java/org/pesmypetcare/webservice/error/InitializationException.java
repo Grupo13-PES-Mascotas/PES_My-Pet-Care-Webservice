@@ -6,7 +6,7 @@ public class InitializationException extends Exception {
     /**
      * Creates an initialization exception with the specified error code and detailed message.
      * @param error The error code for the exception
-     * @param message A clarifying description ofDocument the error
+     * @param message A clarifying description of the error
      */
     public InitializationException(String error, String message) {
         super(message);

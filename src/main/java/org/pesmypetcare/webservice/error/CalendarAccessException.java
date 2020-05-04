@@ -9,7 +9,7 @@ public class CalendarAccessException extends Exception {
     /**
      * Creates a calendar access exception with the specified error code and detailed message.
      * @param error The error code for the exception
-     * @param message A clarifying description ofDocument the error
+     * @param message A clarifying description of the error
      */
     public CalendarAccessException(String error, String message) {
         super(message);

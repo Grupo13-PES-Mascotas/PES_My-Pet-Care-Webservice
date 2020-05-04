@@ -9,9 +9,9 @@ import java.util.Map;
 public interface MedicationService {
     /**
      * Creates a medication eaten by a pet on the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date date ofDocument the medication
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date date of the medication
      * @param name name ofDocument the medication
      * @param medication The medication entity that has the attributes ofDocument the medication for the pet.
      */

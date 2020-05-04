@@ -100,7 +100,7 @@ public class WeekTrainingServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfWeekTrainingsRetrieved() throws DatabaseAccessException {
         when(weekTrainingDao.getAllWeekTraining(owner, petName)).thenReturn(weekTrainingList);
         List<Map<String, Object>> list = service.getAllWeekTraining(owner, petName);
-        assertSame(weekTrainingList, list, "Should return a list ofDocument weekTrainings entities");
+        assertSame(weekTrainingList, list, "Should return a list of weekTrainings entities");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class WeekTrainingServiceTest {
             doThrow(DatabaseAccessException.class).when(weekTrainingDao).getAllWeekTraining(any(String.class),
                 isA(String.class));
             service.getAllWeekTraining(owner, petName);
-        }, "Should return an exception when retrieving a set ofDocument weekTrainings fails");
+        }, "Should return an exception when retrieving a set of weekTrainings fails");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class WeekTrainingServiceTest {
         throws DatabaseAccessException {
         when(weekTrainingDao.getAllWeekTrainingsBetween(owner, petName, date, date2)).thenReturn(weekTrainingList);
         List<Map<String, Object>> list = service.getAllWeekTrainingsBetween(owner, petName, date, date2);
-        assertSame(weekTrainingList, list, "Should return a list ofDocument weekTraining entities");
+        assertSame(weekTrainingList, list, "Should return a list of weekTraining entities");
     }
 
     @Test
@@ -126,7 +126,7 @@ public class WeekTrainingServiceTest {
             doThrow(DatabaseAccessException.class).when(weekTrainingDao).getAllWeekTrainingsBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllWeekTrainingsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set ofDocument weekTrainings between dates fails");
+        }, "Should return an exception when retrieving a set of weekTrainings between dates fails");
     }
 
     @Test

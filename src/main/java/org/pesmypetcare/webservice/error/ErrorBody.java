@@ -31,7 +31,7 @@ public class ErrorBody {
 
     /**
      * Creator with a specific message and exception.
-     * @param message The message ofDocument the body
+     * @param message The message of the body
      * @param ex The throwable from which to generate the body error
      */
     public ErrorBody(String message, Throwable ex) {
@@ -42,9 +42,9 @@ public class ErrorBody {
 
     /**
      * Creator with a specific timestamp, message and debug message.
-     * @param timestamp The timestamp ofDocument the body
-     * @param message The message ofDocument the body
-     * @param debugMessage The debugMessage ofDocument the body
+     * @param timestamp The timestamp of the body
+     * @param message The message of the body
+     * @param debugMessage The debugMessage of the body
      */
     @JsonCreator
     public ErrorBody(@JsonProperty("timestamp") LocalDateTime timestamp,

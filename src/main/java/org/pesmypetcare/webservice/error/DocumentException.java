@@ -9,7 +9,7 @@ public class DocumentException extends Exception {
     /**
      * Creates a database access exception with the specified error code and detailed message.
      * @param errorCode The error code for the exception
-     * @param detailedMessage A clarifying description ofDocument the error
+     * @param detailedMessage A clarifying description of the error
      */
     public DocumentException(String errorCode, String detailedMessage) {
         super(detailedMessage);

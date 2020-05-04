@@ -105,7 +105,7 @@ public class MedicationServiceTest {
     public void shouldReturnMedicationEntityListWhenGetSetOfMedicationsRetrieved() throws DatabaseAccessException {
         when(medicationDao.getAllMedicationData(owner, petName)).thenReturn(medicationList);
         List<Map<String, Object>> list = service.getAllMedicationData(owner, petName);
-        assertSame(medicationList, list, "Should return a list ofDocument Medication entities");
+        assertSame(medicationList, list, "Should return a list of Medication entities");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class MedicationServiceTest {
         when(medicationDao.getAllMedicationsBetween(owner, petName, date, date2)).thenReturn(medicationList);
         List<Map<String, Object>> list = service.getAllMedicationsBetween(owner, petName, date, date2);
         assertSame(medicationList, list,
-            "Should return a list ofDocument Medication entities between the stated dates");
+            "Should return a list of Medication entities between the stated dates");
     }
 
     @Test
@@ -132,7 +132,7 @@ public class MedicationServiceTest {
                                                   .getAllMedicationsBetween(any(String.class), isA(String.class),
                                                       isA(String.class), isA(String.class));
             service.getAllMedicationsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set ofDocument Medications between dates fails");
+        }, "Should return an exception when retrieving a set of Medications between dates fails");
     }
 
     @Test

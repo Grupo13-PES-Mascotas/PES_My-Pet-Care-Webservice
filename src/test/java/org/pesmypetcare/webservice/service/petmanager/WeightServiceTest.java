@@ -98,7 +98,7 @@ public class WeightServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfWeightsRetrieved() throws DatabaseAccessException {
         when(weightDao.getAllWeight(owner, petName)).thenReturn(weightList);
         List<Map<String, Object>> list = service.getAllWeight(owner, petName);
-        assertSame(weightList, list, "Should return a list ofDocument weights entities");
+        assertSame(weightList, list, "Should return a list of weights entities");
     }
 
     @Test

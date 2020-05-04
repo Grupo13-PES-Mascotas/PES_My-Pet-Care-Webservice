@@ -24,10 +24,10 @@ public class PetMealRestController {
 
     /**
      * Creates a meal eaten by a pet on the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @param date Date the meal was eaten
-     * @param meal The meal entity that contains the attributes ofDocument the meal eaten by the pet
+     * @param meal The meal entity that contains the attributes of the meal eaten by the pet
      */
     @PostMapping("/{owner}/{petName}/{date}")
     public void createMeal(@PathVariable String owner, @PathVariable String petName, @PathVariable String date,
@@ -37,8 +37,8 @@ public class PetMealRestController {
 
     /**
      * Deletes the pet with the specified owner and name from the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @param date Date the meal was eaten
      */
     @DeleteMapping("/{owner}/{petName}/{date}")
@@ -47,9 +47,9 @@ public class PetMealRestController {
     }
 
     /**
-     * Deletes all the meals ofDocument the specified pet from database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * Deletes all the meals of the specified pet from database.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -60,8 +60,8 @@ public class PetMealRestController {
 
     /**
      * Gets a meal identified by its pet and date.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @param date Date the meal was eaten
      * @return The MealEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -74,8 +74,8 @@ public class PetMealRestController {
 
     /**
      * Gets the data from all the specified meals from the database identified by its pet.
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @return The List containing all the meals from the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -87,7 +87,7 @@ public class PetMealRestController {
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username ofDocument the owner ofDocument the pets
+     * @param owner Username of the owner ofDocument the pets
      * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
