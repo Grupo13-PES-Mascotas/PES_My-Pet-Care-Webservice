@@ -48,8 +48,7 @@ public class PetEntity {
             if (!(body.get("kcal") instanceof Double) || !(body.get("mealName") instanceof String)) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
             }
-        }
-        else if ("trainings".equals(field) || "washes".equals(field) || "weights".equals(field)) {
+        } else if ("trainings".equals(field) || "washes".equals(field) || "weights".equals(field)) {
             checkDateFormat(key);
             if (body.size() != 1 || !body.containsKey("value")) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
@@ -57,8 +56,7 @@ public class PetEntity {
             if (!(body.get("value") instanceof Integer)) {
                 throw new IllegalArgumentException("Request body does not have a correct format");
             }
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Field does not exists");
         }
     }
