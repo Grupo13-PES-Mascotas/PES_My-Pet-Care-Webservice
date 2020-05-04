@@ -75,11 +75,11 @@ class CollectionPath extends PathBuilder {
                 return buildPathToMealsCollection(ids[0], ids[1]);
             case weights:
                 return buildPathToWeightsCollection(ids[0], ids[1]);
-            case freqWashes:
+            case washes:
                 return buildPathToFreqWashesCollection(ids[0], ids[1]);
             case medications:
                 return buildPathToMedicationsCollection(ids[0], ids[1]);
-            case freqTrainings:
+            case trainings:
                 return buildPathToFreqTrainingsCollection(ids[0], ids[1]);
             case kcalsAverages:
                 return buildPathToKcalsAveragesCollection(ids[0], ids[1]);

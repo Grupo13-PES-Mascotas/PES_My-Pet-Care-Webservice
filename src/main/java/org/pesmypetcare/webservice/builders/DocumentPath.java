@@ -81,11 +81,11 @@ class DocumentPath extends PathBuilder {
                 return buildPathToMeal(ids[0], ids[1], ids[2]);
             case weights:
                 return buildPathToWeight(ids[0], ids[1], ids[2]);
-            case freqWashes:
+            case washes:
                 return buildPathToFreqWash(ids[0], ids[1], ids[2]);
             case medications:
                 return buildPathToMedication(ids[0], ids[1], ids[2], ids[NUMBERS[0]]);
-            case freqTrainings:
+            case trainings:
                 return buildPathToFreqTraining(ids[0], ids[1], ids[2]);
             case kcalsAverages:
                 return buildPathToKcalsAverage(ids[0], ids[1], ids[2]);

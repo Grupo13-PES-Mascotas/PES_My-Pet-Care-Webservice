@@ -188,14 +188,14 @@ class PathTest {
 
     @Test
     public void buildFrequencyOfWashesEntryPath() {
-        String path = Path.ofDocument(Collections.freqWashes, userId, petName, date);
+        String path = Path.ofDocument(Collections.washes, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes/" + date, path,
             "Should return the path to the frequencyof washes entry.");
     }
 
     @Test
     public void buildFrequencyOfWashesEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.freqWashes, userId, petName);
+        String path = Path.ofCollection(Collections.washes, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes", path,
             "Should return the path to the frequencyof washes entries collection.");
     }
@@ -217,14 +217,14 @@ class PathTest {
 
     @Test
     public void buildFrequencyOfTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.freqTrainings, userId, petName, date);
+        String path = Path.ofDocument(Collections.trainings, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings/" + date, path,
             "Should return the path to the frequencyof training entry.");
     }
 
     @Test
     public void buildFrequencyOfTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.freqTrainings, userId, petName);
+        String path = Path.ofCollection(Collections.trainings, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings", path,
             "Should return the path to the frequencyof training entries collection.");
     }

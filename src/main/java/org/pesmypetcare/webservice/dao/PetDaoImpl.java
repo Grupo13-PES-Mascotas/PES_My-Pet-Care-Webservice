@@ -3,7 +3,6 @@ package org.pesmypetcare.webservice.dao;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
@@ -25,10 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 @Repository
 public class PetDaoImpl implements PetDao {
-    private static final String PETS_KEY = "pets";
     private static final String DELFAIL_KEY = "deletion-failed";
-    private static final String PET_DOES_NOT_EXIST_EXC = "The pet does not exist";
-    private static final String INVALID_PET_EXC = "invalid-pet";
     private String ownerId;
     private WriteBatch batch;
     private String path;
@@ -64,14 +60,15 @@ public class PetDaoImpl implements PetDao {
     public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException, DocumentException {
         initializeWithDocumentPath(owner, name);
         String imageLocation = dbDoc.getStringFromDocument(path, "profileImageLocation");
-        deleteProfileImage(imageLocation);
         dbDoc.deleteDocument(path, batch);
         batch.commit();
+        deleteProfileImage(imageLocation);
     }
 
     @Override
-    public void deleteAllPets(String owner) throws DatabaseAccessException {
-        CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
+    public void deleteAllPets(String owner) throws DatabaseAccessException, DocumentException {
+        initializeWithCollectionPath(owner);
+        CollectionReference petsRef = dbCol.getCollectionReference(path);
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
@@ -86,24 +83,15 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public PetEntity getPetData(String owner, String name) throws DatabaseAccessException {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        ApiFuture<DocumentSnapshot> future = petRef.get();
-        DocumentSnapshot petDoc;
-        try {
-            petDoc = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
-        if (!petDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_PET_EXC, PET_DOES_NOT_EXIST_EXC);
-        }
-        return petDoc.toObject(PetEntity.class);
+    public PetEntity getPetData(String owner, String name) throws DatabaseAccessException, DocumentException {
+        initializeWithDocumentPath(owner, name);
+        return dbDoc.getDocumentSnapshot(path).toObject(PetEntity.class);
     }
 
     @Override
-    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException {
-        CollectionReference petsRef = usersRef.document(owner).collection(PETS_KEY);
+    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException, DocumentException {
+        initializeWithCollectionPath(owner);
+        CollectionReference petsRef = dbCol.getCollectionReference(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
@@ -121,60 +109,107 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
-        ApiFuture<DocumentSnapshot> future = petRef.get();
-        DocumentSnapshot petDoc;
-        try {
-            petDoc = future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
-        }
-        if (!petDoc.exists()) {
-            throw new DatabaseAccessException(INVALID_PET_EXC, PET_DOES_NOT_EXIST_EXC);
-        }
-        return petDoc.get(field);
+    public Object getSimpleField(String owner, String name, String field)
+        throws DatabaseAccessException, DocumentException {
+        String petPath = Path.ofDocument(Collections.pets, getUserId(owner), name);
+        return dbDoc.getDocumentField(petPath, field);
     }
 
     @Override
-    public void updateSimpleField(String owner, String name, String field, Object value) {
-        DocumentReference petRef = usersRef.document(owner).collection(PETS_KEY).document(name);
+    public void updateSimpleField(String owner, String name, String field, Object value)
+        throws DatabaseAccessException, DocumentException {
+        initializeWithDocumentPath(owner, name);
+        DocumentReference petRef = dbDoc.getDocumentReference(path);
         petRef.update(field, value);
     }
 
     @Override
-    public void deleteMapField(String owner, String name, String field) throws DatabaseAccessException {
-
+    public void deleteFieldCollection(String owner, String name, String field)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithCollectionPath(owner, name, field);
+        dbCol.deleteCollection(path, batch);
+        batch.commit();
     }
 
     @Override
-    public Map<String, Object> getMapField(String owner, String name, String field) throws DatabaseAccessException {
-        return null;
+    public List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
+        throws DatabaseAccessException,
+        DocumentException {
+        initializeFieldWithCollectionPath(owner, name, field);
+        CollectionReference fieldRef = dbCol.getCollectionReference(path);
+
+        List<Map<String, Object>> externalList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = fieldRef.get();
+            List<QueryDocumentSnapshot> fieldsDocuments = future.get().getDocuments();
+            for (QueryDocumentSnapshot fieldDocument : fieldsDocuments) {
+                Map<String, Object> internalList = new HashMap<>();
+                internalList.put("name", fieldDocument.getId());
+                internalList.put("body", fieldDocument.getData());
+                externalList.add(internalList);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
+        return externalList;
     }
 
     @Override
-    public void addMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
+    public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String owner, String name, String field,
+                                                                           String key1, String key2)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithCollectionPath(owner, name, field);
+        CollectionReference fieldRef = dbCol.getCollectionReference(path);
 
+        List<Map<String, Object>> externalList = new ArrayList<>();
+        try {
+            ApiFuture<QuerySnapshot> future = fieldRef.get();
+            List<QueryDocumentSnapshot> fieldsDocuments = future.get().getDocuments();
+            for (QueryDocumentSnapshot fieldDocument : fieldsDocuments) {
+                String key = fieldDocument.getId();
+                if (key1.compareTo(key) <= 0 && key2.compareTo(key) >= 0) {
+                    Map<String, Object> internalList = new HashMap<>();
+                    internalList.put("name", fieldDocument.getId());
+                    internalList.put("body", fieldDocument.getData());
+                    externalList.add(internalList);
+                }
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException(DELFAIL_KEY, e.getMessage());
+        }
+        return externalList;
     }
 
     @Override
-    public void deleteMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
-
+    public void addFieldCollectionElement(String owner, String name, String field, String key, Map<String, Object> body)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithDocumentPath(owner, name, field, key);
+        dbDoc.createDocument(path, body, batch);
+        batch.commit();
     }
 
     @Override
-    public void updateMapFieldElement(String owner, String name, String field, String key, Object body) throws DatabaseAccessException {
-
+    public void deleteFieldCollectionElement(String owner, String name, String field, String key)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithDocumentPath(owner, name, field, key);
+        dbDoc.deleteDocument(path, batch);
+        batch.commit();
     }
 
     @Override
-    public Object getMapFieldElement(String owner, String name, String field, String key) throws DatabaseAccessException {
-        return null;
+    public void updateFieldCollectionElement(String owner, String name, String field, String key,
+                                             Map<String, Object> body)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithDocumentPath(owner, name, field, key);
+        dbDoc.updateDocumentFields(path, body, batch);
+        batch.commit();
     }
 
     @Override
-    public Map<String, Object> getMapFieldElementsBetweenKeys(String owner, String name, String field, String key1, String key2) throws DatabaseAccessException {
-        return null;
+    public Object getFieldCollectionElement(String owner, String name, String field, String key)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithDocumentPath(owner, name, field, key);
+        return dbDoc.getDocumentData(path);
     }
 
     /**
@@ -212,6 +247,41 @@ public class PetDaoImpl implements PetDao {
         ownerId = getUserId(owner);
         batch = dbCol.batch();
         path = Path.ofCollection(Collections.pets, ownerId);
+    }
+
+    /**
+     * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
+     * pet field document identified by key
+     * @param owner Owner of the pet
+     * @param petName Pet name
+     * @param collectionName Name of the collection
+     * @param key Id of the document we access
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    private void initializeFieldWithDocumentPath(String owner, String petName, String collectionName, String key)
+        throws DatabaseAccessException, DocumentException {
+        Collections collection = Path.collectionOfField(collectionName);
+        ownerId = getUserId(owner);
+        batch = dbCol.batch();
+        path = Path.ofDocument(collection, ownerId, petName, key);
+    }
+
+    /**
+     * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
+     * pet field collection
+     * @param owner Owner of the pet
+     * @param petName Pet name
+     * @param collectionName Name of the collection
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    private void initializeFieldWithCollectionPath(String owner, String petName, String collectionName)
+        throws DatabaseAccessException, DocumentException {
+        Collections collection = Path.collectionOfField(collectionName);
+        ownerId = getUserId(owner);
+        batch = dbCol.batch();
+        path = Path.ofCollection(collection, ownerId, petName);
     }
 
     /**
