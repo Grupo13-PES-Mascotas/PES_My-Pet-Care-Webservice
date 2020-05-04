@@ -51,11 +51,12 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public List<ForumEntity> getAllForumsFromGroup(String parentGroup) throws DatabaseAccessException {
-        if (!groupDao.groupNameInUse(parentGroup)) {
+    public List<ForumEntity> getAllForumsFromGroup(String groupName)
+        throws DatabaseAccessException {
+        if (!groupDao.groupNameInUse(groupName)) {
             throw new DatabaseAccessException("invalid-request", "The group does not exist");
         } else {
-            return forumDao.getAllForumsFromGroup(parentGroup);
+            return forumDao.getAllForumsFromGroup(groupName);
         }
     }
 
@@ -80,12 +81,12 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void postMessage(String token, String parentGroup, String forumName, MessageEntity post)
+    public void postMessage(String token, String parentGroup, String forumName, MessageEntity messageEntity)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DatabaseAccessException("invalid-request", "The forum does not exist");
         } else {
-            forumDao.postMessage(parentGroup, forumName, post);
+            forumDao.postMessage(parentGroup, forumName, messageEntity);
         }
     }
 
