@@ -69,8 +69,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
         for (DocumentReference doc : iterable) {
             try {
                 snapshots.add(documentAdapter.getDocumentSnapshot(doc.getPath()));
-            } catch (DocumentException ignore) {
-            }
+            } catch (DocumentException ignore) { }
         }
         return snapshots;
     }
