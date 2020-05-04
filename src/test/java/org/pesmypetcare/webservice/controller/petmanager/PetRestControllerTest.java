@@ -48,7 +48,7 @@ class PetRestControllerTest {
         + "  \"value\": \"Other\"\n"
         + "} ";
     private static final String jsonCollectionField= "{\n"
-        + "  \"kcal\": 85.4\n"
+        + "  \"kcal\": 85.4,\n"
         + "  \"mealName\": \"MaMeal\"\n"
         + "} ";
     private static final PetEntity petEntity = new PetEntity();
