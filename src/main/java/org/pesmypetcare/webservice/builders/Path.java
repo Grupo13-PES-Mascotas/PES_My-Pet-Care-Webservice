@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.builders;
+package org.pesmypetcare.webservice.builders;
 
 import org.springframework.lang.NonNull;
 
@@ -19,11 +19,15 @@ public class Path {
      * There must be as many IDs as documents should be crossed until the desired file is reached. Also, the IDs must
      * be in the same order they need to be accessed to reach the final document or collection.
      * <p>
-     * Here are some examples ofDocument how the method should be used:
+     * Here are some examples of how the method should be used:
      * <blockquote><pre>
-     *     String path = Path.ofDocument(Collections.users);
+     *     //Path to the Dogs group
      *     String path = Path.ofDocument(Collections.groupsNames, "Dogs");
+     *
+     *     //Path to the Huskies forum in the Dogs group
      *     String path = Path.ofDocument(Collections.forumsNames, "Dogs", "Huskies");
+     *
+     *     //Path to the pet Rex of the user with ID yIoqQ6OepwRaadAOz2EdeIhikOX2
      *     String path = Path.ofDocument(Collections.pets, "yIoqQ6OepwRaadAOz2EdeIhikOX2", "Rex");
      * </pre></blockquote>
      *
@@ -69,7 +73,10 @@ public class Path {
      * <p>
      * Here are some examples of how the method should be used:
      * <blockquote><pre>
+     *     //Path to the users collection
      *     String path = Path.ofCollection(Collections.users);
+     *
+     *     //Path to the forum names collection in the Dogs group name document
      *     String path = Path.ofCollection(Collections.forumsNames, "Dogs");
      * </pre></blockquote>
      *
@@ -112,20 +119,29 @@ public class Path {
      *
      * @param collection The collection where the document is stored
      * @param ids The array with the ids
-     * @throws IllegalArgumentException When the array is empty or any ofDocument its elements is null or empty
+     * @throws IllegalArgumentException When the array is empty or any of its elements is null or empty
      */
     private static void checkProvidedIds(Collections collection, @NonNull String[] ids) {
-        if (ids.length == 0) {
-            if (!(collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
-                .equals(Collections.tags) || collection.equals(Collections.usernames) || collection.equals(Collections.users))) {
-                throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
-            }
+        if (ids.length == 0 && !isRootCollection(collection)) {
+            throw new IllegalArgumentException("Invalid document path. Provided path must not be empty.");
         }
         for (int i = 0; i < ids.length; ++i) {
             if (ids[i] == null || ids[i].isEmpty()) {
                 throw new IllegalArgumentException(
-                    "Invalid ID at argument " + (i + 1) + ". IDs must not " + "be null or empty.");
+                    "Invalid ID at argument " + (i + 1) + ". IDs must not be null or empty.");
             }
         }
+    }
+
+    /**
+     * Checks if the collection is one of the root collections.
+     *
+     * @param collection The collection
+     * @return True if it is a root collection
+     */
+    private static boolean isRootCollection(Collections collection) {
+        return collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
+            .equals(Collections.tags) || collection.equals(Collections.usernames) || collection
+            .equals(Collections.users);
     }
 }

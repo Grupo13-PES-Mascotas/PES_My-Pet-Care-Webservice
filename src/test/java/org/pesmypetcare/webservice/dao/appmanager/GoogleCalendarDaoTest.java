@@ -10,7 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
-import org.pesmypetcare.webservice.firebaseservice.CalendarServiceFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.CalendarServiceFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;

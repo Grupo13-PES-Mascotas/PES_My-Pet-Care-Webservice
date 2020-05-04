@@ -6,10 +6,12 @@ import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -30,6 +32,7 @@ public class MyPetCareRestController {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException {
         ObjectMapper mapper = new ObjectMapper();
         UserEntity userEntity = mapper.convertValue(user.get("user"), UserEntity.class);

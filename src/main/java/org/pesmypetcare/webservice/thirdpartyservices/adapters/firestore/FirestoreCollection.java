@@ -1,12 +1,16 @@
-package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
+package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.WriteBatch;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 /**
  * @author Santiago Del Rey
@@ -14,9 +18,11 @@ import org.springframework.lang.Nullable;
 public interface FirestoreCollection {
     /**
      * Gets a Firestore WriteBatch instance that can be used to combine multiple writes.
+     *
      * @return A WriteBatch that operates on this Firestore client
      */
     WriteBatch batch();
+
     /**
      * Gets a CollectionReference that refers to the collection at the specified path.
      *
@@ -27,10 +33,10 @@ public interface FirestoreCollection {
     CollectionReference getCollectionReference(@NonNull String path);
 
     /**
-     * The id ofDocument a collection refers to the last component ofDocument path pointing to a collection.
+     * The id of a collection refers to the last component of the path pointing to a collection.
      *
      * @param path A slash-separated path to a collection
-     * @return The ID ofDocument the collection
+     * @return The ID of the collection
      */
     @NonNull
     String getCollectionId(@NonNull String path);
@@ -45,22 +51,33 @@ public interface FirestoreCollection {
     DocumentReference getCollectionParent(@NonNull String path);
 
     /**
-     * Retrieves the list ofDocument documents in this collection.
+     * Retrieves the list of documents in this collection.
      * The document references returned may include references to "missing documents", i.e. document locations that have
      * no document present but which contain subcollections with documents. Attempting to read such a document reference
      * (e.g. via `get()` or `onSnapshot()`) will return a `DocumentSnapshot` whose `exists()` method returns false.
      *
      * @param path A slash-separated path to a collection
-     * @return The list ofDocument documents in this collection
+     * @return The list of documents in this collection
      */
     @NonNull
     Iterable<DocumentReference> listAllCollectionDocuments(@NonNull String path);
 
     /**
+     * Retrieves the list of document snapshots in this collection.
+     *
+     * @param path A slash-separated path to a collection
+     * @return The list of document snapshots in this collection
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     */
+    @NonNull
+    List<DocumentSnapshot> listAllCollectionDocumentSnapshots(@NonNull String path) throws DatabaseAccessException;
+
+    /**
      * Creates and returns a new Query that includes all documents in the database that are contained in a
      * collection or subcollection with the given {@code collectionId}.
+     *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                    the last segment ofDocument its path will be included. Cannot contain a slash.
+     * the last segment of its path will be included. Cannot contain a slash.
      * @return The created Query
      */
     Query getCollectionGroup(@NonNull String collectionId);
@@ -78,20 +95,19 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field The name ofDocument the field to compare
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
-    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
-                                   @Nullable Object value);
+    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field, @Nullable Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field
      * and the value should be equal to the specified value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param fieldPath The name ofDocument the field to compare
+     * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -104,20 +120,19 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param field The name ofDocument the field to compare
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
-    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
-                                         @NonNull Object value);
+    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field, @NonNull Object value);
 
     /**
      * Creates and returns a new Query with the additional filter that documents must contain the specified field,
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionPath A slash-separated path to a collection
-     * @param fieldPath The name ofDocument the field to compare
+     * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -130,8 +145,8 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment ofDocument its path will be included. Cannot contain a slash.
-     * @param field The name ofDocument the field to compare
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -144,8 +159,8 @@ public interface FirestoreCollection {
      * and the value should be equal to the specified value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment ofDocument its path will be included. Cannot contain a slash.
-     * @param fieldPath The name ofDocument the field to compare
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -158,8 +173,8 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment ofDocument its path will be included. Cannot contain a slash.
-     * @param field The name ofDocument the field to compare
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param field The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
@@ -172,12 +187,12 @@ public interface FirestoreCollection {
      * the value must be an array, and that the array must contain the provided value.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
-     *                     the last segment ofDocument its path will be included. Cannot contain a slash.
-     * @param fieldPath The name ofDocument the field to compare
+     * the last segment of its path will be included. Cannot contain a slash.
+     * @param fieldPath The name of the field to compare
      * @param value The value for comparison
      * @return The created Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
-                                                        @NonNull FieldPath fieldPath, @NonNull Object value);
+    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull FieldPath fieldPath,
+                                                        @NonNull Object value);
 }

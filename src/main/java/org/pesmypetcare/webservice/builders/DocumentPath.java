@@ -1,11 +1,11 @@
-package org.pesmypetcare.webservice.firebaseservice.builders;
+package org.pesmypetcare.webservice.builders;
 
 import org.springframework.lang.NonNull;
 
 /**
  * @author Santiago Del Rey
  */
-public class DocumentPath extends PathBuilder {
+class DocumentPath extends PathBuilder {
     private static final int[] NUMBERS = {3, 4};
 
     /**
@@ -16,7 +16,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildOneLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(1, ids.length);
         switch (collection) {
             case groups:
@@ -42,7 +42,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildTwoLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         throwExceptionIfWrongNumArgs(2, ids.length);
         switch (collection) {
             case forums:
@@ -66,7 +66,7 @@ public class DocumentPath extends PathBuilder {
      * @return The path to a document
      */
     @NonNull
-    StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
+    public StringBuilder buildThreeLevelPath(@NonNull Collections collection, @NonNull String[] ids) {
         if (collection.equals(Collections.medications)) {
             throwExceptionIfWrongNumArgs(NUMBERS[1], ids.length);
         } else {
@@ -218,7 +218,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -232,7 +232,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -242,11 +242,11 @@ public class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a frequency ofDocument training entry.
+     * Builds the path to a frequency of training entry.
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -260,7 +260,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @param medicationName The medication name
      * @return The path
      */
@@ -271,11 +271,11 @@ public class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a frequency ofDocument wash entry.
+     * Builds the path to a frequency of wash entry.
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -289,7 +289,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -303,7 +303,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull
@@ -317,7 +317,7 @@ public class DocumentPath extends PathBuilder {
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date ofDocument creation
+     * @param date The date of creation
      * @return The path
      */
     @NonNull

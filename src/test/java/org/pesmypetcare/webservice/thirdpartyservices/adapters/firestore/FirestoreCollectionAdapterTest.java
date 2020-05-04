@@ -1,7 +1,8 @@
-package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
+package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
@@ -13,11 +14,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -39,6 +45,8 @@ class FirestoreCollectionAdapterTest {
 
     @Mock
     private Firestore db;
+    @Mock
+    private FirestoreDocument documentAdapter;
     @Mock
     private CollectionReference collectionReference;
     @Mock
@@ -78,7 +86,7 @@ class FirestoreCollectionAdapterTest {
         public void getCollectionParent() {
             given(collectionReference.getParent()).willReturn(documentReference);
             DocumentReference reference = collectionAdapter.getCollectionParent(collectionPath);
-            assertEquals(documentReference, reference, "Should return the parent document reference ofDocument the collection");
+            assertEquals(documentReference, reference, "Should return the parent document reference of the collection");
         }
 
         @Test
@@ -86,6 +94,24 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.listDocuments()).willReturn(documentReferences);
             Iterable<DocumentReference> documents = collectionAdapter.listAllCollectionDocuments(collectionPath);
             assertEquals(documentReferences, documents, "Should return an iterable with all the collection documents");
+        }
+
+        @Test
+        public void listAllCollectionDocumentSnapshots() throws DatabaseAccessException, DocumentException {
+            given(collectionReference.listDocuments()).willReturn(documentReferences);
+            Iterator documentIterator = mock(Iterator.class);
+            given(documentReferences.iterator()).willReturn(documentIterator);
+            given(documentIterator.hasNext()).willReturn(true, false);
+            given(documentIterator.next()).willReturn(documentReference);
+            given(documentReference.getPath()).willReturn(collectionPath);
+            DocumentSnapshot snapshot = mock(DocumentSnapshot.class);
+            given(documentAdapter.getDocumentSnapshot(anyString())).willReturn(snapshot);
+
+            List<DocumentSnapshot> snapshots = collectionAdapter.listAllCollectionDocumentSnapshots(collectionPath);
+            List<DocumentSnapshot> expected = new ArrayList<>();
+            expected.add(snapshot);
+
+            assertEquals(expected, snapshots, "Should return a list with all the document snapshots in the collection");
         }
 
         @Test
@@ -112,8 +138,9 @@ class FirestoreCollectionAdapterTest {
         public void getDocumentsWhereFieldEqualToValue() {
             given(collectionReference.whereEqualTo(same(field), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, field, value);
-            assertEquals(query, result, "Should return all documents from " + collectionPath + " where " + field
-                + " is equals to " + value);
+            assertEquals(query, result,
+                         "Should return all documents from " + collectionPath + " where " + field + " is equals to "
+                             + value);
         }
 
         @Test
@@ -121,8 +148,8 @@ class FirestoreCollectionAdapterTest {
             given(collectionReference.whereEqualTo(same(fieldPath), same(value))).willReturn(query);
             Query result = collectionAdapter.getDocumentsWhereEqualTo(collectionPath, fieldPath, value);
             assertEquals(query, result,
-                         "Should return all documents from " + collectionPath + " where " + field + " in "
-                             + fieldPath + " is equals to " + value);
+                         "Should return all documents from " + collectionPath + " where " + field + " in " + fieldPath
+                             + " is equals to " + value);
         }
 
         @Test

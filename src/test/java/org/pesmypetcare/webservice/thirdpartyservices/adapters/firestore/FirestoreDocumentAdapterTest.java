@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
+package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
@@ -34,12 +34,12 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.lenient;
+import static org.mockito.BDDMockito.mock;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * @author Santiago Del Rey
@@ -97,9 +97,22 @@ class FirestoreDocumentAdapterTest {
         given(collectionReference.document()).willReturn(documentReference);
         given(batch.create(any(DocumentReference.class), anyMap())).willReturn(batch);
 
-        adapter.createDocument(collectionPath, fields, batch);
+        DocumentReference ref = adapter.createDocument(collectionPath, fields, batch);
         verify(collectionReference).document();
         verify(batch).create(same(documentReference), anyMap());
+        assertEquals(documentReference, ref, "Should return the document reference created");
+    }
+
+    @Test
+    public void createDocumentWithoutBatch() {
+        given(db.collection(anyString())).willReturn(collectionReference);
+        given(collectionReference.document()).willReturn(documentReference);
+        given(documentReference.create(anyMap())).willReturn(null);
+
+        DocumentReference ref = adapter.createDocument(collectionPath, fields);
+        verify(collectionReference).document();
+        verify(documentReference).create(same(fields));
+        assertEquals(documentReference, ref, "Should return the document reference created");
     }
 
     @Test
@@ -108,9 +121,22 @@ class FirestoreDocumentAdapterTest {
         given(collectionReference.document()).willReturn(documentReference);
         given(batch.create(any(DocumentReference.class), any(pojo.getClass()))).willReturn(batch);
 
-        adapter.createDocument(collectionPath, pojo, batch);
+        DocumentReference ref = adapter.createDocument(collectionPath, pojo, batch);
         verify(collectionReference).document();
         verify(batch).create(same(documentReference), same(pojo));
+        assertEquals(documentReference, ref, "Should return the document reference created");
+    }
+
+    @Test
+    public void createDocumentFromPojoWithoutBatch() {
+        given(db.collection(anyString())).willReturn(collectionReference);
+        given(collectionReference.document()).willReturn(documentReference);
+        given(documentReference.create(any(pojo.getClass()))).willReturn(null);
+
+        DocumentReference ref = adapter.createDocument(collectionPath, pojo);
+        verify(collectionReference).document();
+        verify(documentReference).create(same(pojo));
+        assertEquals(documentReference, ref, "Should return the document reference created");
     }
 
     @Nested
@@ -119,6 +145,7 @@ class FirestoreDocumentAdapterTest {
         public void setUp() {
             documentId = "1231DADWAqsd2";
             documentPath = collectionPath + "/" + documentId;
+            fieldPath = FieldPath.of(field);
             given(db.document(anyString())).willReturn(documentReference);
         }
 
@@ -148,9 +175,20 @@ class FirestoreDocumentAdapterTest {
         public void createDocumentWithId() {
             given(batch.create(any(DocumentReference.class), anyMap())).willReturn(batch);
 
-            adapter.createDocumentWithId(collectionPath, documentId, fields, batch);
+            DocumentReference ref = adapter.createDocumentWithId(collectionPath, documentId, fields, batch);
             verify(db).document(collectionPath + "/" + documentId);
             verify(batch).create(same(documentReference), same(fields));
+            assertEquals(documentReference, ref, "Should return the document reference created");
+        }
+
+        @Test
+        public void createDocumentWithIdWithoutBatch() {
+            given(documentReference.create(anyMap())).willReturn(null);
+
+            DocumentReference ref = adapter.createDocumentWithId(collectionPath, documentId, fields);
+            verify(db).document(collectionPath + "/" + documentId);
+            verify(documentReference).create(same(fields));
+            assertEquals(documentReference, ref, "Should return the document reference created");
         }
 
         @Test
@@ -163,11 +201,29 @@ class FirestoreDocumentAdapterTest {
         }
 
         @Test
+        public void createDocumentWithIdFromPojoWithoutBatch() {
+            given(documentReference.create(any(pojo.getClass()))).willReturn(null);
+
+            DocumentReference ref = adapter.createDocumentWithId(collectionPath, documentId, pojo);
+            verify(db).document(collectionPath + "/" + documentId);
+            verify(documentReference).create(same(pojo));
+            assertEquals(documentReference, ref, "Should return the document reference created");
+        }
+
+        @Test
         public void setDocumentFields() {
             given(batch.set(any(DocumentReference.class), anyMap())).willReturn(batch);
 
             adapter.setDocumentFields(documentPath, fields, batch);
-            verify(batch).set(same(documentReference), anyMap());
+            verify(batch).set(same(documentReference), same(fields));
+        }
+
+        @Test
+        public void setDocumentFieldsWithoutBatch() {
+            given(documentReference.set(anyMap())).willReturn(null);
+
+            adapter.setDocumentFields(documentPath, fields);
+            verify(documentReference).set(same(fields));
         }
 
         @Test
@@ -179,29 +235,59 @@ class FirestoreDocumentAdapterTest {
         }
 
         @Test
-        public void updateDocumentFields() {
-            given(batch.update(any(DocumentReference.class), anyMap())).willReturn(batch);
+        public void setDocumentFieldsFromPojoWithoutBatch() {
+            given(documentReference.set(any(pojo.getClass()))).willReturn(null);
 
-            adapter.updateDocumentFields(documentPath, fields, batch);
-            verify(batch).update(same(documentReference), anyMap());
+            adapter.setDocumentFields(documentPath, pojo);
+            verify(documentReference).set(same(pojo));
         }
 
         @Test
-        public void deleteDocument() {
-            given(documentReference.listCollections()).willReturn(collectionReferences);
-            Iterator collectionIterator = mock(Iterator.class);
-            given(collectionReferences.iterator()).willReturn(collectionIterator);
-            given(collectionIterator.hasNext()).willReturn(true, false, false);
-            given(collectionIterator.next()).willReturn(collectionReference);
-            given(collectionReference.listDocuments()).willReturn(documentReferences);
-            Iterator documentIterator = mock(Iterator.class);
-            given(documentReferences.iterator()).willReturn(documentIterator);
-            given(documentIterator.hasNext()).willReturn(true, false);
-            given(documentIterator.next()).willReturn(documentReference);
-            given(batch.delete(any(DocumentReference.class))).willReturn(batch);
+        public void updateDocumentFieldsFromMap() {
+            given(batch.update(any(DocumentReference.class), anyMap())).willReturn(batch);
 
-            adapter.deleteDocument(documentPath, batch);
-            verify(batch, times(2)).delete(documentReference);
+            adapter.updateDocumentFields(documentPath, fields, batch);
+            verify(batch).update(same(documentReference), same(fields));
+        }
+
+        @Test
+        public void updateDocumentFieldsFromMapWithoutBatch() {
+            given(documentReference.update(anyMap())).willReturn(null);
+
+            adapter.updateDocumentFields(documentPath, fields);
+            verify(documentReference).update(same(fields));
+        }
+
+        @Test
+        public void updateDocumentFieldsFromFieldPath() {
+            given(batch.update(any(DocumentReference.class), any(FieldPath.class), any())).willReturn(batch);
+
+            adapter.updateDocumentFields(batch, documentPath, fieldPath, aString);
+            verify(batch).update(same(documentReference), same(fieldPath), same(aString));
+        }
+
+        @Test
+        public void updateDocumentFieldsFromFieldPathWithoutBatch() {
+            given(documentReference.update(any(FieldPath.class), any())).willReturn(null);
+
+            adapter.updateDocumentFields(documentPath, fieldPath, aString);
+            verify(documentReference).update(same(fieldPath), same(aString));
+        }
+
+        @Test
+        public void updateDocumentFields() {
+            given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
+
+            adapter.updateDocumentFields(batch, documentPath, field, aString);
+            verify(batch).update(same(documentReference), same(field), same(aString));
+        }
+
+        @Test
+        public void updateDocumentFieldsWithoutBatch() {
+            given(documentReference.update(anyString(), any())).willReturn(null);
+
+            adapter.updateDocumentFields(documentPath, field, aString);
+            verify(documentReference).update(same(field), same(aString));
         }
 
         @Test
@@ -226,6 +312,39 @@ class FirestoreDocumentAdapterTest {
         }
 
         @Nested
+        class RecursiveOperations {
+            @BeforeEach
+            public void setUp() {
+                given(documentReference.listCollections()).willReturn(collectionReferences);
+                Iterator collectionIterator = mock(Iterator.class);
+                given(collectionReferences.iterator()).willReturn(collectionIterator);
+                given(collectionIterator.hasNext()).willReturn(true, false, false);
+                given(collectionIterator.next()).willReturn(collectionReference);
+                given(collectionReference.listDocuments()).willReturn(documentReferences);
+                Iterator documentIterator = mock(Iterator.class);
+                given(documentReferences.iterator()).willReturn(documentIterator);
+                given(documentIterator.hasNext()).willReturn(true, false);
+                given(documentIterator.next()).willReturn(documentReference);
+            }
+
+            @Test
+            public void deleteDocument() {
+                given(batch.delete(any(DocumentReference.class))).willReturn(batch);
+
+                adapter.deleteDocument(documentPath, batch);
+                verify(batch, times(2)).delete(documentReference);
+            }
+
+            @Test
+            public void deleteDocumentWithoutBatch() {
+                given(documentReference.delete()).willReturn(null);
+
+                adapter.deleteDocument(documentPath);
+                verify(documentReference, times(2)).delete();
+            }
+        }
+
+        @Nested
         class UsesFuture {
             private double aDouble;
             private Date aDate;
@@ -246,7 +365,7 @@ class FirestoreDocumentAdapterTest {
                 aDouble = 2.0;
                 aDate = new Date();
                 aBoolean = true;
-                aGeoPoint = new GeoPoint(2.3, 1.0);
+                aGeoPoint = new GeoPoint(2.0, 1.0);
                 aTimestamp = Timestamp.now();
                 fieldPath = FieldPath.of(field);
             }
@@ -262,7 +381,7 @@ class FirestoreDocumentAdapterTest {
                 willReturn(aString).given(documentSnapshot).get(anyString());
 
                 Object result = adapter.getDocumentField(documentPath, field);
-                assertEquals(aString, result, "Should return " + aString + " as the value ofDocument the " + field + " in the "
+                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -280,7 +399,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDouble(anyString())).willReturn(aDouble);
 
                 Double result = adapter.getDoubleFromDocument(documentPath, field);
-                assertEquals(aDouble, result, "Should return " + aDouble + " as the value ofDocument the " + field + " in the "
+                assertEquals(aDouble, result, "Should return " + aDouble + " as the value of the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -289,7 +408,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getDate(anyString())).willReturn(aDate);
 
                 Date result = adapter.getDateFromDocument(documentPath, field);
-                assertEquals(aDate, result, "Should return " + aDate + " as the value ofDocument the " + field + " in the "
+                assertEquals(aDate, result, "Should return " + aDate + " as the value of the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -299,7 +418,7 @@ class FirestoreDocumentAdapterTest {
 
                 Boolean result = adapter.getBooleanFromDocument(documentPath, field);
                 assertEquals(aBoolean, result,
-                             "Should return " + aBoolean + " as the value ofDocument the " + field + " in the "
+                             "Should return " + aBoolean + " as the value of the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -309,7 +428,7 @@ class FirestoreDocumentAdapterTest {
 
                 GeoPoint result = adapter.getGeoPointFromDocument(documentPath, field);
                 assertEquals(aGeoPoint, result,
-                             "Should return " + aGeoPoint + " as the value ofDocument the " + field + " in the "
+                             "Should return " + aGeoPoint + " as the value of the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -318,7 +437,7 @@ class FirestoreDocumentAdapterTest {
                 given(documentSnapshot.getString(anyString())).willReturn(aString);
 
                 String result = adapter.getStringFromDocument(documentPath, field);
-                assertEquals(aString, result, "Should return " + aString + " as the value ofDocument the " + field + " in the "
+                assertEquals(aString, result, "Should return " + aString + " as the value of the " + field + " in the "
                     + "document located at " + documentPath);
             }
 
@@ -328,7 +447,7 @@ class FirestoreDocumentAdapterTest {
 
                 Timestamp result = adapter.getTimestampFromDocument(documentPath, field);
                 assertEquals(aTimestamp, result,
-                             "Should return " + aTimestamp + " as the value ofDocument the " + field + " in the "
+                             "Should return " + aTimestamp + " as the value of the " + field + " in the "
                                  + "document located at " + documentPath);
             }
 
@@ -348,7 +467,7 @@ class FirestoreDocumentAdapterTest {
 
                 UserEntity result = adapter.getDocumentDataAsObject(documentPath, UserEntity.class);
                 assertEquals(pojo, result,
-                             "Should return a pojo ofDocument type " + pojo.getClass().getSimpleName() + " as the data "
+                             "Should return a pojo of type " + pojo.getClass().getSimpleName() + " as the data "
                                  + "stored in the document located at " + documentPath);
             }
 
