@@ -15,6 +15,7 @@ import org.pesmypetcare.webservice.dao.PetDao;
 import org.pesmypetcare.webservice.entity.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,8 @@ public class GoogleCalendarServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenSecondaryCalendarCreated() throws CalendarAccessException {
+    public void shouldReturnNothingWhenSecondaryCalendarCreated()
+        throws CalendarAccessException, DatabaseAccessException, DocumentException {
         given(googleCalendarDao.createSecondaryCalendar(anyString(), isA(Calendar.class))).willReturn(calendarId);
         service.createSecondaryCalendar(accessToken, owner, petName);
         verify(googleCalendarDao).createSecondaryCalendar(isA(String.class), isA(Calendar.class));
@@ -88,7 +90,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnNothingWhenSecondaryCalendarDeleted() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         service.deleteSecondaryCalendar(accessToken, owner, petName);
         verify(googleCalendarDao).deleteSecondaryCalendar(isA(String.class), isA(String.class));
@@ -97,7 +99,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnAListOfEventsWhenAllEventsFromCalendarRetrieved() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         List<EventEntity> response = service.getAllEventsFromCalendar(accessToken, owner, petName);
         assertEquals(eventList, response, "Should return an array of Event");
@@ -105,7 +107,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnNothingWhenEventCreated() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         service.createEvent(accessToken, owner, petName, eventEntity);
         verify(googleCalendarDao).createEvent(isA(String.class), isA(String.class), isA(Event.class));
@@ -113,7 +115,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnEventWhenEventRetrieved() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         given(googleCalendarDao.retrieveEvent(anyString(), anyString(), anyString())).willReturn(event);
         service.retrieveEvent(accessToken, owner, petName, eventId);
@@ -123,7 +125,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnNothingWhenEventUpdated() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         service.updateEvent(accessToken, owner, petName, eventEntity);
         verify(googleCalendarDao).updateEvent(isA(String.class), isA(String.class), isA(String.class),
@@ -132,7 +134,7 @@ public class GoogleCalendarServiceTest {
 
     @Test
     public void shouldReturnNothingWhenEventDeleted() throws CalendarAccessException,
-        DatabaseAccessException {
+        DatabaseAccessException, DocumentException {
         given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         service.deleteEvent(accessToken, owner, petName, eventId);
         verify(googleCalendarDao).deleteEvent(isA(String.class), isA(String.class), isA(String.class));

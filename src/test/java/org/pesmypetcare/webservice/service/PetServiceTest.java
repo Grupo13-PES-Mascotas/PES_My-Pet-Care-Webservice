@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.PetDao;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +47,19 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenPetCreated() {
+    public void shouldReturnNothingWhenPetCreated() throws DatabaseAccessException, DocumentException {
         service.createPet(owner, name, pet);
         verify(petDao).createPet(isA(String.class), isA(String.class), isA(PetEntity.class));
     }
 
     @Test
-    public void shouldReturnNothingWhenPetDeleted() throws DatabaseAccessException {
+    public void shouldReturnNothingWhenPetDeleted() throws DatabaseAccessException, DocumentException {
         service.deleteByOwnerAndName(owner, name);
         verify(petDao).deleteByOwnerAndName(isA(String.class), isA(String.class));
     }
 
     @Test
-    public void shouldReturnNothingWhenAllPetsDeleted() throws DatabaseAccessException {
+    public void shouldReturnNothingWhenAllPetsDeleted() throws DatabaseAccessException, DocumentException {
         service.deleteAllPets(owner);
         verify(petDao).deleteAllPets(isA(String.class));
     }
@@ -72,7 +73,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetEntityWhenPetRetrieved() throws DatabaseAccessException {
+    public void shouldReturnPetEntityWhenPetRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getPetData(owner, name)).thenReturn(pet);
         PetEntity entity = service.getPetData(owner, name);
         assertSame(pet, entity, "Should return a pet entity");
@@ -87,7 +88,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException {
+    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getAllPetsData(owner)).thenReturn(pets);
         List<Map<String, Object>> list = service.getAllPetsData(owner);
         assertSame(pets, list, "Should return a list of pet entities");
@@ -102,7 +103,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException {
+    public void shouldReturnPetFieldWhenPetFieldRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getSimpleField(owner, name, field)).thenReturn(value);
         Object obtainedValue = service.getSimpleField(owner, name, field);
         assertSame(value, obtainedValue, "Should return an Object");
@@ -118,7 +119,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenPetFieldUpdated() {
+    public void shouldReturnNothingWhenPetFieldUpdated() throws DatabaseAccessException, DocumentException {
         service.updateSimpleField(owner, name, field, value);
         verify(petDao).updateSimpleField(isA(String.class), isA(String.class), isA(String.class), isA(Object.class));
     }

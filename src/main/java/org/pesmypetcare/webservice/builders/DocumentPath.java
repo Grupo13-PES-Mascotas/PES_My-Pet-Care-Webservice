@@ -252,7 +252,7 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToFreqTraining(@NonNull String userId, @NonNull String petName,
                                                          @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/freqTrainings/").append(date);
+        return buildPathToPet(userId, petName).append("/trainings/").append(date);
     }
 
     /**
@@ -281,7 +281,7 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToFreqWash(@NonNull String userId, @NonNull String petName,
                                                      @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/freqWashes/").append(date);
+        return buildPathToPet(userId, petName).append("/washes/").append(date);
     }
 
     /**

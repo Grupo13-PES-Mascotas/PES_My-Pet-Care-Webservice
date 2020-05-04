@@ -18,6 +18,8 @@ public class PetEntity {
     private String profileImageLocation;
     private String calendarId;
 
+    public PetEntity() {}
+
     public PetEntity(GenderType gender, String breed, String birth, String pathologies, String needs,
                      Double recommendedKcal, String profileImageLocation, String calendarId) {
         checkDateFormat(birth);
