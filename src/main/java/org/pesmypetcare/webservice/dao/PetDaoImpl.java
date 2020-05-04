@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 @Repository
 public class PetDaoImpl implements PetDao {
     private static final String DELFAIL_KEY = "deletion-failed";
@@ -178,7 +181,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Object getFieldCollectionElement(String owner, String name, String field, String key)
+    public Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithDocumentPath(owner, name, field, key);
         return dbDoc.getDocumentData(path);

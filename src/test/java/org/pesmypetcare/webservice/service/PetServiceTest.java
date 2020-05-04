@@ -21,6 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
+/**
+ * @author Marc Simó
+ */
 @ExtendWith(MockitoExtension.class)
 class PetServiceTest {
     private static List<Map<String, Object>> pets;

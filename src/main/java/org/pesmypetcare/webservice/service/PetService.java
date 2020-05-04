@@ -172,6 +172,6 @@ public interface PetService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    Object getFieldCollectionElement(String owner, String name, String field, String key)
+    Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
         throws DatabaseAccessException, DocumentException;
 }

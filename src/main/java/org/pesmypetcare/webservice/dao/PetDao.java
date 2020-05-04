@@ -6,7 +6,6 @@ import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Marc Simó
@@ -164,7 +163,7 @@ public interface PetDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    Object getFieldCollectionElement(String owner, String name, String field, String key)
+    Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
         throws DatabaseAccessException, DocumentException;
 
 }

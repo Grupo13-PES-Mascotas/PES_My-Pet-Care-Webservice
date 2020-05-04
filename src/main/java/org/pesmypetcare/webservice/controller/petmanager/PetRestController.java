@@ -251,7 +251,7 @@ public class PetRestController {
      */
     @GetMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
+    public Map<String, Object> getFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                      @PathVariable String field, @PathVariable String key)
         throws DatabaseAccessException, DocumentException {
         return petService.getFieldCollectionElement(owner, name, field, key);

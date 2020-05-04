@@ -96,7 +96,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public Object getFieldCollectionElement(String owner, String name, String field, String key)
+    public Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
         return petDao.getFieldCollectionElement(owner, name, field, key);
     }
