@@ -1,6 +1,12 @@
 package org.pesmypetcare.webservice.firebaseservice.adapters.firestore;
 
-import com.google.cloud.firestore.*;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldPath;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.firebaseservice.FirebaseFactory;
@@ -63,7 +69,8 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
         for (DocumentReference doc : iterable) {
             try {
                 snapshots.add(documentAdapter.getDocumentSnapshot(doc.getPath()));
-            } catch (DocumentException ignore) { }
+            } catch (DocumentException ignore) {
+            }
         }
         return snapshots;
     }
