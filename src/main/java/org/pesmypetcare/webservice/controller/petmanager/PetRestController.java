@@ -231,7 +231,7 @@ public class PetRestController {
      */
     @PutMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
+public void updateFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key,
                                       @RequestBody Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
