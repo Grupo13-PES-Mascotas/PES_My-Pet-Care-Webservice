@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.dao;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 /**
  * @author Santiago Del Rey
@@ -29,16 +30,18 @@ public interface UserDao {
      * Deletes a user from database.
      * @param uid The user's unique identifier
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    void deleteFromDatabase(String uid) throws DatabaseAccessException;
+    void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the user with the specified uid from the database.
      * @param uid The uid of the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DocumentException When the document does not exist
      */
-    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException;
+    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
      * Gets the data of the specified user.

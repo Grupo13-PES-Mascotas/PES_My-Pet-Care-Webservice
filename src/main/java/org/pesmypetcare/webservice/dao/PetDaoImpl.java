@@ -51,8 +51,8 @@ public class PetDaoImpl implements PetDao {
     @Override
     public void createPet(String owner, String name, PetEntity petEntity) throws DatabaseAccessException,
         DocumentException {
-        initializeWithDocumentPath(owner, name);
-        dbDoc.createDocument(path, petEntity, batch);
+        initializeWithCollectionPath(owner);
+        dbDoc.createDocumentWithId(path, name, petEntity, batch);
         batch.commit();
     }
 
@@ -85,7 +85,7 @@ public class PetDaoImpl implements PetDao {
     @Override
     public PetEntity getPetData(String owner, String name) throws DatabaseAccessException, DocumentException {
         initializeWithDocumentPath(owner, name);
-        return dbDoc.getDocumentSnapshot(path).toObject(PetEntity.class);
+        return dbDoc.getDocumentDataAsObject(path, PetEntity.class);
     }
 
     @Override
@@ -183,8 +183,8 @@ public class PetDaoImpl implements PetDao {
     @Override
     public void addFieldCollectionElement(String owner, String name, String field, String key, Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithDocumentPath(owner, name, field, key);
-        dbDoc.createDocument(path, body, batch);
+        initializeFieldWithCollectionPath(owner, name, field);
+        dbDoc.createDocumentWithId(path, key, body, batch);
         batch.commit();
     }
 

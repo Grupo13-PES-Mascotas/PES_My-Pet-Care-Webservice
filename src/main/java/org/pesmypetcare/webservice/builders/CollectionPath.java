@@ -179,7 +179,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqTrainingsCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqTrainings");
+        return buildPathToPet(userId, petName).append("/trainings");
     }
 
     /**
@@ -203,7 +203,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqWashesCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqWashes");
+        return buildPathToPet(userId, petName).append("/washes");
     }
 
     /**

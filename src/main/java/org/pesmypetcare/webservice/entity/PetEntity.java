@@ -18,12 +18,25 @@ public class PetEntity {
     private String profileImageLocation;
     private String calendarId;
 
+    public PetEntity(GenderType gender, String breed, String birth, String pathologies, String needs,
+                     Double recommendedKcal, String profileImageLocation, String calendarId) {
+        checkDateFormat(birth);
+        this.gender = gender;
+        this.breed = breed;
+        this.birth = birth;
+        this.pathologies = pathologies;
+        this.needs = needs;
+        this.recommendedKcal = recommendedKcal;
+        this.profileImageLocation = profileImageLocation;
+        this.calendarId = calendarId;
+    }
 
-    private Map<String, MealEntity> meals;
-    private Map<String, Integer> trainings;
-    private Map<String, Integer> washes;
-    private Map<String, Integer> weights;
-    private Map<String, Map<String, MedicationEntity>> medications;
+    /**
+     * Checks that field, key and body have the correct format of a Pet attribute.
+     * @param field Name of the attribute collection. Possible fields: meals, trainings, washes, weights
+     * @param key Key of the attribute
+     * @param body Body of the attribute
+     */
     public static void checkKeyAndBody(String field, String key, Map<String, Object> body) {
         if (field.equals("meals")) {
             checkDateFormat(key);
@@ -42,8 +55,12 @@ public class PetEntity {
         else throw new IllegalArgumentException("Field does not exists");
     }
 
+    /**
+     * Checks that the string date follows the specified .
+     * @param date String that contains a date
+     */
     public static void checkDateFormat(String date) {
-        if (!date.matches("\\d{4}-\\d{2}-\\d{2}'T'\\d{2}:\\d{2}:\\d{2}")) {
+        if (!date.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}")) {
             throw new IllegalArgumentException("Incorrect date format");
         }
     }

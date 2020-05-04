@@ -50,11 +50,12 @@ class PetRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
+        //language=JSON
         jsonPetEntity = "{\n"
             + "  \"gender\": \"Male\",\n"
             + "  \"breed\":\"Chihuahua\",\n"
-            + "  \"birth\":\"2017-12-27T00:00:00.000+0000\",\n"
-            + "  \"patologies\": \"amnesia\",\n"
+            + "  \"birth\":\"2017-12-27T00:00:00\",\n"
+            + "  \"pathologies\": \"amnesia\",\n"
             + "  \"needs\": \"vitaminC\",\n"
             + "  \"recommendedKcal\": 300.0\n"
             + "}";

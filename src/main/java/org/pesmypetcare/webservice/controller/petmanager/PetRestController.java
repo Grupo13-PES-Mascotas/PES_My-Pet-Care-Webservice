@@ -140,7 +140,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @DeleteMapping("/{owner}/{name}/map/{field}")
+    @DeleteMapping("/{owner}/{name}/collection/{field}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFieldCollection(@PathVariable String owner, @PathVariable String name,
                                @PathVariable String field) throws DatabaseAccessException, DocumentException {
@@ -152,11 +152,11 @@ public class PetRestController {
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
      * @param field Name of the field to retrieve
-     * @return The map from the field on the database
+     * @return The list from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/{owner}/{name}/map/{field}")
+    @GetMapping("/{owner}/{name}/collection/{field}")
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getFieldCollection(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
@@ -170,11 +170,11 @@ public class PetRestController {
      * @param field Name of the field
      * @param key1 Start key (This one included)
      * @param key2 End Key (This one included)
-     * @return The map containing the elements between the keys
+     * @return The list containing the elements between the keys
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/{owner}/{name}/map/{field}/{key1}/{key2}")
+    @GetMapping("/{owner}/{name}/collection/{field}/{key1}/{key2}")
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(@PathVariable String owner,
            @PathVariable String name, @PathVariable String field, @PathVariable String key1, @PathVariable String key2)
@@ -192,7 +192,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PostMapping("/{owner}/{name}/map/{field}/{key}")
+    @PostMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.CREATED)
     public void addFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key,
@@ -211,7 +211,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @DeleteMapping("/{owner}/{name}/map/{field}/{key}")
+    @DeleteMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key)
@@ -229,7 +229,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PutMapping("/{owner}/{name}/map/{field}/{key}")
+    @PutMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key,
@@ -249,7 +249,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/{owner}/{name}/map/{field}/{key}")
+    @GetMapping("/{owner}/{name}/collection/{field}/{key}")
     @ResponseStatus(HttpStatus.OK)
     public Object getFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                      @PathVariable String field, @PathVariable String key)

@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.controller.usermanager;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,12 +36,13 @@ public class UserRestController {
      * @param db If true deletes the user only from the database, otherwise deletes the user entirely
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DocumentException When the document does not exist
      */
     @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAccount(@RequestHeader("token") String token, @PathVariable String username,
                               @RequestParam(required = false) boolean db)
-        throws DatabaseAccessException, FirebaseAuthException {
+        throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         if (db) {
             userService.deleteFromDatabase(username);
         } else {
