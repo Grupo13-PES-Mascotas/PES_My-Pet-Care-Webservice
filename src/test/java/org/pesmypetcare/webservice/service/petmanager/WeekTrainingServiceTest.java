@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.petmanager;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -9,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.petmanager.WeekTrainingDao;
 import org.pesmypetcare.webservice.entity.petmanager.WeekTrainingEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.petmanager.WeekTrainingService;
-import org.pesmypetcare.webservice.service.petmanager.WeekTrainingServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

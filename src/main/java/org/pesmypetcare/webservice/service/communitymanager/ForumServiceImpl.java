@@ -25,7 +25,7 @@ public class ForumServiceImpl implements ForumService {
     public void createForum(String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
         if (forumDao.forumNameInUse(parentGroup, forumEntity.getName())) {
-            throw new DatabaseAccessException("invalid-request", "The name is already in use");
+            throw new DocumentException("invalid-request", "The name is already in use");
         } else {
             forumDao.createForum(parentGroup, forumEntity);
         }
@@ -34,7 +34,7 @@ public class ForumServiceImpl implements ForumService {
     @Override
     public void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             forumDao.deleteForum(parentGroup, forumName);
         }
@@ -44,17 +44,16 @@ public class ForumServiceImpl implements ForumService {
     public ForumEntity getForum(String parentGroup, String forumName) throws DatabaseAccessException,
         DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             return forumDao.getForum(parentGroup, forumName);
         }
     }
 
     @Override
-    public List<ForumEntity> getAllForumsFromGroup(String groupName)
-        throws DatabaseAccessException {
+    public List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException, DocumentException {
         if (!groupDao.groupNameInUse(groupName)) {
-            throw new DatabaseAccessException("invalid-request", "The group does not exist");
+            throw new DocumentException("invalid-request", "The group does not exist");
         } else {
             return forumDao.getAllForumsFromGroup(groupName);
         }
@@ -64,7 +63,7 @@ public class ForumServiceImpl implements ForumService {
     public void updateName(String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, currentName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             forumDao.updateName(parentGroup, currentName, newName);
         }
@@ -74,7 +73,7 @@ public class ForumServiceImpl implements ForumService {
     public void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             forumDao.updateTags(parentGroup, forumName, newTags, deletedTags);
         }
@@ -84,7 +83,7 @@ public class ForumServiceImpl implements ForumService {
     public void postMessage(String token, String parentGroup, String forumName, MessageEntity messageEntity)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             forumDao.postMessage(parentGroup, forumName, messageEntity);
         }
@@ -94,7 +93,7 @@ public class ForumServiceImpl implements ForumService {
     public void deleteMessage(String token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
+            throw new DocumentException("invalid-request", "The forum does not exist");
         } else {
             forumDao.deleteMessage(parentGroup, forumName, creator, date);
         }
