@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.dao.UserDao;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+    public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
         userDao.deleteFromDatabase(uid);
     }
 
     @Override
-    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException {
+    public void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         userDao.deleteById(uid);
     }
 

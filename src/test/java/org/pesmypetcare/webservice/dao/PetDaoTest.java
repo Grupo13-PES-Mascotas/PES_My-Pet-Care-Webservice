@@ -1,12 +1,7 @@
 package org.pesmypetcare.webservice.dao;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import org.junit.jupiter.api.BeforeAll;
+import com.google.cloud.firestore.WriteBatch;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,324 +10,215 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.GenderType;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
+/**
+ * @author Marc Simó
+ */
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static List<Map<String, Object>> petList;
-    private static PetEntity pet;
-    private static String owner;
-    private static String name;
-    private static String field;
-    private static GenderType value;
-    private final String PETS_KEY = "pets";
-    private final String INTERRUPTED_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database "
-        + "fails from InterruptedException";
-    private final String EXECUTION_DEL_EXC = "Should throw DatabaseAccessException when the deletion from database "
-        + "fails from ExecutionException";
-    private final String NOT_EXISTS_STR = " doesn't exist";
-    private final String EXECUTION_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database "
-        + "fails from ExecutionException";
-    private final String INTERRUPTED_RETR_EXC = "Should throw DatabaseAccessException when the retrieve from database"
-        + " fails from InterruptedException";
+    private static final List<Map<String, Object>> PET_LIST = new ArrayList<>();
+    private static final List<DocumentSnapshot> PET_SNAPSHOT_LIST = new ArrayList<>();
+    private static final PetEntity PET_ENTITY = new PetEntity();
+    private static final String OWNER = "OwnerUsername";
+    private static final String OWNER_ID = "OwnerId";
+    private static final String PET_NAME = "PetName";
+    private static final String SIMPLE_FIELD = "gender";
+    private static final GenderType VALUE = GenderType.Other;
+    private static final String COLLECTION_FIELD = "trainings";
+    private static final String KEY_1 = "1996-01-08T12:20:30";
+    private static final String KEY_2 = "1996-01-08T15:20:30";
+    private static final Map<String, Object> COLLECTION_ELEMENT_BODY = new HashMap<>();
 
     @Mock
-    private CollectionReference usersRef;
+    private FirestoreCollection dbCol;
     @Mock
-    private DocumentReference ownerRef;
+    private FirestoreDocument dbDoc;
     @Mock
-    private CollectionReference petsRef;
-    @Mock
-    private DocumentReference petRef;
-    @Mock
-    private ApiFuture<QuerySnapshot> futureQuery;
-    @Mock
-    private QuerySnapshot querySnapshot;
-    @Mock
-    private ApiFuture<DocumentSnapshot> futureDocument;
-    @Mock
-    private DocumentSnapshot documentSnapshot;
-    @Mock
-    private List<QueryDocumentSnapshot> petsDocuments;
-    @Mock
-    private Iterator<QueryDocumentSnapshot> it;
+    private WriteBatch batch;
     @Mock
     private StorageDao storageDao;
 
     @InjectMocks
     private PetDao petDao = new PetDaoImpl();
 
-    @BeforeAll
-    public static void setUp() {
-        petList = new ArrayList<>();
-        pet = new PetEntity();
-        owner = "OwnerUsername";
-        name = "PetName";
-        field = "gender";
-        value = GenderType.Other;
+    @Test
+    public void shouldCreatePetOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbDoc.createDocumentWithId(anyString(), anyString(), any(PetEntity.class),
+            any(WriteBatch.class))).willReturn(null);
+        given(batch.commit()).willReturn(null);
+
+        petDao.createPet(OWNER, PET_NAME, PET_ENTITY);
+
+        verify(dbDoc).createDocumentWithId(isA(String.class), same(PET_NAME), same(PET_ENTITY), same(batch));
     }
 
     @Test
-    public void shouldCreatePetOnDatabaseWhenRequested() {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.set(isA(PetEntity.class))).willReturn(null);
+    public void shouldDeletePetOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn("user/pets/pet-profile-image.png");
+        given(batch.commit()).willReturn(null);
 
-        petDao.createPet(owner, name, pet);
+        petDao.deleteByOwnerAndName(OWNER, PET_NAME);
 
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).document(same(name));
-        verify(petRef).set(same(pet));
+        verify(dbDoc).deleteDocument(isA(String.class), same(batch));
     }
 
     @Test
-    public void shouldDeletePetOnDatabaseWhenRequested() throws DatabaseAccessException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        try {
-            given(futureDocument.get()).willReturn(documentSnapshot);
-        } catch (InterruptedException | ExecutionException e) {
-            throw new DatabaseAccessException("deletion-failed", e.getMessage());
-        }
-        given(documentSnapshot.get(anyString())).willReturn("user/pets/pet-profile-image.png");
-        given(petRef.delete()).willReturn(null);
+    public void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
+        given(batch.commit()).willReturn(null);
 
-        petDao.deleteByOwnerAndName(owner, name);
+        petDao.deleteAllPets(OWNER);
 
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).document(same(name));
-        verify(petRef).delete();
+        verify(dbCol).deleteCollection(anyString(), same(batch));
     }
 
     @Test
-    public void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.get()).willReturn(futureQuery);
-        given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(petsDocuments);
-        given(petsDocuments.iterator()).willReturn(it);
+    public void shouldReturnPetEntityFromDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(PET_ENTITY);
 
-        petDao.deleteAllPets(owner);
+        PetEntity result = petDao.getPetData(OWNER, PET_NAME);
 
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).get();
-        verify(futureQuery).get();
-        verify(querySnapshot).getDocuments();
-        verify(petsDocuments).iterator();
+        assertSame(PET_ENTITY, result, "Should return Pet Entity");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseReceivesInterruptedException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.get()).willReturn(futureQuery);
-            willThrow(InterruptedException.class).given(futureQuery).get();
+    public void shouldReturnAllPetsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
-            petDao.deleteAllPets(owner);
-        }, INTERRUPTED_DEL_EXC);
+        List<Map<String, Object>> list = petDao.getAllPetsData(OWNER);
+
+        assertEquals(PET_LIST, list, "Should return a List containing all pets Data");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseReceivesExecutionException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.get()).willReturn(futureQuery);
-            willThrow(ExecutionException.class).given(futureQuery).get();
+    public void shouldReturnPetSimpleFieldFromDatabaseWhenRequested() throws DatabaseAccessException,
+        DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
-            petDao.deleteAllPets(owner);
-        }, EXECUTION_DEL_EXC);
+        Object petValue = petDao.getSimpleField(OWNER, PET_NAME, SIMPLE_FIELD);
+
+        assertSame(VALUE, petValue, "Should return field value");
     }
 
     @Test
-    public void shouldReturnPetEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
-        retrievePetEntityMock();
+    public void shouldUpdateSimpleFieldWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(batch.commit()).willReturn(null);
 
-        PetEntity petEntity = petDao.getPetData(owner, name);
+        petDao.updateSimpleField(OWNER, PET_NAME, SIMPLE_FIELD, VALUE);
 
-        assertSame(pet, petEntity, "Should return Pet Entity");
+        verify(dbDoc).updateDocumentFields(same(batch), isA(String.class), same(SIMPLE_FIELD), same(VALUE));
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExists() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            documentExists(false);
+    public void shouldDeleteFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(batch.commit()).willReturn(null);
 
-            petDao.getPetData(owner, name);
-        }, "Should throw DatabaseAccessException when the retrieve from database fails because the document"
-            + NOT_EXISTS_STR);
-    }
+        petDao.deleteFieldCollection(OWNER, PET_NAME, COLLECTION_FIELD);
 
-
-    @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrievePetDocumentReceivesInterruptedException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            throwInterruptionExceptionMock();
-
-            petDao.getPetData(owner, name);
-        }, INTERRUPTED_RETR_EXC);
+        verify(dbCol).deleteCollection(anyString(), same(batch));
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrievePetDocumentReceivesExecutionException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            throwExecutionExceptionMock();
+    public void shouldGetFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
-            petDao.getPetData(owner, name);
-        }, EXECUTION_RETR_EXC);
+        List<Map<String, Object>> list = petDao.getFieldCollection(OWNER, PET_NAME, COLLECTION_FIELD);
+
+        assertEquals(PET_LIST, list, "Should return a List containing all field collection Data");
     }
 
     @Test
-    public void shouldReturnAllPetsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.get()).willReturn(futureQuery);
-        given(futureQuery.get()).willReturn(querySnapshot);
-        given(querySnapshot.getDocuments()).willReturn(petsDocuments);
-        given(petsDocuments.iterator()).willReturn(it);
-        given(it.hasNext()).willReturn(true);
-        given(it.hasNext()).willReturn(true);
-        given(it.hasNext()).willReturn(false);
+    public void shouldGetFieldCollectionElementsBetweenKeysWhenRequested()
+        throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
 
-        List<Map<String, Object>> list = petDao.getAllPetsData(owner);
+        List<Map<String, Object>> list = petDao.getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, COLLECTION_FIELD,
+            KEY_1, KEY_2);
 
-        assertEquals(petList, list, "Should return a List containing all pets Data");
+        assertEquals(PET_LIST, list, "Should return a List containing the field collection Data between the "
+            + "specified keys");
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetFromDatabaseReceivesInterruptedException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.get()).willReturn(futureQuery);
-            willThrow(InterruptedException.class).given(futureQuery).get();
+    public void shouldAddFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbDoc.createDocumentWithId(anyString(), anyString(), any(Map.class),
+            any(WriteBatch.class)))
+            .willReturn(null);
+        given(batch.commit()).willReturn(null);
 
-            petDao.getAllPetsData(owner);
-        }, INTERRUPTED_DEL_EXC);
+        petDao.addFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
+
+        verify(dbDoc).createDocumentWithId(isA(String.class), same(KEY_1), same(COLLECTION_ELEMENT_BODY), same(batch));
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenGetFromDatabaseReceivesExecutionException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            given(usersRef.document(anyString())).willReturn(ownerRef);
-            given(ownerRef.collection(anyString())).willReturn(petsRef);
-            given(petsRef.get()).willReturn(futureQuery);
-            willThrow(ExecutionException.class).given(futureQuery).get();
+    public void shouldDeleteFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(batch.commit()).willReturn(null);
 
-            petDao.getAllPetsData(owner);
-        }, EXECUTION_DEL_EXC);
+        petDao.deleteFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
+
+        verify(dbDoc).deleteDocument(isA(String.class), same(batch));
     }
 
     @Test
-    public void shouldReturnPetFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
-        documentExists(true);
-        given(documentSnapshot.get(anyString())).willReturn(value);
+    public void shouldUpdateFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(batch.commit()).willReturn(null);
 
-        Object petValue = petDao.getField(owner, name, field);
+        petDao.updateFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
 
-        assertSame(value, petValue, "Should return field value");
+        verify(dbDoc).updateDocumentFields(isA(String.class), same(COLLECTION_ELEMENT_BODY), same(batch));
     }
 
     @Test
-    public void shouldThrowDatabaseAccessExceptionWhenPetDocumentNotExistsInFieldRetrieval() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            documentExists(false);
+    public void shouldGetFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbDoc.getDocumentData(anyString())).willReturn(COLLECTION_ELEMENT_BODY);
 
-            petDao.getField(owner, name, field);
-        }, "Should throw DatabaseAccessException when the retrieve from database fails because document"
-            + NOT_EXISTS_STR);
-    }
+        Map<String, Object> result = petDao.getFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
 
-
-    @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesInterruptedException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            throwInterruptionExceptionMock();
-
-            petDao.getField(owner, name, field);
-        }, INTERRUPTED_RETR_EXC);
-    }
-
-    @Test
-    public void shouldThrowDatabaseAccessExceptionWhenRetrievePetFieldReceivesExecutionException() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            throwExecutionExceptionMock();
-
-            petDao.getField(owner, name, field);
-        }, EXECUTION_RETR_EXC);
-    }
-
-    @Test
-    public void shouldUpdateFieldWhenRequested() {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.update(anyString(), any())).willReturn(null);
-
-        petDao.updateField(owner, name, field, value);
-
-        verify(usersRef).document(same(owner));
-        verify(ownerRef).collection(same(PETS_KEY));
-        verify(petsRef).document(same(name));
-        verify(petRef).update(same(field), same(value));
-    }
-
-
-    private void documentExists(boolean b) throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        given(futureDocument.get()).willReturn(documentSnapshot);
-        given(documentSnapshot.exists()).willReturn(b);
-    }
-
-    private void throwInterruptionExceptionMock() throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        willThrow(InterruptedException.class).given(futureDocument).get();
-    }
-
-    private void throwExecutionExceptionMock() throws InterruptedException, ExecutionException {
-        given(usersRef.document(anyString())).willReturn(ownerRef);
-        given(ownerRef.collection(anyString())).willReturn(petsRef);
-        given(petsRef.document(anyString())).willReturn(petRef);
-        given(petRef.get()).willReturn(futureDocument);
-        willThrow(ExecutionException.class).given(futureDocument).get();
-    }
-
-    private void retrievePetEntityMock() throws InterruptedException, ExecutionException {
-        documentExists(true);
-        given(documentSnapshot.toObject(PetEntity.class)).willReturn(pet);
+        assertSame(COLLECTION_ELEMENT_BODY, result, "Should return elemnt data in a Map<String, Object>");
     }
 }

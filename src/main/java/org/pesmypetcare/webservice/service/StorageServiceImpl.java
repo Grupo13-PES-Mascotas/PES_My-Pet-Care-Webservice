@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.service;
 import org.pesmypetcare.webservice.dao.StorageDao;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void savePetImage(String owner, ImageEntity image) {
+    public void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException {
         storageDao.uploadPetImage(owner, image);
     }
 
@@ -33,7 +34,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Map<String, String> getAllImages(String owner) throws DatabaseAccessException {
+    public Map<String, String> getAllImages(String owner) throws DatabaseAccessException, DocumentException {
         return storageDao.downloadAllPetImages(owner);
     }
 

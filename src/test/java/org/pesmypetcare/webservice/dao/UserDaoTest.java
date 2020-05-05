@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,7 +133,7 @@ class UserDaoTest {
 
     @Test
     public void shouldDeleteUser() throws DatabaseAccessException, FirebaseAuthException,
-        ExecutionException, InterruptedException {
+        ExecutionException, InterruptedException, DocumentException {
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
         given(users.document(anyString())).willReturn(userRef);

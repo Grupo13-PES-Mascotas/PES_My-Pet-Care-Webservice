@@ -2,6 +2,7 @@ package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 
 import java.util.Map;
@@ -20,8 +21,10 @@ public interface StorageService {
      * Saves a pet image to the storage.
      * @param owner The pet's owner
      * @param image The image save
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    void savePetImage(String owner, ImageEntity image);
+    void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets an image from the storage.
@@ -41,6 +44,7 @@ public interface StorageService {
      * @param owner The path with the requested data
      * @return A map with pets names and the their images as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    Map<String, String> getAllImages(String owner) throws DatabaseAccessException;
+    Map<String, String> getAllImages(String owner) throws DatabaseAccessException, DocumentException;
 }

@@ -188,15 +188,15 @@ class PathTest {
 
     @Test
     public void buildFrequencyOfWashesEntryPath() {
-        String path = Path.ofDocument(Collections.freqWashes, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes/" + date, path,
+        String path = Path.ofDocument(Collections.washes, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/washes/" + date, path,
             "Should return the path to the frequencyof washes entry.");
     }
 
     @Test
     public void buildFrequencyOfWashesEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.freqWashes, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/freqWashes", path,
+        String path = Path.ofCollection(Collections.washes, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/washes", path,
             "Should return the path to the frequencyof washes entries collection.");
     }
 
@@ -217,16 +217,16 @@ class PathTest {
 
     @Test
     public void buildFrequencyOfTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.freqTrainings, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings/" + date, path,
-            "Should return the path to the frequencyof training entry.");
+        String path = Path.ofDocument(Collections.trainings, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/trainings/" + date, path,
+            "Should return the path to the frequency of training entry.");
     }
 
     @Test
     public void buildFrequencyOfTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.freqTrainings, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/freqTrainings", path,
-            "Should return the path to the frequencyof training entries collection.");
+        String path = Path.ofCollection(Collections.trainings, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/trainings", path,
+            "Should return the path to the frequency of training entries collection.");
     }
 
     @Test

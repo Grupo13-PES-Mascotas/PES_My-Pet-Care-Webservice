@@ -6,6 +6,7 @@ import com.google.cloud.storage.Bucket;
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.entity.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.stereotype.Repository;
@@ -41,11 +42,11 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public void uploadPetImage(String owner, ImageEntity image) {
+    public void uploadPetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException {
         String imageName = image.getImgName();
         String path = image.getUid() + "/pets/" + image.getImgName();
         String name = imageName.substring(0, imageName.indexOf('-'));
-        petDao.updateField(owner, name, "profileImageLocation", path);
+        petDao.updateSimpleField(owner, name, "profileImageLocation", path);
         storageBucket.create(path, image.getImg(), CONTENT_TYPE);
     }
 
@@ -71,7 +72,7 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException {
+    public Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException, DocumentException {
         Map<String, String> result = new HashMap<>();
         List<Map<String, Object>> pets = petDao.getAllPetsData(owner);
         for (Map<String, Object> pet : pets) {

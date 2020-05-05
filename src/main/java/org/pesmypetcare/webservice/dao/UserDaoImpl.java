@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.entity.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
@@ -65,7 +66,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+    public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
         petDao.deleteAllPets(uid);
         deleteUserStorage(uid);
         ApiFuture<DocumentSnapshot> future = users.document(uid).get();
@@ -76,7 +77,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
+    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException, DocumentException {
         deleteFromDatabase(uid);
         myAuth.deleteUser(uid);
     }

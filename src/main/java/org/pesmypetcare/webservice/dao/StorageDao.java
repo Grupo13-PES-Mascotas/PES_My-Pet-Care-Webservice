@@ -2,6 +2,7 @@ package org.pesmypetcare.webservice.dao;
 
 import org.pesmypetcare.webservice.entity.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 
 import java.util.Map;
@@ -20,8 +21,10 @@ public interface StorageDao {
      * Uploads a pet image to the storage.
      * @param owner The pet's owner
      * @param image The image to upload
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    void uploadPetImage(String owner, ImageEntity image);
+    void uploadPetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Downloads an image from the storage.
@@ -35,8 +38,9 @@ public interface StorageDao {
      * @param owner The path with the requested data
      * @return A map with pets names and the their images as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException;
+    Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes an image from the storage.

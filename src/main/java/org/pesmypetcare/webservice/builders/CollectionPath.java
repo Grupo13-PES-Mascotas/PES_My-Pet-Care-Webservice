@@ -75,11 +75,11 @@ class CollectionPath extends PathBuilder {
                 return buildPathToMealsCollection(ids[0], ids[1]);
             case weights:
                 return buildPathToWeightsCollection(ids[0], ids[1]);
-            case freqWashes:
+            case washes:
                 return buildPathToFreqWashesCollection(ids[0], ids[1]);
             case medications:
                 return buildPathToMedicationsCollection(ids[0], ids[1]);
-            case freqTrainings:
+            case trainings:
                 return buildPathToFreqTrainingsCollection(ids[0], ids[1]);
             case kcalsAverages:
                 return buildPathToKcalsAveragesCollection(ids[0], ids[1]);
@@ -179,7 +179,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqTrainingsCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqTrainings");
+        return buildPathToPet(userId, petName).append("/trainings");
     }
 
     /**
@@ -203,7 +203,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqWashesCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqWashes");
+        return buildPathToPet(userId, petName).append("/washes");
     }
 
     /**

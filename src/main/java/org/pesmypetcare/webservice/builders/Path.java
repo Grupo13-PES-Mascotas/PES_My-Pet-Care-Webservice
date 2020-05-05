@@ -55,8 +55,8 @@ public class Path {
             case kcals:
             case meals:
             case weights:
-            case freqWashes:
-            case freqTrainings:
+            case washes:
+            case trainings:
             case kcalsAverages:
             case weekTrainings:
                 return DOCUMENT_PATH.buildThreeLevelPath(collection, ids).toString();
@@ -104,14 +104,29 @@ public class Path {
             case kcals:
             case meals:
             case weights:
-            case freqWashes:
-            case freqTrainings:
+            case washes:
+            case trainings:
             case kcalsAverages:
             case weekTrainings:
                 return COLLECTION_PATH.buildThreeLevelPath(collection, ids).toString();
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
         }
+    }
+
+    /**
+     * Returns the collection with the same name as the given.
+     * @param collectionName Name of the collection
+     * @return Collection with the name collectionName
+     * @throws IllegalArgumentException When the array is empty or any of its elements is null or empty
+     */
+    public static Collections collectionOfField(String collectionName) {
+        for (Collections c : Collections.values()) {
+            if (c.name().equals(collectionName)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException("CollectionName is not a valid name");
     }
 
     /**

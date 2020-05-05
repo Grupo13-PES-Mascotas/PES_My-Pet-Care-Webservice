@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author Marc Simó
+ */
 @Repository
 public class MealDaoImpl implements MealDao {
     private final String DELFAIL_KEY;

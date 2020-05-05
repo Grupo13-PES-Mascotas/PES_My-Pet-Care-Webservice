@@ -1,5 +1,8 @@
 package org.pesmypetcare.webservice.error;
 
+/**
+ * @author Marc Simó
+ */
 public class InitializationException extends Exception {
     private final String errorCode;
 
