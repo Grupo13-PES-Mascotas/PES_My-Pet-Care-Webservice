@@ -22,7 +22,6 @@ import java.util.Map;
  */
 @Repository
 public class PetDaoImpl implements PetDao {
-    private static final String DELFAIL_KEY = "deletion-failed";
     private String ownerId;
     private WriteBatch batch;
     private String path;
@@ -128,7 +127,7 @@ public class PetDaoImpl implements PetDao {
 
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
             Map<String, Object> internalList = new HashMap<>();
-            internalList.put("name", fieldDocument.getId());
+            internalList.put("key", fieldDocument.getId());
             internalList.put("body", fieldDocument.getData());
             externalList.add(internalList);
         }
@@ -147,7 +146,7 @@ public class PetDaoImpl implements PetDao {
             String key = fieldDocument.getId();
             if (key1.compareTo(key) <= 0 && key2.compareTo(key) >= 0) {
                 Map<String, Object> internalList = new HashMap<>();
-                internalList.put("name", fieldDocument.getId());
+                internalList.put("key", fieldDocument.getId());
                 internalList.put("body", fieldDocument.getData());
                 externalList.add(internalList);
             }
