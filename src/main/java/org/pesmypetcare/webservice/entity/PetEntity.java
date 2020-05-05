@@ -83,7 +83,7 @@ public class PetEntity {
      * @param key Key of the attribute
      * @param body Body of the attribute
      */
-    public static void checkKeyAndBody(String field, String key, Map<String, Object> body) {
+    public static void checkCollectionKeyAndBody(String field, String key, Map<String, Object> body) {
         switch (field) {
             case "meals":
                 checkMeals(key, body);
