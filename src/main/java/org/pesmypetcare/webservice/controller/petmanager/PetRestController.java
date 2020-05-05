@@ -111,6 +111,7 @@ public class PetRestController {
     @ResponseStatus(HttpStatus.OK)
     public Object getSimpleField(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
+        PetEntity.checkSimpleField(field);
         return petService.getSimpleField(owner, name, field);
     }
 
@@ -129,6 +130,7 @@ public class PetRestController {
     public void updateSimpleField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap)
         throws DatabaseAccessException, DocumentException {
+        PetEntity.checkSimpleField(field);
         petService.updateSimpleField(owner, name, field, valueMap.get("value"));
     }
 
@@ -144,6 +146,7 @@ public class PetRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFieldCollection(@PathVariable String owner, @PathVariable String name,
                                @PathVariable String field) throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionField(field);
         petService.deleteFieldCollection(owner, name, field);
     }
 
@@ -160,6 +163,7 @@ public class PetRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getFieldCollection(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionField(field);
         return petService.getFieldCollection(owner, name, field);
     }
 
@@ -179,6 +183,7 @@ public class PetRestController {
     public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(@PathVariable String owner,
            @PathVariable String name, @PathVariable String field, @PathVariable String key1, @PathVariable String key2)
         throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionField(field);
         return petService.getFieldCollectionElementsBetweenKeys(owner, name, field, key1, key2);
     }
 
@@ -216,6 +221,7 @@ public class PetRestController {
     public void deleteFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                         @PathVariable String field, @PathVariable String key)
         throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionField(field);
         petService.deleteFieldCollectionElement(owner, name, field, key);
     }
 
@@ -254,6 +260,7 @@ public void updateFieldCollectionElement(@PathVariable String owner, @PathVariab
     public Map<String, Object> getFieldCollectionElement(@PathVariable String owner, @PathVariable String name,
                                      @PathVariable String field, @PathVariable String key)
         throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionField(field);
         return petService.getFieldCollectionElement(owner, name, field, key);
     }
 }

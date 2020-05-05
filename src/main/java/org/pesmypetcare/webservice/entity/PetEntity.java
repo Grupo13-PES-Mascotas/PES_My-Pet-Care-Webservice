@@ -29,8 +29,30 @@ public class PetEntity {
         this.pathologies = pathologies;
         this.needs = needs;
         this.recommendedKcal = recommendedKcal;
-        this.profileImageLocation = profileImageLocation;
-        this.calendarId = calendarId;
+        this.profileImageLocation = null;
+        this.calendarId = null;
+    }
+
+    /**
+     * Checks that field has the correct format for a Pet simple attribute.
+     * @param field Name of the attribute.
+     */
+    public static void checkSimpleField(String field) {
+        if (!"gender".equals(field) && !"breed".equals(field) && !"birth".equals(field)
+            && !"pathologies".equals(field) && !"needs".equals(field) && !"recommendedKcal".equals(field)) {
+            throw new IllegalArgumentException("Field does not exists");
+        }
+    }
+
+    /**
+     * Checks that field has the correct format for a Pet collection attribute.
+     * @param field Name of the attribute collection. Possible fields: meals, trainings, washes, weights
+     */
+    public static void checkCollectionField(String field) {
+        if (!"meals".equals(field) && !"trainings".equals(field) && !"washes".equals(field)
+            && !"weights".equals(field)) {
+            throw new IllegalArgumentException("Field does not exists");
+        }
     }
 
     /**
