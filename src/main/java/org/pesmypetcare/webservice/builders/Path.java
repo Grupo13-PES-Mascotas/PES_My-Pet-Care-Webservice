@@ -115,7 +115,7 @@ public class Path {
     }
 
     /**
-     * Returns the collection with the same name as the given
+     * Returns the collection with the same name as the given.
      * @param collectionName Name of the collection
      * @return Collection with the name collectionName
      * @throws IllegalArgumentException When the array is empty or any of its elements is null or empty
