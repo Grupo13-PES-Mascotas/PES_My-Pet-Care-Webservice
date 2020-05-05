@@ -65,7 +65,8 @@ public class PetEntity {
             throw new IllegalArgumentException("New value must be a String");
         } else if (field.equals(RECOMMENDED_KCAL) && !(newValue instanceof Double)) {
             throw new IllegalArgumentException("New value must be a Double");
-        } else if (field.equals(GENDER) && !(newValue instanceof GenderType)) {
+        } else if (field.equals(GENDER) && !"Male".equals(newValue) && !"Female".equals(newValue)
+            && !"Other".equals(newValue)) {
             throw new IllegalArgumentException("New value must be a GenderType");
         }
     }
