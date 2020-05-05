@@ -130,7 +130,7 @@ public class PetRestController {
     public void updateSimpleField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap)
         throws DatabaseAccessException, DocumentException {
-        PetEntity.checkSimpleField(field);
+        PetEntity.checkSimpleFieldAndValues(field, valueMap.get("value"));
         petService.updateSimpleField(owner, name, field, valueMap.get("value"));
     }
 

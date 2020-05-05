@@ -9,6 +9,12 @@ import java.util.Map;
  */
 @Data
 public class PetEntity {
+    public static final String GENDER = "gender";
+    public static final String BIRTH = "birth";
+    public static final String BREED = "breed";
+    public static final String PATHOLOGIES = "pathologies";
+    public static final String RECOMMENDED_KCAL = "recommendedKcal";
+    public static final String NEEDS = "needs";
     private GenderType gender;
     private String breed;
     private String birth;
@@ -38,9 +44,25 @@ public class PetEntity {
      * @param field Name of the attribute.
      */
     public static void checkSimpleField(String field) {
-        if (!"gender".equals(field) && !"breed".equals(field) && !"birth".equals(field)
-            && !"pathologies".equals(field) && !"needs".equals(field) && !"recommendedKcal".equals(field)) {
+        if (!GENDER.equals(field) && !BREED.equals(field) && !BIRTH.equals(field)
+            && !PATHOLOGIES.equals(field) && !NEEDS.equals(field) && !RECOMMENDED_KCAL.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");
+        }
+    }
+
+    /**
+     * Checks that the field and the new value for this field have the correct format for a Pet simple attribute.
+     * @param field Name of the attribute.
+     * @param newValue Value of the attribute.
+     */
+    public static void checkSimpleFieldAndValues(String field, Object newValue) {
+        if ((field.equals(BIRTH) || field.equals(BREED) || (field.equals(PATHOLOGIES)
+            || field.equals(NEEDS))) && !(newValue instanceof String)) {
+            throw new IllegalArgumentException("New value must be a String");
+        } else if (field.equals(RECOMMENDED_KCAL) && !(newValue instanceof Double)) {
+            throw new IllegalArgumentException("New value must be a Double");
+        } else if (field.equals(GENDER) && !(newValue instanceof GenderType)) {
+            throw new IllegalArgumentException("New value must be a GenderType");
         }
     }
 
