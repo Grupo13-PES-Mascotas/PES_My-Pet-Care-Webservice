@@ -40,24 +40,48 @@ public class PetEntity {
      * @param body Body of the attribute
      */
     public static void checkKeyAndBody(String field, String key, Map<String, Object> body) {
-        if ("meals".equals(field)) {
-            checkDateFormat(key);
-            if (body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
-                throw new IllegalArgumentException("Request body does not have a correct format");
-            }
-            if (!(body.get("kcal") instanceof Double) || !(body.get("mealName") instanceof String)) {
-                throw new IllegalArgumentException("Request body does not have a correct format");
-            }
-        } else if ("trainings".equals(field) || "washes".equals(field) || "weights".equals(field)) {
-            checkDateFormat(key);
-            if (body.size() != 1 || !body.containsKey("value")) {
-                throw new IllegalArgumentException("Request body does not have a correct format");
-            }
-            if (!(body.get("value") instanceof Integer)) {
-                throw new IllegalArgumentException("Request body does not have a correct format");
-            }
-        } else {
-            throw new IllegalArgumentException("Field does not exists");
+        switch (field) {
+            case "meals":
+                checkMeals(key, body);
+                break;
+            case "trainings":
+            case "washes":
+            case "weights":
+                checkDateAndValueInteger(key, body);
+                break;
+            default:
+                throw new IllegalArgumentException("Field does not exists");
+        }
+    }
+
+    /**
+     * Checks that key and body have the correct format for a meal.
+     * @param key Key of the attribute
+     * @param body Body of the attribute
+     */
+    public static void checkMeals(String key, Map<String, Object> body) {
+        checkDateFormat(key);
+        if (body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
+            throw new IllegalArgumentException("Request body does not have a correct format");
+        }
+        if (!(body.get("kcal") instanceof Double) || !(body.get("mealName") instanceof String)) {
+            throw new IllegalArgumentException("Request body does not have a correct format");
+        }
+    }
+
+    /**
+     * Checks that key and body have the correct format for a date key and body with one element whose key is 'value'
+     * and has an Object of type Integer.
+     * @param key Key of the attribute
+     * @param body Body of the attribute
+     */
+    public static void checkDateAndValueInteger(String key, Map<String, Object> body) {
+        checkDateFormat(key);
+        if (body.size() != 1 || !body.containsKey("value")) {
+            throw new IllegalArgumentException("Request body does not have a correct format");
+        }
+        if (!(body.get("value") instanceof Integer)) {
+            throw new IllegalArgumentException("Request body does not have a correct format");
         }
     }
 
