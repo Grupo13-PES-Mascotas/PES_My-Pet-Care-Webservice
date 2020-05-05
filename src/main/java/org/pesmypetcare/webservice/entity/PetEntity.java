@@ -9,6 +9,10 @@ import java.util.Map;
  */
 @Data
 public class PetEntity {
+    public static final String MEALS = "meals";
+    public static final String TRAININGS = "trainings";
+    public static final String WASHES = "washes";
+    public static final String WEIGHTS = "weights";
     public static final String GENDER = "gender";
     public static final String BIRTH = "birth";
     public static final String BREED = "breed";
@@ -71,8 +75,8 @@ public class PetEntity {
      * @param field Name of the attribute collection. Possible fields: meals, trainings, washes, weights
      */
     public static void checkCollectionField(String field) {
-        if (!"meals".equals(field) && !"trainings".equals(field) && !"washes".equals(field)
-            && !"weights".equals(field)) {
+        if (!MEALS.equals(field) && !TRAININGS.equals(field) && !WASHES.equals(field)
+            && !WEIGHTS.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");
         }
     }
@@ -85,12 +89,12 @@ public class PetEntity {
      */
     public static void checkCollectionKeyAndBody(String field, String key, Map<String, Object> body) {
         switch (field) {
-            case "meals":
+            case MEALS:
                 checkMeals(key, body);
                 break;
-            case "trainings":
-            case "washes":
-            case "weights":
+            case TRAININGS:
+            case WASHES:
+            case WEIGHTS:
                 checkDateAndValueInteger(key, body);
                 break;
             default:
