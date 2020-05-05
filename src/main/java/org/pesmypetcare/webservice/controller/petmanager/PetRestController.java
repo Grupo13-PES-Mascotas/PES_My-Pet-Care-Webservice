@@ -73,7 +73,7 @@ public class PetRestController {
      * Gets a pet identified by its name and owner.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
-     * @return The PetEntity of the owner data
+     * @return The PetEntity corresponding to the owner's pet data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
