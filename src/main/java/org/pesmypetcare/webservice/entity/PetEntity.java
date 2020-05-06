@@ -164,7 +164,7 @@ public class PetEntity {
      */
     public static void checkExercises(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 5 || !body.containsKey("name") || !body.containsKey("description")
+        if (body.size() != 4 || !body.containsKey("name") || !body.containsKey("description")
             || !body.containsKey("endDateTime") || !body.containsKey("coordinates")) {
             throw new IllegalArgumentException("Request body does not have a correct format");
         }
