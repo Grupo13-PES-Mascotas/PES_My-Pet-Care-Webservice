@@ -82,13 +82,15 @@ class PathTest {
     @Test
     public void buildForumPath() {
         String path = Path.ofDocument(Collections.forums, groupId, forumId);
-        assertEquals("groups/" + groupId + "/forums/" + forumId, path, "Should return the path to the forum.");
+        assertEquals("groups/" + groupId + "/forums/" + forumId, path,
+            "Should return the path to the forum.");
     }
 
     @Test
     public void buildForumsCollectionPath() {
         String path = Path.ofCollection(Collections.forums, groupId);
-        assertEquals("groups/" + groupId + "/forums", path, "Should return the path to a forums collection.");
+        assertEquals("groups/" + groupId + "/forums", path,
+            "Should return the path to a forums collection.");
     }
 
     @Test
@@ -109,25 +111,29 @@ class PathTest {
     @Test
     public void buildPetPath() {
         String path = Path.ofDocument(Collections.pets, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName, path, "Should return the path to the pet.");
+        assertEquals("users/" + userId + "/pets/" + petName, path,
+            "Should return the path to the pet.");
     }
 
     @Test
     public void buildPetsCollectionPath() {
         String path = Path.ofCollection(Collections.pets, userId);
-        assertEquals("users/" + userId + "/pets", path, "Should return the path to the pets collection.");
+        assertEquals("users/" + userId + "/pets", path,
+            "Should return the path to the pets collection.");
     }
 
     @Test
     public void buildMemberPath() {
         String path = Path.ofDocument(Collections.members, groupId, userId);
-        assertEquals("groups/" + groupId + "/members/" + userId, path, "Should return the path to the member.");
+        assertEquals("groups/" + groupId + "/members/" + userId, path,
+            "Should return the path to the member.");
     }
 
     @Test
     public void buildMembersCollectionPath() {
         String path = Path.ofCollection(Collections.members, groupId);
-        assertEquals("groups/" + groupId + "/members", path, "Should return the path to the members collection.");
+        assertEquals("groups/" + groupId + "/members", path,
+            "Should return the path to the members collection.");
     }
 
     @Test
@@ -203,9 +209,9 @@ class PathTest {
     @Test
     public void buildMedicationEntryPath() {
         String medicationName = "painkillers";
-        String path = Path.ofDocument(Collections.medications, userId, petName, date, medicationName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/medications/" + date + "½" + medicationName, path,
-            "Should return the path to the medication entry.");
+        String path = Path.ofDocument(Collections.medications, userId, petName, date + "-" + medicationName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/medications/" + date + "-" + medicationName,
+            path, "Should return the path to the medication entry.");
     }
 
     @Test
@@ -213,6 +219,62 @@ class PathTest {
         String path = Path.ofCollection(Collections.medications, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/medications", path,
             "Should return the path to the medication entries collection.");
+    }
+
+    @Test
+    public void buildIllnessEntryPath() {
+        String path = Path.ofDocument(Collections.illnesses, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/illnesses/" + date, path,
+            "Should return the path to the illness entry.");
+    }
+
+    @Test
+    public void buildIllnessEntriesCollectionPath() {
+        String path = Path.ofCollection(Collections.illnesses, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/illnesses", path,
+            "Should return the path to the illness entries collection.");
+    }
+
+    @Test
+    public void buildVaccinationEntryPath() {
+        String path = Path.ofDocument(Collections.vaccinations, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/vaccinations/" + date, path,
+            "Should return the path to the vaccination entry.");
+    }
+
+    @Test
+    public void buildVaccinationEntriesCollectionPath() {
+        String path = Path.ofCollection(Collections.vaccinations, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/vaccinations", path,
+            "Should return the path to the medication vaccination collection.");
+    }
+
+    @Test
+    public void buildVetVisitEntryPath() {
+        String path = Path.ofDocument(Collections.vet_visits, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/vet_visits/" + date, path,
+            "Should return the path to the vet visit entry.");
+    }
+
+    @Test
+    public void buildVetVisitEntriesCollectionPath() {
+        String path = Path.ofCollection(Collections.vet_visits, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/vet_visits", path,
+            "Should return the path to the vet visit entries collection.");
+    }
+
+    @Test
+    public void buildExerciseEntryPath() {
+        String path = Path.ofDocument(Collections.exercises, userId, petName, date);
+        assertEquals("users/" + userId + "/pets/" + petName + "/exercises/" + date, path,
+            "Should return the path to the exercise entry.");
+    }
+
+    @Test
+    public void buildExerciceEntriesCollectionPath() {
+        String path = Path.ofCollection(Collections.exercises, userId, petName);
+        assertEquals("users/" + userId + "/pets/" + petName + "/exercises", path,
+            "Should return the path to the exercise entries collection.");
     }
 
     @Test

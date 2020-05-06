@@ -50,15 +50,19 @@ public class Path {
             case pets:
             case members:
                 return DOCUMENT_PATH.buildTwoLevelPath(collection, ids).toString();
-            case medications:
             case messages:
             case kcals:
-            case meals:
-            case weights:
-            case washes:
             case trainings:
             case kcalsAverages:
             case weekTrainings:
+            case meals:
+            case weights:
+            case exercises:
+            case washes:
+            case vaccinations:
+            case illnesses:
+            case medications:
+            case vet_visits:
                 return DOCUMENT_PATH.buildThreeLevelPath(collection, ids).toString();
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
@@ -99,15 +103,19 @@ public class Path {
             case pets:
             case members:
                 return COLLECTION_PATH.buildTwoLevelPath(collection, ids).toString();
-            case medications:
             case messages:
             case kcals:
-            case meals:
-            case weights:
-            case washes:
             case trainings:
             case kcalsAverages:
             case weekTrainings:
+            case meals:
+            case weights:
+            case exercises:
+            case washes:
+            case vaccinations:
+            case illnesses:
+            case medications:
+            case vet_visits:
                 return COLLECTION_PATH.buildThreeLevelPath(collection, ids).toString();
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
