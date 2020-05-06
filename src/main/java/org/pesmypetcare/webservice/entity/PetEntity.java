@@ -113,7 +113,8 @@ public class PetEntity {
         if (body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
             throw new IllegalArgumentException("Request body does not have a correct format");
         }
-        if (!(body.get("kcal") instanceof Double) || !(body.get("mealName") instanceof String)) {
+        if (!(body.get("kcal") instanceof Double) || !(body.get("kcal") instanceof Integer) || !(body.get(
+            "mealName") instanceof String)) {
             throw new IllegalArgumentException("Request body does not have a correct format");
         }
     }
