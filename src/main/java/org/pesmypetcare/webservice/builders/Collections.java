@@ -15,11 +15,15 @@ public enum Collections {
     users,
     pets,
     meals,
-    medications,
-    trainings,
+    weights,
+    exercises,
     washes,
+    vaccinations,
+    illnesses,
+    medications,
+    vet_visits,
+    trainings,
     weekTrainings,
     kcals,
-    kcalsAverages,
-    weights
+    kcalsAverages
 }
