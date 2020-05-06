@@ -257,21 +257,6 @@ class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a medication entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @param medicationName The medication name
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToMedication(@NonNull String userId, @NonNull String petName,
-                                                       @NonNull String date, @NonNull String medicationName) {
-        return buildPathToPet(userId, petName).append("/medications/").append(date).append("½").append(medicationName);
-    }
-
-    /**
      * Builds the path to a pet collection entry.
      *
      * @param userId The user ID
@@ -284,48 +269,6 @@ class DocumentPath extends PathBuilder {
     private static StringBuilder buildPathToPetCollection(@NonNull String userId, @NonNull String petName,
                                                           @NonNull String collectionName, @NonNull String key) {
         return buildPathToPet(userId, petName).append("/").append(collectionName).append("/").append(key);
-    }
-
-    /**
-     * Builds the path to a frequency of wash entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToFreqWash(@NonNull String userId, @NonNull String petName,
-                                                     @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/washes/").append(date);
-    }
-
-    /**
-     * Builds the path to a weight entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToWeight(@NonNull String userId, @NonNull String petName,
-                                                   @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/weights/").append(date);
-    }
-
-    /**
-     * Builds the path to a meal entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToMeal(@NonNull String userId, @NonNull String petName,
-                                                 @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/meals/").append(date);
     }
 
     /**
