@@ -29,7 +29,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(String token, String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException {
+    public void deleteById(String token, String uid)
+        throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         userDao.deleteById(uid);
     }
 

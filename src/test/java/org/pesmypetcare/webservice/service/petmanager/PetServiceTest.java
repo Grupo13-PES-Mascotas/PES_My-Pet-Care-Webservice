@@ -88,8 +88,7 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved()
-        throws DatabaseAccessException, DocumentException {
+    public void shouldReturnPetEntityListWhenGetSetOfPetsRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getAllPetsData(OWNER)).thenReturn(PET_LIST);
         List<Map<String, Object>> list = service.getAllPetsData(OWNER);
         assertSame(PET_LIST, list, "Should return a list of pet entities");
@@ -113,8 +112,8 @@ class PetServiceTest {
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetPetFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(petDao).getSimpleField(any(String.class), any(String.class),
-                any(String.class));
+            doThrow(DatabaseAccessException.class).when(petDao)
+                .getSimpleField(any(String.class), any(String.class), any(String.class));
             service.getSimpleField(OWNER, PET_NAME, FIELD);
         }, "Should return an exception when retrieving a pet field fails");
     }
@@ -139,40 +138,40 @@ class PetServiceTest {
     }
 
     @Test
-    public void shouldReturnListWhenFieldCollectionElementsBetweenKeysRetrieved() throws DatabaseAccessException,
-        DocumentException {
-        when(petDao.getFieldCollectionElementsBetweenKeys(anyString(), anyString(), anyString(), anyString(),
-            anyString())).thenReturn(PET_LIST);
-        List<Map<String, Object>> list = service.getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, FIELD, KEY_1, KEY_2);
+    public void shouldReturnListWhenFieldCollectionElementsBetweenKeysRetrieved()
+        throws DatabaseAccessException, DocumentException {
+        when(petDao
+            .getFieldCollectionElementsBetweenKeys(anyString(), anyString(), anyString(), anyString(), anyString()))
+            .thenReturn(PET_LIST);
+        List<Map<String, Object>> list = service
+            .getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, FIELD, KEY_1, KEY_2);
         assertSame(PET_LIST, list, "Should return a list of pet entities");
     }
 
     @Test
-    public void shouldReturnNothingWhenFieldCollectionElementAdded()
-        throws DatabaseAccessException, DocumentException {
+    public void shouldReturnNothingWhenFieldCollectionElementAdded() throws DatabaseAccessException, DocumentException {
         service.addFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
         verify(petDao).addFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1),
             same(COLLECTION_ELEMENT_BODY));
     }
 
     @Test
-    public void shouldReturnNothingWhenFieldCollectionElementDeleted() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnNothingWhenFieldCollectionElementDeleted()
+        throws DatabaseAccessException, DocumentException {
         service.deleteFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1);
         verify(petDao).deleteFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1));
     }
 
     @Test
-    public void shouldReturnNothingWhenFieldCollectionElementUpdated() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnNothingWhenFieldCollectionElementUpdated()
+        throws DatabaseAccessException, DocumentException {
         service.updateFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
         verify(petDao).updateFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1),
             same(COLLECTION_ELEMENT_BODY));
     }
 
     @Test
-    public void shouldReturnMapWhenFieldCollectionElementRetrieved() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnMapWhenFieldCollectionElementRetrieved() throws DatabaseAccessException, DocumentException {
         service.getFieldCollectionElement(OWNER, PET_NAME, FIELD, KEY_1);
         verify(petDao).getFieldCollectionElement(same(OWNER), same(PET_NAME), same(FIELD), same(KEY_1));
     }

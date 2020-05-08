@@ -71,7 +71,7 @@ public class PetDaoImpl implements PetDao {
         dbCol.deleteCollection(path, batch);
         batch.commit();
         for (DocumentSnapshot petDocument : petsDocuments) {
-            String imageLocation = (String) petDocument.get("profileImageLocation");
+            String imageLocation = petDocument.getString("profileImageLocation");
             deleteProfileImage(imageLocation);
         }
     }
@@ -144,10 +144,10 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
+        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
             String key = fieldDocument.getId();
             if (key1.compareTo(key) <= 0 && key2.compareTo(key) >= 0) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("key", fieldDocument.getId());
                 internalList.put("body", fieldDocument.getData());
                 externalList.add(internalList);
@@ -261,7 +261,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     /**
-     * Returns the id of a user specifying its username
+     * Returns the id of a user specifying its username.
      * @param username Name of the user
      * @return The user's id
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails

@@ -22,11 +22,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -78,10 +80,12 @@ class PetDaoTest {
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn("user/pets/pet-profile-image.png");
         given(batch.commit()).willReturn(null);
+        willDoNothing().given(storageDao).deleteImageByName(anyString());
 
         petDao.deleteByOwnerAndName(OWNER, PET_NAME);
 
         verify(dbDoc).deleteDocument(isA(String.class), same(batch));
+        verify(storageDao).deleteImageByName(eq("user/pets/pet-profile-image.png"));
     }
 
     @Test

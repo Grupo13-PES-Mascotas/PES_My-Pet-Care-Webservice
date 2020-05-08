@@ -24,6 +24,18 @@ public class PetEntity {
     public static final String ILLNESSES = "illnesses";
     public static final String MEDICATIONS = "medications";
     public static final String VET_VISITS = "vet_visits";
+    private static final String DESCRIPTION = "description";
+    private static final String COORDINATES = "coordinates";
+    private static final String NAME = "name";
+    private static final String END_DATE_TIME = "endDateTime";
+    private static final String VALUE = "value";
+    private static final String DURATION = "duration";
+    private static final String QUANTITY = "quantity";
+    private static final String FIELD_NOT_EXISTS = "Field does not exists";
+    private static final String INCORRECT_BODY_FORMAT = "Request body does not have a correct format";
+    private static final String MEAL_NAME = "mealName";
+    private static final String KCAL = "kcal";
+    private static final String INCORRECT_SEVERITY_FORMAT = "Incorrect severity format";
     private GenderType gender;
     private String breed;
     private String birth;
@@ -55,7 +67,7 @@ public class PetEntity {
     public static void checkSimpleField(String field) {
         if (!GENDER.equals(field) && !BREED.equals(field) && !BIRTH.equals(field)
             && !PATHOLOGIES.equals(field) && !NEEDS.equals(field) && !RECOMMENDED_KCAL.equals(field)) {
-            throw new IllegalArgumentException("Field does not exists");
+            throw new IllegalArgumentException(FIELD_NOT_EXISTS);
         }
     }
 
@@ -84,7 +96,7 @@ public class PetEntity {
         if (!MEALS.equals(field) && !WEIGHTS.equals(field) && !EXERCISES.equals(field) && !WASHES.equals(field)
             && !VACCINATIONS.equals(field) && !ILLNESSES.equals(field) && !MEDICATIONS.equals(field)
             && !VET_VISITS.equals(field)) {
-            throw new IllegalArgumentException("Field does not exists");
+            throw new IllegalArgumentException(FIELD_NOT_EXISTS);
         }
     }
 
@@ -121,7 +133,7 @@ public class PetEntity {
                 checkVetVisits(key, body);
                 break;
             default:
-                throw new IllegalArgumentException("Field does not exists");
+                throw new IllegalArgumentException(FIELD_NOT_EXISTS);
         }
     }
 
@@ -132,12 +144,12 @@ public class PetEntity {
      */
     public static void checkMeals(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 2 || !body.containsKey("kcal") || !body.containsKey("mealName")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (body.size() != 2 || !body.containsKey(KCAL) || !body.containsKey(MEAL_NAME)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if ((!(body.get("kcal") instanceof Double) && !(body.get("kcal") instanceof Integer))
-            || !(body.get("mealName") instanceof String)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if ((!(body.get(KCAL) instanceof Double) && !(body.get(KCAL) instanceof Integer))
+            || !(body.get(MEAL_NAME) instanceof String)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
@@ -149,11 +161,11 @@ public class PetEntity {
      */
     public static void checkDateAndValueInteger(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 1 || !body.containsKey("value")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (body.size() != 1 || !body.containsKey(VALUE)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get("value") instanceof Integer)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (!(body.get(VALUE) instanceof Integer)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
@@ -164,15 +176,15 @@ public class PetEntity {
      */
     public static void checkExercises(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 4 || !body.containsKey("name") || !body.containsKey("description")
-            || !body.containsKey("endDateTime") || !body.containsKey("coordinates")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (body.size() != 4 || !body.containsKey(NAME) || !body.containsKey(DESCRIPTION)
+            || !body.containsKey(END_DATE_TIME) || !body.containsKey(COORDINATES)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if ((!(body.get("name") instanceof String) && !(body.get("description") instanceof String))
-            || !(body.get("coordinates") instanceof List) || !(body.get("endDateTime") instanceof String)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if ((!(body.get(NAME) instanceof String) && !(body.get(DESCRIPTION) instanceof String))
+            || !(body.get(COORDINATES) instanceof List) || !(body.get(END_DATE_TIME) instanceof String)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        checkDateFormat((String) body.get("endDateTime"));
+        checkDateFormat((String) body.get(END_DATE_TIME));
     }
 
     /**
@@ -182,11 +194,11 @@ public class PetEntity {
      */
     public static void checkWashes(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 2 || !body.containsKey("description") || !body.containsKey("duration")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (body.size() != 2 || !body.containsKey(DESCRIPTION) || !body.containsKey(DURATION)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get("description") instanceof String) || !(body.get("duration") instanceof Integer)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (!(body.get(DESCRIPTION) instanceof String) || !(body.get(DURATION) instanceof Integer)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
@@ -197,11 +209,11 @@ public class PetEntity {
      */
     public static void checkVaccinations(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 1 || !body.containsKey("description")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (body.size() != 1 || !body.containsKey(DESCRIPTION)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get("description") instanceof String)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (!(body.get(DESCRIPTION) instanceof String)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
@@ -212,17 +224,19 @@ public class PetEntity {
      */
     public static void checkIllnesses(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 4 || !body.containsKey("endDateTime") || !body.containsKey("type")
-            || !body.containsKey("description") || !body.containsKey("severity")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        String type = "type";
+        String severity = "severity";
+        if (body.size() != 4 || !body.containsKey(END_DATE_TIME) || !body.containsKey(type)
+            || !body.containsKey(DESCRIPTION) || !body.containsKey(severity)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get("endDateTime") instanceof String) || !(body.get("type") instanceof String)
-            || !(body.get("description") instanceof String) || !(body.get("severity") instanceof String)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (!(body.get(END_DATE_TIME) instanceof String) || !(body.get(type) instanceof String)
+            || !(body.get(DESCRIPTION) instanceof String) || !(body.get(severity) instanceof String)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        checkDateFormat((String) body.get("endDateTime"));
-        checkTypeValue((String) body.get("type"));
-        checkSeverityValue((String) body.get("severity"));
+        checkDateFormat((String) body.get(END_DATE_TIME));
+        checkTypeValue((String) body.get(type));
+        checkSeverityValue((String) body.get(severity));
     }
 
     /**
@@ -232,13 +246,14 @@ public class PetEntity {
      */
     public static void checkMedications(String key, Map<String, Object> body) {
         checkDatePlusNameFormat(key);
-        if (body.size() != 3 || !body.containsKey("quantity") || !body.containsKey("duration")
-            || !body.containsKey("periodicity")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        String periodicity = "periodicity";
+        if (body.size() != 3 || !body.containsKey(QUANTITY) || !body.containsKey(DURATION)
+            || !body.containsKey(periodicity)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if ((!(body.get("quantity") instanceof Double) && !(body.get("quantity") instanceof Integer))
-            || !(body.get("duration") instanceof Integer) || !(body.get("periodicity") instanceof Integer)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if ((!(body.get(QUANTITY) instanceof Double) && !(body.get(QUANTITY) instanceof Integer))
+            || !(body.get(DURATION) instanceof Integer) || !(body.get(periodicity) instanceof Integer)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
@@ -249,31 +264,33 @@ public class PetEntity {
      */
     public static void checkVetVisits(String key, Map<String, Object> body) {
         checkDateFormat(key);
-        if (body.size() != 2 || !body.containsKey("reason") || !body.containsKey("address")) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        String address = "address";
+        String reason = "reason";
+        if (body.size() != 2 || !body.containsKey(reason) || !body.containsKey(address)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get("reason") instanceof String) || !(body.get("address") instanceof String)) {
-            throw new IllegalArgumentException("Request body does not have a correct format");
+        if (!(body.get(reason) instanceof String) || !(body.get(address) instanceof String)) {
+            throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
 
     /**
-     * Checks wether the severity value is valid or not
+     * Checks wether the severity value is valid or not.
      * @param severity Severity value
      */
     private static void checkSeverityValue(String severity) {
         if (!"Low".equals(severity) && !"Medium".equals(severity) && !"High".equals(severity)) {
-            throw new IllegalArgumentException("Incorrect severity format");
+            throw new IllegalArgumentException(INCORRECT_SEVERITY_FORMAT);
         }
     }
 
     /**
-     * Checks wether type value is valid or not
+     * Checks wether type value is valid or not.
      * @param type Type value
      */
     private static void checkTypeValue(String type) {
         if (!"Normal".equals(type) && !"Allergy".equals(type)) {
-            throw new IllegalArgumentException("Incorrect severity format");
+            throw new IllegalArgumentException(INCORRECT_SEVERITY_FORMAT);
         }
     }
 
