@@ -123,8 +123,8 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldCreateUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException,
-        ExecutionException, InterruptedException {
+    public void shouldCreateUserOnDatabase()
+        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException {
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(users.document(anyString())).willReturn(userRef);
         given(usernameRef.get()).willReturn(future);
@@ -148,8 +148,8 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldDeleteUser() throws DatabaseAccessException, FirebaseAuthException,
-        ExecutionException, InterruptedException {
+    public void shouldDeleteUser()
+        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException {
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
         given(users.document(anyString())).willReturn(userRef);
@@ -169,14 +169,14 @@ class UserDaoTest {
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseOfNonExistentUser()
         throws ExecutionException, InterruptedException {
-            given(petDao.getStorageDao()).willReturn(storageDao);
-            willDoNothing().given(storageDao).deleteImageByName(anyString());
-            given(users.document(anyString())).willReturn(userRef);
-            given(userRef.get()).willReturn(future);
-            given(future.get()).willReturn(snapshot);
-            given(snapshot.exists()).willReturn(false);
+        given(petDao.getStorageDao()).willReturn(storageDao);
+        willDoNothing().given(storageDao).deleteImageByName(anyString());
+        given(users.document(anyString())).willReturn(userRef);
+        given(userRef.get()).willReturn(future);
+        given(future.get()).willReturn(snapshot);
+        given(snapshot.exists()).willReturn(false);
         assertThrows(DatabaseAccessException.class, () -> dao.deleteById(username),
-            "Should throw DatabaseAccessException when the deleting a non existent user");
+                     "Should throw DatabaseAccessException when the deleting a non existent user");
     }
 
     @Test
@@ -224,12 +224,12 @@ class UserDaoTest {
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
         assertThrows(DatabaseAccessException.class, () -> dao.getUserData(username),
-            "Should return DatabaseAccessException if user doesn't exist");
+                     "Should return DatabaseAccessException if user doesn't exist");
     }
 
     @Test
-    public void shouldUpdateUsername() throws FirebaseAuthException, DatabaseAccessException,
-        ExecutionException, InterruptedException {
+    public void shouldUpdateUsername()
+        throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
         given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
@@ -272,7 +272,7 @@ class UserDaoTest {
         verify(userRecord).updateRequest();
         verify(updateRequest).setDisplayName(same(newUsername));
         verify(myAuth).updateUserAsync(same(updateRequest));
-        verify(users).document(same(uid));;
+        verify(users).document(same(uid));
         Map<String, Object> data = new HashMap<>();
         data.put(USER_FIELD, newUsername);
         verify(batch).update(groupRef, data);
@@ -287,8 +287,8 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldUpdateEmail() throws FirebaseAuthException, DatabaseAccessException,
-        ExecutionException, InterruptedException {
+    public void shouldUpdateEmail()
+        throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
         given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
@@ -311,8 +311,8 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldUpdatePassword() throws FirebaseAuthException, DatabaseAccessException,
-        ExecutionException, InterruptedException {
+    public void shouldUpdatePassword()
+        throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
         given(usedUsernames.document(username)).willReturn(usernameRef);
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(oldSnapshot);
@@ -355,6 +355,6 @@ class UserDaoTest {
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
         assertThrows(DatabaseAccessException.class, () -> dao.updateField(username, EMAIL_FIELD, email),
-            "Should return DatabaseAccessException if the user does not exist");
+                     "Should return DatabaseAccessException if the user does not exist");
     }
 }

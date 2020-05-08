@@ -13,6 +13,6 @@ public class MessageEntity {
     private String publicationDate;
     private String text;
     private String imagePath;
-    private boolean banned = false;
+    private boolean banned;
     private List<String> likedBy;
 }

@@ -39,6 +39,7 @@ public class UserDaoImpl implements UserDao {
     private static final String USER_KEY = "user";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
+    private final String UPDATE_FAILED_CODE = "update-failed";
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
@@ -137,7 +138,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addGroupSubscription(String username, String groupName, WriteBatch batch) throws DatabaseAccessException {
+    public void addGroupSubscription(String username, String groupName, WriteBatch batch)
+        throws DatabaseAccessException {
         DocumentReference user = users.document(getUid(username));
         Map<String, Object> data = new HashMap<>();
         data.put("groupSubscriptions", FieldValue.arrayUnion(groupName));
@@ -159,7 +161,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch) throws DatabaseAccessException {
+    public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
+        throws DatabaseAccessException {
         DocumentReference subscriptions = users.document(getUid(username)).collection("forumSubscriptions")
             .document(parentGroup + "-" + forumName);
         Map<String, String> data = new HashMap<>();
@@ -170,12 +173,14 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Gets the document snapshot for the api future given.
+     *
      * @param collection The collection from which to get the document
      * @param docName The document name
      * @return The document snapshot for the api future given
      * @throws DatabaseAccessException If the deletion fails or if the user doesn't exist
      */
-    private DocumentSnapshot getDocumentSnapshot(CollectionReference collection, String docName) throws DatabaseAccessException {
+    private DocumentSnapshot getDocumentSnapshot(CollectionReference collection, String docName)
+        throws DatabaseAccessException {
         ApiFuture<DocumentSnapshot> future = collection.document(docName).get();
         DocumentSnapshot userDoc;
         try {
@@ -188,6 +193,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Deletes all the user files on the storage.
+     *
      * @param uid The user unique identifier
      */
     private void deleteUserStorage(String uid) {
@@ -197,6 +203,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Updates the user's username.
+     *
      * @param uid The unique identifier ofDocument the user
      * @param newUsername The new username for the account
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -221,7 +228,7 @@ public class UserDaoImpl implements UserDao {
                 updateDisplayName(uid, newUsername);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
-                throw new DatabaseAccessException("update-failed", "The username update failed");
+                throw new DatabaseAccessException(UPDATE_FAILED_CODE, "The username update failed");
             }
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
@@ -230,35 +237,39 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Updates the username on all the groups the user is subscribed to.
+     *
      * @param username The current username
      * @param newUsername The new username
      * @param batch The batch ofDocument writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnSubscriptions(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
-        Query query = db.collectionGroup("members").whereEqualTo("user", username);
+    private void updateNameOnSubscriptions(String username, String newUsername, WriteBatch batch)
+        throws DatabaseAccessException {
+        Query query = db.collectionGroup("members").whereEqualTo(USER_KEY, username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
                 Map<String, Object> data = new HashMap<>();
-                data.put("user", newUsername);
+                data.put(USER_KEY, newUsername);
                 batch.update(ref, data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "Failure when updating name in subscriptions");
         }
     }
 
     /**
      * Updates the username on all the groups the user has created.
+     *
      * @param username The current username
      * @param newUsername The new username
      * @param batch The batch ofDocument writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnCreatedGroups(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
+    private void updateNameOnCreatedGroups(String username, String newUsername, WriteBatch batch)
+        throws DatabaseAccessException {
         Query query = db.collection("groups").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
@@ -270,18 +281,20 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("update-failed", "Failure when updating name in created groups");
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "Failure when updating name in created groups");
         }
     }
 
     /**
      * Updates the username on all the forums the user has created.
+     *
      * @param username The current username
      * @param newUsername The new username
      * @param batch The batch ofDocument writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnCreatedForums(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
+    private void updateNameOnCreatedForums(String username, String newUsername, WriteBatch batch)
+        throws DatabaseAccessException {
         Query query = db.collectionGroup("forums").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
@@ -293,35 +306,38 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("update-failed", "Failure when updating name in created groups");
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "Failure when updating name in created groups");
         }
     }
 
     /**
      * Updates the username on all the messages the user has created.
+     *
      * @param username The current username
      * @param newUsername The new username
      * @param batch The batch ofDocument writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void updateNameOnCreatedMessages(String username, String newUsername, WriteBatch batch) throws DatabaseAccessException {
+    private void updateNameOnCreatedMessages(String username, String newUsername, WriteBatch batch)
+        throws DatabaseAccessException {
         Query query = db.collectionGroup("messages").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
+            Map<String, Object> data = new HashMap<>();
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
-                Map<String, Object> data = new HashMap<>();
                 data.put("creator", newUsername);
                 batch.update(ref, data);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("update-failed", "Failure when updating name in created messages");
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "Failure when updating name in created messages");
         }
     }
 
     /**
      * Updates the user's email.
+     *
      * @param uid The unique identifier ofDocument the user
      * @param newEmail The new email for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -335,6 +351,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Updates the user's username.
+     *
      * @param uid The unique identifier ofDocument the user
      * @param newPassword The new password for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -349,6 +366,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Saves the username inside the used usernames collection.
+     *
      * @param username The username to save
      * @param batch The batch ofDocument writes
      */
@@ -360,6 +378,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Deletes the old username from the database.
+     *
      * @param uid The unique identifier ofDocument the user
      * @param batch The batch ofDocument writes
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -371,6 +390,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Updates the display name.
+     *
      * @param uid The unique identifier ofDocument the user
      * @param newUsername The new username for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -383,6 +403,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Gets the update request for the user.
+     *
      * @param uid The unique identifier ofDocument the user
      * @return An update request for the user data
      * @throws FirebaseAuthException If an error occurs when retrieving the data

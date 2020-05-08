@@ -32,6 +32,7 @@ public class UserRestController {
 
     /**
      * Deletes the user.
+     *
      * @param token The personal access token ofDocument the user
      * @param username The user's username
      * @param db If true deletes the user only from the database, otherwise deletes the user entirely
@@ -52,19 +53,21 @@ public class UserRestController {
 
     /**
      * Retrieves the user data.
+     *
      * @param token The personal access token ofDocument the user
      * @param username The user's username
      * @return A user entity that contains the user data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{username}")
-    public UserEntity getUserData(@RequestHeader(TOKEN) String token,
-                                  @PathVariable String username) throws DatabaseAccessException {
+    public UserEntity getUserData(@RequestHeader(TOKEN) String token, @PathVariable String username)
+        throws DatabaseAccessException {
         return userService.getUserData(token, username);
     }
 
     /**
      * Updates the user email bound to the account.
+     *
      * @param token The personal access token ofDocument the user
      * @param username The user's username
      * @param value The new value
@@ -81,7 +84,8 @@ public class UserRestController {
     }
 
     @GetMapping("/subscriptions")
-    public List<String> getUserSubscriptions(@RequestHeader String token, @RequestParam String username) throws DatabaseAccessException {
+    public List<String> getUserSubscriptions(@RequestHeader String token, @RequestParam String username)
+        throws DatabaseAccessException {
         return userService.getUserSubscriptions(token, username);
     }
 }

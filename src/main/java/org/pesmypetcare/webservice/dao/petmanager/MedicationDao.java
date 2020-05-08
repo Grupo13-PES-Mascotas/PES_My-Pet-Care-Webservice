@@ -1,4 +1,3 @@
-
 package org.pesmypetcare.webservice.dao.petmanager;
 
 import org.pesmypetcare.webservice.entity.petmanager.MedicationEntity;
@@ -11,6 +10,7 @@ import java.util.Map;
 public interface MedicationDao {
     /**
      * Creates a medication eaten by a pet on the database.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @param date Date ofDocument the receipt ofDocument the medication
@@ -21,6 +21,7 @@ public interface MedicationDao {
 
     /**
      * Deletes all the medication with the specified owner and pet from certain date.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @param date Date ofDocument the receipt ofDocument the medication
@@ -31,6 +32,7 @@ public interface MedicationDao {
 
     /**
      * Deletes all the medications ofDocument the specified pet from database.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -39,6 +41,7 @@ public interface MedicationDao {
 
     /**
      * Gets a medication identified by its pet, date and name.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @param date Date ofDocument the receipt ofDocument the medication
@@ -47,10 +50,11 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     MedicationEntity getMedicationData(String owner, String petName, String date, String name)
-            throws DatabaseAccessException;
+        throws DatabaseAccessException;
 
     /**
      * Gets the data from all the specified medications from the database identified by its pet.
+     *
      * @param owner Username ofDocument the owner ofDocument the pets
      * @param petName Name ofDocument the pet
      * @return The List containing all the medications ofDocument the pet
@@ -60,6 +64,7 @@ public interface MedicationDao {
 
     /**
      * Gets the data from all the medications ofDocument the pet between the initial and final date not including them.
+     *
      * @param owner Username ofDocument the owner ofDocument the pets
      * @param petName Name ofDocument the pet
      * @param initialDate Initial Date
@@ -68,10 +73,11 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
-                                                              String finalDate) throws DatabaseAccessException;
+                                                       String finalDate) throws DatabaseAccessException;
 
     /**
      * Gets the value for the specified field ofDocument the medication on the database.
+     *
      * @param owner Username ofDocument the owner ofDocument the pets
      * @param petName Name ofDocument the pet
      * @param date Date ofDocument the receipt ofDocument the medication
@@ -81,10 +87,11 @@ public interface MedicationDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     Object getMedicationField(String owner, String petName, String date, String name, String field)
-            throws DatabaseAccessException;
+        throws DatabaseAccessException;
 
     /**
      * Updates the medication's field.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @param date Date ofDocument the receipt ofDocument the medication

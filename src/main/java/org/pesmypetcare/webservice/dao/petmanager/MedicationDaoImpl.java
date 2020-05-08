@@ -124,10 +124,10 @@ public class MedicationDaoImpl implements MedicationDao {
                                                         List<Map<String, Object>> externalList)
             throws InterruptedException, ExecutionException {
         List<QueryDocumentSnapshot> medDocuments = medsRef.get().get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot medDocument : medDocuments) {
             if (initialDate.compareTo(pkToDate(medDocument.getId())) < 0
                     && finalDate.compareTo(pkToDate(medDocument.getId())) > 0) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(DATE, pkToDate(medDocument.getId()));
                 internalList.put(NAME, pkToName(medDocument.getId()));
                 internalList.put(BODY, medDocument.toObject(MedicationEntity.class));

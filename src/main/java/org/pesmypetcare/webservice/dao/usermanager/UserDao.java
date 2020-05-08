@@ -13,6 +13,7 @@ import java.util.List;
 public interface UserDao {
     /**
      * Creates a user on the database.
+     *
      * @param uid The user's unique identifier
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -22,6 +23,7 @@ public interface UserDao {
 
     /**
      * Deletes a user from database.
+     *
      * @param uid The user's unique identifier
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -29,6 +31,7 @@ public interface UserDao {
 
     /**
      * Deletes the user with the specified uid from the database.
+     *
      * @param uid The uid ofDocument the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -37,6 +40,7 @@ public interface UserDao {
 
     /**
      * Gets the data ofDocument the specified user.
+     *
      * @param uid The unique identifier ofDocument the user
      * @return The UserEntity with the users data
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -45,6 +49,7 @@ public interface UserDao {
 
     /**
      * Updates a user field.
+     *
      * @param username The user's username
      * @param field The field to update
      * @param newValue The new field value
@@ -56,6 +61,7 @@ public interface UserDao {
 
     /**
      * Checks if a username is already in use.
+     *
      * @param username The username to check
      * @return True if the username is already in use
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -83,6 +89,7 @@ public interface UserDao {
 
     /**
      * Creates an entry ofDocument the group in the subscription collection.
+     *
      * @param username The user's username
      * @param groupName The group's name
      * @param batch The batch ofDocument writes to which it belongs
@@ -91,6 +98,7 @@ public interface UserDao {
 
     /**
      * Deletes an entry ofDocument the group in the subscription collection.
+     *
      * @param userUid The user's uid
      * @param groupName The group's name
      * @param batch The batch ofDocument writes to which it belongs
@@ -99,11 +107,13 @@ public interface UserDao {
 
     /**
      * Gets all the user's group subscriptions.
+     *
      * @param username The user's username
      * @return A list with the group subscriptions
      * @throws DatabaseAccessException If an error occurs when retrieving the data
      */
     List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
 
-    void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch) throws DatabaseAccessException;
+    void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
+        throws DatabaseAccessException;
 }

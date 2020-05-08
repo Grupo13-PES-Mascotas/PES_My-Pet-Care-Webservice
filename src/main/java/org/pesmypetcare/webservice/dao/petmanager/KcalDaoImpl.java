@@ -91,7 +91,7 @@ public class KcalDaoImpl implements KcalDao {
 
     @Override
     public List<Map<String, Object>> getAllKcalsBetween(String owner, String petName, String initialDate,
-                                                          String finalDate) throws DatabaseAccessException {
+                                                        String finalDate) throws DatabaseAccessException {
         CollectionReference kcalsRef = getKcalsRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
@@ -111,17 +111,18 @@ public class KcalDaoImpl implements KcalDao {
 
     /**
      * Return the kcal collection ofDocument one pet.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @return Return the kcal collection ofDocument one pet
      */
     public CollectionReference getKcalsRef(String owner, String petName) {
-        return db.collection("users").document(owner).collection("pets").document(petName)
-            .collection("kcals");
+        return db.collection("users").document(owner).collection("pets").document(petName).collection("kcals");
     }
 
     /**
      * Gets all the kcals ofDocument the collection and puts them in the externalList.
+     *
      * @param kcalsRef Reference to the collection ofDocument kcals
      * @param externalList list that will contain all the kcals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
@@ -140,8 +141,10 @@ public class KcalDaoImpl implements KcalDao {
     }
 
     /**
-     * Gets all the kcals ofDocument the collection between the initial and final dates without taking them into account and
+     * Gets all the kcals ofDocument the collection between the initial and final dates without taking them into
+     * account and
      * puts them in the externalList.
+     *
      * @param initialDate Initial date
      * @param finalDate Final date
      * @param kcalsRef Reference to the collection ofDocument kcals
@@ -149,15 +152,15 @@ public class KcalDaoImpl implements KcalDao {
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
-    private void getKcalsBetweenDatesFromDatabase(String initialDate, String finalDate,
-                                                    CollectionReference kcalsRef, List<Map<String,
-        Object>> externalList) throws InterruptedException, ExecutionException {
+    private void getKcalsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference kcalsRef,
+                                                  List<Map<String, Object>> externalList)
+        throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = kcalsRef.get();
         List<QueryDocumentSnapshot> kcalDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot kcalDocument : kcalDocuments) {
             String date = kcalDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, kcalDocument.toObject(KcalEntity.class));
                 externalList.add(internalList);

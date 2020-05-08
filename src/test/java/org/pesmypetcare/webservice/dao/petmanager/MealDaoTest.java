@@ -137,8 +137,8 @@ public class MealDaoTest {
     }
 
     @Test
-    public void shouldDeleteAllMealsOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldDeleteAllMealsOnDatabaseWhenRequested()
+        throws DatabaseAccessException, ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -193,8 +193,8 @@ public class MealDaoTest {
     }
 
     @Test
-    public void shouldReturnMealEntityFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
+    public void shouldReturnMealEntityFromDatabaseWhenRequested()
+        throws ExecutionException, InterruptedException, DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -263,8 +263,8 @@ public class MealDaoTest {
     }
 
     @Test
-    public void shouldReturnAllMealsDataOnDatabaseWhenRequested() throws DatabaseAccessException, ExecutionException,
-        InterruptedException {
+    public void shouldReturnAllMealsDataOnDatabaseWhenRequested()
+        throws DatabaseAccessException, ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -313,8 +313,8 @@ public class MealDaoTest {
     }
 
     @Test
-    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested() throws DatabaseAccessException,
-        ExecutionException, InterruptedException {
+    public void shouldReturnAllMealsBetweenDatesOnDatabaseWhenRequested()
+        throws DatabaseAccessException, ExecutionException, InterruptedException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);
@@ -364,8 +364,8 @@ public class MealDaoTest {
     }
 
     @Test
-    public void shouldReturnMealFieldFromDatabaseWhenRequested() throws ExecutionException, InterruptedException,
-        DatabaseAccessException {
+    public void shouldReturnMealFieldFromDatabaseWhenRequested()
+        throws ExecutionException, InterruptedException, DatabaseAccessException {
         given(db.collection(anyString())).willReturn(usersRef);
         given(usersRef.document(anyString())).willReturn(ownerRef);
         given(ownerRef.collection(anyString())).willReturn(petsRef);

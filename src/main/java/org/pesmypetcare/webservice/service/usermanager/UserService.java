@@ -61,10 +61,12 @@ public interface UserService {
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String token, String uid, String field, String newValue) throws FirebaseAuthException, DatabaseAccessException;
+    void updateField(String token, String uid, String field, String newValue)
+        throws FirebaseAuthException, DatabaseAccessException;
 
     /**
      * Checks if a username is already in use.
+     *
      * @param username The username to check
      * @return True if the username is already in use
      * @throws DatabaseAccessException If an error occurs when accessing the database

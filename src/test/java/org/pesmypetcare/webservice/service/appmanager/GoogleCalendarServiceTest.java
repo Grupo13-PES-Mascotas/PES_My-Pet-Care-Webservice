@@ -62,11 +62,11 @@ public class GoogleCalendarServiceTest {
         accessToken = "tokem";
         eventList = new ArrayList<>();
         eventEntity = new EventEntity();
-        eventEntity.setId("My eventId");
+        eventEntity.setId(eventId);
         eventEntity.setStartDate(date);
         eventEntity.setEndDate(date2);
         event = new Event();
-        event.setId("My eventId");
+        event.setId(eventId);
         EventDateTime start = new EventDateTime()
             .setDateTime(new DateTime(date))
             .setTimeZone("Europe/Madrid");

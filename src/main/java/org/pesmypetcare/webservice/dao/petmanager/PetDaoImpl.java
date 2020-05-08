@@ -40,6 +40,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Gets the storage dao.
+     *
      * @return The storage dao
      */
     public StorageDao getStorageDao() {
@@ -49,7 +50,7 @@ public class PetDaoImpl implements PetDao {
     @Override
     public void createPet(String owner, String name, PetEntity petEntity) {
         DocumentReference petRef = usersRef.document(owner).
-                collection(PETS_KEY).document(name);
+            collection(PETS_KEY).document(name);
         petRef.set(petEntity);
         System.out.println("Pet created");
     }
@@ -106,8 +107,8 @@ public class PetDaoImpl implements PetDao {
         try {
             ApiFuture<QuerySnapshot> future = petsRef.get();
             List<QueryDocumentSnapshot> petsDocuments = future.get().getDocuments();
+            Map<String, Object> internalList = new HashMap<>();
             for (QueryDocumentSnapshot petDocument : petsDocuments) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("name", petDocument.getId());
                 internalList.put("body", petDocument.toObject(PetEntity.class));
                 externalList.add(internalList);
@@ -142,6 +143,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Deletes the pet profile image.
+     *
      * @param imageLocation The image location
      */
     private void deleteProfileImage(String imageLocation) {

@@ -9,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.petmanager.FreqTrainingDao;
 import org.pesmypetcare.webservice.entity.petmanager.FreqTrainingEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.petmanager.FreqTrainingService;
-import org.pesmypetcare.webservice.service.petmanager.FreqTrainingServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -28,9 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
@@ -117,6 +119,7 @@ class PetDaoTest {
         }
         given(documentSnapshot.get(anyString())).willReturn("user/pets/pet-profile-image.png");
         given(petRef.delete()).willReturn(null);
+        willDoNothing().given(storageDao).deleteImageByName(anyString());
 
         petDao.deleteByOwnerAndName(owner, name);
 
@@ -124,6 +127,7 @@ class PetDaoTest {
         verify(ownerRef).collection(same(PETS_KEY));
         verify(petsRef).document(same(name));
         verify(petRef).delete();
+        verify(storageDao).deleteImageByName(eq("user/pets/pet-profile-image.png"));
     }
 
     @Test

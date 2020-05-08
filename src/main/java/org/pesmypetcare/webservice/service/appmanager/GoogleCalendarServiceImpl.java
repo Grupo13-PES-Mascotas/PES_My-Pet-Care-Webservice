@@ -49,7 +49,7 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
         String calendarId = (String) petDao.getField(owner, petName, CALENDAR_ID);
         List<Event> eventList = googleCalendarDao.getAllEventsFromCalendar(accessToken, calendarId);
         List<EventEntity> eventEntityList = new ArrayList<>();
-        for (Event event: eventList) {
+        for (Event event : eventList) {
             eventEntityList.add(new EventEntity(event));
         }
         return eventEntityList;

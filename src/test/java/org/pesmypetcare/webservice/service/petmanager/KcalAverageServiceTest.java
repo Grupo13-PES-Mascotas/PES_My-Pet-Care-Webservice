@@ -9,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.petmanager.KcalAverageDao;
 import org.pesmypetcare.webservice.entity.petmanager.KcalAverageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.petmanager.KcalAverageService;
-import org.pesmypetcare.webservice.service.petmanager.KcalAverageServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

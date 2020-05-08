@@ -91,6 +91,7 @@ public class MealDaoImpl implements MealDao {
 
     /**
      * Gets all the meals ofDocument the collection and puts them in the externalList.
+     *
      * @param mealsRef Reference to the collection ofDocument meals
      * @param externalList list that will contain all the meals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
@@ -122,8 +123,10 @@ public class MealDaoImpl implements MealDao {
     }
 
     /**
-     * Gets all the meals ofDocument the collection between the initial and final dates without taking them into account and
+     * Gets all the meals ofDocument the collection between the initial and final dates without taking them into
+     * account and
      * puts them in the externalList.
+     *
      * @param initialDate Initial date
      * @param finalDate Final date
      * @param mealsRef Reference to the collection ofDocument meals
@@ -132,14 +135,14 @@ public class MealDaoImpl implements MealDao {
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
     private void getMealsBetweenDatesFromDatabase(String initialDate, String finalDate, CollectionReference mealsRef,
-                                                  List<Map<String, Object>> externalList) throws InterruptedException,
-        ExecutionException {
+                                                  List<Map<String, Object>> externalList)
+        throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
         List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot mealDocument : mealDocuments) {
             String date = mealDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("date", date);
                 internalList.put("body", mealDocument.toObject(MealEntity.class));
                 externalList.add(internalList);
@@ -172,7 +175,6 @@ public class MealDaoImpl implements MealDao {
     }
 
     public CollectionReference getMealsRef(String owner, String petName) {
-        return db.collection("users").document(owner).collection("pets").document(petName)
-            .collection("meals");
+        return db.collection("users").document(owner).collection("pets").document(petName).collection("meals");
     }
 }

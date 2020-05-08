@@ -112,7 +112,7 @@ public class GroupDaoImpl implements GroupDao {
         String id = getGroupId(name);
         WriteBatch batch = db.batch();
         DocumentReference group = groups.document(id);
-        Map<String, Object> data= new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
         data.put(field, newValue);
         batch.update(group, data);
         if ("name".equals(field)) {
@@ -157,7 +157,8 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateTags(String group, List<String> newTags, List<String> deletedTags) throws DatabaseAccessException {
+    public void updateTags(String group, List<String> newTags, List<String> deletedTags)
+        throws DatabaseAccessException {
         String id = getGroupId(group);
         DocumentReference groupRef = groups.document(id);
         Map<String, Object> data = new HashMap<>();
@@ -203,6 +204,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Saves the user as a member ofDocument the group.
+     *
      * @param userUid The user's uid
      * @param username The user's username
      * @param groupRef The group document reference
@@ -219,6 +221,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Deletes a user membership.
+     *
      * @param userUid The user uid
      * @param groupRef The group reference
      * @param batch The batch ofDocument writes to which it belongs
@@ -230,6 +233,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Adds the member list if the group is not null.
+     *
      * @param id The group id
      * @param group The group
      */
@@ -242,6 +246,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Gets the group members.
+     *
      * @param id The group id
      * @return The map with the user and its subscription date
      */
@@ -261,13 +266,14 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Gets a document snapshot from a collection.
+     *
      * @param collection The collection to which the document belongs
      * @param documentName The document name
      * @return The document snapshot
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private DocumentSnapshot getDocumentSnapshot(CollectionReference collection,
-                                                 String documentName) throws DatabaseAccessException {
+    private DocumentSnapshot getDocumentSnapshot(CollectionReference collection, String documentName)
+        throws DatabaseAccessException {
         ApiFuture<DocumentSnapshot> future = collection.document(documentName).get();
         DocumentSnapshot snapshot;
         try {
@@ -280,6 +286,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Saves the group name in database.
+     *
      * @param name The group name
      * @param groupId The group id to which the name belongs
      * @param batch The batch ofDocument writes to which it belongs
@@ -293,6 +300,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Creates an entry in the tag collection for the group.
+     *
      * @param tag The tag
      * @param groupId The group id
      * @param batch The batch ofDocument writes to which it belongs
@@ -312,6 +320,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Deletes an entry in the tag collection for the group.
+     *
      * @param tag The tag
      * @param group The group name
      * @param batch The batch ofDocument writes to which it belongs
@@ -347,6 +356,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Deletes the all group from members.
+     *
      * @param id The group id
      * @param name The group name
      * @param batch The batch ofDocument writes to which it belongs
@@ -373,6 +383,7 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Updates the group name in all its tags.
+     *
      * @param oldName The old name
      * @param newName The new name
      * @param batch The batch ofDocument writes to which it belongs
@@ -394,12 +405,14 @@ public class GroupDaoImpl implements GroupDao {
 
     /**
      * Changes the name on its subscribers collection.
+     *
      * @param oldName The old name
      * @param newName The new name
      * @param batch The batch ofDocument writes to which it belongs
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    private void changeNameInSubscription(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
+    private void changeNameInSubscription(String oldName, String newName, WriteBatch batch)
+        throws DatabaseAccessException {
         Query query = db.collection("users").whereArrayContains("groupSubscriptions", oldName);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
@@ -416,8 +429,10 @@ public class GroupDaoImpl implements GroupDao {
             throw new DatabaseAccessException("update-failed", "Failure when updating name in subscriptions");
         }
     }
+
     /**
      * Deletes the specified collection.
+     *
      * @param collection The collection to delete
      * @param batch The batch ofDocument writes to which it belongs
      */

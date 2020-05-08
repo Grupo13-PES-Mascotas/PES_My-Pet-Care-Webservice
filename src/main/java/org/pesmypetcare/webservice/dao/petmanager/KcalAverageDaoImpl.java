@@ -92,7 +92,7 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
 
     @Override
     public List<Map<String, Object>> getAllKcalAveragesBetween(String owner, String petName, String initialDate,
-                                                          String finalDate) throws DatabaseAccessException {
+                                                               String finalDate) throws DatabaseAccessException {
         CollectionReference kcalAveragesRef = getKcalAveragesRef(owner, petName);
         List<Map<String, Object>> externalList = new ArrayList<>();
         try {
@@ -112,17 +112,18 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
 
     /**
      * Return the kcalAverage collection ofDocument one pet.
+     *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @return Return the kcalAverage collection ofDocument one pet
      */
     public CollectionReference getKcalAveragesRef(String owner, String petName) {
-        return db.collection("users").document(owner).collection("pets").document(petName)
-            .collection("kcalAverages");
+        return db.collection("users").document(owner).collection("pets").document(petName).collection("kcalAverages");
     }
 
     /**
      * Gets all the kcalAverages ofDocument the collection and puts them in the externalList.
+     *
      * @param kcalAveragesRef Reference to the collection ofDocument kcalAverages
      * @param externalList list that will contain all the kcalAverages
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
@@ -142,8 +143,10 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
     }
 
     /**
-     * Gets the kcalAverages ofDocument the collection between the initial and final dates without taking them into account and
+     * Gets the kcalAverages ofDocument the collection between the initial and final dates without taking them into
+     * account and
      * puts them in the externalList.
+     *
      * @param initialDate Initial date
      * @param finalDate Final date
      * @param kcalAveragesRef Reference to the collection ofDocument kcalAverages
@@ -152,14 +155,15 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
      */
     private void getKcalAveragesBetweenDatesFromDatabase(String initialDate, String finalDate,
-                                                    CollectionReference kcalAveragesRef, List<Map<String,
-        Object>> externalList) throws InterruptedException, ExecutionException {
+                                                         CollectionReference kcalAveragesRef,
+                                                         List<Map<String, Object>> externalList)
+        throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = kcalAveragesRef.get();
         List<QueryDocumentSnapshot> kcalAverageDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot kcalAverageDocument : kcalAverageDocuments) {
             String date = kcalAverageDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
-                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, kcalAverageDocument.toObject(KcalAverageEntity.class));
                 externalList.add(internalList);

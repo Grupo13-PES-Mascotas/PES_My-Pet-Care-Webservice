@@ -75,7 +75,7 @@ public class GroupRestController {
      */
     @PutMapping
     public void updateField(@RequestParam String group, @RequestParam String field,
-                            @RequestBody Map<String , String> updateValue) throws DatabaseAccessException {
+                            @RequestBody Map<String, String> updateValue) throws DatabaseAccessException {
         if (!("name".equals(field) || "description".equals(field))) {
             throw new IllegalArgumentException("Field must be either name or description");
         }
@@ -101,8 +101,8 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PutMapping("/tags")
-    public void updateTags(@RequestParam String group,
-                            @RequestBody Map<String , List<String>> updateValue) throws DatabaseAccessException {
+    public void updateTags(@RequestParam String group, @RequestBody Map<String, List<String>> updateValue)
+        throws DatabaseAccessException {
         service.updateTags(group, updateValue.get("new"), updateValue.get("deleted"));
     }
 

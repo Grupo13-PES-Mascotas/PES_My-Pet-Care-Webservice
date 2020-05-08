@@ -8,6 +8,6 @@ import java.util.Map;
  * @author Santiago Del Rey
  */
 @Data
-public class Group extends GroupEntity{
+public class Group extends GroupEntity {
     private Map<String, String> members;
 }
