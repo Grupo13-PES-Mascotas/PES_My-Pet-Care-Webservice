@@ -38,6 +38,15 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
         return db.batch();
     }
 
+    @Override
+    public void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException {
+        try {
+            batch.commit().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException("write-failed", e.getMessage());
+        }
+    }
+
     @NonNull
     @Override
     public DocumentReference getDocumentReference(@NonNull String path) {

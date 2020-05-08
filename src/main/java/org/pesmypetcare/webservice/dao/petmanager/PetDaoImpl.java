@@ -52,7 +52,7 @@ public class PetDaoImpl implements PetDao {
         DocumentException {
         initializeWithCollectionPath(owner);
         dbDoc.createDocumentWithId(path, name, petEntity, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PetDaoImpl implements PetDao {
         initializeWithDocumentPath(owner, name);
         String imageLocation = dbDoc.getStringFromDocument(path, "profileImageLocation");
         dbDoc.deleteDocument(path, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
         deleteProfileImage(imageLocation);
     }
 
@@ -69,7 +69,7 @@ public class PetDaoImpl implements PetDao {
         initializeWithCollectionPath(owner);
         List<DocumentSnapshot> petsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         dbCol.deleteCollection(path, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
         for (DocumentSnapshot petDocument : petsDocuments) {
             String imageLocation = petDocument.getString("profileImageLocation");
             deleteProfileImage(imageLocation);
@@ -88,8 +88,8 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> petsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
-        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot petDocument : petsDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             internalList.put("name", petDocument.getId());
             internalList.put("body", petDocument.toObject(PetEntity.class));
             externalList.add(internalList);
@@ -109,7 +109,7 @@ public class PetDaoImpl implements PetDao {
         throws DatabaseAccessException, DocumentException {
         initializeWithDocumentPath(owner, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class PetDaoImpl implements PetDao {
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithCollectionPath(owner, name, field);
         dbCol.deleteCollection(path, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override
@@ -127,8 +127,8 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
-        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             internalList.put("key", fieldDocument.getId());
             internalList.put("body", fieldDocument.getData());
             externalList.add(internalList);
@@ -144,8 +144,8 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
-        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             String key = fieldDocument.getId();
             if (key1.compareTo(key) <= 0 && key2.compareTo(key) >= 0) {
                 internalList.put("key", fieldDocument.getId());
@@ -161,7 +161,7 @@ public class PetDaoImpl implements PetDao {
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithCollectionPath(owner, name, field);
         dbDoc.createDocumentWithId(path, key, body, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class PetDaoImpl implements PetDao {
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithDocumentPath(owner, name, field, key);
         dbDoc.deleteDocument(path, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class PetDaoImpl implements PetDao {
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithDocumentPath(owner, name, field, key);
         dbDoc.updateDocumentFields(path, body, batch);
-        batch.commit();
+        dbDoc.commitBatch(batch);
     }
 
     @Override

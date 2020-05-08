@@ -26,6 +26,13 @@ public interface FirestoreCollection {
     WriteBatch batch();
 
     /**
+     * Commits a write batch
+     * @param batch The batch to commit
+     * @throws DatabaseAccessException When the commit fails
+     */
+    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException;
+
+    /**
      * Gets a CollectionReference that refers to the collection at the specified path.
      *
      * @param path A slash-separated path to a collection

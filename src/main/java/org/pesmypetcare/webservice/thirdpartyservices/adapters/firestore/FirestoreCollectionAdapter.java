@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Santiago Del Rey
@@ -37,6 +38,15 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
     @Override
     public WriteBatch batch() {
         return db.batch();
+    }
+
+    @Override
+    public void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException {
+        try {
+            batch.commit().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new DatabaseAccessException("write-failed", e.getMessage());
+        }
     }
 
     @NonNull

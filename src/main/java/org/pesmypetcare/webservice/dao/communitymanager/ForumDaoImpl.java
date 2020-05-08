@@ -69,7 +69,7 @@ public class ForumDaoImpl implements ForumDao {
         for (String tag : tags) {
             addForumToTag(tag, name, batch);
         }
-        commitBatch(batch);
+        documentAdapter.commitBatch(batch);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ForumDaoImpl implements ForumDao {
         deleteForumFromAllTags(forumName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forums, groupId, forumId), batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forumsNames, parentGroup, forumName), batch);
-        commitBatch(batch);
+        documentAdapter.commitBatch(batch);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ForumDaoImpl implements ForumDao {
         changeNameInTags(currentName, newName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forumsNames, parentGroup, currentName), batch);
         saveForumName(parentGroup, newName, forumId, batch);
-        commitBatch(batch);
+        documentAdapter.commitBatch(batch);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class ForumDaoImpl implements ForumDao {
         if (newTags != null) {
             addNewTags(groupId, forumId, forumName, newTags, batch);
         }
-        commitBatch(batch);
+        documentAdapter.commitBatch(batch);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ForumDaoImpl implements ForumDao {
                 e.printStackTrace();
                 throw new DatabaseAccessException("message-deletion-failed", "Failure when deleting the message");
             }
-            commitBatch(batch);
+            documentAdapter.commitBatch(batch);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -315,18 +315,6 @@ public class ForumDaoImpl implements ForumDao {
                                              FieldValue.arrayRemove(deletedTags.toArray()), batch);
         for (String tag : deletedTags) {
             deleteForumFromTag(tag, forumName, batch);
-        }
-    }
-
-    /**
-     * Commits the batch.
-     *
-     * @param batch The batch to commit
-     * @throws DatabaseAccessException When the batch is cancelled
-     */
-    private void commitBatch(WriteBatch batch) throws DatabaseAccessException {
-        if (batch.commit().isCancelled()) {
-            throw new DatabaseAccessException("write-cancelled", "The operation was cancelled");
         }
     }
 }
