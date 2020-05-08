@@ -244,8 +244,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      * @throws IllegalArgumentException When the field is empty or null
      */
-    private ApiFuture<QuerySnapshot> concatenateWhereArrayContains(Query query, Object[] moreFieldsAndValues)
-        throws IllegalArgumentException {
+    private ApiFuture<QuerySnapshot> concatenateWhereArrayContains(Query query, Object[] moreFieldsAndValues) {
         String field;
         Object value;
         for (int i = 0; i < moreFieldsAndValues.length; i += 2) {

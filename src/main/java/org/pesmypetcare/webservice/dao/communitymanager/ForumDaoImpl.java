@@ -205,7 +205,7 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     /**
-     * Gets the forum ID
+     * Gets the forum ID.
      *
      * @param groupName The group name
      * @param forumName The forum name

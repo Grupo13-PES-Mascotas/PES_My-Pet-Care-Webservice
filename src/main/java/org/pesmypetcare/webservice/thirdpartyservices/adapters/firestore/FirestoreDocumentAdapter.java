@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutionException;
  */
 @Repository
 public class FirestoreDocumentAdapter implements FirestoreDocument {
+    private static final String DOCUMENT_NOT_RETRIEVED = "The document could not be retrieved";
     private Firestore db;
 
     public FirestoreDocumentAdapter() {
@@ -67,7 +68,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
             return snapshot;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
+            throw new DatabaseAccessException("retrieval-failed", DOCUMENT_NOT_RETRIEVED);
         }
     }
 
@@ -84,7 +85,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
             return documentSnapshotExists(snapshot);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
+            throw new DatabaseAccessException("retrieval-failed", DOCUMENT_NOT_RETRIEVED);
         }
     }
 
