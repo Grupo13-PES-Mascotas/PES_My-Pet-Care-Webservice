@@ -17,6 +17,7 @@ import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.stereotype.Repository;
 
@@ -75,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteFromDatabase(String uid) throws DatabaseAccessException {
+    public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
         petDao.deleteAllPets(uid);
         deleteUserStorage(uid);
         DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
@@ -86,7 +87,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException {
+    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException, DocumentException {
         deleteFromDatabase(uid);
         myAuth.deleteUser(uid);
     }
@@ -204,7 +205,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Updates the user's username.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @param newUsername The new username for the account
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
@@ -240,7 +241,7 @@ public class UserDaoImpl implements UserDao {
      *
      * @param username The current username
      * @param newUsername The new username
-     * @param batch The batch ofDocument writes
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void updateNameOnSubscriptions(String username, String newUsername, WriteBatch batch)
@@ -265,7 +266,7 @@ public class UserDaoImpl implements UserDao {
      *
      * @param username The current username
      * @param newUsername The new username
-     * @param batch The batch ofDocument writes
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void updateNameOnCreatedGroups(String username, String newUsername, WriteBatch batch)
@@ -290,7 +291,7 @@ public class UserDaoImpl implements UserDao {
      *
      * @param username The current username
      * @param newUsername The new username
-     * @param batch The batch ofDocument writes
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void updateNameOnCreatedForums(String username, String newUsername, WriteBatch batch)
@@ -315,7 +316,7 @@ public class UserDaoImpl implements UserDao {
      *
      * @param username The current username
      * @param newUsername The new username
-     * @param batch The batch ofDocument writes
+     * @param batch The batch of writes
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void updateNameOnCreatedMessages(String username, String newUsername, WriteBatch batch)
@@ -338,7 +339,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Updates the user's email.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @param newEmail The new email for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
@@ -352,7 +353,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Updates the user's username.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @param newPassword The new password for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
@@ -368,7 +369,7 @@ public class UserDaoImpl implements UserDao {
      * Saves the username inside the used usernames collection.
      *
      * @param username The username to save
-     * @param batch The batch ofDocument writes
+     * @param batch The batch of writes
      */
     private void saveUsername(String uid, String username, WriteBatch batch) {
         Map<String, String> docData = new HashMap<>();
@@ -379,8 +380,8 @@ public class UserDaoImpl implements UserDao {
     /**
      * Deletes the old username from the database.
      *
-     * @param uid The unique identifier ofDocument the user
-     * @param batch The batch ofDocument writes
+     * @param uid The unique identifier of the user
+     * @param batch The batch of writes
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     private void deleteOldUsername(String uid, WriteBatch batch) throws FirebaseAuthException {
@@ -391,7 +392,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Updates the display name.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @param newUsername The new username for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
@@ -404,7 +405,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Gets the update request for the user.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @return An update request for the user data
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
@@ -415,7 +416,7 @@ public class UserDaoImpl implements UserDao {
     /**
      * Throws DatabaseAccessException if the user does not exist.
      *
-     * @param userDoc The document snapshot ofDocument the user
+     * @param userDoc The document snapshot of the user
      * @throws DatabaseAccessException If the user does not exist
      */
     private void throwExceptionIfUserDoesNotExist(DocumentSnapshot userDoc) throws DatabaseAccessException {
