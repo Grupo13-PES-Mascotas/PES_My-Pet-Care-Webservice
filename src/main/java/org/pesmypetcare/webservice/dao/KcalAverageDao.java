@@ -6,6 +6,9 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Oriol Catalán
+ */
 public interface KcalAverageDao {
     /**
      * Creates a kcalAverage of the pet on the database.

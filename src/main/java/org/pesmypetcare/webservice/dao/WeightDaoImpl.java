@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * @author Oriol Catalán
+ */
 @Repository
 public class WeightDaoImpl implements WeightDao {
     private static final String DELFAIL_KEY = "deletion-failed";

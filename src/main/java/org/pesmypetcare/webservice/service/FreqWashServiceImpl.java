@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Oriol Catalán
+ */
 @Service
 public class FreqWashServiceImpl implements FreqWashService {
     @Autowired
