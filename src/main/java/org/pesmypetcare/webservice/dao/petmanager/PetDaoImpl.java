@@ -127,8 +127,8 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
+        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             internalList.put("key", fieldDocument.getId());
             internalList.put("body", fieldDocument.getData());
             externalList.add(internalList);
@@ -199,7 +199,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     /**
-     * Initializes the ownerId, batch and path variables for the access, the path is set to the pet document
+     * Initializes the ownerId, batch and path variables for the access, the path is set to the pet document.
      * @param owner Owner of the pet
      * @param petName Pet name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -213,7 +213,7 @@ public class PetDaoImpl implements PetDao {
     }
 
     /**
-     * Initializes the ownerId, batch and path variables for the access, the path is set to the user's pet collection
+     * Initializes the ownerId, batch and path variables for the access, the path is set to the user's pet collection.
      * @param owner Owner of the pets
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
@@ -227,7 +227,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
-     * pet field document identified by key
+     * pet field document identified by key.
      * @param owner Owner of the pet
      * @param petName Pet name
      * @param collectionName Name of the collection
@@ -245,7 +245,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
-     * pet field collection
+     * pet field collection.
      * @param owner Owner of the pet
      * @param petName Pet name
      * @param collectionName Name of the collection
