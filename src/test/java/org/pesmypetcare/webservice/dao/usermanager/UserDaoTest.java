@@ -23,6 +23,7 @@ import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -149,7 +150,7 @@ class UserDaoTest {
 
     @Test
     public void shouldDeleteUser()
-        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException {
+        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException, DocumentException {
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
         given(users.document(anyString())).willReturn(userRef);

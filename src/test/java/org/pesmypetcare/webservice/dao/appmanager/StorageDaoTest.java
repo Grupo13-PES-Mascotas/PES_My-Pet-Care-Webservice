@@ -13,6 +13,7 @@ import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.entity.petmanager.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 
 import java.util.ArrayList;
@@ -77,9 +78,9 @@ class StorageDaoTest {
     }
 
     @Test
-    public void uploadPetImage() {
+    public void uploadPetImage() throws DatabaseAccessException, DocumentException {
         dao.uploadPetImage(owner, imageEntity);
-        verify(petDao).updateField(owner, petName, "profileImageLocation", formPath);
+        verify(petDao).updateSimpleField(owner, petName, "profileImageLocation", formPath);
         verify(bucket).create(formPath, img, CONTENT_TYPE);
     }
 
@@ -92,7 +93,7 @@ class StorageDaoTest {
     }
 
     @Test
-    public void downloadAllPetImages() throws DatabaseAccessException {
+    public void downloadAllPetImages() throws DatabaseAccessException, DocumentException {
         given(petDao.getAllPetsData(owner)).willReturn(pets);
         given(bucket.get(formPath)).willReturn(blob);
         given(blob.getContent()).willReturn(img);

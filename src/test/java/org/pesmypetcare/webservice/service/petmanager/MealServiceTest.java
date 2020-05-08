@@ -22,6 +22,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Marc Simó
+ */
 @ExtendWith(MockitoExtension.class)
 public class MealServiceTest {
     private static List<Map<String, Object>> mealList;

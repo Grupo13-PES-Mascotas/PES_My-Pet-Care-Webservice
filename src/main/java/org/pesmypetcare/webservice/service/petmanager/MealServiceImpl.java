@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 @Service
 public class MealServiceImpl implements MealService {
     @Autowired

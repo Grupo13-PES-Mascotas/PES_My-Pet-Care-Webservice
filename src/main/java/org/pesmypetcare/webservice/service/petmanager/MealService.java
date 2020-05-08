@@ -6,6 +6,9 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Marc Simó
+ */
 public interface MealService {
 
     /**

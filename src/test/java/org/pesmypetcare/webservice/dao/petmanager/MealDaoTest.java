@@ -33,6 +33,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.verify;
 
+/**
+ * @author Marc Simó
+ */
 @ExtendWith(MockitoExtension.class)
 public class MealDaoTest {
     private static List<Map<String, Object>> mealList;

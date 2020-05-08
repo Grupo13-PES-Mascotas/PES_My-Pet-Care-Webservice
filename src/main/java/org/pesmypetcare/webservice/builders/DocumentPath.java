@@ -78,14 +78,15 @@ class DocumentPath extends PathBuilder {
             case kcals:
                 return buildPathToKcal(ids[0], ids[1], ids[2]);
             case meals:
-                return buildPathToMeal(ids[0], ids[1], ids[2]);
             case weights:
-                return buildPathToWeight(ids[0], ids[1], ids[2]);
-            case freqWashes:
-                return buildPathToFreqWash(ids[0], ids[1], ids[2]);
+            case exercises:
+            case washes:
+            case vaccinations:
+            case illnesses:
             case medications:
-                return buildPathToMedication(ids[0], ids[1], ids[2], ids[NUMBERS[0]]);
-            case freqTrainings:
+            case vet_visits:
+                return buildPathToPetCollection(ids[0], ids[1], collection.name(), ids[2]);
+            case trainings:
                 return buildPathToFreqTraining(ids[0], ids[1], ids[2]);
             case kcalsAverages:
                 return buildPathToKcalsAverage(ids[0], ids[1], ids[2]);
@@ -252,64 +253,22 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToFreqTraining(@NonNull String userId, @NonNull String petName,
                                                          @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/freqTrainings/").append(date);
+        return buildPathToPet(userId, petName).append("/trainings/").append(date);
     }
 
     /**
-     * Builds the path to a medication entry.
+     * Builds the path to a pet collection entry.
      *
      * @param userId The user ID
      * @param petName The pet name
-     * @param date The date of creation
-     * @param medicationName The medication name
+     * @param collectionName The pet collection name
+     * @param key Key to the collection entry
      * @return The path
      */
     @NonNull
-    private static StringBuilder buildPathToMedication(@NonNull String userId, @NonNull String petName,
-                                                       @NonNull String date, @NonNull String medicationName) {
-        return buildPathToPet(userId, petName).append("/medications/").append(date).append("½").append(medicationName);
-    }
-
-    /**
-     * Builds the path to a frequency of wash entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToFreqWash(@NonNull String userId, @NonNull String petName,
-                                                     @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/freqWashes/").append(date);
-    }
-
-    /**
-     * Builds the path to a weight entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToWeight(@NonNull String userId, @NonNull String petName,
-                                                   @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/weights/").append(date);
-    }
-
-    /**
-     * Builds the path to a meal entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToMeal(@NonNull String userId, @NonNull String petName,
-                                                 @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/meals/").append(date);
+    private static StringBuilder buildPathToPetCollection(@NonNull String userId, @NonNull String petName,
+                                                          @NonNull String collectionName, @NonNull String key) {
+        return buildPathToPet(userId, petName).append("/").append(collectionName).append("/").append(key);
     }
 
     /**

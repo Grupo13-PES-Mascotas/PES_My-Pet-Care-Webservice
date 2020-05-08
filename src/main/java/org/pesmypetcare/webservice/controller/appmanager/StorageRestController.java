@@ -2,6 +2,7 @@ package org.pesmypetcare.webservice.controller.appmanager;
 
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.service.appmanager.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,13 @@ public class StorageRestController {
      * @param token The personal access token ofDocument the user
      * @param user The user's username
      * @param image The image entity containing the image, its path and name
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
     @PutMapping("/image/{user}/pets")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void savePetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
-                             @RequestBody ImageEntity image) {
+                             @RequestBody ImageEntity image) throws DatabaseAccessException, DocumentException {
         storage.savePetImage(user, image);
     }
 
@@ -94,12 +97,13 @@ public class StorageRestController {
      * @param user The user's username
      * @return A map with the pets names and the their profile pictures as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
     @GetMapping(value = "/image/{user}/pets",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token,
-                                                     @PathVariable String user) throws DatabaseAccessException {
+    public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token, @PathVariable String user)
+        throws DatabaseAccessException, DocumentException {
         return storage.getAllImages(user);
     }
 

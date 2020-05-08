@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ class StorageServiceTest {
     }
 
     @Test
-    public void savePetImage() {
+    public void savePetImage() throws DatabaseAccessException, DocumentException {
         service.savePetImage(owner, imageEntity);
         verify(storageDao).uploadPetImage(same(owner), same(imageEntity));
     }
@@ -73,7 +74,7 @@ class StorageServiceTest {
     }
 
     @Test
-    public void getAllImages() throws DatabaseAccessException {
+    public void getAllImages() throws DatabaseAccessException, DocumentException {
         given(storageDao.downloadAllPetImages(same(owner))).willReturn(images);
         Map<String, String> resultMap = service.getAllImages(owner);
         assertEquals(images, resultMap, "Should return a map with the pets names ant their profile"

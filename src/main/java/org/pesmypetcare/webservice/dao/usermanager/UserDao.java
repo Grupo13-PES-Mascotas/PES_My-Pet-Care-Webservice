@@ -4,6 +4,7 @@ import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
 
@@ -26,8 +27,9 @@ public interface UserDao {
      *
      * @param uid The user's unique identifier
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    void deleteFromDatabase(String uid) throws DatabaseAccessException;
+    void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the user with the specified uid from the database.
@@ -35,8 +37,9 @@ public interface UserDao {
      * @param uid The uid ofDocument the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DocumentException When the document does not exist
      */
-    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException;
+    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
      * Gets the data ofDocument the specified user.

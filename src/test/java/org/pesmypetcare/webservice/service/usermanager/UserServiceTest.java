@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,7 +53,8 @@ class UserServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenUserDeleted() throws DatabaseAccessException, FirebaseAuthException {
+    public void shouldReturnNothingWhenUserDeleted()
+        throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         service.deleteById(TOKEN, username);
         verify(userDao).deleteById(same(username));
     }

@@ -4,6 +4,7 @@ package org.pesmypetcare.webservice.service.usermanager;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
 
@@ -27,8 +28,9 @@ public interface UserService {
      * @param token The user's personal access token
      * @param uid The unique identifier of the user
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
      */
-    void deleteFromDatabase(String token, String uid) throws DatabaseAccessException;
+    void deleteFromDatabase(String token, String uid) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the user with the specified uid from the data base.
@@ -37,8 +39,9 @@ public interface UserService {
      * @param uid The unique identifier of the user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DocumentException When the document does not exist
      */
-    void deleteById(String token, String uid) throws DatabaseAccessException, FirebaseAuthException;
+    void deleteById(String token, String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
 
     /**

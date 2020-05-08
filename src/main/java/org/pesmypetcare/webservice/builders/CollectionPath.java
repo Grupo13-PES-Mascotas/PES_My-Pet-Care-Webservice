@@ -75,11 +75,19 @@ class CollectionPath extends PathBuilder {
                 return buildPathToMealsCollection(ids[0], ids[1]);
             case weights:
                 return buildPathToWeightsCollection(ids[0], ids[1]);
-            case freqWashes:
+            case exercises:
+                return buildPathToExercisesCollection(ids[0], ids[1]);
+            case washes:
                 return buildPathToFreqWashesCollection(ids[0], ids[1]);
+            case vaccinations:
+                return buildPathToVaccinationsCollection(ids[0], ids[1]);
+            case illnesses:
+                return buildPathToIllnessesCollection(ids[0], ids[1]);
             case medications:
                 return buildPathToMedicationsCollection(ids[0], ids[1]);
-            case freqTrainings:
+            case vet_visits:
+                return buildPathToVetVisitsCollection(ids[0], ids[1]);
+            case trainings:
                 return buildPathToFreqTrainingsCollection(ids[0], ids[1]);
             case kcalsAverages:
                 return buildPathToKcalsAveragesCollection(ids[0], ids[1]);
@@ -179,7 +187,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqTrainingsCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqTrainings");
+        return buildPathToPet(userId, petName).append("/trainings");
     }
 
     /**
@@ -203,7 +211,7 @@ class CollectionPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToFreqWashesCollection(@NonNull String userId, @NonNull String petName) {
-        return buildPathToPet(userId, petName).append("/freqWashes");
+        return buildPathToPet(userId, petName).append("/washes");
     }
 
     /**
@@ -228,6 +236,54 @@ class CollectionPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToMealsCollection(@NonNull String userId, @NonNull String petName) {
         return buildPathToPet(userId, petName).append("/meals");
+    }
+
+    /**
+     * Builds the path to a collection of exercise entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToExercisesCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/exercises");
+    }
+
+    /**
+     * Builds the path to a collection of vet visit entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToVetVisitsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/vet_visits");
+    }
+
+    /**
+     * Builds the path to a collection of illness entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToIllnessesCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/illnesses");
+    }
+
+    /**
+     * Builds the path to a collection of vaccination entries.
+     *
+     * @param userId The user ID
+     * @param petName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToVaccinationsCollection(@NonNull String userId, @NonNull String petName) {
+        return buildPathToPet(userId, petName).append("/vaccinations");
     }
 
     /**

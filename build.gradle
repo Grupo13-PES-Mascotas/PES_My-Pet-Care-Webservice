@@ -1,7 +1,7 @@
 import io.franzbecker.gradle.lombok.task.DelombokTask
 
 plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'org.springframework.boot' version '2.2.7.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'org.asciidoctor.jvm.convert' version '3.2.0'
     id 'io.franzbecker.gradle-lombok' version '3.3.0'
@@ -30,7 +30,7 @@ ext {
 }
 
 dependencies {
-    implementation 'com.google.apis:google-api-services-calendar:v3-rev20200426-1.30.9'
+    implementation 'com.google.apis:google-api-services-calendar:v3-rev20200428-1.30.9'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.google.firebase:firebase-admin:6.12.2'
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.0'
