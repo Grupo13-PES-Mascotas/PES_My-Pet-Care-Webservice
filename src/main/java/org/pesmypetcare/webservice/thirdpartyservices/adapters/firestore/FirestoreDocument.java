@@ -65,12 +65,21 @@ public interface FirestoreDocument {
     DocumentSnapshot getDocumentSnapshot(@NonNull String path) throws DatabaseAccessException, DocumentException;
 
     /**
-     * Returns whether or not the field exists in the document. Returns false if the document does not exist.
+     * Returns whether or not exists the document. Returns false if the document does not exist.
      *
      * @param snapshot The DocumentSnapshot instance
      * @return Whether the document existed in this snapshot
      */
     boolean documentSnapshotExists(@NonNull DocumentSnapshot snapshot);
+
+    /**
+     * Returns whether or not exists the document. Returns false if the document does not exist.
+     *
+     * @param path The path to the Document
+     * @return Whether the document existed
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     */
+    boolean documentExists(@NonNull String path) throws DatabaseAccessException;
 
     /**
      * Creates a new Document at the paths's location with an auto-generated id.

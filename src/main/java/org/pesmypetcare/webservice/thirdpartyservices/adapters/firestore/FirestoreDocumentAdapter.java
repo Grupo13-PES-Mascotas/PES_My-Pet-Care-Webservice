@@ -77,6 +77,18 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     }
 
     @Override
+    public boolean documentExists(@NonNull String path) throws DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = db.document(path).get();
+        try {
+            DocumentSnapshot snapshot = future.get();
+            return documentSnapshotExists(snapshot);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
+        }
+    }
+
+    @Override
     public DocumentReference createDocument(@NonNull String path, @NonNull Map<String, Object> fields,
                                             @NonNull WriteBatch batch) {
         DocumentReference ref = db.collection(path).document();

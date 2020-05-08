@@ -45,12 +45,7 @@ public class ForumDaoImpl implements ForumDao {
 
     @Override
     public boolean forumNameInUse(String parentGroup, String forumName) throws DatabaseAccessException {
-        try {
-            documentAdapter.getDocumentSnapshot(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
-            return true;
-        } catch (DocumentException e) {
-            return false;
-        }
+        return documentAdapter.documentExists(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
     }
 
     @Override
@@ -144,7 +139,7 @@ public class ForumDaoImpl implements ForumDao {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         messageEntity.setPublicationDate(timeFormatter.format(LocalDateTime.now()));
-        documentAdapter.createDocument(Path.ofDocument(Collections.messages, groupId, forumId), messageEntity);
+        documentAdapter.createDocument(Path.ofCollection(Collections.messages, groupId, forumId), messageEntity);
     }
 
     @Override
