@@ -88,8 +88,8 @@ public class PetDaoImpl implements PetDao {
         List<DocumentSnapshot> petsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
+        Map<String, Object> internalList = new HashMap<>();
         for (DocumentSnapshot petDocument : petsDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             internalList.put("name", petDocument.getId());
             internalList.put("body", petDocument.toObject(PetEntity.class));
             externalList.add(internalList);
