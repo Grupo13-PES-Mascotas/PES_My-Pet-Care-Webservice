@@ -9,8 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.petmanager.KcalDao;
 import org.pesmypetcare.webservice.entity.petmanager.KcalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.petmanager.KcalService;
-import org.pesmypetcare.webservice.service.petmanager.KcalServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

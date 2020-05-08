@@ -298,9 +298,9 @@ public class UserDaoImpl implements UserDao {
         Query query = db.collectionGroup("forums").whereEqualTo("creator", username);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         try {
+            Map<String, Object> data = new HashMap<>();
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
-                Map<String, Object> data = new HashMap<>();
                 data.put("creator", newUsername);
                 batch.update(ref, data);
             }

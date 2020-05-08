@@ -25,6 +25,7 @@ import java.util.List;
  */
 @Repository
 public class FirestoreCollectionAdapter implements FirestoreCollection {
+    private static final String INVALID_FIELD_MESSAGE = "Invalid field. Field must not be null or empty";
     private Firestore db;
     @Autowired
     private FirestoreDocument documentAdapter;
@@ -71,8 +72,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
         for (DocumentReference doc : iterable) {
             try {
                 snapshots.add(documentAdapter.getDocumentSnapshot(doc.getPath()));
-            } catch (DocumentException ignore) {
-            }
+            } catch (DocumentException ignore) { }
         }
         return snapshots;
     }
@@ -184,7 +184,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
      * @throws IllegalArgumentException When the number of arguments is odd
      */
     private void checkArguments(Object[] fieldsAndValues) {
-        if (!(fieldsAndValues.length % 2 == 0)) {
+        if (fieldsAndValues.length % 2 != 0) {
             throw new IllegalArgumentException("Wrong number of arguments. There must be an even number of arguments");
         }
     }
@@ -205,7 +205,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             field = (String) moreFieldsAndValues[i];
             value = moreFieldsAndValues[i + 1];
             if (field == null || field.isEmpty()) {
-                throw new IllegalArgumentException("Invalid field. Field must not be null or empty");
+                throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
             query.whereEqualTo(field, value);
         }
@@ -228,7 +228,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             fieldPath = (FieldPath) moreFieldsAndValues[i];
             value = moreFieldsAndValues[i + 1];
             if (fieldPath == null || fieldPath.toString().isEmpty()) {
-                throw new IllegalArgumentException("Invalid field. Field must not be null or empty");
+                throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
             query.whereEqualTo(fieldPath, value);
         }
@@ -252,7 +252,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             field = (String) moreFieldsAndValues[i];
             value = moreFieldsAndValues[i + 1];
             if (field == null || field.isEmpty()) {
-                throw new IllegalArgumentException("Invalid field. Field must not be null or empty");
+                throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
             query.whereArrayContains(field, value);
         }
@@ -268,15 +268,14 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      * @throws IllegalArgumentException When the field is empty or null
      */
-    private ApiFuture<QuerySnapshot> concatenateWhereArrayContainsFieldPath(Query query, Object[] moreFieldsAndValues)
-        throws IllegalArgumentException {
+    private ApiFuture<QuerySnapshot> concatenateWhereArrayContainsFieldPath(Query query, Object[] moreFieldsAndValues) {
         FieldPath fieldPath;
         Object value;
         for (int i = 0; i < moreFieldsAndValues.length; i += 2) {
             fieldPath = (FieldPath) moreFieldsAndValues[i];
             value = moreFieldsAndValues[i + 1];
             if (fieldPath == null || fieldPath.toString().isEmpty()) {
-                throw new IllegalArgumentException("Invalid field. Field must not be null or empty");
+                throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
             query.whereArrayContains(fieldPath, value);
         }

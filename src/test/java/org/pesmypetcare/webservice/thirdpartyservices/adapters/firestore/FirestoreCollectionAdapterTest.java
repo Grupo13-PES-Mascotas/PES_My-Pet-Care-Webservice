@@ -66,8 +66,15 @@ class FirestoreCollectionAdapterTest {
     @InjectMocks
     private FirestoreCollection collectionAdapter = new FirestoreCollectionAdapter();
 
+    @Test
+    public void checkArgumentsShouldThrowExceptionWhenOddNumberOfArguments() {
+        assertThrows(IllegalArgumentException.class,
+            () -> collectionAdapter.getDocumentsWhereEqualTo(collectionGroup, arrayPath, value, arrayPath));
+    }
+
     @Nested
     class UseDbCollection {
+
 
         @BeforeEach
         public void setUp() {
@@ -170,7 +177,6 @@ class FirestoreCollectionAdapterTest {
                 "Should return all documents from " + collectionPath + " where the array " + array + " contains "
                     + value);
         }
-
         @Test
         public void getDocumentsWhereArrayFromFieldPathContainsValue() {
             given(collectionReference.whereArrayContains(same(arrayPath), same(value))).willReturn(query);
@@ -181,10 +187,11 @@ class FirestoreCollectionAdapterTest {
                 "Should return all documents from " + collectionPath + " where the array" + array + " in " + arrayPath
                     + " contains " + value);
         }
-    }
 
+    }
     @Nested
     class UsesCollectionGroup {
+
         @BeforeEach
         public void setUp() {
             given(db.collectionGroup(same(collectionGroup))).willReturn(query);
@@ -232,7 +239,6 @@ class FirestoreCollectionAdapterTest {
                 "Should return all documents from the collections whose id is " + collectionGroup + " and the "
                     + "array" + array + " contains " + value);
         }
-
         @Test
         public void getCollectionGroupDocumentsWhereArrayFromFieldPathContainsValue() {
             given(query.whereArrayContains(same(arrayPath), same(value))).willReturn(query);
@@ -244,11 +250,6 @@ class FirestoreCollectionAdapterTest {
                 "Should return all documents from the collections whose id is " + collectionGroup + " and have the "
                     + "array" + array + " in " + arrayPath + " which contains " + value);
         }
-    }
 
-    @Test
-    public void checkArgumentsShouldThrowExceptionWhenOddNumberOfArguments() {
-        assertThrows(IllegalArgumentException.class,
-            () -> collectionAdapter.getDocumentsWhereEqualTo(collectionGroup, arrayPath, value, arrayPath));
     }
 }

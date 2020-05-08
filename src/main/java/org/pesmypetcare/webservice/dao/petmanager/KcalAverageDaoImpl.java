@@ -134,8 +134,8 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = kcalAveragesRef.get();
         List<QueryDocumentSnapshot> kcalAverageDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot kcalAverageDocument : kcalAverageDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             internalList.put(INTERNAL_LIST_STRING_1, kcalAverageDocument.getId());
             internalList.put(INTERNAL_LIST_STRING_2, kcalAverageDocument.toObject(KcalAverageEntity.class));
             externalList.add(internalList);

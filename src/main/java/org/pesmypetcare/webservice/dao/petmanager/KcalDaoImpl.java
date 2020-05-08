@@ -132,8 +132,8 @@ public class KcalDaoImpl implements KcalDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = kcalsRef.get();
         List<QueryDocumentSnapshot> kcalDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot kcalDocument : kcalDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             internalList.put(INTERNAL_LIST_STRING_1, kcalDocument.getId());
             internalList.put(INTERNAL_LIST_STRING_2, kcalDocument.toObject(KcalEntity.class));
             externalList.add(internalList);

@@ -133,8 +133,8 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = freqTrainingsRef.get();
         List<QueryDocumentSnapshot> freqTrainingDocuments = future.get().getDocuments();
+        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot freqTrainingDocument : freqTrainingDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             internalList.put(INTERNAL_LIST_STRING_1, freqTrainingDocument.getId());
             internalList.put(INTERNAL_LIST_STRING_2, freqTrainingDocument.toObject(FreqTrainingEntity.class));
             externalList.add(internalList);

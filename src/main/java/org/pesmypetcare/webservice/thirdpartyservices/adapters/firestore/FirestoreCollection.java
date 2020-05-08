@@ -103,8 +103,8 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field, @Nullable Object value,
-                                                      Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
+                                                      @Nullable Object value, Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields
@@ -118,7 +118,7 @@ public interface FirestoreCollection {
      */
     @NonNull
     ApiFuture<QuerySnapshot> getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                   @Nullable Object value, Object... moreFieldsAndValues);
+                                                      @Nullable Object value, Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields,
@@ -132,7 +132,7 @@ public interface FirestoreCollection {
      */
     @NonNull
     ApiFuture<QuerySnapshot> getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
-                                           @NonNull Object value, Object... moreFieldsAndValues);
+                                                            @NonNull Object value, Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields,
@@ -145,8 +145,9 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                         @NonNull Object value, Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getDocumentsWhereArrayContains(@NonNull String collectionPath,
+                                                            @NonNull FieldPath fieldPath, @NonNull Object value,
+                                                            Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields
@@ -160,8 +161,9 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull String field,
-                                                  @Nullable Object value, Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId,
+                                                                     @NonNull String field, @Nullable Object value,
+                                                                     Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields
@@ -175,8 +177,11 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                  @Nullable Object value, Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId,
+                                                                     @NonNull FieldPath fieldPath,
+                                                                     @Nullable Object value,
+                                                                     Object... moreFieldsAndValues);
+
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields,
      * the values must be an array, and that the array must contain the provided values.
@@ -189,8 +194,9 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull String field,
-                                                        @NonNull Object value, Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
+                                                                           @NonNull String field, @NonNull Object value,
+                                                                           Object... moreFieldsAndValues);
 
     /**
      * Returns the result of the query with the additional filter that documents must contain the specified fields,
@@ -204,6 +210,8 @@ public interface FirestoreCollection {
      * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                        @NonNull Object value, Object... moreFieldsAndValues);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
+                                                                           @NonNull FieldPath fieldPath,
+                                                                           @NonNull Object value,
+                                                                           Object... moreFieldsAndValues);
 }

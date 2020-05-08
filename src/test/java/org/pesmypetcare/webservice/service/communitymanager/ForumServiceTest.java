@@ -77,7 +77,7 @@ class ForumServiceTest {
 
         List<ForumEntity> result = service.getAllForumsFromGroup(groupName);
         assertEquals(forumEntityList, result,
-                     "Should return a list with all the forum entities in the requested " + "collection.");
+            "Should return a list with all the forum entities in the requested " + "collection.");
     }
 
     @Test
@@ -127,13 +127,13 @@ class ForumServiceTest {
         @Test
         public void postMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
-                         () -> service.postMessage(token, groupName, forumName, messageEntity));
+                () -> service.postMessage(token, groupName, forumName, messageEntity));
         }
 
         @Test
         public void deleteMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
-                         () -> service.deleteMessage(token, groupName, forumName, creator, date));
+                () -> service.deleteMessage(token, groupName, forumName, creator, date));
         }
     }
 
