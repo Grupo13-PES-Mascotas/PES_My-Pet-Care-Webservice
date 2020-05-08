@@ -216,9 +216,8 @@ class ForumDaoTest {
         @Nested
         class CommitsBatch {
             @BeforeEach
-            public void setUp() {
-                given(batch.commit()).willReturn(writeResults);
-                given(writeResults.isCancelled()).willReturn(false);
+            public void setUp() throws DatabaseAccessException {
+                willDoNothing().given(documentAdapter).commitBatch(batch);
             }
 
             @Test

@@ -67,7 +67,7 @@ class PetDaoTest {
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.createDocumentWithId(anyString(), anyString(), any(PetEntity.class),
             any(WriteBatch.class))).willReturn(null);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.createPet(OWNER, PET_NAME, PET_ENTITY);
 
@@ -79,7 +79,7 @@ class PetDaoTest {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn("user/pets/pet-profile-image.png");
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
 
         petDao.deleteByOwnerAndName(OWNER, PET_NAME);
@@ -93,7 +93,7 @@ class PetDaoTest {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.deleteAllPets(OWNER);
 
@@ -137,7 +137,7 @@ class PetDaoTest {
     public void shouldUpdateSimpleFieldWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.updateSimpleField(OWNER, PET_NAME, SIMPLE_FIELD, VALUE);
 
@@ -148,7 +148,7 @@ class PetDaoTest {
     public void shouldDeleteFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.deleteFieldCollection(OWNER, PET_NAME, COLLECTION_FIELD);
 
@@ -187,7 +187,7 @@ class PetDaoTest {
         given(dbDoc.createDocumentWithId(anyString(), anyString(), any(Map.class),
             any(WriteBatch.class)))
             .willReturn(null);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.addFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
 
@@ -198,7 +198,7 @@ class PetDaoTest {
     public void shouldDeleteFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.deleteFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
 
@@ -209,7 +209,7 @@ class PetDaoTest {
     public void shouldUpdateFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(batch.commit()).willReturn(null);
+        willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.updateFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
 
