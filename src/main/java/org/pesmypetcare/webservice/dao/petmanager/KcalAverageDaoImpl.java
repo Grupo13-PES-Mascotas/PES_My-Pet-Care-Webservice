@@ -161,9 +161,9 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
         ApiFuture<QuerySnapshot> future = kcalAveragesRef.get();
         List<QueryDocumentSnapshot> kcalAverageDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot kcalAverageDocument : kcalAverageDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             String date = kcalAverageDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, kcalAverageDocument.toObject(KcalAverageEntity.class));
                 externalList.add(internalList);

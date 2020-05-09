@@ -158,9 +158,9 @@ public class KcalDaoImpl implements KcalDao {
         ApiFuture<QuerySnapshot> future = kcalsRef.get();
         List<QueryDocumentSnapshot> kcalDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot kcalDocument : kcalDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             String date = kcalDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, kcalDocument.toObject(KcalEntity.class));
                 externalList.add(internalList);

@@ -143,9 +143,9 @@ public class MealDaoImpl implements MealDao {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
         List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot mealDocument : mealDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             String date = mealDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("date", date);
                 internalList.put("body", mealDocument.toObject(MealEntity.class));
                 externalList.add(internalList);

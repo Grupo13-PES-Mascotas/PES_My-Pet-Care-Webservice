@@ -157,9 +157,9 @@ public class FreqTrainingDaoImpl implements FreqTrainingDao {
         ApiFuture<QuerySnapshot> future = freqTrainingsRef.get();
         List<QueryDocumentSnapshot> freqTrainingDocuments = future.get().getDocuments();
         for (QueryDocumentSnapshot freqTrainingDocument : freqTrainingDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             String date = freqTrainingDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, freqTrainingDocument.toObject(FreqTrainingEntity.class));
                 externalList.add(internalList);

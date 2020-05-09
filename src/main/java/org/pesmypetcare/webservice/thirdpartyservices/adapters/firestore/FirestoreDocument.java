@@ -27,7 +27,7 @@ public interface FirestoreDocument {
     WriteBatch batch();
 
     /**
-     * Commits a write batch
+     * Commits a write batch.
      * @param batch The batch to commit
      * @throws DatabaseAccessException When the commit is interrupted
      * @throws DocumentException When the commit execution fails

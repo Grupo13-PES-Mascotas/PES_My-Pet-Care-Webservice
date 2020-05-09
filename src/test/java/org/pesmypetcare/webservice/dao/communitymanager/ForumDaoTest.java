@@ -7,7 +7,6 @@ import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
-import com.google.cloud.firestore.WriteResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -70,8 +69,6 @@ class ForumDaoTest {
     private FirestoreCollection collectionAdapter;
     @Mock
     private WriteBatch batch;
-    @Mock
-    private ApiFuture<List<WriteResult>> writeResults;
     @Mock
     private DocumentReference documentReference;
     @Mock
