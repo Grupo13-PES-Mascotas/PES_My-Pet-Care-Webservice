@@ -29,9 +29,10 @@ public interface FirestoreDocument {
     /**
      * Commits a write batch
      * @param batch The batch to commit
-     * @throws DatabaseAccessException When the commit fails
+     * @throws DatabaseAccessException When the commit is interrupted
+     * @throws DocumentException When the commit execution fails
      */
-    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException;
+    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a DocumentReference that refers to the document at the specified path.

@@ -9,6 +9,7 @@ import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.GeoPoint;
 import com.google.cloud.firestore.WriteBatch;
+import com.google.cloud.firestore.WriteResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.pesmypetcare.webservice.error.DocumentException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -65,6 +67,8 @@ class FirestoreDocumentAdapterTest {
     @Mock
     private ApiFuture<DocumentSnapshot> future;
     @Mock
+    private ApiFuture<List<WriteResult>> writeResult;
+    @Mock
     private WriteBatch batch;
     @Mock
     private Iterable<DocumentReference> documentReferences;
@@ -81,6 +85,37 @@ class FirestoreDocumentAdapterTest {
         aString = "John";
         fields.put(field, aString);
         pojo = new UserEntity();
+    }
+
+    @Test
+    public void commitWriteBatch()
+        throws ExecutionException, InterruptedException, DatabaseAccessException, DocumentException {
+        given(batch.commit()).willReturn(writeResult);
+        given(writeResult.get()).willReturn(null);
+
+        adapter.commitBatch(batch);
+        verify(batch).commit();
+        verify(writeResult).get();
+    }
+
+    @Test
+    public void commitWriteBatchShouldReturnDatabaseAccessExceptionWhenInterrupted() throws ExecutionException,
+        InterruptedException {
+        given(batch.commit()).willReturn(writeResult);
+        willThrow(InterruptedException.class).given(writeResult).get();
+
+        assertThrows(DatabaseAccessException.class, () -> adapter.commitBatch(batch), "Should throw database access "
+            + "exception when commit is interrupted");
+    }
+
+    @Test
+    public void commitWriteBatchShouldReturnDocumentExceptionWhenExecutionFails() throws ExecutionException,
+        InterruptedException {
+        given(batch.commit()).willReturn(writeResult);
+        willThrow(ExecutionException.class).given(writeResult).get();
+
+        assertThrows(DocumentException.class, () -> adapter.commitBatch(batch), "Should throw document "
+            + "exception when commit execution fails");
     }
 
     @Test

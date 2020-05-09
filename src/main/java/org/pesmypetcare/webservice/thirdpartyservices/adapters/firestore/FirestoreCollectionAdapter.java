@@ -41,11 +41,13 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
     }
 
     @Override
-    public void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException {
+    public void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException, DocumentException {
         try {
             batch.commit().get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
             throw new DatabaseAccessException("write-failed", e.getMessage());
+        } catch (ExecutionException e) {
+            throw new DocumentException("write-failed", e.getMessage());
         }
     }
 

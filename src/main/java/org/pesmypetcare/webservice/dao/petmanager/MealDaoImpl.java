@@ -104,8 +104,8 @@ public class MealDaoImpl implements MealDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
         List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot mealDocument : mealDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             internalList.put("date", mealDocument.getId());
             internalList.put("body", mealDocument.toObject(MealEntity.class));
             externalList.add(internalList);
@@ -142,8 +142,8 @@ public class MealDaoImpl implements MealDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = mealsRef.get();
         List<QueryDocumentSnapshot> mealDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot mealDocument : mealDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             String date = mealDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
                 internalList.put("date", date);

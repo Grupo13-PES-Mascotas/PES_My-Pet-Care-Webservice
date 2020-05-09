@@ -133,8 +133,8 @@ public class WeekTrainingDaoImpl implements WeekTrainingDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = weekTrainingsRef.get();
         List<QueryDocumentSnapshot> weekTrainingDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot weekTrainingDocument : weekTrainingDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             internalList.put(INTERNAL_LIST_STRING_1, weekTrainingDocument.getId());
             internalList.put(INTERNAL_LIST_STRING_2, weekTrainingDocument.toObject(WeekTrainingEntity.class));
             externalList.add(internalList);
@@ -156,10 +156,10 @@ public class WeekTrainingDaoImpl implements WeekTrainingDao {
         Object>> externalList) throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = weekTrainingsRef.get();
         List<QueryDocumentSnapshot> weekTrainingDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot weekTrainingDocument : weekTrainingDocuments) {
             String date = weekTrainingDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put(INTERNAL_LIST_STRING_1, date);
                 internalList.put(INTERNAL_LIST_STRING_2, weekTrainingDocument.toObject(WeekTrainingEntity.class));
                 externalList.add(internalList);

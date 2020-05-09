@@ -9,6 +9,7 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -28,9 +29,10 @@ public interface FirestoreCollection {
     /**
      * Commits a write batch
      * @param batch The batch to commit
-     * @throws DatabaseAccessException When the commit fails
+     * @throws DatabaseAccessException When the commit is interrupted
+     * @throws DocumentException When the commit execution fails
      */
-    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException;
+    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a CollectionReference that refers to the collection at the specified path.

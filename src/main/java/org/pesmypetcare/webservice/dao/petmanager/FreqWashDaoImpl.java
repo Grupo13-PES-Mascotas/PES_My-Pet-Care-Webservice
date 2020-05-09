@@ -134,8 +134,8 @@ public class FreqWashDaoImpl implements FreqWashDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = freqWashesRef.get();
         List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot freqWashDocument : freqWashDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             internalList.put(INTERNAL_LIST_STRING_1, freqWashDocument.getId());
             internalList.put(INTERNAL_LIST_STRING_2, freqWashDocument.toObject(FreqWashEntity.class));
             externalList.add(internalList);
@@ -160,8 +160,8 @@ public class FreqWashDaoImpl implements FreqWashDao {
         throws InterruptedException, ExecutionException {
         ApiFuture<QuerySnapshot> future = freqWashesRef.get();
         List<QueryDocumentSnapshot> freqWashDocuments = future.get().getDocuments();
-        Map<String, Object> internalList = new HashMap<>();
         for (QueryDocumentSnapshot freqWashDocument : freqWashDocuments) {
+            Map<String, Object> internalList = new HashMap<>();
             String date = freqWashDocument.getId();
             if (initialDate.compareTo(date) < 0 && finalDate.compareTo(date) > 0) {
                 internalList.put(INTERNAL_LIST_STRING_1, date);

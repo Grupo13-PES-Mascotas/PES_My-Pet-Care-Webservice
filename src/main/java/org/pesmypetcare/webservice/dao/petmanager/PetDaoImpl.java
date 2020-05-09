@@ -145,9 +145,9 @@ public class PetDaoImpl implements PetDao {
         List<Map<String, Object>> externalList = new ArrayList<>();
 
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
             String key = fieldDocument.getId();
             if (key1.compareTo(key) <= 0 && key2.compareTo(key) >= 0) {
+                Map<String, Object> internalList = new HashMap<>();
                 internalList.put("key", fieldDocument.getId());
                 internalList.put("body", fieldDocument.getData());
                 externalList.add(internalList);

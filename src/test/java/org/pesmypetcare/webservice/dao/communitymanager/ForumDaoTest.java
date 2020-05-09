@@ -216,7 +216,7 @@ class ForumDaoTest {
         @Nested
         class CommitsBatch {
             @BeforeEach
-            public void setUp() throws DatabaseAccessException {
+            public void setUp() throws DatabaseAccessException, DocumentException {
                 willDoNothing().given(documentAdapter).commitBatch(batch);
             }
 
