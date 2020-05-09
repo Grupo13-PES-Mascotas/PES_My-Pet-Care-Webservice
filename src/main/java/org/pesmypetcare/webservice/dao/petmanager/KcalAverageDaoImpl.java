@@ -111,7 +111,7 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
     }
 
     /**
-     * Return the kcalAverage collection ofDocument one pet.
+     * Return the kcalAverage collection of one pet.
      *
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet

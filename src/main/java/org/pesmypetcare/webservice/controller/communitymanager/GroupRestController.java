@@ -109,7 +109,7 @@ public class GroupRestController {
     /**
      * Subscribes a user to a group.
      *
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
@@ -123,7 +123,7 @@ public class GroupRestController {
     /**
      * Unsubscribes a user to a group.
      *
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database

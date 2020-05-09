@@ -8,26 +8,26 @@ import java.util.Map;
 
 public interface KcalAverageDao {
     /**
-     * Creates a kcalAverage ofDocument the pet on the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Creation date ofDocument the pet's kcalAverage
-     * @param kcalAverageEntity The parameters ofDocument kcalAverage
+     * Creates a kcalAverage of the pet on the database.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Creation date of the pet's kcalAverage
+     * @param kcalAverageEntity The parameters of kcalAverage
      */
     void createKcalAverage(String owner, String petName, String date, KcalAverageEntity kcalAverageEntity);
 
     /**
-     * Deletes all kcalAverages ofDocument the pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * Deletes all kcalAverages of the pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void deleteAllKcalAverages(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Deletes the kcalAverage with the specified pet and date.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @param petDate Date ofDocument the kcalAverage instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */

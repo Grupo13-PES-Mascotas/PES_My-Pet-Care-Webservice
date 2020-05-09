@@ -100,7 +100,7 @@ public class MealServiceTest {
     public void shouldReturnMealEntityListWhenGetSetOfMealsRetrieved() throws DatabaseAccessException {
         when(mealDao.getAllMealData(owner, petName)).thenReturn(mealList);
         List<Map<String, Object>> list = service.getAllMealData(owner, petName);
-        assertSame(mealList, list, "Should return a list ofDocument meal entities");
+        assertSame(mealList, list, "Should return a list of meal entities");
     }
 
     @Test
@@ -108,14 +108,14 @@ public class MealServiceTest {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(mealDao).getAllMealData(any(String.class), isA(String.class));
             service.getAllMealData(owner, petName);
-        }, "Should return an exception when retrieving a set ofDocument meals fails");
+        }, "Should return an exception when retrieving a set of meals fails");
     }
 
     @Test
     public void shouldReturnMealEntityListWhenGetMealsBetweenDatesRetrieved() throws DatabaseAccessException {
         when(mealDao.getAllMealsBetween(owner, petName, date, date2)).thenReturn(mealList);
         List<Map<String, Object>> list = service.getAllMealsBetween(owner, petName, date, date2);
-        assertSame(mealList, list, "Should return a list ofDocument meal entities");
+        assertSame(mealList, list, "Should return a list of meal entities");
     }
 
     @Test
@@ -124,7 +124,7 @@ public class MealServiceTest {
             doThrow(DatabaseAccessException.class).when(mealDao).getAllMealsBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllMealsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set ofDocument meals between dates fails");
+        }, "Should return an exception when retrieving a set of meals between dates fails");
     }
 
     @Test

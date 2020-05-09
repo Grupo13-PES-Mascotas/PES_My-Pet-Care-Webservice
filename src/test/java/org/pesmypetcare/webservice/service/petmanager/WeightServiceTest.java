@@ -106,14 +106,14 @@ public class WeightServiceTest {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(weightDao).getAllWeight(any(String.class), isA(String.class));
             service.getAllWeight(owner, petName);
-        }, "Should return an exception when retrieving a set ofDocument weights fails");
+        }, "Should return an exception when retrieving a set of weights fails");
     }
 
     @Test
     public void shouldReturnWeightEntityListWhenGetWeightsBetweenDatesRetrieved() throws DatabaseAccessException {
         when(weightDao.getAllWeightsBetween(owner, petName, date, date2)).thenReturn(weightList);
         List<Map<String, Object>> list = service.getAllWeightsBetween(owner, petName, date, date2);
-        assertSame(weightList, list, "Should return a list ofDocument weight entities");
+        assertSame(weightList, list, "Should return a list of weight entities");
     }
 
     @Test
@@ -122,7 +122,7 @@ public class WeightServiceTest {
             doThrow(DatabaseAccessException.class).when(weightDao).getAllWeightsBetween(any(String.class),
                 isA(String.class), isA(String.class), isA(String.class));
             service.getAllWeightsBetween(owner, petName, date, date2);
-        }, "Should return an exception when retrieving a set ofDocument weights between dates fails");
+        }, "Should return an exception when retrieving a set of weights between dates fails");
     }
 
     @Test

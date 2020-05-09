@@ -34,7 +34,7 @@ public interface UserDao {
     /**
      * Deletes the user with the specified uid from the database.
      *
-     * @param uid The uid ofDocument the user to delete
+     * @param uid The uid of the user to delete
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DocumentException When the document does not exist
@@ -42,9 +42,9 @@ public interface UserDao {
     void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
-     * Gets the data ofDocument the specified user.
+     * Gets the data of the specified user.
      *
-     * @param uid The unique identifier ofDocument the user
+     * @param uid The unique identifier of the user
      * @return The UserEntity with the users data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -91,20 +91,20 @@ public interface UserDao {
     String getUid(String username) throws DatabaseAccessException;
 
     /**
-     * Creates an entry ofDocument the group in the subscription collection.
+     * Creates an entry of the group in the subscription collection.
      *
      * @param username The user's username
      * @param groupName The group's name
-     * @param batch The batch ofDocument writes to which it belongs
+     * @param batch The batch of writes to which it belongs
      */
     void addGroupSubscription(String username, String groupName, WriteBatch batch) throws DatabaseAccessException;
 
     /**
-     * Deletes an entry ofDocument the group in the subscription collection.
+     * Deletes an entry of the group in the subscription collection.
      *
      * @param userUid The user's uid
      * @param groupName The group's name
-     * @param batch The batch ofDocument writes to which it belongs
+     * @param batch The batch of writes to which it belongs
      */
     void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch);
 

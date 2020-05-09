@@ -111,20 +111,20 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     /**
-     * Return the freqWash collection ofDocument one pet.
+     * Return the freqWash collection of one pet.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return Return the freqWash collection ofDocument one pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return Return the freqWash collection of one pet
      */
     public CollectionReference getFreqWashesRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName).collection("freqWashes");
     }
 
     /**
-     * Gets all the freqWashes ofDocument the collection and puts them in the externalList.
+     * Gets all the freqWashes of the collection and puts them in the externalList.
      *
-     * @param freqWashesRef Reference to the collection ofDocument freqWashes
+     * @param freqWashesRef Reference to the collection of freqWashes
      * @param externalList list that will contain all the freqWashes
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -143,13 +143,13 @@ public class FreqWashDaoImpl implements FreqWashDao {
     }
 
     /**
-     * Gets the freqWashes ofDocument the collection between the initial and final dates without taking them into
+     * Gets the freqWashes of the collection between the initial and final dates without taking them into
      * account and
      * puts them in the externalList.
      *
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param freqWashesRef Reference to the collection ofDocument freqWashes
+     * @param freqWashesRef Reference to the collection of freqWashes
      * @param externalList list that will contain all the freqWashes
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

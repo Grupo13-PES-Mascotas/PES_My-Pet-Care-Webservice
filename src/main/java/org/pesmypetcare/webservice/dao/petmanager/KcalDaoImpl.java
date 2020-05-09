@@ -110,20 +110,20 @@ public class KcalDaoImpl implements KcalDao {
     }
 
     /**
-     * Return the kcal collection ofDocument one pet.
+     * Return the kcal collection of one pet.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return Return the kcal collection ofDocument one pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return Return the kcal collection of one pet
      */
     public CollectionReference getKcalsRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName).collection("kcals");
     }
 
     /**
-     * Gets all the kcals ofDocument the collection and puts them in the externalList.
+     * Gets all the kcals of the collection and puts them in the externalList.
      *
-     * @param kcalsRef Reference to the collection ofDocument kcals
+     * @param kcalsRef Reference to the collection of kcals
      * @param externalList list that will contain all the kcals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -141,13 +141,13 @@ public class KcalDaoImpl implements KcalDao {
     }
 
     /**
-     * Gets all the kcals ofDocument the collection between the initial and final dates without taking them into
+     * Gets all the kcals of the collection between the initial and final dates without taking them into
      * account and
      * puts them in the externalList.
      *
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param kcalsRef Reference to the collection ofDocument kcals
+     * @param kcalsRef Reference to the collection of kcals
      * @param externalList list that will contain all the kcals
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

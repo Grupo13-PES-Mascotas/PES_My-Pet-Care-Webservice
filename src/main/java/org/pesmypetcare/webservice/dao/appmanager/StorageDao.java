@@ -50,7 +50,7 @@ public interface StorageDao {
 
     /**
      * Deletes an image from the storage.
-     * @param imageName The name ofDocument the image
+     * @param imageName The name of the image
      */
     void deleteImageByName(String imageName);
 }

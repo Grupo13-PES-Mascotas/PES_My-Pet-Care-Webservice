@@ -98,7 +98,7 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     /**
-     * Gets the profile image ofDocument a pet if it exists.
+     * Gets the profile image of a pet if it exists.
      * @param response A map to store the pet name and its image
      * @param pet The pet data as a map
      * @param path The path to the image

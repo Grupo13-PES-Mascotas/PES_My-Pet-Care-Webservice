@@ -9,7 +9,7 @@ import java.util.Map;
 public interface FreqWashService {
 
     /**
-     * Creates a freqWash ofDocument the pet on the database.
+     * Creates a freqWash of the pet on the database.
      * @param owner Username ofDocument the owner ofDocument the pet
      * @param petName Name ofDocument the pet
      * @param date Creation date ofDocument the pet's freqWash

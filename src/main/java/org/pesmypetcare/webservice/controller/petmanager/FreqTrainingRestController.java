@@ -24,11 +24,11 @@ public class FreqTrainingRestController {
     private FreqTrainingService freqTrainingService;
 
     /**
-     * Creates a freqTraining ofDocument the pet on the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Creation date ofDocument the instance
-     * @param freqTrainingEntity The parameters ofDocument freqTraining
+     * Creates a freqTraining of the pet on the database.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Creation date of the instance
+     * @param freqTrainingEntity The parameters of freqTraining
      */
     @PostMapping("/{owner}/{petName}/{petDate}")
     public void createFreqTraining(@PathVariable String owner, @PathVariable String petName,
@@ -37,9 +37,9 @@ public class FreqTrainingRestController {
     }
 
     /**
-     * Deletes all freqTrainings ofDocument the pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * Deletes all freqTrainings of the pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
@@ -50,9 +50,9 @@ public class FreqTrainingRestController {
 
     /**
      * Deletes the freqTraining with the specified pet and date.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the freqTraining instance
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the freqTraining instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}/{petDate}")
@@ -62,11 +62,11 @@ public class FreqTrainingRestController {
     }
 
     /**
-     * Get one freqTraining ofDocument the pet with the specified date.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the freqTraining instance
-     * @return The FreqTrainingEntity with the data ofDocument freqTraining
+     * Get one freqTraining of the pet with the specified date.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the freqTraining instance
+     * @return The FreqTrainingEntity with the data of freqTraining
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}/{petDate}")
@@ -76,10 +76,10 @@ public class FreqTrainingRestController {
     }
 
     /**
-     * Gets all the specified freqTrainings ofDocument one pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return The list with all ofDocument the freqTrainings
+     * Gets all the specified freqTrainings of one pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return The list with all of the freqTrainings
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @GetMapping("/{owner}/{petName}")
@@ -90,8 +90,8 @@ public class FreqTrainingRestController {
 
     /**
      * Gets the data from all the freqtrainings by the pet between the initial and final date not including them.
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the freqTrainings in the specified time
@@ -107,10 +107,10 @@ public class FreqTrainingRestController {
     }
 
     /**
-     * Updates one ofDocument the freqTrainings specified with the date and the pet name.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the freqTraining instance
+     * Updates one of the freqTrainings specified with the date and the pet name.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the freqTraining instance
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                 key "value"
      * @throws DatabaseAccessException If an error occurs when accessing the database

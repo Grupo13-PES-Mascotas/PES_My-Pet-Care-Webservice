@@ -110,20 +110,20 @@ public class WeightDaoImpl implements WeightDao {
     }
 
     /**
-     * Return the weight collection ofDocument one pet.
+     * Return the weight collection of one pet.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return Return the weight collection ofDocument one pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return Return the weight collection of one pet
      */
     public CollectionReference getWeightsRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName).collection("weights");
     }
 
     /**
-     * Gets all the weights ofDocument the collection and puts them in the externalList.
+     * Gets all the weights of the collection and puts them in the externalList.
      *
-     * @param weightsRef Reference to the collection ofDocument weights
+     * @param weightsRef Reference to the collection of weights
      * @param externalList list that will contain all the weights
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -141,13 +141,13 @@ public class WeightDaoImpl implements WeightDao {
     }
 
     /**
-     * Gets all the weights ofDocument the collection between the initial and final dates without taking them into
+     * Gets all the weights of the collection between the initial and final dates without taking them into
      * account and
      * puts them in the externalList.
      *
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param weightsRef Reference to the collection ofDocument weights
+     * @param weightsRef Reference to the collection of weights
      * @param externalList list that will contain all the weights
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

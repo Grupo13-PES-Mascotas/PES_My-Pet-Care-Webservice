@@ -273,7 +273,7 @@ public class ForumDaoImpl implements ForumDao {
      *
      * @param tag The tag
      * @param forum The forum name
-     * @param batch The batch ofDocument writes to which it belongs
+     * @param batch The batch of writes to which it belongs
      */
     private void deleteForumFromTag(String tag, String forum, WriteBatch batch) {
         documentAdapter

@@ -34,7 +34,7 @@ public class StorageRestController {
 
     /**
      * Saves an image in user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param image The image entity containing the image, its path and name
      */
     @PutMapping("/image")
@@ -45,7 +45,7 @@ public class StorageRestController {
 
     /**
      * Saves a pet image in user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param user The user's username
      * @param image The image entity containing the image, its path and name
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -60,7 +60,7 @@ public class StorageRestController {
 
     /**
      * Downloads an image from user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
      * @return The image as a base64 encoded byte array
@@ -76,7 +76,7 @@ public class StorageRestController {
 
     /**
      * Downloads a pet image from user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
      * @return The image as a base64 encoded byte array
@@ -93,7 +93,7 @@ public class StorageRestController {
 
     /**
      * Downloads all pet profile pictures from user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param user The user's username
      * @return A map with the pets names and the their profile pictures as a byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -109,7 +109,7 @@ public class StorageRestController {
 
     /**
      * Deletes an image from user storage.
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param storageForm A form with the image name and its path
      */
     @DeleteMapping("/image")

@@ -11,30 +11,30 @@ public interface MedicationDao {
     /**
      * Creates a medication eaten by a pet on the database.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Date ofDocument the receipt ofDocument the medication
-     * @param name Name ofDocument the medication
-     * @param medication The medication entity that has the attributes ofDocument the medication for the pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
+     * @param medication The medication entity that has the attributes of the medication for the pet.
      */
     void createMedication(String owner, String petName, String date, String name, MedicationEntity medication);
 
     /**
      * Deletes all the medication with the specified owner and pet from certain date.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Date ofDocument the receipt ofDocument the medication
-     * @param name Name ofDocument the medication
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      */
     void deleteByDateAndName(String owner, String petName, String date, String name);
 
 
     /**
-     * Deletes all the medications ofDocument the specified pet from database.
+     * Deletes all the medications of the specified pet from database.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void deleteAllMedications(String owner, String petName) throws DatabaseAccessException;
@@ -42,10 +42,10 @@ public interface MedicationDao {
     /**
      * Gets a medication identified by its pet, date and name.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Date ofDocument the receipt ofDocument the medication
-     * @param name Name ofDocument the medication
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
      * @return The MedicationEntity identified by the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -55,31 +55,31 @@ public interface MedicationDao {
     /**
      * Gets the data from all the specified medications from the database identified by its pet.
      *
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
-     * @return The List containing all the medications ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
+     * @return The List containing all the medications of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllMedicationData(String owner, String petName) throws DatabaseAccessException;
 
     /**
-     * Gets the data from all the medications ofDocument the pet between the initial and final date not including them.
+     * Gets the data from all the medications of the pet between the initial and final date not including them.
      *
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
-     * @return The List containing all the medication ofDocument the pet in the specified time
+     * @return The List containing all the medication of the pet in the specified time
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllMedicationsBetween(String owner, String petName, String initialDate,
                                                        String finalDate) throws DatabaseAccessException;
 
     /**
-     * Gets the value for the specified field ofDocument the medication on the database.
+     * Gets the value for the specified field of the medication on the database.
      *
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param date Date ofDocument the receipt ofDocument the medication
      * @param name Name ofDocument the medication
      * @param field Name ofDocument the field to retrieve the value from

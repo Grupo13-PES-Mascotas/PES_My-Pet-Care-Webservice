@@ -90,8 +90,8 @@ public class PetMealRestController {
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username of the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the meals eaten by the pet in the specified time
@@ -105,11 +105,11 @@ public class PetMealRestController {
     }
 
     /**
-     * Gets the value for the specified field ofDocument the meal on the database.
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * Gets the value for the specified field of the meal on the database.
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param date Date the meal was eaten
-     * @param field Name ofDocument the field to retrieve the value from
+     * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -121,10 +121,10 @@ public class PetMealRestController {
 
     /**
      * Updates the meal's field.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @param date Date the meal was eaten
-     * @param field Name ofDocument the field to update
+     * @param field Name of the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *      *                key "value"
      */

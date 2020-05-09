@@ -9,18 +9,18 @@ import java.util.Map;
 public interface WeekTrainingService {
 
     /**
-     * Creates a weekTraining ofDocument the pet on the database.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Creation date ofDocument the pet's weekTraining
-     * @param weekTrainingEntity The parameters ofDocument weekTraining
+     * Creates a weekTraining of the pet on the database.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Creation date of the pet's weekTraining
+     * @param weekTrainingEntity The parameters of weekTraining
      */
     void createWeekTraining(String owner, String petName, String date, WeekTrainingEntity weekTrainingEntity);
 
     /**
-     * Deletes all weekTrainings ofDocument the pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
+     * Deletes all weekTrainings of the pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void deleteAllWeekTrainings(String owner, String petName) throws DatabaseAccessException;
