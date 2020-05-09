@@ -80,9 +80,9 @@ public interface MedicationDao {
      *
      * @param owner Username of the owner of the pets
      * @param petName Name of the pet
-     * @param date Date ofDocument the receipt ofDocument the medication
-     * @param name Name ofDocument the medication
-     * @param field Name ofDocument the field to retrieve the value from
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
+     * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -92,11 +92,11 @@ public interface MedicationDao {
     /**
      * Updates the medication's field.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param date Date ofDocument the receipt ofDocument the medication
-     * @param name Name ofDocument the medication
-     * @param field Name ofDocument the field to update
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param date Date of the receipt of the medication
+     * @param name Name of the medication
+     * @param field Name of the field to update
      * @param value Value the field will have
      */
     void updateMedicationField(String owner, String petName, String date, String name, String field, Object value);

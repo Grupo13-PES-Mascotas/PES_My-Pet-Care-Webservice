@@ -28,34 +28,34 @@ public interface KcalAverageDao {
      * Deletes the kcalAverage with the specified pet and date.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
-     * @param petDate Date ofDocument the kcalAverage instance
+     * @param petDate Date of the kcalAverage instance
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void deleteKcalAverageByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
 
     /**
-     * Get one kcalAverage ofDocument the pet with the specified date.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the kcalAverage instance
-     * @return The kcalAverageEntity with the data ofDocument kcalAverage
+     * Get one kcalAverage of the pet with the specified date.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the kcalAverage instance
+     * @return The kcalAverageEntity with the data of kcalAverage
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     KcalAverageEntity getKcalAverageByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
 
     /**
-     * Gets all the specified kcalAverages ofDocument one pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return The list with all ofDocument the kcalAverages
+     * Gets all the specified kcalAverages of one pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return The list with all of the kcalAverages
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllKcalAverage(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the kcalAverages in the specified time
@@ -65,11 +65,11 @@ public interface KcalAverageDao {
                                                  String finalDate) throws DatabaseAccessException;
 
     /**
-     * Updates one ofDocument the kcalAverages specified with the date and the pet name.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the kcalAverage instance
-     * @param value Value ofDocument the new kcalAverage
+     * Updates one of the kcalAverages specified with the date and the pet name.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the kcalAverage instance
+     * @param value Value of the new kcalAverage
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void updateKcalAverage(String owner, String petName, String petDate, Object value) throws DatabaseAccessException;

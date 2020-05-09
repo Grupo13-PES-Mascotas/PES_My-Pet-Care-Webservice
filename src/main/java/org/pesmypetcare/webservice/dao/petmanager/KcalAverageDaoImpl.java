@@ -113,18 +113,18 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
     /**
      * Return the kcalAverage collection of one pet.
      *
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return Return the kcalAverage collection ofDocument one pet
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return Return the kcalAverage collection of one pet
      */
     public CollectionReference getKcalAveragesRef(String owner, String petName) {
         return db.collection("users").document(owner).collection("pets").document(petName).collection("kcalAverages");
     }
 
     /**
-     * Gets all the kcalAverages ofDocument the collection and puts them in the externalList.
+     * Gets all the kcalAverages of the collection and puts them in the externalList.
      *
-     * @param kcalAveragesRef Reference to the collection ofDocument kcalAverages
+     * @param kcalAveragesRef Reference to the collection of kcalAverages
      * @param externalList list that will contain all the kcalAverages
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem
@@ -143,13 +143,13 @@ public class KcalAverageDaoImpl implements KcalAverageDao {
     }
 
     /**
-     * Gets the kcalAverages ofDocument the collection between the initial and final dates without taking them into
+     * Gets the kcalAverages of the collection between the initial and final dates without taking them into
      * account and
      * puts them in the externalList.
      *
      * @param initialDate Initial date
      * @param finalDate Final date
-     * @param kcalAveragesRef Reference to the collection ofDocument kcalAverages
+     * @param kcalAveragesRef Reference to the collection of kcalAverages
      * @param externalList list that will contain all the kcalAverages
      * @throws InterruptedException Exception thrown by the DB if the operation is interrupted
      * @throws ExecutionException Exception thrown by the DB if there's an execution problem

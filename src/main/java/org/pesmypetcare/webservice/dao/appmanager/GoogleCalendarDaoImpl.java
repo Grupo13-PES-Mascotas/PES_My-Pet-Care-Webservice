@@ -51,7 +51,7 @@ public class GoogleCalendarDaoImpl implements GoogleCalendarDao {
         service = factory.initializeService(accessToken);
         List<Event> allEvents = new ArrayList<>();
         // Iterate over the events in the specified calendar, needed because there's a limit for the amount
-        // ofDocument events
+        // of events
         // Google Calendar returns at a time
         String pageToken = null;
         do {

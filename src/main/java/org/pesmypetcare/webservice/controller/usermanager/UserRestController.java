@@ -34,7 +34,7 @@ public class UserRestController {
     /**
      * Deletes the user.
      *
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param username The user's username
      * @param db If true deletes the user only from the database, otherwise deletes the user entirely
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -56,7 +56,7 @@ public class UserRestController {
     /**
      * Retrieves the user data.
      *
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param username The user's username
      * @return A user entity that contains the user data
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -70,7 +70,7 @@ public class UserRestController {
     /**
      * Updates the user email bound to the account.
      *
-     * @param token The personal access token ofDocument the user
+     * @param token The personal access token of the user
      * @param username The user's username
      * @param value The new value
      * @throws FirebaseAuthException If an error occurs when updating the data

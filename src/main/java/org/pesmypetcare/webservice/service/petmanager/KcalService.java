@@ -45,18 +45,18 @@ public interface KcalService {
     KcalEntity getKcalByDate(String owner, String petName, String petDate) throws DatabaseAccessException;
 
     /**
-     * Gets all the specified kcals ofDocument one pet.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @return The list with all ofDocument the kcals
+     * Gets all the specified kcals of one pet.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @return The list with all of the kcals
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     List<Map<String, Object>> getAllKcal(String owner, String petName) throws DatabaseAccessException;
 
     /**
      * Gets the data from all the meals eaten by the pet between the initial and final date not including them.
-     * @param owner Username ofDocument the owner ofDocument the pets
-     * @param petName Name ofDocument the pet
+     * @param owner Username of the owner of the pets
+     * @param petName Name of the pet
      * @param initialDate Initial Date
      * @param finalDate Final Date
      * @return The List containing all the kcals in the specified time
@@ -66,11 +66,11 @@ public interface KcalService {
                                                    String finalDate) throws DatabaseAccessException;
 
     /**
-     * Updates one ofDocument the kcals specified with the date and the pet name.
-     * @param owner Username ofDocument the owner ofDocument the pet
-     * @param petName Name ofDocument the pet
-     * @param petDate Date ofDocument the kcal instance
-     * @param value Value ofDocument the new kcal
+     * Updates one of the kcals specified with the date and the pet name.
+     * @param owner Username of the owner of the pet
+     * @param petName Name of the pet
+     * @param petDate Date of the kcal instance
+     * @param value Value of the new kcal
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     void updateKcal(String owner, String petName, String petDate, Object value) throws DatabaseAccessException;
