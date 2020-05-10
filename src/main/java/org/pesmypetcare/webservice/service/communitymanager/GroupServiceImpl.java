@@ -65,16 +65,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void subscribe(String token, String group, String username) throws DatabaseAccessException,
-        DocumentException {
-        if (!groupDao.groupNameInUse(group)) {
-            throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
-        } else {
-            groupDao.subscribe(group, username);
-        }
-    }
-
-    @Override
     public void updateTags(String group, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
         if (!groupDao.groupNameInUse(group)) {
@@ -87,6 +77,16 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Map<String, TagEntity> getAllTags() throws DatabaseAccessException {
         return groupDao.getAllTags();
+    }
+
+    @Override
+    public void subscribe(String token, String group, String username) throws DatabaseAccessException,
+        DocumentException {
+        if (!groupDao.groupNameInUse(group)) {
+            throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
+        } else {
+            groupDao.subscribe(group, username);
+        }
     }
 
     @Override

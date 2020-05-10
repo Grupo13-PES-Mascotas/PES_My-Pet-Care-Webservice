@@ -11,11 +11,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
@@ -28,6 +36,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
     private String groupName;
+    private Group group;
 
     @Mock
     private GroupDao dao;
@@ -38,36 +47,64 @@ class GroupServiceTest {
     @BeforeEach
     public void setUp() {
         groupName = "Dogs";
+        group = new Group();
     }
 
     @Test
-    public void getAllGroups() {
+    public void getAllGroups() throws DatabaseAccessException {
+        List<Group> groups = new ArrayList<>();
+        groups.add(group);
+        given(dao.getAllGroups()).willReturn(groups);
+
+        List<Group> result = service.getAllGroups();
+        assertEquals(groups, result, "Should return all the existing groups.");
     }
 
     @Test
-    public void getAllTags() {
-    }
+    public void getAllTags() throws DatabaseAccessException {
+        Map<String, TagEntity> tags = new HashMap<>();
+        tags.put("dogs", new TagEntity());
+        given(dao.getAllTags()).willReturn(tags);
 
-    @Test
-    public void groupNameInUse() {
+        Map<String, TagEntity> result = service.getAllTags();
+        assertEquals(tags, result, "Should return all the existing tags.");
     }
 
     @Nested
     class UsesGroupNameInUse {
+        private String field;
+        private String newName;
+        private String username;
+        private String token;
+        private ArrayList<String> newTags;
+        private ArrayList<String> deletedTags;
+
 
         @AfterEach
         public void verifyGroupNameInUse() throws DatabaseAccessException {
             verify(dao).groupNameInUse(same(groupName));
         }
+
+        @BeforeEach
+        public void setUp() {
+            field = "name";
+            newName = "Cats and Dogs";
+            username = "John";
+            token = "my-token";
+            newTags = new ArrayList<>();
+            deletedTags = new ArrayList<>();
+        }
         @Nested
         class GroupExists {
+
 
             @BeforeEach
             public void setUp() throws DatabaseAccessException {
                 given(dao.groupNameInUse(anyString())).willReturn(true);
             }
+
             @Test
-            public void createGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() throws DatabaseAccessException {
+            public void createGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
                 GroupEntity entity = new GroupEntity();
                 entity.setName(groupName);
                 assertThrows(DocumentException.class, () -> service.createGroup(entity),
@@ -84,7 +121,6 @@ class GroupServiceTest {
 
             @Test
             public void getGroup() throws DatabaseAccessException, DocumentException {
-                Group group = new Group();
                 given(dao.getGroup(anyString())).willReturn(group);
 
                 Group result = service.getGroup(groupName);
@@ -92,19 +128,40 @@ class GroupServiceTest {
             }
 
             @Test
-            public void updateField() {
+            public void updateField() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(dao).updateField(anyString(), anyString(), anyString());
+
+                service.updateField(groupName, field, newName);
+                verify(dao).updateField(same(groupName), same(field), same(newName));
             }
 
             @Test
-            public void subscribe() {
+            public void updateTags() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(dao).updateTags(anyString(), anyList(), anyList());
+
+                service.updateTags(groupName, newTags, deletedTags);
+                verify(dao).updateTags(same(groupName), same(newTags), same(deletedTags));
             }
 
             @Test
-            public void updateTags() {
+            public void subscribe() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(dao).subscribe(anyString(), anyString());
+
+                service.subscribe(token, groupName, username);
+                verify(dao).subscribe(same(groupName), same(username));
             }
 
             @Test
-            public void unsubscribe() {
+            public void unsubscribe() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(dao).unsubscribe(anyString(), anyString());
+
+                service.unsubscribe(token, groupName, username);
+                verify(dao).unsubscribe(same(groupName), same(username));
+            }
+
+            @Test
+            public void groupNameInUse() throws DatabaseAccessException {
+                assertTrue(service.groupNameInUse(groupName), "Should return true if the group exists.");
             }
         }
 
@@ -123,6 +180,42 @@ class GroupServiceTest {
 
                 service.createGroup(entity);
                 verify(dao).createGroup(same(entity));
+            }
+
+            @Test
+            public void deleteGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.deleteGroup(groupName),
+                    "Should throw an exception when the group already exists.");
+            }
+
+            @Test
+            public void getGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.getGroup(groupName),
+                    "Should throw an exception when the group already exists.");
+            }
+
+            @Test
+            public void updateFieldShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.updateField(groupName, field, newName),
+                    "Should throw an exception when the group already exists.");
+            }
+
+            @Test
+            public void updateTagsShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.updateTags(groupName, newTags, deletedTags),
+                    "Should throw an exception when the group already exists.");
+            }
+
+            @Test
+            public void subscribeShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.subscribe(token, groupName, username),
+                    "Should throw an exception when the group already exists.");
+            }
+
+            @Test
+            public void unsubscribeShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
+                assertThrows(DocumentException.class, () -> service.unsubscribe(token, groupName, username),
+                    "Should throw an exception when the group already exists.");
             }
         }
     }
