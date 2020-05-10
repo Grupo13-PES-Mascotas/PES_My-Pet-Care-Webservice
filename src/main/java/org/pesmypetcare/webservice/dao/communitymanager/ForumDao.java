@@ -54,8 +54,9 @@ public interface ForumDao {
      * @param groupName The group name
      * @return A list of forum entities
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or the forum do not exist
      */
-    List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException;
+    List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException, DocumentException;
 
     /**
      * Updates a forum name.

@@ -93,7 +93,7 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException {
+    public List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(groupName);
         List<DocumentSnapshot> snapshots = collectionAdapter
             .listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.forums, groupId));

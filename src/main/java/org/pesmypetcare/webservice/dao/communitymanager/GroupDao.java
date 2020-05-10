@@ -16,6 +16,8 @@ public interface GroupDao {
     /**
      * Creates a group.
      * @param entity The group entity with the group data
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException;
 
@@ -23,6 +25,7 @@ public interface GroupDao {
      * Deletes a group by name.
      * @param name The group name.
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     void deleteGroup(String name) throws DatabaseAccessException, DocumentException;
 
@@ -31,6 +34,7 @@ public interface GroupDao {
      * @param name The group name
      * @return The group
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     Group getGroup(String name) throws DatabaseAccessException, DocumentException;
 
@@ -47,6 +51,7 @@ public interface GroupDao {
      * @param field    The field to update
      * @param newValue The new field value
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When updating the name to one that already exists
      */
     void updateField(String name, String field, String newValue) throws DatabaseAccessException, DocumentException;
 
@@ -64,6 +69,7 @@ public interface GroupDao {
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     void subscribe(String group, String username) throws DatabaseAccessException, DocumentException;
 
@@ -74,6 +80,7 @@ public interface GroupDao {
      * @param newTags The new tags
      * @param deletedTags The deleted tags
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     void updateTags(String group, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException;
@@ -92,6 +99,7 @@ public interface GroupDao {
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     void unsubscribe(String group, String username) throws DatabaseAccessException, DocumentException;
 
@@ -100,6 +108,7 @@ public interface GroupDao {
      * @param name The group name
      * @return The group id
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     String getGroupId(String name) throws DatabaseAccessException, DocumentException;
 }
