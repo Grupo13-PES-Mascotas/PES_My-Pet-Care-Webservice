@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.controller.communitymanager;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.communitymanager.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,10 +36,11 @@ public class GroupRestController {
      *
      * @param entity The group entity
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When the group does not exist
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGroup(@RequestBody GroupEntity entity) throws DatabaseAccessException {
+    public void createGroup(@RequestBody GroupEntity entity) throws DatabaseAccessException, DocumentException {
         service.createGroup(entity);
     }
 
@@ -47,10 +49,11 @@ public class GroupRestController {
      *
      * @param group The group name
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When the group does not exist
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGroup(@RequestParam String group) throws DatabaseAccessException {
+    public void deleteGroup(@RequestParam String group) throws DatabaseAccessException, DocumentException {
         service.deleteGroup(group);
     }
 
@@ -60,9 +63,11 @@ public class GroupRestController {
      * @param group The group name
      * @return The requested group entity or all the groups if none is specified
      * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
      */
     @GetMapping
-    public Object getGroup(@RequestParam(defaultValue = "all") String group) throws DatabaseAccessException {
+    public Object getGroup(@RequestParam(defaultValue = "all") String group)
+        throws DatabaseAccessException, DocumentException {
         if ("all".equals(group)) {
             return service.getAllGroups();
         }
@@ -76,11 +81,13 @@ public class GroupRestController {
      * @param field The field to update
      * @param updateValue The new value stored in a map
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When updating the name to one that already exists
      */
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateField(@RequestParam String group, @RequestParam String field,
-                            @RequestBody Map<String, String> updateValue) throws DatabaseAccessException {
+                            @RequestBody Map<String, String> updateValue)
+        throws DatabaseAccessException, DocumentException {
         if (!("name".equals(field) || "description".equals(field))) {
             throw new IllegalArgumentException("Field must be either name or description");
         }
@@ -104,11 +111,12 @@ public class GroupRestController {
      * @param group The group name
      * @param updateValue The new value stored in a map
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When the group does not exist
      */
     @PutMapping("/tags")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateTags(@RequestParam String group, @RequestBody Map<String, List<String>> updateValue)
-        throws DatabaseAccessException {
+        throws DatabaseAccessException, DocumentException {
         service.updateTags(group, updateValue.get("new"), updateValue.get("deleted"));
     }
 
@@ -119,11 +127,12 @@ public class GroupRestController {
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When the group does not exist
      */
     @PostMapping("/subscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void subscribe(@RequestHeader("token") String token, @RequestParam String group,
-                          @RequestParam String username) throws DatabaseAccessException {
+                          @RequestParam String username) throws DatabaseAccessException, DocumentException {
         service.subscribe(token, group, username);
     }
 
@@ -134,11 +143,12 @@ public class GroupRestController {
      * @param group The group name
      * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
+     * @throws DocumentException When the group does not exist
      */
     @DeleteMapping("/unsubscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group,
-                            @RequestParam String username) throws DatabaseAccessException {
+                            @RequestParam String username) throws DatabaseAccessException, DocumentException {
         service.unsubscribe(token, group, username);
     }
 
