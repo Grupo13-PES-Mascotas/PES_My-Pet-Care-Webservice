@@ -25,6 +25,8 @@ import java.util.concurrent.ExecutionException;
  */
 @Repository
 public class FirestoreDocumentAdapter implements FirestoreDocument {
+    private static final String DOCUMENT_NOT_RETRIEVED = "The document could not be retrieved";
+    private static final String RETRIEVAL_FAILED_CODE = "retrieval-failed";
     private Firestore db;
 
     public FirestoreDocumentAdapter() {
@@ -34,6 +36,17 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     @Override
     public WriteBatch batch() {
         return db.batch();
+    }
+
+    @Override
+    public void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException, DocumentException {
+        try {
+            batch.commit().get();
+        } catch (InterruptedException e) {
+            throw new DatabaseAccessException("write-failed", e.getMessage());
+        } catch (ExecutionException e) {
+            throw new DocumentException("write-failed", e.getMessage());
+        }
     }
 
     @NonNull
@@ -67,13 +80,25 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
             return snapshot;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("retrieval-failed", "The document could not be retrieves");
+            throw new DatabaseAccessException(RETRIEVAL_FAILED_CODE, DOCUMENT_NOT_RETRIEVED);
         }
     }
 
     @Override
     public boolean documentSnapshotExists(@NonNull DocumentSnapshot snapshot) {
         return snapshot.exists();
+    }
+
+    @Override
+    public boolean documentExists(@NonNull String path) throws DatabaseAccessException {
+        ApiFuture<DocumentSnapshot> future = db.document(path).get();
+        try {
+            DocumentSnapshot snapshot = future.get();
+            return documentSnapshotExists(snapshot);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException(RETRIEVAL_FAILED_CODE, DOCUMENT_NOT_RETRIEVED);
+        }
     }
 
     @Override

@@ -1,9 +1,9 @@
 package org.pesmypetcare.webservice.controller.appmanager;
-import org.pesmypetcare.webservice.entity.EventEntity;
+import org.pesmypetcare.webservice.entity.appmanager.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.service.GoogleCalendarService;
+import org.pesmypetcare.webservice.service.appmanager.GoogleCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

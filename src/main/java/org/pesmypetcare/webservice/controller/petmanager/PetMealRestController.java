@@ -1,8 +1,8 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
-import org.pesmypetcare.webservice.entity.MealEntity;
+import org.pesmypetcare.webservice.entity.petmanager.MealEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.MealService;
+import org.pesmypetcare.webservice.service.petmanager.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,12 +1,15 @@
 package org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -22,6 +25,14 @@ public interface FirestoreCollection {
      * @return A WriteBatch that operates on this Firestore client
      */
     WriteBatch batch();
+
+    /**
+     * Commits a write batch.
+     * @param batch The batch to commit
+     * @throws DatabaseAccessException When the commit is interrupted
+     * @throws DocumentException When the commit execution fails
+     */
+    void commitBatch(@NonNull WriteBatch batch) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a CollectionReference that refers to the collection at the specified path.
@@ -91,108 +102,125 @@ public interface FirestoreCollection {
     void deleteCollection(@NonNull String path, @NonNull WriteBatch batch);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field
-     * and the value should be equal to the specified value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields
+     * and the values should be equal to the specified values.
      *
      * @param collectionPath A slash-separated path to a collection
      * @param field The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues String and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field, @Nullable Object value);
+    ApiFuture<QuerySnapshot> getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull String field,
+                                                      @Nullable Object value, Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field
-     * and the value should be equal to the specified value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields
+     * and the values should be equal to the specified values.
      *
      * @param collectionPath A slash-separated path to a collection
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues FieldPath and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                   @Nullable Object value);
+    ApiFuture<QuerySnapshot> getDocumentsWhereEqualTo(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
+                                                      @Nullable Object value, Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field,
-     * the value must be an array, and that the array must contain the provided value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields,
+     * the values must be an array, and that the array must contain the provided values.
      *
      * @param collectionPath A slash-separated path to a collection
      * @param field The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues String and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field, @NonNull Object value);
+    ApiFuture<QuerySnapshot> getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull String field,
+                                                            @NonNull Object value, Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field,
-     * the value must be an array, and that the array must contain the provided value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields,
+     * the values must be an array, and that the array must contain the provided values.
      *
      * @param collectionPath A slash-separated path to a collection
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues FieldPath and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getDocumentsWhereArrayContains(@NonNull String collectionPath, @NonNull FieldPath fieldPath,
-                                         @NonNull Object value);
+    ApiFuture<QuerySnapshot> getDocumentsWhereArrayContains(@NonNull String collectionPath,
+                                                            @NonNull FieldPath fieldPath, @NonNull Object value,
+                                                            Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field
-     * and the value should be equal to the specified value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields
+     * and the values should be equal to the specified values.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
      * the last segment of its path will be included. Cannot contain a slash.
      * @param field The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues String and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull String field,
-                                                  @Nullable Object value);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId,
+                                                                     @NonNull String field, @Nullable Object value,
+                                                                     Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field
-     * and the value should be equal to the specified value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields
+     * and the values should be equal to the specified values.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
      * the last segment of its path will be included. Cannot contain a slash.
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues FieldPath and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                  @Nullable Object value);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereEqualTo(@NonNull String collectionId,
+                                                                     @NonNull FieldPath fieldPath,
+                                                                     @Nullable Object value,
+                                                                     Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field,
-     * the value must be an array, and that the array must contain the provided value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields,
+     * the values must be an array, and that the array must contain the provided values.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
      * the last segment of its path will be included. Cannot contain a slash.
      * @param field The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues String and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull String field,
-                                                        @NonNull Object value);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
+                                                                           @NonNull String field, @NonNull Object value,
+                                                                           Object... moreFieldsAndValues);
 
     /**
-     * Creates and returns a new Query with the additional filter that documents must contain the specified field,
-     * the value must be an array, and that the array must contain the provided value.
+     * Returns the result of the query with the additional filter that documents must contain the specified fields,
+     * the values must be an array, and that the array must contain the provided values.
      *
      * @param collectionId Identifies the collections to query over. Every collection or subcollection with this ID as
      * the last segment of its path will be included. Cannot contain a slash.
      * @param fieldPath The name of the field to compare
      * @param value The value for comparison
-     * @return The created Query
+     * @param moreFieldsAndValues FieldPath and Object pairs with more fields to be compared
+     * @return An ApiFuture that will be resolved with the results of the Query
      */
     @NonNull
-    Query getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId, @NonNull FieldPath fieldPath,
-                                                        @NonNull Object value);
+    ApiFuture<QuerySnapshot> getCollectionGroupDocumentsWhereArrayContains(@NonNull String collectionId,
+                                                                           @NonNull FieldPath fieldPath,
+                                                                           @NonNull Object value,
+                                                                           Object... moreFieldsAndValues);
 }
