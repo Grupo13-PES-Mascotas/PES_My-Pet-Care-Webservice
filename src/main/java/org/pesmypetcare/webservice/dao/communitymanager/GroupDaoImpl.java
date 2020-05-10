@@ -50,7 +50,7 @@ public class GroupDaoImpl implements GroupDao {
     public void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException {
         entity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
         WriteBatch batch = documentAdapter.batch();
-        DocumentReference groupRef = documentAdapter.createDocument(Path.ofCollection(Collections.groups), entity);
+        DocumentReference groupRef = documentAdapter.createDocument(Path.ofCollection(Collections.groups), entity, batch);
         String name = entity.getName();
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
@@ -180,7 +180,7 @@ public class GroupDaoImpl implements GroupDao {
         Map<String, Object> data = new HashMap<>();
         data.put("user", username);
         data.put("date", timeFormatter.format(LocalDateTime.now()));
-        documentAdapter.createDocumentWithId(Path.ofDocument(Collections.members, groupId), userUid, data, batch);
+        documentAdapter.createDocumentWithId(Path.ofCollection(Collections.members, groupId), userUid, data, batch);
     }
 
     /**

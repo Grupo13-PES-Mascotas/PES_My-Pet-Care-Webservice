@@ -15,4 +15,14 @@ public class GroupEntity {
     private String icon;
     private String description;
     private List<String> tags;
+
+    public GroupEntity() {
+    }
+
+    public GroupEntity(String name, String creator, String description, List<String> tags) {
+        this.name = name;
+        this.creator = creator;
+        this.description = description;
+        this.tags = tags;
+    }
 }
