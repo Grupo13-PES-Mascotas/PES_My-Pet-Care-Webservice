@@ -130,7 +130,7 @@ public class GroupRestController {
      * @throws DocumentException When the group does not exist
      */
     @PostMapping("/subscribe")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.CREATED)
     public void subscribe(@RequestHeader("token") String token, @RequestParam String group,
                           @RequestParam String username) throws DatabaseAccessException, DocumentException {
         service.subscribe(token, group, username);
