@@ -130,7 +130,7 @@ class ForumDaoTest {
     }
 
     @Test
-    public void getAllForumsFromGroup() throws DatabaseAccessException {
+    public void getAllForumsFromGroup() throws DatabaseAccessException, DocumentException {
         given(groupDao.getGroupId(anyString())).willReturn(groupId);
         List<DocumentSnapshot> snapshots = mock(List.class);
         given(collectionAdapter.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshots);
@@ -157,7 +157,8 @@ class ForumDaoTest {
     }
 
     @Test
-    public void getForumIdShouldThrowDocumentExceptionWhenWhenTheForumDoesNotExist() throws DatabaseAccessException {
+    public void getForumIdShouldThrowDocumentExceptionWhenWhenTheForumDoesNotExist()
+        throws DatabaseAccessException, DocumentException {
         given(groupDao.getGroupId(anyString())).willReturn(groupId);
         assertThrows(DocumentException.class, () -> {
             willThrow(DocumentException.class).given(documentAdapter).getStringFromDocument(anyString(),

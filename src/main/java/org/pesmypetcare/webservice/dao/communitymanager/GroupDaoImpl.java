@@ -103,7 +103,7 @@ public class GroupDaoImpl implements GroupDao {
         documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.groups, id), field, newValue);
         if ("name".equals(field)) {
             if (groupNameInUse(newValue)) {
-                throw new DocumentException("invalid-name", "The group name is already in use");
+                throw new DocumentException("document-already-exists", "The group name is already in use");
             }
             changeNameInTags(name, newValue, batch);
             changeNameInSubscription(name, newValue, batch);
