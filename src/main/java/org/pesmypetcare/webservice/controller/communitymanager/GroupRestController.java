@@ -5,6 +5,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.communitymanager.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void createGroup(@RequestBody GroupEntity entity) throws DatabaseAccessException {
         service.createGroup(entity);
     }
@@ -46,6 +49,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGroup(@RequestParam String group) throws DatabaseAccessException {
         service.deleteGroup(group);
     }
@@ -74,6 +78,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateField(@RequestParam String group, @RequestParam String field,
                             @RequestBody Map<String, String> updateValue) throws DatabaseAccessException {
         if (!("name".equals(field) || "description".equals(field))) {
@@ -101,6 +106,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PutMapping("/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateTags(@RequestParam String group, @RequestBody Map<String, List<String>> updateValue)
         throws DatabaseAccessException {
         service.updateTags(group, updateValue.get("new"), updateValue.get("deleted"));
@@ -115,6 +121,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @PostMapping("/subscribe")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void subscribe(@RequestHeader("token") String token, @RequestParam String group,
                           @RequestParam String username) throws DatabaseAccessException {
         service.subscribe(token, group, username);
@@ -129,6 +136,7 @@ public class GroupRestController {
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      */
     @DeleteMapping("/unsubscribe")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group,
                             @RequestParam String username) throws DatabaseAccessException {
         service.unsubscribe(token, group, username);
