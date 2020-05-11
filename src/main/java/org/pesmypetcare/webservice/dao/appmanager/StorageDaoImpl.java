@@ -58,7 +58,7 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public void uploadGroupImage(String group, ImageEntity image) throws DatabaseAccessException, DocumentException {
+    public void uploadGroupImage(ImageEntity image) throws DatabaseAccessException, DocumentException {
         String imageName = image.getImgName();
         String path = "Groups/" + image.getUid() + "/" + imageName;
         Map<String, String> imageMap = new HashMap<>();
@@ -67,6 +67,14 @@ public class StorageDaoImpl implements StorageDao {
         imageMap.put("lastModified", timeFormatter.format(LocalDateTime.now()));
         groupDao.updateField(image.getUid(), "icon", imageMap);
         storageBucket.create(path, image.getImg());
+    }
+
+    @Override
+    public String uploadPostImage(String group, String forum, ImageEntity image) {
+        String imageName = image.getImgName();
+        String path = "Groups/" + group + "/" + forum + "/" + imageName;
+        storageBucket.create(path, image.getImg());
+        return path;
     }
 
     @Override

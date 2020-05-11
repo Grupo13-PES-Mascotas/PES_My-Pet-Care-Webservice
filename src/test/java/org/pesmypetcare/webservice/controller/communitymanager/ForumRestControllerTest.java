@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,7 @@ class ForumRestControllerTest {
     @Test
     public void postMessage() throws Exception {
         json = mapper.writeValueAsString(new MessageEntity());
-        willDoNothing().given(service).postMessage(anyString(), anyString(), anyString(), any(MessageEntity.class));
+        willDoNothing().given(service).postMessage(anyString(), anyString(), anyString(), any(Message.class));
         mockMvc.perform(post(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
             .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
     }

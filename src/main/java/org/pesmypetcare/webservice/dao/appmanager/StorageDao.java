@@ -28,12 +28,20 @@ public interface StorageDao {
 
     /**
      * Uploads a group image to the storage.
-     * @param group The group name
      * @param image The image to upload
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void uploadGroupImage(String group, ImageEntity image) throws DatabaseAccessException, DocumentException;
+    void uploadGroupImage(ImageEntity image) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Uploads a post image to the storage.
+     * @param group The group name where the post is published
+     * @param forum The forum name where the post is published
+     * @param image The image to upload
+     * @return The path to the image
+     */
+    String uploadPostImage(String group, String forum, ImageEntity image);
 
     /**
      * Downloads an image from the storage.

@@ -3,7 +3,7 @@ package org.pesmypetcare.webservice.service.communitymanager;
 import org.pesmypetcare.webservice.dao.communitymanager.ForumDao;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
-import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,12 +83,12 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void postMessage(String token, String parentGroup, String forumName, MessageEntity messageEntity)
+    public void postMessage(String token, String parentGroup, String forumName, Message message)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.postMessage(parentGroup, forumName, messageEntity);
+            forumDao.postMessage(parentGroup, forumName, message);
         }
     }
 

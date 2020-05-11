@@ -16,7 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
+import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -59,10 +62,13 @@ class ForumDaoTest {
     private String tagPath;
     private ForumEntity forumEntity;
     private List<String> tags;
+    private Message message;
     private MessageEntity messageEntity;
 
     @Mock
     private GroupDao groupDao;
+    @Mock
+    private StorageDao storageDao;
     @Mock
     private FirestoreDocument documentAdapter;
     @Mock
@@ -99,24 +105,24 @@ class ForumDaoTest {
         messageEntity = new MessageEntity();
         messageEntity.setCreator("John");
         messageEntity.setText("Some text");
+        message = new Message();
+        message.setMessage(messageEntity);
     }
 
     @Test
-    public void forumNameInUseShouldReturnTrueWhenTheNameAlreadyExistsInTheGroup()
-        throws DatabaseAccessException {
+    public void forumNameInUseShouldReturnTrueWhenTheNameAlreadyExistsInTheGroup() throws DatabaseAccessException {
         given(documentAdapter.documentExists(anyString())).willReturn(true);
 
         assertTrue(dao.forumNameInUse(groupName, forumName),
-                   "Should return true when the forum name is already in use in the specified group.");
+            "Should return true when the forum name is already in use in the specified group.");
     }
 
     @Test
-    public void forumNameInUseShouldReturnFalseWhenTheNameDoesNotExistInTheGroup()
-        throws DatabaseAccessException {
+    public void forumNameInUseShouldReturnFalseWhenTheNameDoesNotExistInTheGroup() throws DatabaseAccessException {
         given(documentAdapter.documentExists(anyString())).willReturn(false);
 
         assertFalse(dao.forumNameInUse(groupName, forumName),
-                    "Should return false when the forum name is not in use in the specified group.");
+            "Should return false when the forum name is not in use in the specified group.");
     }
 
     @Test
@@ -148,21 +154,11 @@ class ForumDaoTest {
     }
 
     @Test
-    public void postMessage() throws DatabaseAccessException, DocumentException {
-        mockGetGroupAndForumIds();
-        given(documentAdapter.createDocument(anyString(), any(MessageEntity.class))).willReturn(documentReference);
-
-        dao.postMessage(groupName, forumName, messageEntity);
-        verify(documentAdapter).createDocument(eq(messagePath), eq(messageEntity));
-    }
-
-    @Test
     public void getForumIdShouldThrowDocumentExceptionWhenWhenTheForumDoesNotExist()
         throws DatabaseAccessException, DocumentException {
         given(groupDao.getGroupId(anyString())).willReturn(groupId);
         assertThrows(DocumentException.class, () -> {
-            willThrow(DocumentException.class).given(documentAdapter).getStringFromDocument(anyString(),
-                                                                                            anyString());
+            willThrow(DocumentException.class).given(documentAdapter).getStringFromDocument(anyString(), anyString());
             dao.getForum(groupName, forumName);
         });
     }
@@ -208,7 +204,7 @@ class ForumDaoTest {
             throws DatabaseAccessException, DocumentException {
             willThrow(DocumentException.class).given(documentAdapter).getStringFromDocument(anyString(), anyString());
             assertThrows(DocumentException.class, () -> dao.createForum(groupName, forumEntity),
-                         "Create forum should fail when the group does not exist.");
+                "Create forum should fail when the group does not exist.");
         }
 
         @Nested
@@ -241,21 +237,39 @@ class ForumDaoTest {
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
-                willDoNothing().given(documentAdapter)
-                    .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
+                willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(),
+                    any(FieldValue.class), any(WriteBatch.class));
                 mockAddForumToTag();
 
                 dao.updateTags(groupName, forumName, tags, tags);
-                verify(documentAdapter)
-                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayRemove(tags.toArray())),
-                                          same(batch));
-                verify(documentAdapter)
-                    .updateDocumentFields(eq(tagPath), eq("forums"), eq(FieldValue.arrayRemove(forumName)),
-                                          same(batch));
-                verify(documentAdapter)
-                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayUnion(tags.toArray())),
-                                          same(batch));
+                verify(documentAdapter).updateDocumentFields(eq(forumPath), eq("tags"),
+                    eq(FieldValue.arrayRemove(tags.toArray())), same(batch));
+                verify(documentAdapter).updateDocumentFields(eq(tagPath), eq("forums"),
+                    eq(FieldValue.arrayRemove(forumName)), same(batch));
+                verify(documentAdapter).updateDocumentFields(eq(forumPath), eq("tags"),
+                    eq(FieldValue.arrayUnion(tags.toArray())), same(batch));
                 verifyAddForumToTag(forumName);
+            }
+
+            @Test
+            public void postMessage() throws DatabaseAccessException, DocumentException {
+                mockGetGroupAndForumIds();
+                given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class))).willReturn(
+                    documentReference);
+                String messageId = "1";
+                given(documentReference.getId()).willReturn(messageId);
+                String imagePath = "some-path";
+                given(storageDao.uploadPostImage(anyString(), anyString(), any(ImageEntity.class))).willReturn(
+                    imagePath);
+
+                ImageEntity image = new ImageEntity();
+                message.setImage(image);
+                dao.postMessage(groupName, forumName, message);
+                verify(documentAdapter).createDocument(eq(messagePath), eq(messageEntity), same(batch));
+                verify(storageDao).uploadPostImage(same(groupName), same(forumName), same(image));
+                verify(documentAdapter).updateDocumentFields(same(batch),
+                    eq(Path.ofDocument(Collections.messages, groupId, forumId, messageId)), eq("imagePath"),
+                    eq(imagePath));
             }
 
             @Nested
@@ -288,8 +302,8 @@ class ForumDaoTest {
                     verify(documentAdapter).getStringFromDocument(eq(forumNamePath), eq("forum"));
                     verify(documentAdapter).deleteDocument(eq(forumPath), same(batch));
                     verify(documentAdapter).deleteDocument(eq(forumNamePath), same(batch));
-                    verify(collectionAdapter)
-                        .getDocumentsWhereArrayContains(eq(tagsPath), eq("forums"), same(forumName));
+                    verify(collectionAdapter).getDocumentsWhereArrayContains(eq(tagsPath), eq("forums"),
+                        same(forumName));
                     Map<String, Object> data = new HashMap<>();
                     data.put("forums", FieldValue.arrayRemove(forumName));
                     verify(batch).update(same(documentReference), eq(data));
@@ -299,11 +313,11 @@ class ForumDaoTest {
                 public void updateName() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
                     given(documentAdapter.documentExists(anyString())).willReturn(false);
-                    willDoNothing().given(documentAdapter)
-                        .updateDocumentFields(anyString(), anyString(), anyString(), any(WriteBatch.class));
+                    willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(), anyString(),
+                        any(WriteBatch.class));
                     willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
-                    willDoNothing().given(documentAdapter)
-                        .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
+                    willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(),
+                        any(FieldValue.class), any(WriteBatch.class));
                     mockAddForumToTag();
                     given(
                         documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
@@ -325,14 +339,16 @@ class ForumDaoTest {
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
                         .willReturn(query);
+                    given(documentSnapshot.getString(anyString())).willReturn("some-path");
                     given(documentSnapshot.getReference()).willReturn(documentReference);
                     given(batch.delete(any(DocumentReference.class))).willReturn(batch);
+                    willDoNothing().given(storageDao).deleteImageByName(anyString());
 
                     dao.deleteMessage(groupName, forumName, "John", "2020-05-01T17:48:15");
-                    verify(collectionAdapter)
-                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                                                  eq("creator"), eq("John"), eq("publicationDate"),
-                                                  eq("2020-05-01T17:48:15"));
+                    verify(collectionAdapter).getDocumentsWhereEqualTo(
+                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq("John"),
+                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    verify(storageDao).deleteImageByName("some-path");
                     verify(batch).delete(documentReference);
                 }
             }

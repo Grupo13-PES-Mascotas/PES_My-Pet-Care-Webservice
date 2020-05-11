@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.communitymanager.ForumDao;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
-import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
@@ -43,7 +43,7 @@ class ForumServiceTest {
     private List<String> newTags;
     private List<String> deletedTags;
     private ForumEntity forumEntity;
-    private MessageEntity messageEntity;
+    private Message message;
 
     @Mock
     private GroupDao groupDao;
@@ -64,7 +64,7 @@ class ForumServiceTest {
         date = "2020-05-01T17:48:15";
         newTags = new LinkedList<>();
         deletedTags = new LinkedList<>();
-        messageEntity = new MessageEntity();
+        message = new Message();
         newName = "German Shepherds";
     }
 
@@ -127,7 +127,7 @@ class ForumServiceTest {
         @Test
         public void postMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
-                () -> service.postMessage(token, groupName, forumName, messageEntity));
+                () -> service.postMessage(token, groupName, forumName, message));
         }
 
         @Test
@@ -190,10 +190,10 @@ class ForumServiceTest {
 
             @Test
             public void postMessage() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).postMessage(anyString(), anyString(), any(MessageEntity.class));
+                willDoNothing().given(forumDao).postMessage(anyString(), anyString(), any(Message.class));
 
-                service.postMessage(token, groupName, forumName, messageEntity);
-                verify(forumDao).postMessage(same(groupName), same(forumName), same(messageEntity));
+                service.postMessage(token, groupName, forumName, message);
+                verify(forumDao).postMessage(same(groupName), same(forumName), same(message));
             }
 
             @Test

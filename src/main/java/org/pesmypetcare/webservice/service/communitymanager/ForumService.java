@@ -1,7 +1,7 @@
 package org.pesmypetcare.webservice.service.communitymanager;
 
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
-import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
@@ -77,11 +77,11 @@ public interface ForumService {
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
-     * @param messageEntity The message entity
+     * @param message The message to post
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or the forum do not exist
      */
-    void postMessage(String token, String parentGroup, String forumName, MessageEntity messageEntity)
+    void postMessage(String token, String parentGroup, String forumName, Message message)
         throws DatabaseAccessException, DocumentException;
 
     /**

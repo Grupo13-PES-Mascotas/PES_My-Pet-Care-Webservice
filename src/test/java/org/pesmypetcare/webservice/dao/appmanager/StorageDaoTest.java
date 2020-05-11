@@ -74,14 +74,14 @@ class StorageDaoTest {
     @Test
     public void uploadImage() {
         dao.uploadImage(imageEntity);
-        verify(bucket).create(entityPath, img, CONTENT_TYPE);
+        verify(bucket).create(entityPath, img);
     }
 
     @Test
     public void uploadPetImage() throws DatabaseAccessException, DocumentException {
         dao.uploadPetImage(owner, imageEntity);
         verify(petDao).updateSimpleField(owner, petName, "profileImageLocation", formPath);
-        verify(bucket).create(formPath, img, CONTENT_TYPE);
+        verify(bucket).create(formPath, img);
     }
 
     @Test
