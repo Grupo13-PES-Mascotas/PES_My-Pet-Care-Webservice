@@ -50,7 +50,8 @@ public class GroupDaoImpl implements GroupDao {
     public void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException {
         entity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
         WriteBatch batch = documentAdapter.batch();
-        DocumentReference groupRef = documentAdapter.createDocument(Path.ofCollection(Collections.groups), entity, batch);
+        DocumentReference groupRef = documentAdapter.createDocument(Path.ofCollection(Collections.groups), entity,
+            batch);
         String name = entity.getName();
         saveGroupName(name, groupRef.getId(), batch);
         String creator = entity.getCreator();
@@ -248,8 +249,8 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void addGroupToTag(String tag, String groupId, WriteBatch batch) throws DatabaseAccessException {
         if (documentAdapter.documentExists(Path.ofDocument(Collections.tags, tag))) {
-            documentAdapter.updateDocumentFields(Path.ofDocument(Collections.tags, tag), "groups",
-                FieldValue.arrayUnion(groupId), batch);
+            documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.tags, tag), "groups",
+                FieldValue.arrayUnion(groupId));
         } else {
             Map<String, Object> data = new HashMap<>();
             data.put("groups", FieldValue.arrayUnion(groupId));
@@ -261,12 +262,12 @@ public class GroupDaoImpl implements GroupDao {
      * Deletes an entry in the tag collection for the group.
      *
      * @param tag The tag
-     * @param group The group name
+     * @param groupId The group id
      * @param batch The batch where to write
      */
-    private void deleteGroupFromTag(String tag, String group, WriteBatch batch) {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.tags, tag), "groups",
-            FieldValue.arrayRemove(group), batch);
+    private void deleteGroupFromTag(String tag, String groupId, WriteBatch batch) {
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.tags, tag), "groups",
+            FieldValue.arrayRemove(groupId));
     }
 
     /**
@@ -318,8 +319,8 @@ public class GroupDaoImpl implements GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void changeNameInTags(String oldName, String newName, WriteBatch batch) throws DatabaseAccessException {
-        ApiFuture<QuerySnapshot> querySnapshot =
-            collectionAdapter.getDocumentsWhereArrayContains(Path.ofCollection(Collections.tags),"groups", oldName);
+        ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter.getDocumentsWhereArrayContains(
+            Path.ofCollection(Collections.tags), "groups", oldName);
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 deleteGroupFromTag(document.getId(), oldName, batch);
@@ -341,8 +342,8 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void changeNameInSubscription(String oldName, String newName, WriteBatch batch)
         throws DatabaseAccessException {
-        ApiFuture<QuerySnapshot> querySnapshot =
-            collectionAdapter.getDocumentsWhereArrayContains(Path.ofCollection(Collections.users), "groupSubscriptions", oldName);
+        ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter.getDocumentsWhereArrayContains(
+            Path.ofCollection(Collections.users), "groupSubscriptions", oldName);
         try {
             for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                 DocumentReference ref = document.getReference();
