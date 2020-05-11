@@ -151,6 +151,24 @@ public class PetRestController {
     }
 
     /**
+     * Deletes all the field collection elements with a key previous or smaller to the specified one.
+     * @param owner Username of the owner of the pet
+     * @param name Name of the pet
+     * @param field Name of the field where the action will be done
+     * @param key Specified key (This one not included)
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
+     */
+    @DeleteMapping("/{owner}/{name}/collection/{field}/{key}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteFieldCollectionElementsPreviousToKey(@PathVariable String owner, @PathVariable String name,
+                                                    @PathVariable String field, @PathVariable String key)
+        throws DatabaseAccessException, DocumentException {
+        PetEntity.checkCollectionKey(field, key);
+        petService.deleteFieldCollectionElementsPreviousToKey(owner, name, field, key);
+    }
+
+    /**
      * Gets the map for the specified field of the pet on the database.
      * @param owner Username of the owner of the pet
      * @param name Name of the pet
@@ -183,7 +201,8 @@ public class PetRestController {
     public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(@PathVariable String owner,
            @PathVariable String name, @PathVariable String field, @PathVariable String key1, @PathVariable String key2)
         throws DatabaseAccessException, DocumentException {
-        PetEntity.checkCollectionField(field);
+        PetEntity.checkCollectionKey(field, key1);
+        PetEntity.checkCollectionKey(field, key2);
         return petService.getFieldCollectionElementsBetweenKeys(owner, name, field, key1, key2);
     }
 
