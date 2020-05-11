@@ -218,7 +218,7 @@ public class GroupDaoImpl implements GroupDao {
     private Map<String, String> getGroupMembers(String id) throws DatabaseAccessException {
         Map<String, String> members = new HashMap<>();
         List<DocumentSnapshot> membersList = collectionAdapter.listAllCollectionDocumentSnapshots(
-            Path.ofDocument(Collections.members, id));
+            Path.ofCollection(Collections.members, id));
         for (DocumentSnapshot member : membersList) {
             members.put(member.getString("user"), member.getString("date"));
         }

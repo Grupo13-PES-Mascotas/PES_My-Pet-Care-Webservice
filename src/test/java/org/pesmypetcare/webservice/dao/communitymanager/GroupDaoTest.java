@@ -1,7 +1,11 @@
 package org.pesmypetcare.webservice.dao.communitymanager;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -14,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
+import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -24,10 +29,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -35,6 +43,8 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -46,6 +56,7 @@ class GroupDaoTest {
     private String groupId;
     private String username;
     private String userId;
+    private String tag;
 
     @Mock
     private UserDao userDao;
@@ -57,22 +68,91 @@ class GroupDaoTest {
     private WriteBatch batch;
     @Mock
     private DocumentReference docRef;
+    @Mock
+    private ApiFuture<QuerySnapshot> query;
+    @Mock
+    private QuerySnapshot querySnapshot;
+    @Mock
+    private QueryDocumentSnapshot documentSnapshot;
 
     @InjectMocks
     private GroupDao dao = new GroupDaoImpl();
-    private String tag;
+
+    @BeforeEach
+    public void setUp() {
+        groupName = "Dogs";
+        groupId = "12daw3e23d";
+    }
+
+    @Test
+    public void getGroup() throws DatabaseAccessException, DocumentException {
+        mockGetGroupId();
+        Group group = new Group();
+        String groupPath = Path.ofDocument(Collections.groups, groupId);
+        given(documentAdapter.getDocumentDataAsObject(eq(groupPath), same(Group.class))).willReturn(group);
+        List<DocumentSnapshot> membersList = new ArrayList<>();
+        membersList.add(documentSnapshot);
+        given(
+            collectionAdapter.listAllCollectionDocumentSnapshots(eq(Path.ofCollection(Collections.members, groupId))))
+            .willReturn(membersList);
+        String date = "2020-05-01T17:48:15";
+        given(documentSnapshot.getString(anyString())).willReturn(username, date);
+
+        Group result = dao.getGroup(groupName);
+        Map<String, String> members = new HashMap<>();
+        members.put(username, date);
+        group.setMembers(members);
+        assertEquals(group, result, "Should return the requested group.");
+    }
+
+    @Test
+    public void getAllGroups() {
+    }
+
+    @Test
+    public void updateField() {
+    }
+
+    @Test
+    public void groupNameInUse() {
+    }
+
+    @Test
+    public void subscribe() {
+    }
+
+    @Test
+    public void updateTags() {
+    }
+
+    @Test
+    public void getAllTags() {
+    }
+
+    @Test
+    public void unsubscribe() {
+    }
+
+    @Test
+    public void getGroupId() {
+    }
+
+    private void mockGetGroupId() throws DatabaseAccessException, DocumentException {
+        given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(groupId);
+    }
 
     @Nested
     class UsesWriteBatch {
+
         private String groupNamesPath;
+
         private String groupsPath;
 
         @BeforeEach
         public void setUp() throws DatabaseAccessException, DocumentException {
-            groupName = "Dogs";
-            groupId = "12daw3e23d";
             username = "John";
             userId = "sda23e8823nda";
+            tag = "dogs";
             groupsPath = Path.ofCollection(Collections.groups);
             groupNamesPath = Path.ofCollection(Collections.groupsNames);
             given(documentAdapter.batch()).willReturn(batch);
@@ -111,53 +191,43 @@ class GroupDaoTest {
             verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
             String tagPath = Path.ofDocument(Collections.tags, tag);
             verify(documentAdapter).documentExists(eq(tagPath));
-            verify(documentAdapter).updateDocumentFields(eq(tagPath), eq("groups"), any(FieldValue.class),
+            verify(documentAdapter).updateDocumentFields(eq(tagPath), eq("groups"), any(FieldValue.class), same(batch));
+        }
+
+        @Test
+        public void deleteGroup()
+            throws ExecutionException, InterruptedException, DatabaseAccessException, DocumentException {
+            mockGetGroupId();
+            given(collectionAdapter.getDocumentsWhereArrayContains(anyString(), anyString(), any())).willReturn(query);
+            given(documentSnapshot.getReference()).willReturn(docRef);
+            lenient().when(batch.update(any(DocumentReference.class), anyString(), any())).thenReturn(batch);
+            willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
+            mockQuery();
+
+            String tagsPath = Path.ofCollection(Collections.tags);
+            String usersPath = Path.ofCollection(Collections.users);
+            String groupNamePath = Path.ofDocument(Collections.groupsNames, groupName);
+            dao.deleteGroup(groupName);
+            verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq("group"));
+            verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(
+                AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
+                AdditionalMatchers.or(eq("groups"), eq("groupSubscriptions")), eq(groupName));
+            verify(batch).update(same(docRef), AdditionalMatchers.or(eq("groups"), eq("groupSubscriptions")),
+                eq(FieldValue.arrayRemove(groupName)));
+            String groupPath = Path.ofDocument(Collections.groups, groupId);
+            verify(documentAdapter, times(2)).deleteDocument(AdditionalMatchers.or(eq(groupPath), eq(groupNamePath)),
                 same(batch));
         }
-    }
 
-    @BeforeEach
-    public void setUp() {
-        tag = "dogs";
-    }
-
-    @Test
-    public void deleteGroup() {
-    }
-
-    @Test
-    public void getGroup() {
-    }
-
-    @Test
-    public void getAllGroups() {
-    }
-
-    @Test
-    public void updateField() {
-    }
-
-    @Test
-    public void groupNameInUse() {
-    }
-
-    @Test
-    public void subscribe() {
-    }
-
-    @Test
-    public void updateTags() {
-    }
-
-    @Test
-    public void getAllTags() {
-    }
-
-    @Test
-    public void unsubscribe() {
-    }
-
-    @Test
-    public void getGroupId() {
+        private void mockQuery() throws ExecutionException, InterruptedException {
+            given(query.get()).willReturn(querySnapshot);
+            List<QueryDocumentSnapshot> mockList = mock(List.class);
+            given(querySnapshot.getDocuments()).willReturn(mockList);
+            Iterator<QueryDocumentSnapshot> mockIterator = mock(Iterator.class);
+            given(mockList.iterator()).willReturn(mockIterator);
+            given(mockIterator.hasNext()).willReturn(true, false);
+            given(mockIterator.next()).willReturn(documentSnapshot);
+        }
     }
 }
+
