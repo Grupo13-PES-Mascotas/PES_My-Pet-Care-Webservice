@@ -131,6 +131,15 @@ class PetRestControllerTest {
     }
 
     @Test
+    public void deleteFieldCollectionElementsPreviousToKeyShouldReturnStatusNoContent() throws Exception {
+        willDoNothing().given(service).deleteFieldCollectionElementsPreviousToKey(anyString(), anyString(),
+            anyString(), anyString());
+        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" +
+            COLLECTION_FIELD + "/" + KEY_1))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
     public void getFieldCollectionShouldReturnStatusOk() throws Exception {
         willReturn(PET_LIST).given(service).getFieldCollection(anyString(), anyString(), anyString());
         mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD))

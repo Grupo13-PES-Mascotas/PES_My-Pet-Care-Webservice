@@ -131,6 +131,14 @@ class PetServiceTest {
     }
 
     @Test
+    public void shouldReturnNothingWhenFieldCollectionElementsPreviousToKeyDeleted() throws DatabaseAccessException,
+        DocumentException {
+        service.deleteFieldCollectionElementsPreviousToKey(OWNER, PET_NAME, FIELD, KEY_1);
+        verify(petDao).deleteFieldCollectionElementsPreviousToKey(same(OWNER), same(PET_NAME), same(FIELD),
+            same(KEY_1));
+    }
+
+    @Test
     public void shouldReturnListWhenFieldCollectionRetrieved() throws DatabaseAccessException, DocumentException {
         when(petDao.getFieldCollection(anyString(), anyString(), anyString())).thenReturn(PET_LIST);
         List<Map<String, Object>> list = service.getFieldCollection(OWNER, PET_NAME, FIELD);
