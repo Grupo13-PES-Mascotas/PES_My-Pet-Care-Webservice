@@ -53,7 +53,7 @@ public interface GroupDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When updating the name to one that already exists
      */
-    void updateField(String name, String field, String newValue) throws DatabaseAccessException, DocumentException;
+    void updateField(String name, String field, Object newValue) throws DatabaseAccessException, DocumentException;
 
     /**
      * Checks whether a group name is already in use or not.

@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.dao.communitymanager;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
+import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
@@ -73,6 +75,8 @@ class GroupDaoTest {
 
     @Mock
     private UserDao userDao;
+    @Mock
+    private StorageDao storageDao;
     @Mock
     private FirestoreDocument documentAdapter;
     @Mock
@@ -256,6 +260,9 @@ class GroupDaoTest {
             lenient().when(batch.update(any(DocumentReference.class), anyString(), any())).thenReturn(batch);
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
             mockQuery();
+            String imagePath = "some-image-path";
+            given(documentAdapter.getDocumentField(anyString(), any(FieldPath.class))).willReturn(imagePath);
+            willDoNothing().given(storageDao).deleteImageByName(anyString());
 
             dao.deleteGroup(groupName);
             verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq("group"));
@@ -267,6 +274,9 @@ class GroupDaoTest {
             String groupPath = Path.ofDocument(Collections.groups, groupId);
             verify(documentAdapter, times(2)).deleteDocument(AdditionalMatchers.or(eq(groupPath), eq(groupNamePath)),
                 same(batch));
+            verify(documentAdapter).getDocumentField(eq(groupPath), eq(FieldPath.of("icon",
+                "path")));
+            verify(storageDao).deleteImageByName(same(imagePath));
         }
 
         @Test

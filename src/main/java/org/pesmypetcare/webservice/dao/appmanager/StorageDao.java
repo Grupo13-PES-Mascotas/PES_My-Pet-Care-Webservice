@@ -22,9 +22,18 @@ public interface StorageDao {
      * @param owner The pet's owner
      * @param image The image to upload
      * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException When the pet does not exist
      */
     void uploadPetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Uploads a group image to the storage.
+     * @param group The group name
+     * @param image The image to upload
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
+     */
+    void uploadGroupImage(String group, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Downloads an image from the storage.

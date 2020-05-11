@@ -56,7 +56,7 @@ class StorageServiceTest {
 
     @Test
     public void saveImage() {
-        service.saveImage(imageEntity);
+        service.saveUserImage(imageEntity);
         verify(storageDao).uploadImage(same(imageEntity));
     }
 

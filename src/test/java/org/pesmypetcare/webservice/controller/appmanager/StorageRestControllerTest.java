@@ -74,7 +74,7 @@ class StorageRestControllerTest {
 
     @Test
     public void saveImageShouldReturnStatusNoContent() throws Exception {
-        willDoNothing().given(service).saveImage(any(ImageEntity.class));
+        willDoNothing().given(service).saveUserImage(any(ImageEntity.class));
         mockMvc.perform(put(BASE_URL).header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON).content(json))
                .andExpect(status().isNoContent());
     }

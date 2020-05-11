@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.entity.communitymanager;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Santiago Del Rey
@@ -12,7 +13,7 @@ public class GroupEntity {
     private String name;
     private String creator;
     private String creationDate;
-    private String icon;
+    private Map<String, String> icon;
     private String description;
     private List<String> tags;
 

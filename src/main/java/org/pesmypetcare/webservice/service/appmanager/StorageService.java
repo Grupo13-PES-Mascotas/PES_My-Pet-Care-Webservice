@@ -15,16 +15,27 @@ public interface StorageService {
      * Saves an image to the storage.
      * @param image The image to save
      */
-    void saveImage(ImageEntity image);
+    void saveUserImage(ImageEntity image);
 
     /**
      * Saves a pet image to the storage.
      * @param owner The pet's owner
-     * @param image The image save
+     * @param image The image to save
      * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException When the pet does not exist
      */
     void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Saves a group image to the storage.
+     * @param token The user personal access token
+     * @param group The group name
+     * @param image The image to save
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document group not exist
+     */
+    void saveGroupImage(String token, String group, ImageEntity image) throws DatabaseAccessException,
+        DocumentException;
 
     /**
      * Gets an image from the storage.

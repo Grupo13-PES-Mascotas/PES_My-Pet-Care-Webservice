@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.service.appmanager;
 
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -17,15 +18,26 @@ import java.util.Map;
 public class StorageServiceImpl implements StorageService {
     @Autowired
     private StorageDao storageDao;
+    @Autowired
+    private GroupDao groupDao;
 
     @Override
-    public void saveImage(ImageEntity image) {
+    public void saveUserImage(ImageEntity image) {
         storageDao.uploadImage(image);
     }
 
     @Override
     public void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException {
         storageDao.uploadPetImage(owner, image);
+    }
+
+    @Override
+    public void saveGroupImage(String token, String group, ImageEntity image)
+        throws DatabaseAccessException, DocumentException {
+        if (!groupDao.groupNameInUse(group)) {
+            throw new DocumentException("document-not-exists", "The group does not exist.");
+        }
+        storageDao.uploadGroupImage(group, image);
     }
 
     @Override

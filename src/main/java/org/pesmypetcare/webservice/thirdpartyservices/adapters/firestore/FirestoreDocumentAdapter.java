@@ -214,6 +214,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     public void updateDocumentFields(@NonNull WriteBatch batch, @NonNull String path, @NonNull String field,
                                      @Nullable Object value, Object... moreFieldsAndValues) {
         DocumentReference doc = getDocumentReference(path);
+        System.out.println(path + " " +field + " " + value);
         batch.update(doc, field, value, moreFieldsAndValues);
     }
 

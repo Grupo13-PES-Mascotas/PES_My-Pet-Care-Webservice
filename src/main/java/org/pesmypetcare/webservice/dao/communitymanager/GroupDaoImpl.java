@@ -3,11 +3,13 @@ package org.pesmypetcare.webservice.dao.communitymanager;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldPath;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
+import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
@@ -37,6 +39,8 @@ public class GroupDaoImpl implements GroupDao {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private StorageDao storageDao;
     @Autowired
     private FirestoreDocument documentAdapter;
     @Autowired
@@ -70,6 +74,7 @@ public class GroupDaoImpl implements GroupDao {
         WriteBatch batch = documentAdapter.batch();
         deleteGroupFromAllTags(name, batch);
         deleteAllMembers(name, batch);
+        deleteGroupIcon(id);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.groups, id), batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.groupsNames, name), batch);
         documentAdapter.commitBatch(batch);
@@ -97,19 +102,20 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateField(String name, String field, String newValue)
+    public void updateField(String name, String field, Object newValue)
         throws DatabaseAccessException, DocumentException {
         String id = getGroupId(name);
         WriteBatch batch = documentAdapter.batch();
+        System.out.println(field + " " + newValue);
         documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.groups, id), field, newValue);
         if ("name".equals(field)) {
-            if (groupNameInUse(newValue)) {
+            if (groupNameInUse((String) newValue)) {
                 throw new DocumentException("document-already-exists", "The group name is already in use");
             }
-            changeNameInTags(name, newValue, batch);
-            changeNameInSubscription(name, newValue, batch);
+            changeNameInTags(name, (String) newValue, batch);
+            changeNameInSubscription(name, (String) newValue, batch);
             documentAdapter.deleteDocument(Path.ofDocument(Collections.groupsNames, name), batch);
-            saveGroupName(newValue, id, batch);
+            saveGroupName((String) newValue, id, batch);
         }
         documentAdapter.commitBatch(batch);
     }
@@ -193,6 +199,18 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void deleteUserFromMember(String groupId, String userUid, WriteBatch batch) {
         documentAdapter.deleteDocument(Path.ofDocument(Collections.members, groupId, userUid), batch);
+    }
+
+    /**
+     * Deletes the group icon from the storage.
+     * @param id The group ID
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
+     */
+    private void deleteGroupIcon(String id) throws DatabaseAccessException, DocumentException {
+        String path = (String) documentAdapter.getDocumentField(Path.ofDocument(Collections.groups, id), FieldPath.of("icon",
+            "path"));
+        storageDao.deleteImageByName(path);
     }
 
     /**
