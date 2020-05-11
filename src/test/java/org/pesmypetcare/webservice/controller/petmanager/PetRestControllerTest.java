@@ -170,7 +170,7 @@ class PetRestControllerTest {
     @Test
     public void deleteFieldCollectionElementShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteFieldCollectionElement(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" +
+        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/fullcollection/" +
             COLLECTION_FIELD + "/" + KEY_1))
             .andExpect(status().isNoContent());
     }

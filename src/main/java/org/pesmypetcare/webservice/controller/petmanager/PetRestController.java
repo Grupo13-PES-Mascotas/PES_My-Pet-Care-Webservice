@@ -159,7 +159,7 @@ public class PetRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @DeleteMapping("/{owner}/{name}/collection/{field}/{key}")
+    @DeleteMapping("/{owner}/{name}/fullcollection/{field}/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void deleteFieldCollectionElementsPreviousToKey(@PathVariable String owner, @PathVariable String name,
                                                     @PathVariable String field, @PathVariable String key)
