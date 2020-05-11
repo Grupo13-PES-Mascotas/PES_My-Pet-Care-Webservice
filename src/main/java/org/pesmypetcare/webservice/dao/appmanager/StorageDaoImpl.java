@@ -110,6 +110,9 @@ public class StorageDaoImpl implements StorageDao {
         return result;
     }
 
+    //TODO: downloadAllPostsImages_
+
+
     /**
      * Obtain the image path.
      * @param form The request form
