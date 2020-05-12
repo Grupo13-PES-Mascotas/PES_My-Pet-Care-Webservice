@@ -128,7 +128,7 @@ public class PetDaoImpl implements PetDao {
 
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
             String documentKey = fieldDocument.getId();
-            if (documentKey.compareTo(key) > 0) {
+            if (documentKey.compareTo(key) < 0) {
                 batch.delete(fieldDocument.getReference());
             }
         }
