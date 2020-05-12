@@ -25,6 +25,8 @@ class CollectionPath extends PathBuilder {
                 return "used_usernames";
             case users:
                 return "users";
+            case medals:
+                return "medals";
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
         }
@@ -49,8 +51,8 @@ class CollectionPath extends PathBuilder {
                 return buildPathToPetsCollection(ids[0]);
             case members:
                 return buildPathToMembersCollection(ids[0]);
-            case medals:
-                return buildPathToMedalsCollection(ids[0]);
+            case userMedals:
+                return buildPathToUserMedalsCollection(ids[0]);
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
         }
@@ -157,11 +159,11 @@ class CollectionPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a collection of medals.
+     * Builds the path to a collection of user's medals.
      * @param userId The user ID
      * @return The path
      */
-    private StringBuilder buildPathToMedalsCollection(@NonNull String userId) {
+    private StringBuilder buildPathToUserMedalsCollection(@NonNull String userId) {
         return new StringBuilder("users/").append(userId).append("/medals");
     }
 

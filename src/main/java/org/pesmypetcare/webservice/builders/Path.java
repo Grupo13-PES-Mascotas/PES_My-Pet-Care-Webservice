@@ -49,6 +49,7 @@ public class Path {
             case forumsNames:
             case pets:
             case medals:
+            case userMedals:
             case members:
                 return DOCUMENT_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
@@ -103,6 +104,7 @@ public class Path {
             case forumsNames:
             case pets:
             case medals:
+            case userMedals:
             case members:
                 return COLLECTION_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
@@ -167,6 +169,6 @@ public class Path {
     private static boolean isRootCollection(Collections collection) {
         return collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
             .equals(Collections.tags) || collection.equals(Collections.usernames) || collection
-            .equals(Collections.users);
+            .equals(Collections.users) || collection.equals(Collections.medals);
     }
 }

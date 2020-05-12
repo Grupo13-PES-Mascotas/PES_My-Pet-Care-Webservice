@@ -1,6 +1,6 @@
 package org.pesmypetcare.webservice.dao;
 
-import org.pesmypetcare.webservice.entity.MedalEntity;
+import org.pesmypetcare.webservice.entity.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Oriol Catalán
  */
-public interface MedalDao {
+public interface UserMedalDao {
 
     /**
      * Gets a medal identified by its name and owner.
@@ -20,7 +20,7 @@ public interface MedalDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    MedalEntity getMedalData(String owner, String name) throws DatabaseAccessException, DocumentException;
+    UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets the data from all the specified medals from the database.
@@ -29,7 +29,19 @@ public interface MedalDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, Object>> getAllMedalsData(String owner) throws DatabaseAccessException, DocumentException;
+    List<Map<String, Object>> getAllUserMedalsData(String owner) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Updates the medal's field.
+     * @param owner Username of the owner of the medal
+     * @param name Name of the medal
+     * @param field Name of the field to update
+     * @param value Value the field will have
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
+     */
+    void updateSimpleField(String owner, String name, String field, Object value)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets the value for the specified field of the medal on the database.
@@ -66,4 +78,5 @@ public interface MedalDao {
      */
     Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
         throws DatabaseAccessException, DocumentException;
+
 }
