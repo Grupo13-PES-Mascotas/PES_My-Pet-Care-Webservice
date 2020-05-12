@@ -156,6 +156,19 @@ class PetDaoTest {
     }
 
     @Test
+    public void shouldDeleteFieldCollectionElementsPreviousToKeyWhenRequested() throws DatabaseAccessException,
+        DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(new ArrayList<>());
+        willDoNothing().given(dbDoc).commitBatch(batch);
+
+        petDao.deleteFieldCollectionElementsPreviousToKey(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
+
+        verify(dbDoc).commitBatch(same(batch));
+    }
+
+    @Test
     public void shouldGetFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);

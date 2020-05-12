@@ -64,6 +64,12 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public void deleteFieldCollectionElementsPreviousToKey(String owner, String name, String field, String key)
+        throws DatabaseAccessException, DocumentException {
+        petDao.deleteFieldCollectionElementsPreviousToKey(owner, name, field, key);
+    }
+
+    @Override
     public List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
         throws DatabaseAccessException, DocumentException {
         return petDao.getFieldCollection(owner, name, field);
