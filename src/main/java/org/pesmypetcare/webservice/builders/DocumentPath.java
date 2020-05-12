@@ -51,6 +51,8 @@ class DocumentPath extends PathBuilder {
                 return buildPathToForumName(ids[0], ids[1]);
             case pets:
                 return buildPathToPet(ids[0], ids[1]);
+            case medals:
+                return buildPathToMedal(ids[0], ids[1]);
             case members:
                 return buildPathToMember(ids[0], ids[1]);
             default:
@@ -212,6 +214,18 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToPet(@NonNull String userId, @NonNull String petName) {
         return buildPathToUser(userId).append("/pets/").append(petName);
+    }
+
+    /**
+     * Builds the path to a medal.
+     *
+     * @param userId The user ID
+     * @param medalName The pet name
+     * @return The path
+     */
+    @NonNull
+    private static StringBuilder buildPathToMedal(@NonNull String userId, @NonNull String medalName) {
+        return buildPathToUser(userId).append("/medals/").append(medalName);
     }
 
     /**

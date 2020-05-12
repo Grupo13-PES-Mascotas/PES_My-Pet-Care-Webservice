@@ -48,6 +48,7 @@ public class Path {
             case forums:
             case forumsNames:
             case pets:
+            case medals:
             case members:
                 return DOCUMENT_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
@@ -101,6 +102,7 @@ public class Path {
             case forums:
             case forumsNames:
             case pets:
+            case medals:
             case members:
                 return COLLECTION_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
