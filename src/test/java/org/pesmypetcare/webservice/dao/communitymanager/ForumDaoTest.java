@@ -384,6 +384,22 @@ class ForumDaoTest {
                         eq("publicationDate"), eq("2020-05-01T17:48:15"));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
                 }
+
+                @Test
+                public void removeUserFromLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                    mockGetGroupAndForumIds();
+                    given(
+                        collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
+                        .willReturn(query);
+                    given(documentSnapshot.getReference()).willReturn(documentReference);
+                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class))).willReturn(batch);
+
+                    dao.removeUserFromLikedByOfMessage(username, groupName, forumName, username, "2020-05-01T17:48:15");
+                    verify(collectionAdapter).getDocumentsWhereEqualTo(
+                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
+                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
+                }
             }
         }
 

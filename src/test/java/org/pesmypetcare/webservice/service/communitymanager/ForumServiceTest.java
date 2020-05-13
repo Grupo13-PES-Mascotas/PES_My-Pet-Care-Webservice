@@ -126,14 +126,25 @@ class ForumServiceTest {
 
         @Test
         public void postMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
-            assertThrows(DocumentException.class,
-                () -> service.postMessage(token, groupName, forumName, message));
+            assertThrows(DocumentException.class, () -> service.postMessage(token, groupName, forumName, message));
         }
 
         @Test
         public void deleteMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
                 () -> service.deleteMessage(token, groupName, forumName, creator, date));
+        }
+
+        @Test
+        public void addUserToLikedByOfMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
+            assertThrows(DocumentException.class,
+                () -> service.addUserToLikedByOfMessage(token, creator, groupName, forumName, creator, date));
+        }
+
+        @Test
+        public void removeUserFromLikedByOfMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
+            assertThrows(DocumentException.class,
+                () -> service.removeUserFromLikedByOfMessage(token, creator, groupName, forumName, creator, date));
         }
     }
 
@@ -202,6 +213,27 @@ class ForumServiceTest {
 
                 service.deleteMessage(token, groupName, forumName, creator, date);
                 verify(forumDao).deleteMessage(same(groupName), same(forumName), same(creator), same(date));
+            }
+
+            @Test
+            public void addUserToLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(forumDao).addUserToLikedByOfMessage(anyString(), anyString(), anyString(),
+                    anyString(), anyString());
+
+                service.addUserToLikedByOfMessage(token, creator, groupName, forumName, creator, date);
+                verify(forumDao).addUserToLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
+                    same(date));
+            }
+
+            @Test
+            public void removeUserFromLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(forumDao).removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(),
+                    anyString(), anyString());
+
+                service.removeUserFromLikedByOfMessage(token, creator, groupName, forumName, creator, date);
+                verify(forumDao).removeUserFromLikedByOfMessage(same(creator), same(groupName), same(forumName),
+                    same(creator),
+                    same(date));
             }
         }
     }

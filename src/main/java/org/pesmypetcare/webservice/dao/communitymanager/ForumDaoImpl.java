@@ -201,8 +201,12 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date) {
-
+    public void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        batch.update(messageSnapshot.getReference(), "likedBy", FieldValue.arrayRemove(username));
+        documentAdapter.commitBatch(batch);
     }
 
     /**

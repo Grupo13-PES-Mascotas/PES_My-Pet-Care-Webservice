@@ -102,6 +102,28 @@ public class ForumServiceImpl implements ForumService {
         }
     }
 
+    @Override
+    public void addUserToLikedByOfMessage(String token, String username, String parentGroup, String forumName,
+                                          String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
+        } else {
+            forumDao.addUserToLikedByOfMessage(username, parentGroup, forumName, creator, date);
+        }
+    }
+
+    @Override
+    public void removeUserFromLikedByOfMessage(String token, String username, String parentGroup, String forumName,
+                                               String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
+        } else {
+            forumDao.removeUserFromLikedByOfMessage(username, parentGroup, forumName, creator, date);
+        }
+    }
+
     /*@Override
     public void subscribe(String token, String parentGroup, String forumName, String username) throws
     DatabaseAccessException {

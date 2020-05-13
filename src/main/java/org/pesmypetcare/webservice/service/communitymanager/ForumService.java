@@ -13,16 +13,17 @@ import java.util.List;
 public interface ForumService {
     /**
      * Creates a forum in the given group.
+     *
      * @param parentGroup The group name
      * @param forumEntity The forum entity
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the group does not exist
      */
-    void createForum(String parentGroup, ForumEntity forumEntity)
-        throws DatabaseAccessException, DocumentException;
+    void createForum(String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a forum form the given group.
+     *
      * @param parentGroup The group name
      * @param forumName The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -32,6 +33,7 @@ public interface ForumService {
 
     /**
      * Gets a forum from a group.
+     *
      * @param parentGroup The group name
      * @param forumName The forum name
      * @return The forum entity
@@ -42,6 +44,7 @@ public interface ForumService {
 
     /**
      * Gets all forums from a group.
+     *
      * @param groupName The group name
      * @return A list of forum entities
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -51,6 +54,7 @@ public interface ForumService {
 
     /**
      * Updates a forum name.
+     *
      * @param parentGroup The parent group name
      * @param currentName The current name
      * @param newName The new name
@@ -62,6 +66,7 @@ public interface ForumService {
 
     /**
      * Updates the tags of a group.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param newTags The list of new tags
@@ -74,6 +79,7 @@ public interface ForumService {
 
     /**
      * Posts a message in a forum.
+     *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
@@ -86,6 +92,7 @@ public interface ForumService {
 
     /**
      * Deletes a message from a forum.
+     *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
@@ -96,4 +103,34 @@ public interface ForumService {
      */
     void deleteMessage(String token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Adds a user to the likedBy list of a message.
+     *
+     * @param token The user's personal access token
+     * @param username The user's username
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's name
+     * @param date The publication date of the message
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    void addUserToLikedByOfMessage(String token, String username, String parentGroup, String forumName, String creator,
+                                   String date) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Deletes a user from the likedBy list of a message.
+     *
+     * @param token The user's personal access token
+     * @param username The user's username
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's name
+     * @param date The publication date of the message
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    void removeUserFromLikedByOfMessage(String token, String username, String parentGroup, String forumName,
+                                        String creator, String date) throws DatabaseAccessException, DocumentException;
 }

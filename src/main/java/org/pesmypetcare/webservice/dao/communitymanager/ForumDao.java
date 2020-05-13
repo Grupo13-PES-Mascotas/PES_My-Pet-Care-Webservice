@@ -127,6 +127,16 @@ public interface ForumDao {
     void addUserToLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException;
 
+    /**
+     * Deletes a user from the likedBy list of a message.
+     * @param username The user's username
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's name
+     * @param date The publication date of the message
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
     void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator,
-                                        String date);
+                                        String date) throws DatabaseAccessException, DocumentException;
 }
