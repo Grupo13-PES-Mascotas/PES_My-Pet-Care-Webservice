@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ public class UserMedalDaoTest {
 
     private static UserMedalEntity userMedalEntity;
     private static List<Map<String, Object>> userMedalList;
+    private static List<DocumentSnapshot> snapshotList;
 
 
     @Mock
@@ -49,6 +51,8 @@ public class UserMedalDaoTest {
     private FirestoreDocument dbDoc;
     @Mock
     private WriteBatch batch;
+    @Mock
+    private DocumentSnapshot documentSnapshot;
 
     @InjectMocks
     private UserMedalDao userMedalDao = new UserMedalDaoImpl();
@@ -63,6 +67,10 @@ public class UserMedalDaoTest {
         userMedalList.add(auxMap);
         userMedalList.add(auxMap);
         userMedalList.add(auxMap);
+        snapshotList = new ArrayList<>();
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
     }
 
     @Test
@@ -80,8 +88,11 @@ public class UserMedalDaoTest {
     @Test
     public void shouldReturnAllUserMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
+        given(documentSnapshot.getId()).willReturn(USER_MEDAL_NAME);
+        given(documentSnapshot.toObject(any())).willReturn(userMedalEntity);
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
 
         List<Map<String, Object>> list = userMedalDao.getAllUserMedalsData(OWNER);
 

@@ -37,11 +37,17 @@ public class MedalDaoTest {
 
     private static MedalEntity medalEntity;
     private static List<Map<String, Object>> medalList;
+    private static List<DocumentSnapshot> snapshotList;
+
 
     @Mock
     private FirestoreCollection dbCol;
     @Mock
     private FirestoreDocument dbDoc;
+    @Mock
+    private WriteBatch batch;
+    @Mock
+    private DocumentSnapshot documentSnapshot;
 
     @InjectMocks
     private MedalDao medalDao = new MedalDaoImpl();
@@ -56,6 +62,10 @@ public class MedalDaoTest {
         medalList.add(auxMap);
         medalList.add(auxMap);
         medalList.add(auxMap);
+        snapshotList = new ArrayList<>();
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
     }
 
     @Test
@@ -69,7 +79,9 @@ public class MedalDaoTest {
 
     @Test
     public void shouldReturnAllMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(medalEntity);
+        given(documentSnapshot.getId()).willReturn(MEDAL_NAME);
+        given(documentSnapshot.toObject(any())).willReturn(medalEntity);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         List<Map<String, Object>> list = medalDao.getAllMedalsData();
 
         assertEquals(medalList, list, "Should return a List containing all medals Data");
