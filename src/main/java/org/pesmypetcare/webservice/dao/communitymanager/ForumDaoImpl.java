@@ -187,6 +187,24 @@ public class ForumDaoImpl implements ForumDao {
         }
     }
 
+    @Override
+    public List<String> getAllPostImagesPaths(String group, String forum)
+        throws DatabaseAccessException, DocumentException {
+        String groupId = groupDao.getGroupId(group);
+        String forumId = getForumId(group, forum);
+        List<DocumentSnapshot> messages =
+            collectionAdapter.listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.messages, groupId,
+                forumId));
+        List<String> imagesPaths = new ArrayList<>();
+        for (DocumentSnapshot message : messages) {
+            String imagePath = message.getString("imagePath");
+            if (imagePath != null) {
+                imagesPaths.add(imagePath);
+            }
+        }
+        return imagesPaths;
+    }
+
     /**
      * Saves the forum name in the collection of names of its parent group.
      *

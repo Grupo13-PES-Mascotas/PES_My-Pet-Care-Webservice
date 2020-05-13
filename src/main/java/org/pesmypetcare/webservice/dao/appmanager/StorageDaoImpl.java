@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.dao.appmanager;
 import com.google.api.client.util.Base64;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+import org.pesmypetcare.webservice.dao.communitymanager.ForumDao;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
@@ -31,6 +32,8 @@ public class StorageDaoImpl implements StorageDao {
     private PetDao petDao;
     @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private ForumDao forumDao;
 
     public StorageDaoImpl() {
         storageBucket = FirebaseFactory.getInstance().getStorage();
@@ -110,8 +113,18 @@ public class StorageDaoImpl implements StorageDao {
         return result;
     }
 
-    //TODO: downloadAllPostsImages_
-
+    @Override
+    public Map<String, String> downloadAllPostsImagesFromForum(String group, String forum)
+        throws DatabaseAccessException, DocumentException {
+        List<String> postsImagesPaths = forumDao.getAllPostImagesPaths(group, forum);
+        Map<String, String> response = new HashMap<>();
+        for (String postImagePath : postsImagesPaths) {
+            byte[] image = storageBucket.get(postImagePath).getContent();
+            String base64Image = Base64.encodeBase64String(image);
+            response.put(postImagePath, base64Image);
+        }
+        return response;
+    }
 
     /**
      * Obtain the image path.

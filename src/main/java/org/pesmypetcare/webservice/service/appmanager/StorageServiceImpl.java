@@ -46,8 +46,14 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Map<String, String> getAllImages(String owner) throws DatabaseAccessException, DocumentException {
+    public Map<String, String> getAllPetImages(String owner) throws DatabaseAccessException, DocumentException {
         return storageDao.downloadAllPetImages(owner);
+    }
+
+    @Override
+    public Map<String, String> getAllPostsImagesFromForum(String group, String forum)
+        throws DatabaseAccessException, DocumentException {
+        return storageDao.downloadAllPostsImagesFromForum(group, forum);
     }
 
     @Override

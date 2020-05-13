@@ -53,11 +53,22 @@ public interface StorageDao {
     /**
      * Downloads all the images from the pets folder.
      * @param owner The path with the requested data
-     * @return A map with pets names and the their images as a byte array
+     * @return A map with pets names and the their images as a base64 encoded byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException When the document pet does not exist
      */
     Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Downloads all the images from a forum folder.
+     * @param group The group name
+     * @param forum The forum name
+     * @return A map with images paths and their images as a base64 encoded byte array
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group or forum does not exist
+     */
+    Map<String, String> downloadAllPostsImagesFromForum(String group, String forum)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes an image from the storage.

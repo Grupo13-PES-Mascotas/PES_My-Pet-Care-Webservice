@@ -33,6 +33,7 @@ public class StorageRestController {
 
     /**
      * Saves an image in user storage.
+     *
      * @param token The personal access token of the user
      * @param image The image entity containing the image, its path and name
      */
@@ -44,6 +45,7 @@ public class StorageRestController {
 
     /**
      * Saves a pet image in user storage.
+     *
      * @param token The personal access token of the user
      * @param user The user's username
      * @param image The image entity containing the image, its path and name
@@ -59,6 +61,7 @@ public class StorageRestController {
 
     /**
      * Saves a group image to the storage.
+     *
      * @param token The user personal access token
      * @param group The group name
      * @param image The image to save
@@ -74,6 +77,7 @@ public class StorageRestController {
 
     /**
      * Downloads an image from user storage.
+     *
      * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
@@ -89,6 +93,7 @@ public class StorageRestController {
 
     /**
      * Downloads a pet image from user storage.
+     *
      * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
@@ -105,14 +110,14 @@ public class StorageRestController {
 
     /**
      * Downloads a group image from storage.
+     *
      * @param group The group name
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
     @GetMapping(value = "/image/groups/{group}")
     @ResponseBody
-    public String downloadGroupImage(@PathVariable String group,
-                                   @RequestParam String name) {
+    public String downloadGroupImage(@PathVariable String group, @RequestParam String name) {
         String path = "Groups/" + group;
         StorageForm form = new StorageForm(path, name);
         return storage.getImage(form);
@@ -120,21 +125,40 @@ public class StorageRestController {
 
     /**
      * Downloads all pet profile pictures from user storage.
+     *
      * @param token The personal access token of the user
      * @param user The user's username
      * @return A map with the pets names and the their profile pictures as a byte array
-     * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When the pet does not exist
      */
     @GetMapping(value = "/image/{user}/pets")
     @ResponseBody
     public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token, @PathVariable String user)
         throws DatabaseAccessException, DocumentException {
-        return storage.getAllImages(user);
+        return storage.getAllPetImages(user);
+    }
+
+    /**
+     * Downloads all posts images from a forum.
+     * @param token The personal access token of the user
+     * @param group The group name
+     * @param forum The forum name
+     * @return A map with the pets names and the their profile pictures as a byte array
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    @GetMapping(value = "/image/{group}/{forum}")
+    @ResponseBody
+    public Map<String, String> downloadAllPostsImages(@RequestHeader(TOKEN) String token, @PathVariable String group,
+                                                      @PathVariable String forum)
+        throws DatabaseAccessException, DocumentException {
+        return storage.getAllPostsImagesFromForum(group, forum);
     }
 
     /**
      * Deletes an image from user storage.
+     *
      * @param token The personal access token of the user
      * @param storageForm A form with the image name and its path
      */

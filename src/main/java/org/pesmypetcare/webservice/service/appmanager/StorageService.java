@@ -53,9 +53,20 @@ public interface StorageService {
     /**
      * Downloads all the images from the pets folder.
      * @param owner The path with the requested data
-     * @return A map with pets names and the their images as a byte array
-     * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @return A map with pets names and the their images as a base64 encoded byte array
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When the pet does not exist
      */
-    Map<String, String> getAllImages(String owner) throws DatabaseAccessException, DocumentException;
+    Map<String, String> getAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Downloads all the images from a forum folder.
+     * @param group The group name
+     * @param forum The forum name
+     * @return A map with the images paths and their images as a base64 encoded byte array
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When the either the group or forum do not exist
+     */
+    Map<String, String> getAllPostsImagesFromForum(String group, String forum)
+        throws DatabaseAccessException, DocumentException;
 }

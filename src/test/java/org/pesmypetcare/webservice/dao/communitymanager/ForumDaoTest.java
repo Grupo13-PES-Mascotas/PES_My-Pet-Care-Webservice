@@ -138,13 +138,7 @@ class ForumDaoTest {
     @Test
     public void getAllForumsFromGroup() throws DatabaseAccessException, DocumentException {
         given(groupDao.getGroupId(anyString())).willReturn(groupId);
-        List<DocumentSnapshot> snapshots = mock(List.class);
-        given(collectionAdapter.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshots);
-        Iterator<DocumentSnapshot> mockIterator = mock(Iterator.class);
-        given(snapshots.iterator()).willReturn(mockIterator);
-        given(mockIterator.hasNext()).willReturn(true, false);
-        DocumentSnapshot documentSnapshot = mock(DocumentSnapshot.class);
-        given(mockIterator.next()).willReturn(documentSnapshot);
+        mockDocumentSnapshotList();
         given(documentSnapshot.toObject(any())).willReturn(forumEntity);
 
         List<ForumEntity> forums = dao.getAllForumsFromGroup(groupName);
@@ -163,6 +157,29 @@ class ForumDaoTest {
         });
     }
 
+    @Test
+    public void getAllPostImagesPaths() throws DatabaseAccessException, DocumentException {
+        mockGetGroupAndForumIds();
+        mockDocumentSnapshotList();
+        String imagePath = "some/image/path";
+        given(documentSnapshot.getString(anyString())).willReturn(imagePath);
+
+        List<String> paths = new ArrayList<>();
+        paths.add(imagePath);
+        List<String> result = dao.getAllPostImagesPaths(groupName, forumName);
+        assertEquals(paths, result, "Should return all the path images of the forum posts.");
+    }
+
+    private void mockGetGroupAndForumIds() throws DatabaseAccessException, DocumentException {
+        given(groupDao.getGroupId(anyString())).willReturn(groupId);
+        given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(forumId);
+    }
+
+    private void mockAddForumToTag() throws DatabaseAccessException, DocumentException {
+        given(documentAdapter.getDocumentSnapshot(anyString())).willReturn(null);
+        willDoNothing().given(documentAdapter).setDocumentFields(anyString(), anyMap(), any(WriteBatch.class));
+    }
+
     private void verifyAddForumToTag(String forumName) throws DatabaseAccessException, DocumentException {
         Map<String, Object> data = new HashMap<>();
         data.put("forums", FieldValue.arrayUnion(forumName));
@@ -177,14 +194,13 @@ class ForumDaoTest {
         verify(documentAdapter).createDocumentWithId(eq(forumNamePath), eq(forumName), eq(docData), same(batch));
     }
 
-    private void mockAddForumToTag() throws DatabaseAccessException, DocumentException {
-        given(documentAdapter.getDocumentSnapshot(anyString())).willReturn(null);
-        willDoNothing().given(documentAdapter).setDocumentFields(anyString(), anyMap(), any(WriteBatch.class));
-    }
-
-    private void mockGetGroupAndForumIds() throws DatabaseAccessException, DocumentException {
-        given(groupDao.getGroupId(anyString())).willReturn(groupId);
-        given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(forumId);
+    private void mockDocumentSnapshotList() throws DatabaseAccessException {
+        List<DocumentSnapshot> snapshots = mock(List.class);
+        given(collectionAdapter.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshots);
+        Iterator<DocumentSnapshot> mockIterator = mock(Iterator.class);
+        given(snapshots.iterator()).willReturn(mockIterator);
+        given(mockIterator.hasNext()).willReturn(true, false);
+        given(mockIterator.next()).willReturn(documentSnapshot);
     }
 
     @Nested
