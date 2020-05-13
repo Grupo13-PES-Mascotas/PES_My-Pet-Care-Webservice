@@ -14,11 +14,11 @@ public class UserMedalEntity {
     private String name;
     private Double progress;
     private Double currentLevel;
-    private String completedLevelsDate[];
+    private String [] completedLevelsDate;
 
     public UserMedalEntity() { }
 
-    public UserMedalEntity(String name, Double progress, Double currentLevel, String completedLevelsDate[]) {
+    public UserMedalEntity(String name, Double progress, Double currentLevel, String [] completedLevelsDate) {
         for (String date : completedLevelsDate) {
             checkDateFormat(date);
         }

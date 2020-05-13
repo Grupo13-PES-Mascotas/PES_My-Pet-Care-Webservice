@@ -78,7 +78,7 @@ public class MedalServiceTest {
     public void shouldReturnDatabaseAccessExceptionWhenGetMedalFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
             doThrow(DatabaseAccessException.class).when(medalDao).getSimpleField(any(String.class), any(String.class));
-            service.getSimpleField( MEDAL_NAME, FIELD);
+            service.getSimpleField(MEDAL_NAME, FIELD);
         }, "Should return an exception when retrieving a medal field fails");
     }
 }

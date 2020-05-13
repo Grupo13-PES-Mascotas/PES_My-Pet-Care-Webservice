@@ -26,6 +26,8 @@ public class UserMedalRestController {
     @Autowired
     private UserMedalService userMedalService;
 
+    private String VALUE = "value";
+
     /**
      * Gets a pet identified by its name and owner.
      * @param owner Username of the owner of the pet
@@ -70,8 +72,8 @@ public class UserMedalRestController {
     public void updateSimpleField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap)
         throws DatabaseAccessException, DocumentException {
-        UserMedalEntity.checkSimpleFieldAndValues(field, valueMap.get("value"));
-        userMedalService.updateSimpleField(owner, name, field, valueMap.get("value"));
+        UserMedalEntity.checkSimpleFieldAndValues(field, valueMap.get(VALUE));
+        userMedalService.updateSimpleField(owner, name, field, valueMap.get(VALUE));
     }
 
     /**

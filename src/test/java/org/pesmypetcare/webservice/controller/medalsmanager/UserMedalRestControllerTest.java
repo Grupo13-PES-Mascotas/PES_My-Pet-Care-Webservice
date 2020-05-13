@@ -35,12 +35,14 @@ public class UserMedalRestControllerTest {
         + "} ";
 
     private static final UserMedalEntity USER_MEDAL_ENTITY = new UserMedalEntity();
-    private static final List< Map<String, Object>> USER_MEDAL_LIST = new ArrayList<>();
+    private static final List<Map<String, Object>> USER_MEDAL_LIST = new ArrayList<>();
     private static final String OWNER = "Pepe Lotas";
     private static final String USER_MEDAL_NAME = "Walker";
     private static final String FIELD = "progress";
     private static final Double VALUE = 2.0;
-    private static final String urlBase = "/usermedal";
+    private static final String URL_BASE = "/usermedal";
+    private static final String SLASH = "/";
+    private static final String SIMPLE = "/simple/";
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,28 +53,28 @@ public class UserMedalRestControllerTest {
     @Test
     public void getUserMedalDataShouldReturnPetEntityAndStatusOk() throws Exception {
         willReturn(USER_MEDAL_ENTITY).given(service).getUserMedalData(anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + USER_MEDAL_NAME))
+        mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getAllUserMedalsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
         willReturn(USER_MEDAL_LIST).given(service).getAllUserMedalsData(anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER))
+        mockMvc.perform(get(URL_BASE + SLASH + OWNER))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(VALUE).given(service).getSimpleField(anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + USER_MEDAL_NAME + "/simple/" + FIELD))
+        mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD))
             .andExpect(status().isOk());
     }
 
     @Test
     public void updateSimpleFieldShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateSimpleField(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(urlBase + "/" + OWNER + "/" + USER_MEDAL_NAME + "/simple/" + FIELD)
+        mockMvc.perform(put(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD)
             .contentType(MediaType.APPLICATION_JSON)
             .content(JSON_FIELD))
             .andExpect(status().isNoContent());

@@ -12,7 +12,7 @@ public class MedalEntity {
     public static final String DESCRIPTION = "description";
     public static final String ICON_LOCATION = "iconLocation";
     private String name;
-    private Double levels[];
+    private Double [] levels;
     private String description;
     private String iconLocation;
 
@@ -20,7 +20,7 @@ public class MedalEntity {
 
     public MedalEntity() { }
 
-    public MedalEntity(String name, Double levels[], String description) {
+    public MedalEntity(String name, Double [] levels, String description) {
         this.name = name;
         this.levels = levels;
         this.description = description;

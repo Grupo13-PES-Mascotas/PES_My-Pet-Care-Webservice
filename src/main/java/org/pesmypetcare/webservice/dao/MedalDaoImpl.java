@@ -22,7 +22,6 @@ import java.util.Map;
  */
 @Repository
 public class MedalDaoImpl implements MedalDao {
-    private String ownerId;
     private WriteBatch batch;
     private String path;
 
@@ -30,9 +29,6 @@ public class MedalDaoImpl implements MedalDao {
     private FirestoreCollection dbCol;
     @Autowired
     private FirestoreDocument dbDoc;
-
-    public MedalDaoImpl() {
-    }
 
     @Override
     public MedalEntity getMedalData(String name) throws DatabaseAccessException, DocumentException {
@@ -59,7 +55,8 @@ public class MedalDaoImpl implements MedalDao {
     public Object getSimpleField(String name, String field) throws DatabaseAccessException,
         DocumentException {
         String medalPath = Path.ofDocument(Collections.medals, name);
-        return dbDoc.getDocumentField(medalPath, field);    }
+        return dbDoc.getDocumentField(medalPath, field);
+    }
 
 
     /**

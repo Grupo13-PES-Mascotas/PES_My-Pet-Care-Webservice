@@ -33,9 +33,6 @@ public class UserMedalDaoImpl implements UserMedalDao {
     @Autowired
     private FirestoreDocument dbDoc;
 
-    public UserMedalDaoImpl() {
-    }
-
     @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
         DocumentException {
@@ -71,10 +68,11 @@ public class UserMedalDaoImpl implements UserMedalDao {
     public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException,
         DocumentException {
         String medalPath = Path.ofDocument(Collections.userMedals, getUserId(owner), name);
-        return dbDoc.getDocumentField(medalPath, field);    }
+        return dbDoc.getDocumentField(medalPath, field);
+    }
 
     /**
-     * Initializes the ownerId, batch and path variables for the access, the path is set to the medal document
+     * Initializes the ownerId, batch and path variables for the access, the path is set to the medal document.
      * @param owner Owner of the medal
      * @param medalName Medal name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -88,7 +86,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     /**
-     * Initializes the ownerId, batch and path variables for the access, the path is set to the user's medal collection
+     * Initializes the ownerId, batch and path variables for the access, the path is set to the user's medal collection.
      * @param owner Owner of the medals
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
@@ -101,7 +99,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     /**
-     * Returns the id of a user specifying its username
+     * Returns the id of a user specifying its username.
      * @param username Name of the user
      * @return The user's id
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails

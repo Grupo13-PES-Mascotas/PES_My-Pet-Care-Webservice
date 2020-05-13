@@ -34,7 +34,8 @@ public class MedalRestControllerTest {
     private static final String MEDAL_NAME = "Walker";
     private static final String FIELD = "description";
     private static final String VALUE = "You have to walk a lot of kilometers!";
-    private static final String urlBase = "/medal";
+    private static final String URL_BASE = "/medal";
+    private static final String SLASH = "/";
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,21 +46,21 @@ public class MedalRestControllerTest {
     @Test
     public void getUserMedalDataShouldReturnPetEntityAndStatusOk() throws Exception {
         willReturn(MEDAL_ENTITY).given(service).getMedalData(anyString());
-        mockMvc.perform(get(urlBase + "/" + MEDAL_NAME))
+        mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getAllUserMedalsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
         willReturn(MEDAL_LIST).given(service).getAllMedalsData();
-        mockMvc.perform(get(urlBase))
+        mockMvc.perform(get(URL_BASE))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(VALUE).given(service).getSimpleField(anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + MEDAL_NAME + "/simple/" + FIELD))
+        mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME + "/simple/" + FIELD))
             .andExpect(status().isOk());
     }
 }
