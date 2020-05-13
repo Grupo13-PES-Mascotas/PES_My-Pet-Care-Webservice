@@ -2,7 +2,6 @@ package org.pesmypetcare.webservice.dao.medalmanager;
 
 
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.WriteBatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +50,7 @@ public class MedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        medalEntity = new MedalEntity("Walker", new ArrayList<Double>(), "You have to walk a lot!");
+        medalEntity = new MedalEntity("Walker", new ArrayList<>(), "You have to walk a lot!");
         medalList = new ArrayList<>();
         Map<String, Object> auxMap = new HashMap<>();
         auxMap.put("name", MEDAL_NAME);
