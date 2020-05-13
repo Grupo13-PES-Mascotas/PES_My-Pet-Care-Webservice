@@ -34,14 +34,17 @@ public class StorageDaoImpl implements StorageDao {
     private GroupDao groupDao;
     @Autowired
     private ForumDao forumDao;
+    private final DateTimeFormatter timeFormatter;
 
     public StorageDaoImpl() {
         storageBucket = FirebaseFactory.getInstance().getStorage();
+        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
     }
 
     public StorageDaoImpl(PetDao petDao) {
         storageBucket = FirebaseFactory.getInstance().getStorage();
         this.petDao = petDao;
+        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
     }
 
     @Override
@@ -66,7 +69,6 @@ public class StorageDaoImpl implements StorageDao {
         String path = "Groups/" + image.getUid() + "/" + imageName;
         Map<String, String> imageMap = new HashMap<>();
         imageMap.put("path", path);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
         imageMap.put("lastModified", timeFormatter.format(LocalDateTime.now()));
         groupDao.updateField(image.getUid(), "icon", imageMap);
         storageBucket.create(path, image.getImg());
@@ -74,7 +76,7 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public String uploadPostImage(String group, String forum, ImageEntity image) {
-        String imageName = image.getImgName();
+        String imageName = image.getUid() + "-" + timeFormatter.format(LocalDateTime.now());
         String path = "Groups/" + group + "/" + forum + "/" + imageName;
         storageBucket.create(path, image.getImg());
         return path;
