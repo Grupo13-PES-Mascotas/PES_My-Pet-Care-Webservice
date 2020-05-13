@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.entity.appmanager.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.thirdpartyservices.CalendarServiceFactory;
 
@@ -70,9 +71,16 @@ public class GoogleCalendarDaoTest {
         eventId = "eventId";
         calendar = new Calendar();
         calendar.setId("calendarId");
-        event = new Event();
+        EventEntity auxEventEntity = new EventEntity("id1", "Summary", "Description", "Spain", "2",
+            10, 5, "1996-01-08T10:20:30", "1996-01-08T12" +
+            ":20:30");
+        event = auxEventEntity.convertToEvent();
         eventList = new ArrayList<>();
         eventList.add(event);
+        auxEventEntity.setId("id2");
+        eventList.add(auxEventEntity.convertToEvent());
+        auxEventEntity.setId("id3");
+        eventList.add(auxEventEntity.convertToEvent());
         eventsModel = new Events();
         eventsModel.setItems(eventList);
     }
