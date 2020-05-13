@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Oriol Catalán
  */
-public interface UserMedalDao {
+public interface UserMedalService {
 
     /**
      * Gets a medal identified by its name and owner.
@@ -53,6 +53,4 @@ public interface UserMedalDao {
      * @throws DocumentException When the document does not exist
      */
     Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
-
-
 }

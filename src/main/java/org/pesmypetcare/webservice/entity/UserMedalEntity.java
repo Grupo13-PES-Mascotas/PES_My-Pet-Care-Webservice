@@ -7,19 +7,22 @@ import lombok.Data;
  */
 @Data
 public class UserMedalEntity {
+    public static final String NAME = "name";
     public static final String PROGRESS = "progress";
     public static final String CURRENT_LEVEL = "currentLevel";
     public static final String COMPLETED_LEVELS_DATE = "completedLevelsDate";
-    private double progress;
-    private double currentLevel;
+    private String name;
+    private Double progress;
+    private Double currentLevel;
     private String completedLevelsDate[];
 
     public UserMedalEntity() { }
 
-    public UserMedalEntity(double progress, double currentLevel, String completedLevelsDate[]) {
+    public UserMedalEntity(String name, Double progress, Double currentLevel, String completedLevelsDate[]) {
         for (String date : completedLevelsDate) {
             checkDateFormat(date);
         }
+        this.name = name;
         this.progress = progress;
         this.currentLevel = currentLevel;
         this.completedLevelsDate = completedLevelsDate;
@@ -30,9 +33,22 @@ public class UserMedalEntity {
      * @param field Name of the attribute.
      */
     public static void checkSimpleField(String field) {
-        if (!PROGRESS.equals(field) && !CURRENT_LEVEL.equals(field)
+        if (!NAME.equals(field) && !PROGRESS.equals(field) && !CURRENT_LEVEL.equals(field)
             && !COMPLETED_LEVELS_DATE.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");
+        }
+    }
+
+    /**
+     * Checks that the field and the new value for this field have the correct format for a UserMedal simple attribute.
+     * @param field Name of the attribute.
+     * @param newValue Value of the attribute.
+     */
+    public static void checkSimpleFieldAndValues(String field, Object newValue) {
+        if ((field.equals(NAME) || field.equals(COMPLETED_LEVELS_DATE)) && !(newValue instanceof String)) {
+            throw new IllegalArgumentException("New value must be a String");
+        } else if ((field.equals(PROGRESS) || field.equals(CURRENT_LEVEL)) && !(newValue instanceof Double)) {
+            throw new IllegalArgumentException("New value must be a Double");
         }
     }
 

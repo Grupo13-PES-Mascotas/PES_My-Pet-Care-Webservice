@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.service;
 
 import org.pesmypetcare.webservice.entity.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -10,12 +10,12 @@ import java.util.Map;
 /**
  * @author Oriol Catalán
  */
-public interface MedalDao {
+public interface MedalService {
 
     /**
      * Gets a medal identified by its name.
      * @param name Name of the medal
-     * @return The MedalEntity corresponding to the medal data
+     * @return The MedalEntity corresponding to the owner's medal data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
@@ -23,7 +23,7 @@ public interface MedalDao {
 
     /**
      * Gets the data from all the specified medals from the database.
-     * @return The List containing all the medals data
+     * @return The List containing all the owner medals data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */

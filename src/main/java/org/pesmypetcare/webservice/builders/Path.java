@@ -44,11 +44,11 @@ public class Path {
             case tags:
             case usernames:
             case users:
+            case medals:
                 return DOCUMENT_PATH.buildOneLevelPath(collection, ids).toString();
             case forums:
             case forumsNames:
             case pets:
-            case medals:
             case userMedals:
             case members:
                 return DOCUMENT_PATH.buildTwoLevelPath(collection, ids).toString();
@@ -99,11 +99,11 @@ public class Path {
             case tags:
             case usernames:
             case users:
+            case medals:
                 return COLLECTION_PATH.buildRootCollectionPath(collection);
             case forums:
             case forumsNames:
             case pets:
-            case medals:
             case userMedals:
             case members:
                 return COLLECTION_PATH.buildTwoLevelPath(collection, ids).toString();
