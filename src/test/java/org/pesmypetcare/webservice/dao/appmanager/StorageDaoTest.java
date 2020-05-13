@@ -115,7 +115,7 @@ class StorageDaoTest {
         String group = "Dogs";
         String forum = "Huskies";
         dao.uploadPostImage(group, forum, imageEntity);
-        verify(bucket).create(eq("Groups/" + group + "/" + forum + "/" + imageEntity.getImgName()),
+        verify(bucket).create(isA(String.class),
             same(imageEntity.getImg()));
     }
 

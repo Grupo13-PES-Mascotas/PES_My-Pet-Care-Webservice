@@ -27,6 +27,7 @@ import java.util.Map;
  */
 @Repository
 public class StorageDaoImpl implements StorageDao {
+    private final DateTimeFormatter timeFormatter;
     private Bucket storageBucket;
     @Autowired
     private PetDao petDao;
@@ -34,7 +35,6 @@ public class StorageDaoImpl implements StorageDao {
     private GroupDao groupDao;
     @Autowired
     private ForumDao forumDao;
-    private final DateTimeFormatter timeFormatter;
 
     public StorageDaoImpl() {
         storageBucket = FirebaseFactory.getInstance().getStorage();
