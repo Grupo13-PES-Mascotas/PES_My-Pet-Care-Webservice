@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -13,20 +14,22 @@ import com.google.cloud.firestore.WriteResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -35,12 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -49,17 +52,19 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class UserDaoTest {
-    private static final String USERNAME_FIELD = "username";
-    private static final String EMAIL_FIELD = "email";
-    private static final String PASSWORD_FIELD = "password";
-    private static final String USER_FIELD = "user";
-    private static UserEntity userEntity;
-    private static String uid;
-    private static String username;
-    private static String newUsername;
-    private static String password;
-    private static String email;
-    private static Map<String, String> docData;
+    private final String USERNAME_FIELD = "username";
+    private final String EMAIL_FIELD = "email";
+    private final String PASSWORD_FIELD = "password";
+    private final String USER_FIELD = "user";
+    private UserEntity userEntity;
+    private String uid;
+    private String username;
+    private String newUsername;
+    private String password;
+    private String email;
+    private Map<String, String> docData;
+    private List<QueryDocumentSnapshot> docList;
+
 
     @Mock
     private FirebaseAuth myAuth;
@@ -102,17 +107,19 @@ class UserDaoTest {
     @Mock
     private Query query;
     @Mock
-    private List<QueryDocumentSnapshot> docList;
-    @Mock
     private WriteBatch batch;
     @Mock
     private ApiFuture<List<WriteResult>> batchResult;
+    @Mock
+    private FirestoreCollection collectionAdapter;
+    @Mock
+    private QueryDocumentSnapshot queryDocumentSnapshot;
 
     @InjectMocks
     private final UserDao dao = new UserDaoImpl();
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         password = "123456";
         uid = "123eA2eA4";
         username = "John";
@@ -121,6 +128,8 @@ class UserDaoTest {
         userEntity = new UserEntity(username, password, email);
         docData = new HashMap<>();
         docData.put(USER_FIELD, uid);
+        docList = new ArrayList<>();
+        docList.add(queryDocumentSnapshot);
     }
 
     @Test
@@ -161,50 +170,36 @@ class UserDaoTest {
         given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
+        given(collectionAdapter.getCollectionGroupDocumentsWhereArrayContains(anyString(), anyString(), any()))
+            .willReturn(queryFuture);
+        given(queryFuture.get()).willReturn(querySnapshot);
+        given(querySnapshot.getDocuments()).willReturn(docList);
+        given(queryDocumentSnapshot.getReference()).willReturn(userRef);
+        given(collectionAdapter.batch()).willReturn(batch);
+        given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
+        willDoNothing().given(collectionAdapter).commitBatch(any(WriteBatch.class));
+
         dao.deleteById(username);
         verify(petDao).deleteAllPets(same(username));
         verify(userRef).delete();
         verify(usernameRef).delete();
         verify(myAuth).deleteUser(same(username));
+        verify(collectionAdapter)
+            .getCollectionGroupDocumentsWhereArrayContains(eq(Collections.messages.name()), eq("likedBy"),
+                same(username));
+        verify(batch).update(same(userRef), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
+        verify(collectionAdapter).commitBatch(same(batch));
     }
 
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseOfNonExistentUser()
         throws ExecutionException, InterruptedException {
-        given(petDao.getStorageDao()).willReturn(storageDao);
-        willDoNothing().given(storageDao).deleteImageByName(anyString());
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
         assertThrows(DatabaseAccessException.class, () -> dao.deleteById(username),
             "Should throw DatabaseAccessException when the deleting a non existent user");
-    }
-
-    @Test
-    public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseFails() {
-        assertThrows(DatabaseAccessException.class, () -> {
-            willThrow(DatabaseAccessException.class).given(petDao).deleteAllPets(anyString());
-            dao.deleteById(username);
-        }, "Should throw DatabaseAccessException when the deletion from database fails");
-    }
-
-    @Test
-    public void shouldThrowFirebaseAuthExceptionWhenDeleteFromDatabaseFails()
-        throws ExecutionException, InterruptedException {
-        given(petDao.getStorageDao()).willReturn(storageDao);
-        willDoNothing().given(storageDao).deleteImageByName(anyString());
-        given(users.document(anyString())).willReturn(userRef);
-        given(userRef.get()).willReturn(future);
-        given(future.get()).willReturn(snapshot);
-        given(snapshot.exists()).willReturn(true);
-        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
-        given(usedUsernames.document(anyString())).willReturn(usernameRef);
-        given(usernameRef.delete()).willReturn(null);
-        assertThrows(FirebaseAuthException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(myAuth).deleteUser(anyString());
-            dao.deleteById(username);
-        }, "Should throw FirebaseAuthException when the deletion from Firebase authentication fails");
     }
 
     @Test
@@ -254,11 +249,7 @@ class UserDaoTest {
         given(query.get()).willReturn(queryFuture);
         given(queryFuture.get()).willReturn(querySnapshot);
         given(querySnapshot.getDocuments()).willReturn(docList);
-        Iterator mockIterator = mock(Iterator.class);
-        given(docList.iterator()).willReturn(mockIterator);
-        given(mockIterator.hasNext()).willReturn(true, false);
-        given(mockIterator.next()).willReturn(snapshot);
-        given(snapshot.getReference()).willReturn(groupRef);
+        given(queryDocumentSnapshot.getReference()).willReturn(groupRef);
         given(db.batch()).willReturn(batch);
         given(batch.update(any(DocumentReference.class), any())).willReturn(batch);
         given(batch.commit()).willReturn(batchResult);

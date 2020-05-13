@@ -12,6 +12,7 @@ import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
+import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
@@ -19,6 +20,8 @@ import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -44,8 +47,11 @@ public class UserDaoImpl implements UserDao {
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
-    private PetDao petDao;
     private Firestore db;
+    @Autowired
+    private PetDao petDao;
+    @Autowired
+    private FirestoreCollection collectionAdapter;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
@@ -53,7 +59,6 @@ public class UserDaoImpl implements UserDao {
         db = firebaseFactory.getFirestore();
         users = db.collection("users");
         usedUsernames = db.collection("used_usernames");
-        petDao = new PetDaoImpl();
     }
 
     @Override
@@ -77,11 +82,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
-        petDao.deleteAllPets(uid);
-        deleteUserStorage(uid);
         DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
         throwExceptionIfUserDoesNotExist(userDoc);
+        petDao.deleteAllPets(uid);
+        deleteUserStorage(uid);
         String username = (String) userDoc.get(USERNAME_FIELD);
+        WriteBatch batch = collectionAdapter.batch();
+        deleteUserLikes(username, batch);
+        collectionAdapter.commitBatch(batch);
         usedUsernames.document(Objects.requireNonNull(username)).delete();
         users.document(uid).delete();
     }
@@ -200,6 +208,26 @@ public class UserDaoImpl implements UserDao {
     private void deleteUserStorage(String uid) {
         StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
         storageDao.deleteImageByName(uid + "/profile-image.png");
+    }
+
+    /**
+     * Deletes all the user likes to messages.
+     * @param username The user's username
+     * @param batch The batch where to write
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void deleteUserLikes(String username, WriteBatch batch) throws DatabaseAccessException {
+        ApiFuture<QuerySnapshot> documentSnapshots = collectionAdapter
+            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), "likedBy",
+                username);
+        try {
+            for (DocumentSnapshot document : documentSnapshots.get().getDocuments()) {
+                batch.update(document.getReference(), "likedBy", FieldValue.arrayRemove(username));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("update-failed", "The deletion of the user likes failed");
+        }
     }
 
     /**
