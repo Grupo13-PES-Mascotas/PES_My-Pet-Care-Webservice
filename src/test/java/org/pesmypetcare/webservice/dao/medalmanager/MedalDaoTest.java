@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
-import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
@@ -44,8 +43,6 @@ public class MedalDaoTest {
     private FirestoreCollection dbCol;
     @Mock
     private FirestoreDocument dbDoc;
-    @Mock
-    private WriteBatch batch;
     @Mock
     private DocumentSnapshot documentSnapshot;
 

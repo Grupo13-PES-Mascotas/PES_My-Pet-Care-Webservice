@@ -2,7 +2,6 @@ package org.pesmypetcare.webservice.dao.medalmanager;
 
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;

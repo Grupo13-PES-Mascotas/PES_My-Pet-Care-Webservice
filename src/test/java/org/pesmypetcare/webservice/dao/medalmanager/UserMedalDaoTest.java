@@ -26,7 +26,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -59,7 +58,7 @@ public class UserMedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        userMedalEntity = new UserMedalEntity("Walker", 6.0, 2.0, new ArrayList<String>());
+        userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<String>());
         userMedalList = new ArrayList<>();
         Map<String, Object> auxMap = new HashMap<>();
         auxMap.put("name", USER_MEDAL_NAME);
