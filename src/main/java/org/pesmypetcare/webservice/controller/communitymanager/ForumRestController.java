@@ -171,7 +171,7 @@ public class ForumRestController {
                             @RequestParam String date, @RequestParam boolean like) throws DatabaseAccessException,
         DocumentException {
         if (like) {
-            service.addUserToLikedByOfMessage(token, parentGroup, forumName, username, creator, date);
+            service.addUserToLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
         } else {
             service.removeUserFromLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
         }
