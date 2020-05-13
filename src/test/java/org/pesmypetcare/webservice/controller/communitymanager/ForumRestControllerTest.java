@@ -75,8 +75,8 @@ class ForumRestControllerTest {
     @Test
     public void createForum() throws Exception {
         willDoNothing().given(service).createForum(anyString(), any(ForumEntity.class));
-        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(
-            status().isCreated());
+        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json))
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -88,8 +88,8 @@ class ForumRestControllerTest {
     @Test
     public void getForum() throws Exception {
         given(service.getForum(anyString(), anyString())).willReturn(forumEntity);
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + parentGroup).param("forum", forumName)).andExpect(
-            status().isOk()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + parentGroup).param("forum", forumName))
+            .andExpect(status().isOk()).andReturn();
         String result = mvcResult.getResponse().getContentAsString();
         assertEquals("Should return the requested forum.", json, result);
     }
@@ -108,16 +108,17 @@ class ForumRestControllerTest {
     @Test
     public void updateTags() throws Exception {
         willDoNothing().given(service).updateTags(anyString(), anyString(), anyList(), anyList());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).param("newName", "German Shepherds")).andExpect(
-            status().isNoContent());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).param("newName", "German Shepherds"))
+            .andExpect(status().isNoContent());
     }
 
     @Test
     public void updateName() throws Exception {
         willDoNothing().given(service).updateName(anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL + "tags/" + parentGroup + "/" + forumName)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(new HashMap<String, List<String>>()))).andExpect(status().isNoContent());
+        mockMvc.perform(
+            put(BASE_URL + "tags/" + parentGroup + "/" + forumName).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(new HashMap<String, List<String>>())))
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -131,7 +132,27 @@ class ForumRestControllerTest {
     @Test
     public void deleteMessage() throws Exception {
         willDoNothing().given(service).createForum(anyString(), any(ForumEntity.class));
-        mockMvc.perform(delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
-            .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
+        mockMvc.perform(
+            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
+                .param("date", creationDate)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void likeMessage() throws Exception {
+        willDoNothing().given(service)
+            .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+            .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "true"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void removeLikeFromMessage() throws Exception {
+        willDoNothing().given(service)
+            .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+            .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "false"))
+            .andExpect(status().isNoContent());
     }
 }
