@@ -9,9 +9,6 @@ import org.pesmypetcare.webservice.dao.medalmanager.MedalDao;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.service.medalmanager.MedalService;
-import org.pesmypetcare.webservice.service.medalmanager.MedalServiceImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
