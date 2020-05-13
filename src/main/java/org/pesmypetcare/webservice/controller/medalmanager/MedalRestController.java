@@ -25,14 +25,14 @@ public class MedalRestController {
 
     /**
      * Gets a medal identified by its name and owner.
-     * @param name Name of the pet
+     * @param name Name of the medal
      * @return The MedalEntity corresponding to the medal data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
     @GetMapping("/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public MedalEntity getPetData(@PathVariable String name)
+    public MedalEntity getMedalData(@PathVariable String name)
         throws DatabaseAccessException, DocumentException {
         return medalService.getMedalData(name);
     }
@@ -45,7 +45,7 @@ public class MedalRestController {
      */
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getAllPetsData()
+    public List<Map<String, Object>> getAllMedalsData()
         throws DatabaseAccessException, DocumentException {
         return medalService.getAllMedalsData();
     }
@@ -60,9 +60,9 @@ public class MedalRestController {
      */
     @GetMapping("{name}/simple/{field}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getSimpleField(@PathVariable String name,
+    public Object getField(@PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
         MedalEntity.checkSimpleField(field);
-        return medalService.getSimpleField(name, field);
+        return medalService.getField(name, field);
     }
 }

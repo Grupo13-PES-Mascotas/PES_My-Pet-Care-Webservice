@@ -37,5 +37,5 @@ public interface MedalDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    Object getSimpleField(String name, String field) throws DatabaseAccessException, DocumentException;
+    Object getField(String name, String field) throws DatabaseAccessException, DocumentException;
 }

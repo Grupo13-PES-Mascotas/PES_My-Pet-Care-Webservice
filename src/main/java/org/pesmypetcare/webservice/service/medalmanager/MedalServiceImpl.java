@@ -29,7 +29,7 @@ public class MedalServiceImpl implements MedalService {
     }
 
     @Override
-    public Object getSimpleField(String name, String field) throws DatabaseAccessException, DocumentException {
-        return medalDao.getSimpleField(name, field);
+    public Object getField(String name, String field) throws DatabaseAccessException, DocumentException {
+        return medalDao.getField(name, field);
     }
 }

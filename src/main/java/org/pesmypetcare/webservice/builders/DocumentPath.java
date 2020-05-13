@@ -208,7 +208,6 @@ class DocumentPath extends PathBuilder {
 
     /**
      * Builds the path to a medal.
-     *
      * @param medalName The medal name
      * @return The path
      */
@@ -231,7 +230,6 @@ class DocumentPath extends PathBuilder {
 
     /**
      * Builds the path to a medal.
-     *
      * @param userId The user ID
      * @param medalName The medal name
      * @return The path

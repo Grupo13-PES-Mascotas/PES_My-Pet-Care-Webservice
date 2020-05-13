@@ -2,6 +2,9 @@ package org.pesmypetcare.webservice.entity.medalmanager;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Oriol Catalán
  */
@@ -14,11 +17,11 @@ public class UserMedalEntity {
     private String name;
     private Double progress;
     private Double currentLevel;
-    private String [] completedLevelsDate;
+    private ArrayList<String> completedLevelsDate;
 
     public UserMedalEntity() { }
 
-    public UserMedalEntity(String name, Double progress, Double currentLevel, String [] completedLevelsDate) {
+    public UserMedalEntity(String name, Double progress, Double currentLevel, ArrayList<String> completedLevelsDate) {
         for (String date : completedLevelsDate) {
             checkDateFormat(date);
         }
@@ -44,7 +47,7 @@ public class UserMedalEntity {
      * @param field Name of the attribute.
      * @param newValue Value of the attribute.
      */
-    public static void checkSimpleFieldAndValues(String field, Object newValue) {
+    public static void checkFieldAndValues(String field, Object newValue) {
         if ((field.equals(NAME) || field.equals(COMPLETED_LEVELS_DATE)) && !(newValue instanceof String)) {
             throw new IllegalArgumentException("New value must be a String");
         } else if ((field.equals(PROGRESS) || field.equals(CURRENT_LEVEL)) && !(newValue instanceof Double)) {

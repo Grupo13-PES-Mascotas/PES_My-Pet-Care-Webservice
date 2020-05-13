@@ -31,14 +31,14 @@ public class UserMedalServiceImpl implements UserMedalService {
     }
 
     @Override
-    public void updateSimpleField(String owner, String name, String field, Object value) throws DatabaseAccessException,
+    public void updateField(String owner, String name, String field, Object value) throws DatabaseAccessException,
         DocumentException {
-        userMedalDao.updateSimpleField(owner, name, field, value);
+        userMedalDao.updateField(owner, name, field, value);
     }
 
     @Override
-    public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException,
+    public Object getField(String owner, String name, String field) throws DatabaseAccessException,
         DocumentException {
-        return userMedalDao.getSimpleField(owner, name, field);
+        return userMedalDao.getField(owner, name, field);
     }
 }

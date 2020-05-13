@@ -68,16 +68,16 @@ public class MedalServiceTest {
     @Test
     public void shouldReturnMedalSimpleFieldWhenMedalFieldRetrieved() throws DatabaseAccessException,
         DocumentException {
-        when(medalDao.getSimpleField(MEDAL_NAME, FIELD)).thenReturn(VALUE);
-        Object obtainedValue = service.getSimpleField(MEDAL_NAME, FIELD);
+        when(medalDao.getField(MEDAL_NAME, FIELD)).thenReturn(VALUE);
+        Object obtainedValue = service.getField(MEDAL_NAME, FIELD);
         assertSame(VALUE, obtainedValue, "Should return an Object");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetMedalFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(medalDao).getSimpleField(any(String.class), any(String.class));
-            service.getSimpleField(MEDAL_NAME, FIELD);
+            doThrow(DatabaseAccessException.class).when(medalDao).getField(any(String.class), any(String.class));
+            service.getField(MEDAL_NAME, FIELD);
         }, "Should return an exception when retrieving a medal field fails");
     }
 }

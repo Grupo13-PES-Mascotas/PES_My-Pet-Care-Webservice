@@ -57,7 +57,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public void updateSimpleField(String owner, String name, String field, Object value)
+    public void updateField(String owner, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException {
         initializeWithDocumentPath(owner, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
@@ -65,7 +65,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException,
+    public Object getField(String owner, String name, String field) throws DatabaseAccessException,
         DocumentException {
         String medalPath = Path.ofDocument(Collections.userMedals, getUserId(owner), name);
         return dbDoc.getDocumentField(medalPath, field);

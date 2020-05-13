@@ -40,7 +40,7 @@ public interface UserMedalService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    void updateSimpleField(String owner, String name, String field, Object value)
+    void updateField(String owner, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException;
 
     /**
@@ -52,5 +52,5 @@ public interface UserMedalService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    Object getSimpleField(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
+    Object getField(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
 }

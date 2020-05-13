@@ -22,7 +22,6 @@ import java.util.Map;
  */
 @Repository
 public class MedalDaoImpl implements MedalDao {
-    private WriteBatch batch;
     private String path;
 
     @Autowired
@@ -52,7 +51,7 @@ public class MedalDaoImpl implements MedalDao {
     }
 
     @Override
-    public Object getSimpleField(String name, String field) throws DatabaseAccessException,
+    public Object getField(String name, String field) throws DatabaseAccessException,
         DocumentException {
         String medalPath = Path.ofDocument(Collections.medals, name);
         return dbDoc.getDocumentField(medalPath, field);
@@ -64,7 +63,6 @@ public class MedalDaoImpl implements MedalDao {
      * @param medalName Medal name
      */
     private void initializeWithDocumentPath(String medalName) {
-        batch = dbCol.batch();
         path = Path.ofDocument(Collections.medals, medalName);
     }
 
@@ -72,7 +70,6 @@ public class MedalDaoImpl implements MedalDao {
      * Initializes the batch and path variables for the access, the path is set to the medal collection.
      */
     private void initializeWithCollectionPath() {
-        batch = dbCol.batch();
         path = Path.ofCollection(Collections.medals);
     }
 }

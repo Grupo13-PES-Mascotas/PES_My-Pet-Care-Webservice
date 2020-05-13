@@ -51,7 +51,7 @@ public class MedalRestControllerTest {
     }
 
     @Test
-    public void getAllUserMedalsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
+    public void getAllUserMedalsDataShouldReturnUserMedalEntityListAndStatusOk() throws Exception {
         willReturn(MEDAL_LIST).given(service).getAllMedalsData();
         mockMvc.perform(get(URL_BASE))
             .andExpect(status().isOk());
@@ -59,7 +59,7 @@ public class MedalRestControllerTest {
 
     @Test
     public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
-        willReturn(VALUE).given(service).getSimpleField(anyString(), anyString());
+        willReturn(VALUE).given(service).getField(anyString(), anyString());
         mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME + "/simple/" + FIELD))
             .andExpect(status().isOk());
     }

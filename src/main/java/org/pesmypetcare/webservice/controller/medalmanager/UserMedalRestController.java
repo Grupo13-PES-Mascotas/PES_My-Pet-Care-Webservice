@@ -30,38 +30,38 @@ public class UserMedalRestController {
 
 
     /**
-     * Gets a pet identified by its name and owner.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
-     * @return The PetEntity corresponding to the owner's pet data
+     * Gets a medal identified by its name and owner.
+     * @param owner Username of the owner of the medal
+     * @param name Name of the medal
+     * @return The MedalEntity corresponding to the owner's medal data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
     @GetMapping("/{owner}/{name}")
     @ResponseStatus(HttpStatus.OK)
-    public UserMedalEntity getPetData(@PathVariable String owner, @PathVariable String name)
+    public UserMedalEntity getMedalData(@PathVariable String owner, @PathVariable String name)
         throws DatabaseAccessException, DocumentException {
         return userMedalService.getUserMedalData(owner, name);
     }
 
     /**
-     * Gets the data from all the specified pets from the database.
-     * @param owner Username of the owner of the pets
-     * @return The List containing all the owner pets data
+     * Gets the data from all the specified medals from the database.
+     * @param owner Username of the owner of the medals
+     * @return The List containing all the owner medals data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
     @GetMapping("/{owner}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getAllPetsData(@PathVariable String owner)
+    public List<Map<String, Object>> getAllMedalsData(@PathVariable String owner)
         throws DatabaseAccessException, DocumentException {
         return userMedalService.getAllUserMedalsData(owner);
     }
 
     /**
-     * Updates the pet's field.
-     * @param owner Username of the owner of the pet
-     * @param name Name of the pet
+     * Updates the medal's field.
+     * @param owner Username of the owner of the medal
+     * @param name Name of the medal
      * @param field Name of the field to update
      * @param valueMap Entity that contains the value that the field will have. The new field value needs to have the
      *                key "value"
@@ -70,17 +70,17 @@ public class UserMedalRestController {
      */
     @PutMapping("/{owner}/{name}/simple/{field}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateSimpleField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
+    public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap)
         throws DatabaseAccessException, DocumentException {
-        UserMedalEntity.checkSimpleFieldAndValues(field, valueMap.get(VALUE));
-        userMedalService.updateSimpleField(owner, name, field, valueMap.get(VALUE));
+        UserMedalEntity.checkFieldAndValues(field, valueMap.get(VALUE));
+        userMedalService.updateField(owner, name, field, valueMap.get(VALUE));
     }
 
     /**
-     * Gets the value for the specified field of the pet on the database.
-     * @param owner Username of the owner of the pets
-     * @param name Name of the pet
+     * Gets the value for the specified field of the medal on the database.
+     * @param owner Username of the owner of the medals
+     * @param name Name of the medal
      * @param field Name of the field to retrieve the value from
      * @return The value from the field on the database
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -88,9 +88,9 @@ public class UserMedalRestController {
      */
     @GetMapping("/{owner}/{name}/simple/{field}")
     @ResponseStatus(HttpStatus.OK)
-    public Object getSimpleField(@PathVariable String owner, @PathVariable String name,
+    public Object getField(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
         UserMedalEntity.checkSimpleField(field);
-        return userMedalService.getSimpleField(owner, name, field);
+        return userMedalService.getField(owner, name, field);
     }
 }

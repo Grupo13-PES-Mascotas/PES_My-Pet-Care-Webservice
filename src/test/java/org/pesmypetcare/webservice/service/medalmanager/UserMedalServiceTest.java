@@ -71,24 +71,24 @@ public class UserMedalServiceTest {
     @Test
     public void shouldReturnUserMedalSimpleFieldWhenUserMedalFieldRetrieved() throws DatabaseAccessException,
         DocumentException {
-        when(userMedalDao.getSimpleField(OWNER, USER_MEDAL_NAME, FIELD)).thenReturn(VALUE);
-        Object obtainedValue = service.getSimpleField(OWNER, USER_MEDAL_NAME, FIELD);
+        when(userMedalDao.getField(OWNER, USER_MEDAL_NAME, FIELD)).thenReturn(VALUE);
+        Object obtainedValue = service.getField(OWNER, USER_MEDAL_NAME, FIELD);
         assertSame(VALUE, obtainedValue, "Should return an Object");
     }
 
     @Test
     public void shouldReturnDatabaseAccessExceptionWhenGetUserMedalFieldRequestFails() {
         assertThrows(DatabaseAccessException.class, () -> {
-            doThrow(DatabaseAccessException.class).when(userMedalDao).getSimpleField(any(String.class),
+            doThrow(DatabaseAccessException.class).when(userMedalDao).getField(any(String.class),
                 any(String.class), any(String.class));
-            service.getSimpleField(OWNER, USER_MEDAL_NAME, FIELD);
+            service.getField(OWNER, USER_MEDAL_NAME, FIELD);
         }, "Should return an exception when retrieving a userMedal field fails");
     }
 
     @Test
     public void shouldReturnNothingWhenUserMedalSimpleFieldUpdated() throws DatabaseAccessException,
         DocumentException {
-        service.updateSimpleField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
-        verify(userMedalDao).updateSimpleField(same(OWNER), same(USER_MEDAL_NAME), same(FIELD), same(VALUE));
+        service.updateField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
+        verify(userMedalDao).updateField(same(OWNER), same(USER_MEDAL_NAME), same(FIELD), same(VALUE));
     }
 }

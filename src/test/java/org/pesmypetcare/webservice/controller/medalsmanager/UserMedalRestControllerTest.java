@@ -51,14 +51,14 @@ public class UserMedalRestControllerTest {
     private UserMedalService service;
 
     @Test
-    public void getUserMedalDataShouldReturnPetEntityAndStatusOk() throws Exception {
+    public void getUserMedalDataShouldReturnMedalEntityAndStatusOk() throws Exception {
         willReturn(USER_MEDAL_ENTITY).given(service).getUserMedalData(anyString(), anyString());
         mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME))
             .andExpect(status().isOk());
     }
 
     @Test
-    public void getAllUserMedalsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
+    public void getAllUserMedalsDataShouldReturnMedalEntityListAndStatusOk() throws Exception {
         willReturn(USER_MEDAL_LIST).given(service).getAllUserMedalsData(anyString());
         mockMvc.perform(get(URL_BASE + SLASH + OWNER))
             .andExpect(status().isOk());
@@ -66,14 +66,14 @@ public class UserMedalRestControllerTest {
 
     @Test
     public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
-        willReturn(VALUE).given(service).getSimpleField(anyString(), anyString(), anyString());
+        willReturn(VALUE).given(service).getField(anyString(), anyString(), anyString());
         mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD))
             .andExpect(status().isOk());
     }
 
     @Test
     public void updateSimpleFieldShouldReturnStatusNoContent() throws Exception {
-        willDoNothing().given(service).updateSimpleField(anyString(), anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(put(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD)
             .contentType(MediaType.APPLICATION_JSON)
             .content(JSON_FIELD))
