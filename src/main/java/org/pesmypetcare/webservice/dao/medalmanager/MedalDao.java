@@ -1,6 +1,6 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.medalmanager;
 
-import org.pesmypetcare.webservice.entity.MedalEntity;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 

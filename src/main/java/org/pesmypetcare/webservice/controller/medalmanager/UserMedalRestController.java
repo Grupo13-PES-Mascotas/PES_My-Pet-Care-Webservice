@@ -1,9 +1,9 @@
 package org.pesmypetcare.webservice.controller.medalmanager;
 
-import org.pesmypetcare.webservice.entity.UserMedalEntity;
+import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.service.UserMedalService;
+import org.pesmypetcare.webservice.service.medalmanager.UserMedalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

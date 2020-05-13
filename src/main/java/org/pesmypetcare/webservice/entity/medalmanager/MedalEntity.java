@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.entity;
+package org.pesmypetcare.webservice.entity.medalmanager;
 
 import lombok.Data;
 

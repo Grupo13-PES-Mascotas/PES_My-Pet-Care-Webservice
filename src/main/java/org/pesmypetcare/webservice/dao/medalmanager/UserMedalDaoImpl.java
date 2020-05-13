@@ -1,7 +1,7 @@
-package org.pesmypetcare.webservice.dao;
+package org.pesmypetcare.webservice.dao.medalmanager;
 
 
-import org.pesmypetcare.webservice.entity.UserMedalEntity;
+import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.builders.Collections;

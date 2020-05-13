@@ -1,14 +1,16 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.medalmanager;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.dao.MedalDao;
-import org.pesmypetcare.webservice.entity.MedalEntity;
+import org.pesmypetcare.webservice.dao.medalmanager.MedalDao;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.service.medalmanager.MedalService;
+import org.pesmypetcare.webservice.service.medalmanager.MedalServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

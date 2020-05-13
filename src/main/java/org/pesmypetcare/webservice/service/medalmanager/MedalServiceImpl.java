@@ -1,7 +1,7 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.service.medalmanager;
 
-import org.pesmypetcare.webservice.dao.MedalDao;
-import org.pesmypetcare.webservice.entity.MedalEntity;
+import org.pesmypetcare.webservice.dao.medalmanager.MedalDao;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
