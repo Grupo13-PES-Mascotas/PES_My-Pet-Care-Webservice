@@ -1,10 +1,10 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
-import org.pesmypetcare.webservice.entity.ImageEntity;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
-import org.pesmypetcare.webservice.service.StorageService;
+import org.pesmypetcare.webservice.service.appmanager.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

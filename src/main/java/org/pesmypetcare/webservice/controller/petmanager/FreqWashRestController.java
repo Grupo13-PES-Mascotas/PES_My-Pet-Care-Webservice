@@ -1,18 +1,18 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
 
-import org.pesmypetcare.webservice.entity.FreqWashEntity;
+import org.pesmypetcare.webservice.entity.petmanager.FreqWashEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.FreqWashService;
+import org.pesmypetcare.webservice.service.petmanager.FreqWashService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -37,13 +37,13 @@ public class FreqWashRestController {
     }
 
     /**
-     * Deletes all freqWashs of the pet.
+     * Deletes all freqWashes of the pet.
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     @DeleteMapping("/{owner}/{petName}")
-    public void deleteAllFreqWashs(@PathVariable String owner, @PathVariable String petName)
+    public void deleteAllFreqWashes(@PathVariable String owner, @PathVariable String petName)
         throws DatabaseAccessException {
         freqWashService.deleteAllFreqWashs(owner, petName);
     }

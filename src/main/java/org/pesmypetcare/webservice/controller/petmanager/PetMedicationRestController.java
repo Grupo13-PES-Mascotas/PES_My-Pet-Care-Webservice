@@ -1,8 +1,8 @@
 package org.pesmypetcare.webservice.controller.petmanager;
 
-import org.pesmypetcare.webservice.entity.MedicationEntity;
+import org.pesmypetcare.webservice.entity.petmanager.MedicationEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
-import org.pesmypetcare.webservice.service.MedicationService;
+import org.pesmypetcare.webservice.service.petmanager.MedicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +48,7 @@ public class PetMedicationRestController {
      * @param owner Username of the owner of the pet
      * @param petName Name of the pet
      * @param date Date of the Medication
-     * @param name  Name of the Medication
+     * @param name Name of the Medication
      */
     @DeleteMapping("/{owner}/{petName}/{date}/{name}")
     public void deleteByDateAndName(@RequestHeader(TOKEN) String accessToken,
