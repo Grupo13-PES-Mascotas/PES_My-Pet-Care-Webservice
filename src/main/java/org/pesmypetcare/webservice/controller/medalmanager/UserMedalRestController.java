@@ -23,10 +23,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/usermedal")
 public class UserMedalRestController {
+    private static final String VALUE = "value";
+
     @Autowired
     private UserMedalService userMedalService;
 
-    private String VALUE = "value";
 
     /**
      * Gets a pet identified by its name and owner.
