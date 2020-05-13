@@ -71,9 +71,9 @@ public class GoogleCalendarDaoTest {
         eventId = "eventId";
         calendar = new Calendar();
         calendar.setId("calendarId");
-        EventEntity auxEventEntity = new EventEntity("id1", "Summary", "Description", "Spain", "2",
-            10, 5, "1996-01-08T10:20:30", "1996-01-08T12" +
-            ":20:30");
+        EventEntity auxEventEntity = new EventEntity("id1", "Summary", "Description",
+            "Spain", "2", 10, 5, "1996-01-08T10:20:30",
+            "1996-01-08T12:20:30");
         event = auxEventEntity.convertToEvent();
         eventList = new ArrayList<>();
         eventList.add(event);
