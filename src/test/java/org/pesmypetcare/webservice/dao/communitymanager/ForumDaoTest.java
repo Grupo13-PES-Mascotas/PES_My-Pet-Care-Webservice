@@ -64,6 +64,7 @@ class ForumDaoTest {
     private List<String> tags;
     private Message message;
     private MessageEntity messageEntity;
+    private List<QueryDocumentSnapshot> queryDocumentSnapshots;
 
     @Mock
     private GroupDao groupDao;
@@ -86,6 +87,7 @@ class ForumDaoTest {
 
     @InjectMocks
     private ForumDao dao = new ForumDaoImpl();
+    private String username;
 
 
     @BeforeEach
@@ -103,10 +105,13 @@ class ForumDaoTest {
         tagPath = Path.ofDocument(Collections.tags, "dogs");
         messagePath = Path.ofCollection(Collections.messages, groupId, forumId);
         messageEntity = new MessageEntity();
-        messageEntity.setCreator("John");
+        messageEntity.setCreator(username);
         messageEntity.setText("Some text");
         message = new Message();
         message.setMessage(messageEntity);
+        queryDocumentSnapshots = new ArrayList<>();
+        queryDocumentSnapshots.add(documentSnapshot);
+        username = "John";
     }
 
     @Test
@@ -270,8 +275,8 @@ class ForumDaoTest {
             @Test
             public void postMessage() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
-                given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class))).willReturn(
-                    documentReference);
+                given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class)))
+                    .willReturn(documentReference);
                 String messageId = "1";
                 given(documentReference.getId()).willReturn(messageId);
                 String imagePath = "some-path";
@@ -294,12 +299,7 @@ class ForumDaoTest {
                 @BeforeEach
                 public void setUp() throws ExecutionException, InterruptedException {
                     given(query.get()).willReturn(querySnapshot);
-                    List<QueryDocumentSnapshot> mockList = mock(List.class);
-                    given(querySnapshot.getDocuments()).willReturn(mockList);
-                    Iterator<QueryDocumentSnapshot> mockIterator = mock(Iterator.class);
-                    given(mockList.iterator()).willReturn(mockIterator);
-                    given(mockIterator.hasNext()).willReturn(true, false);
-                    given(mockIterator.next()).willReturn(documentSnapshot);
+                    given(querySnapshot.getDocuments()).willReturn(queryDocumentSnapshots);
                 }
 
                 @Test
@@ -350,7 +350,8 @@ class ForumDaoTest {
                 }
 
                 @Test
-                public void deleteMessage() throws DatabaseAccessException, DocumentException {
+                public void deleteMessage()
+                    throws DatabaseAccessException, DocumentException, ExecutionException, InterruptedException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
@@ -360,12 +361,28 @@ class ForumDaoTest {
                     given(batch.delete(any(DocumentReference.class))).willReturn(batch);
                     willDoNothing().given(storageDao).deleteImageByName(anyString());
 
-                    dao.deleteMessage(groupName, forumName, "John", "2020-05-01T17:48:15");
+                    dao.deleteMessage(groupName, forumName, username, "2020-05-01T17:48:15");
                     verify(collectionAdapter).getDocumentsWhereEqualTo(
-                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq("John"),
+                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
                         eq("publicationDate"), eq("2020-05-01T17:48:15"));
-                    verify(storageDao).deleteImageByName("some-path");
-                    verify(batch).delete(documentReference);
+                    verify(storageDao).deleteImageByName(eq("some-path"));
+                    verify(batch).delete(same(documentReference));
+                }
+
+                @Test
+                public void addUserToLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                    mockGetGroupAndForumIds();
+                    given(
+                        collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
+                        .willReturn(query);
+                    given(documentSnapshot.getReference()).willReturn(documentReference);
+                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class))).willReturn(batch);
+
+                    dao.addUserToLikedByOfMessage(username, groupName, forumName, username, "2020-05-01T17:48:15");
+                    verify(collectionAdapter).getDocumentsWhereEqualTo(
+                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
+                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
                 }
             }
         }

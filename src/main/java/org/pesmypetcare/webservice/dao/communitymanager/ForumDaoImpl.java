@@ -163,28 +163,14 @@ public class ForumDaoImpl implements ForumDao {
     @Override
     public void deleteMessage(String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException {
-        String groupId = groupDao.getGroupId(parentGroup);
-        String forumId = getForumId(parentGroup, forumName);
-        try {
-            ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter.getDocumentsWhereEqualTo(
-                Path.ofCollection(Collections.messages, groupId, forumId), "creator", creator, "publicationDate", date);
-            WriteBatch batch = documentAdapter.batch();
-            try {
-                for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
-                    String imagePath = document.getString("imagePath");
-                    if (imagePath != null) {
-                        storageDao.deleteImageByName(imagePath);
-                    }
-                    batch.delete(document.getReference());
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                throw new DatabaseAccessException("message-deletion-failed", "Failure when deleting the message");
-            }
-            documentAdapter.commitBatch(batch);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        String imagePath = messageSnapshot.getString("imagePath");
+        if (imagePath != null) {
+            storageDao.deleteImageByName(imagePath);
         }
+        batch.delete(messageSnapshot.getReference());
+        documentAdapter.commitBatch(batch);
     }
 
     @Override
@@ -203,6 +189,20 @@ public class ForumDaoImpl implements ForumDao {
             }
         }
         return imagesPaths;
+    }
+
+    @Override
+    public void addUserToLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        batch.update(messageSnapshot.getReference(), "likedBy", FieldValue.arrayUnion(username));
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
+    public void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date) {
+
     }
 
     /**
@@ -351,6 +351,29 @@ public class ForumDaoImpl implements ForumDao {
             FieldValue.arrayRemove(deletedTags.toArray()), batch);
         for (String tag : deletedTags) {
             deleteForumFromTag(tag, forumName, batch);
+        }
+    }
+
+    /**
+     * Gets a forum message.
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's username
+     * @param date The publication date
+     * @return The document snapshot of the message
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    private DocumentSnapshot getForumMessage(String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        String groupId = groupDao.getGroupId(parentGroup);
+        String forumId = getForumId(parentGroup, forumName);
+        try {
+            return collectionAdapter.getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId),
+                "creator", creator, "publicationDate", date).get().getDocuments().get(0);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the message");
         }
     }
 }
