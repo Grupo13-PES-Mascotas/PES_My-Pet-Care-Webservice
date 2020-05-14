@@ -42,7 +42,6 @@ public class UserMedalRestControllerTest {
     private static final Double VALUE = 2.0;
     private static final String URL_BASE = "/usermedal";
     private static final String SLASH = "/";
-    private static final String SIMPLE = "/simple/";
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,16 +64,16 @@ public class UserMedalRestControllerTest {
     }
 
     @Test
-    public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
+    public void getFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(VALUE).given(service).getField(anyString(), anyString(), anyString());
-        mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD))
+        mockMvc.perform(get(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SLASH + FIELD))
             .andExpect(status().isOk());
     }
 
     @Test
-    public void updateSimpleFieldShouldReturnStatusNoContent() throws Exception {
+    public void updateFieldShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SIMPLE + FIELD)
+        mockMvc.perform(put(URL_BASE + SLASH + OWNER + SLASH + USER_MEDAL_NAME + SLASH + FIELD)
             .contentType(MediaType.APPLICATION_JSON)
             .content(JSON_FIELD))
             .andExpect(status().isNoContent());

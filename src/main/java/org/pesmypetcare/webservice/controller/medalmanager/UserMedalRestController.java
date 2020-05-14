@@ -68,7 +68,7 @@ public class UserMedalRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PutMapping("/{owner}/{name}/simple/{field}")
+    @PutMapping("/{owner}/{name}/{field}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateField(@PathVariable String owner, @PathVariable String name, @PathVariable String field,
                                   @RequestBody Map<String, Object> valueMap)
@@ -86,11 +86,11 @@ public class UserMedalRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/{owner}/{name}/simple/{field}")
+    @GetMapping("/{owner}/{name}/{field}")
     @ResponseStatus(HttpStatus.OK)
     public Object getField(@PathVariable String owner, @PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
-        UserMedalEntity.checkSimpleField(field);
+        UserMedalEntity.checkField(field);
         return userMedalService.getField(owner, name, field);
     }
 }

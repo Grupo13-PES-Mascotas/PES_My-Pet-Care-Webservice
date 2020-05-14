@@ -58,11 +58,11 @@ public class MedalRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("{name}/simple/{field}")
+    @GetMapping("{name}/{field}")
     @ResponseStatus(HttpStatus.OK)
     public Object getField(@PathVariable String name,
                                  @PathVariable String field) throws DatabaseAccessException, DocumentException {
-        MedalEntity.checkSimpleField(field);
+        MedalEntity.checkField(field);
         return medalService.getField(name, field);
     }
 }

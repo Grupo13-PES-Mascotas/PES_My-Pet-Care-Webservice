@@ -34,7 +34,7 @@ public class UserMedalEntity {
      * Checks that field has the correct format for a Medal simple attribute.
      * @param field Name of the attribute.
      */
-    public static void checkSimpleField(String field) {
+    public static void checkField(String field) {
         if (!NAME.equals(field) && !PROGRESS.equals(field) && !CURRENT_LEVEL.equals(field)
             && !COMPLETED_LEVELS_DATE.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");

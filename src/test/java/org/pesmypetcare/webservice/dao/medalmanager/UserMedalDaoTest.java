@@ -36,7 +36,7 @@ public class UserMedalDaoTest {
     private static final String OWNER = "OwnerUsername";
     private static final String OWNER_ID = "OwnerId";
     private static final String USER_MEDAL_NAME = "UserMedalName";
-    private static final String SIMPLE_FIELD = "progress";
+    private static final String FIELD = "progress";
     private static final Double VALUE = 2.0;
 
     private static UserMedalEntity userMedalEntity;
@@ -58,7 +58,7 @@ public class UserMedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<String>());
+        userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>());
         userMedalList = new ArrayList<>();
         Map<String, Object> auxMap = new HashMap<>();
         auxMap.put("name", USER_MEDAL_NAME);
@@ -99,23 +99,23 @@ public class UserMedalDaoTest {
     }
 
     @Test
-    public void shouldReturnUserMedalSimpleFromDatabaseWhenRequested() throws DatabaseAccessException,
+    public void shouldReturnUserMedalFromDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
-        Object userMedalValue = userMedalDao.getField(OWNER, USER_MEDAL_NAME, SIMPLE_FIELD);
+        Object userMedalValue = userMedalDao.getField(OWNER, USER_MEDAL_NAME, FIELD);
 
         assertSame(VALUE, userMedalValue, "Should return field value");
     }
 
     @Test
-    public void shouldUpdateSimpleFieldWhenRequested() throws DatabaseAccessException, DocumentException {
+    public void shouldUpdateFieldWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
 
-        userMedalDao.updateField(OWNER, USER_MEDAL_NAME, SIMPLE_FIELD, VALUE);
+        userMedalDao.updateField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
 
-        verify(dbDoc).updateDocumentFields(same(batch), isA(String.class), same(SIMPLE_FIELD), same(VALUE));
+        verify(dbDoc).updateDocumentFields(same(batch), isA(String.class), same(FIELD), same(VALUE));
     }
 }

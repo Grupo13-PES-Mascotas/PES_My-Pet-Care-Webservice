@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class MedalDaoTest {
     private static final String MEDAL_NAME = "MedalName";
-    private static final String SIMPLE_FIELD = "description";
+    private static final String FIELD = "description";
     private static final String VALUE = "You have to walk a lot of kilometers!";
 
     private static MedalEntity medalEntity;
@@ -84,11 +84,11 @@ public class MedalDaoTest {
     }
 
     @Test
-    public void shouldReturnMedalSimpleFieldFromDatabaseWhenRequested() throws DatabaseAccessException,
+    public void shouldReturnMedalFieldFromDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
         given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
-        Object medalValue = medalDao.getField(MEDAL_NAME, SIMPLE_FIELD);
+        Object medalValue = medalDao.getField(MEDAL_NAME, FIELD);
 
         assertSame(VALUE, medalValue, "Should return field value");
     }

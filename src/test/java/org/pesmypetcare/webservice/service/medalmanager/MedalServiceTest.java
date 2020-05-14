@@ -66,7 +66,7 @@ public class MedalServiceTest {
     }
 
     @Test
-    public void shouldReturnMedalSimpleFieldWhenMedalFieldRetrieved() throws DatabaseAccessException,
+    public void shouldReturnMedalFieldWhenMedalFieldRetrieved() throws DatabaseAccessException,
         DocumentException {
         when(medalDao.getField(MEDAL_NAME, FIELD)).thenReturn(VALUE);
         Object obtainedValue = service.getField(MEDAL_NAME, FIELD);

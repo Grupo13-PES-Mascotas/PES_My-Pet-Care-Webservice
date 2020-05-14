@@ -69,7 +69,7 @@ public class UserMedalServiceTest {
     }
 
     @Test
-    public void shouldReturnUserMedalSimpleFieldWhenUserMedalFieldRetrieved() throws DatabaseAccessException,
+    public void shouldReturnUserMedalFieldWhenUserMedalFieldRetrieved() throws DatabaseAccessException,
         DocumentException {
         when(userMedalDao.getField(OWNER, USER_MEDAL_NAME, FIELD)).thenReturn(VALUE);
         Object obtainedValue = service.getField(OWNER, USER_MEDAL_NAME, FIELD);
@@ -86,7 +86,7 @@ public class UserMedalServiceTest {
     }
 
     @Test
-    public void shouldReturnNothingWhenUserMedalSimpleFieldUpdated() throws DatabaseAccessException,
+    public void shouldReturnNothingWhenUserMedalFieldUpdated() throws DatabaseAccessException,
         DocumentException {
         service.updateField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
         verify(userMedalDao).updateField(same(OWNER), same(USER_MEDAL_NAME), same(FIELD), same(VALUE));

@@ -58,9 +58,9 @@ public class MedalRestControllerTest {
     }
 
     @Test
-    public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
+    public void getFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(VALUE).given(service).getField(anyString(), anyString());
-        mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME + "/simple/" + FIELD))
+        mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME + SLASH + FIELD))
             .andExpect(status().isOk());
     }
 }
