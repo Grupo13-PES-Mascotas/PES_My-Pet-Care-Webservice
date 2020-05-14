@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.AdditionalMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -41,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -96,6 +96,7 @@ class GroupDaoTest {
 
     @InjectMocks
     private GroupDao dao = new GroupDaoImpl();
+    private String token;
 
     @BeforeEach
     public void setUp() {
@@ -111,6 +112,7 @@ class GroupDaoTest {
         tagPath = Path.ofDocument(Collections.tags, tag);
         usersPath = Path.ofCollection(Collections.users);
         groupNamePath = Path.ofDocument(Collections.groupsNames, groupName);
+        token = "token";
     }
 
     @Test
@@ -174,8 +176,8 @@ class GroupDaoTest {
     private void mockListAllCollectionDocumentSnapshots() throws DatabaseAccessException {
         List<DocumentSnapshot> snapshotList = new ArrayList<>();
         snapshotList.add(documentSnapshot);
-        given(collectionAdapter.listAllCollectionDocumentSnapshots(AdditionalMatchers
-            .or(eq(Path.ofCollection(Collections.members, groupId)), eq(Path.ofCollection(Collections.groups)))))
+        given(collectionAdapter.listAllCollectionDocumentSnapshots(
+            or(eq(Path.ofCollection(Collections.members, groupId)), eq(Path.ofCollection(Collections.groups)))))
             .willReturn(snapshotList);
     }
 
@@ -231,7 +233,7 @@ class GroupDaoTest {
                 .updateDocumentFields(anyString(), anyString(), any(), any(WriteBatch.class));
             given(docRef.getId()).willReturn(groupId);
             given(userDao.getUid(anyString())).willReturn(userId);
-
+            given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(token);
             List<String> tags = new ArrayList<>();
             tags.add(tag);
             GroupEntity entity = new GroupEntity(groupName, username, "", tags);
@@ -245,12 +247,14 @@ class GroupDaoTest {
             Map<String, Object> data2 = new HashMap<>();
             data2.put("user", username);
             data2.put("date", timeFormatter.format(LocalDateTime.now()));
-            verify(documentAdapter).createDocumentWithId(AdditionalMatchers.or(eq(groupNamesPath), eq(membersPath)),
-                AdditionalMatchers.or(eq(groupName), eq(userId)), AdditionalMatchers.or(eq(data), eq(data2)),
-                same(batch));
+            verify(documentAdapter)
+                .createDocumentWithId(or(eq(groupNamesPath), eq(membersPath)), or(eq(groupName), eq(userId)),
+                    or(eq(data), eq(data2)), same(batch));
             verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
-            verify(documentAdapter).updateDocumentFields(same(batch), eq(tagPath), eq(GROUPS_FIELD), any(FieldValue.class));
+            verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
+                or(eq(GROUPS_FIELD), eq("notification-tokens")), or(eq(token), any(FieldValue.class)));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
         }
 
         @Test
@@ -268,14 +272,12 @@ class GroupDaoTest {
 
             dao.deleteGroup(groupName);
             verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq(GROUP_FIELD));
-            verify(collectionAdapter, times(2))
-                .getDocumentsWhereArrayContains(AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
-                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
-            verify(batch).update(same(docRef), AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")),
+            verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(or(eq(tagsPath), eq(usersPath)),
+                or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
+            verify(batch).update(same(docRef), or(eq(GROUPS_FIELD), eq("groupSubscriptions")),
                 eq(FieldValue.arrayRemove(groupName)));
             String groupPath = Path.ofDocument(Collections.groups, groupId);
-            verify(documentAdapter, times(2))
-                .deleteDocument(AdditionalMatchers.or(eq(groupPath), eq(groupNamePath)), same(batch));
+            verify(documentAdapter, times(2)).deleteDocument(or(eq(groupPath), eq(groupNamePath)), same(batch));
             verify(documentAdapter).getDocumentField(eq(groupPath), eq(FieldPath.of("icon", "path")));
             verify(storageDao).deleteImageByName(same(imagePath));
         }
@@ -297,12 +299,11 @@ class GroupDaoTest {
 
             dao.updateField(groupName, field, newName);
             verify(documentAdapter).updateDocumentFields(same(batch), eq(groupPath), eq(field), eq(newName));
-            verify(collectionAdapter, times(2))
-                .getDocumentsWhereArrayContains(AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
-                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
-            verify(documentAdapter).updateDocumentFields(same(batch), AdditionalMatchers.or(eq(groupPath), eq(tagPath)),
-                AdditionalMatchers.or(eq(GROUPS_FIELD), eq("name")), AdditionalMatchers.or(eq(newName),
-                    AdditionalMatchers.or(eq(FieldValue.arrayRemove(groupId)), eq(FieldValue.arrayUnion(groupId)))));
+            verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(or(eq(tagsPath), eq(usersPath)),
+                or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
+            verify(documentAdapter)
+                .updateDocumentFields(same(batch), or(eq(groupPath), eq(tagPath)), or(eq(GROUPS_FIELD), eq("name")),
+                    or(eq(newName), or(eq(FieldValue.arrayRemove(groupId)), eq(FieldValue.arrayUnion(groupId)))));
             verify(documentAdapter).documentExists(tagPath);
             verify(documentAdapter).deleteDocument(eq(groupNamePath), same(batch));
             Map<String, String> docData = new HashMap<>();
@@ -354,11 +355,9 @@ class GroupDaoTest {
             newTags.add(tag);
             dao.updateTags(groupName, newTags, deletedTags);
             verify(documentAdapter, times(2))
-                .updateDocumentFields(same(batch), AdditionalMatchers.or(eq(groupPath), eq(tagPath)),
-                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("tags")), AdditionalMatchers
-                        .or(eq(FieldValue.arrayRemove(groupId)), AdditionalMatchers
-                            .or(eq(FieldValue.arrayUnion(newTags.toArray())),
-                                eq(FieldValue.arrayRemove(deletedTags.toArray())))));
+                .updateDocumentFields(same(batch), or(eq(groupPath), eq(tagPath)), or(eq(GROUPS_FIELD), eq("tags")),
+                    or(eq(FieldValue.arrayRemove(groupId)), or(eq(FieldValue.arrayUnion(newTags.toArray())),
+                        eq(FieldValue.arrayRemove(deletedTags.toArray())))));
             verify(documentAdapter).createDocumentWithId(eq(tagsPath), eq(tag), anyMap(), same(batch));
         }
     }

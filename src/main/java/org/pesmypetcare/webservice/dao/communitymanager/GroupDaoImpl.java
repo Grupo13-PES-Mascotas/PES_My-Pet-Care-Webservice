@@ -61,9 +61,11 @@ public class GroupDaoImpl implements GroupDao {
         DocumentReference groupRef = documentAdapter
             .createDocument(Path.ofCollection(Collections.groups), entity, batch);
         String name = entity.getName();
-        saveGroupName(name, groupRef.getId(), batch);
+        String groupId = groupRef.getId();
+        saveGroupName(name, groupId, batch);
         String creator = entity.getCreator();
-        saveUserAsMember(groupRef.getId(), userDao.getUid(creator), creator, batch);
+        String userUid = userDao.getUid(creator);
+        saveUserAsMember(groupId, userUid, creator, batch);
         userDao.addGroupSubscription(creator, name, batch);
         List<String> tags = entity.getTags();
         if (tags != null) {
@@ -71,7 +73,15 @@ public class GroupDaoImpl implements GroupDao {
                 addGroupToTag(tag, name, batch);
             }
         }
+        addUserToGroupNotifications(userUid, groupId, batch);
         documentAdapter.commitBatch(batch);
+    }
+
+    private void addUserToGroupNotifications(String userUid, String groupId, WriteBatch batch)
+        throws DatabaseAccessException, DocumentException {
+        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
+        documentAdapter
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens", token);
     }
 
     @Override
