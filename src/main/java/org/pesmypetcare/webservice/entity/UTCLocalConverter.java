@@ -6,10 +6,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-class UTCLocalConverter {
+public class UTCLocalConverter {
 
     private static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String UTC = "UTC";
+
+    private UTCLocalConverter() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static String convertUTCtoLocal(String datein) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
@@ -28,7 +32,7 @@ class UTCLocalConverter {
     }
 
     public static String getCurrentUTC() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
         Date date2 = new Date();
         sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         return sdf.format(date2);
