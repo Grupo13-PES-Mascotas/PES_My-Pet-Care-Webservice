@@ -45,7 +45,7 @@ public class MedalRestController {
      */
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getAllMedalsData()
+    public List<Map<String, MedalEntity>> getAllMedalsData()
         throws DatabaseAccessException, DocumentException {
         return medalService.getAllMedalsData();
     }

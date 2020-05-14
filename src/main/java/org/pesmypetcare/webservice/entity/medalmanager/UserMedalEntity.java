@@ -31,7 +31,7 @@ public class UserMedalEntity {
     }
 
     /**
-     * Checks that field has the correct format for a Medal simple attribute.
+     * Checks that field has the correct format for a Medal attribute.
      * @param field Name of the attribute.
      */
     public static void checkField(String field) {
@@ -42,7 +42,7 @@ public class UserMedalEntity {
     }
 
     /**
-     * Checks that the field and the new value for this field have the correct format for a UserMedal simple attribute.
+     * Checks that the field and the new value for this field have the correct format for a UserMedal attribute.
      * @param field Name of the attribute.
      * @param newValue Value of the attribute.
      */

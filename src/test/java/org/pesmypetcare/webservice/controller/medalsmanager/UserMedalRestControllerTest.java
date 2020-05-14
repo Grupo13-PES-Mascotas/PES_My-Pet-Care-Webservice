@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,7 +35,7 @@ public class UserMedalRestControllerTest {
         + "} ";
 
     private static final UserMedalEntity USER_MEDAL_ENTITY = new UserMedalEntity();
-    private static final List<Map<String, Object>> USER_MEDAL_LIST = new ArrayList<>();
+    private static final List<Map<String, UserMedalEntity>> USER_MEDAL_LIST = new ArrayList<>();
     private static final String OWNER = "Pepe Lotas";
     private static final String USER_MEDAL_NAME = "Walker";
     private static final String FIELD = "progress";

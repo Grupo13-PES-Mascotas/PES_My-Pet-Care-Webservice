@@ -26,11 +26,10 @@ public class MedalEntity {
         this.name = name;
         this.levels = levels;
         this.description = description;
-        this.iconLocation = null;
     }
 
     /**
-     * Checks that field has the correct format for a Medal simple attribute.
+     * Checks that field has the correct format for a Medal attribute.
      * @param field Name of the attribute.
      */
     public static void checkField(String field) {

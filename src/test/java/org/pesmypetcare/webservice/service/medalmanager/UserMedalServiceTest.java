@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 public class UserMedalServiceTest {
-    private static final List<Map<String, Object>> USER_MEDAL_LIST = new ArrayList<>();
+    private static final List<Map<String, UserMedalEntity>> USER_MEDAL_LIST = new ArrayList<>();
     private static final UserMedalEntity USER_MEDAL_ENTITY = new UserMedalEntity();
     private static final String OWNER = "Benito Camela";
     private static final String USER_MEDAL_NAME = "Walker";
@@ -56,7 +56,7 @@ public class UserMedalServiceTest {
     public void shouldReturnUserMedalEntityListWhenGetSetOfUserMedalsRetrieved()
         throws DatabaseAccessException, DocumentException {
         when(userMedalDao.getAllUserMedalsData(OWNER)).thenReturn(USER_MEDAL_LIST);
-        List<Map<String, Object>> list = service.getAllUserMedalsData(OWNER);
+        List<Map<String, UserMedalEntity>> list = service.getAllUserMedalsData(OWNER);
         assertSame(USER_MEDAL_LIST, list, "Should return a list of userMedal entities");
     }
 
@@ -88,7 +88,7 @@ public class UserMedalServiceTest {
     @Test
     public void shouldReturnNothingWhenUserMedalFieldUpdated() throws DatabaseAccessException,
         DocumentException {
-        service.updateField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
-        verify(userMedalDao).updateField(same(OWNER), same(USER_MEDAL_NAME), same(FIELD), same(VALUE));
+        service.updateField(OWNER, USER_MEDAL_NAME, FIELD, USER_MEDAL_ENTITY);
+        verify(userMedalDao).updateField(same(OWNER), same(USER_MEDAL_NAME), same(FIELD), same(USER_MEDAL_ENTITY));
     }
 }

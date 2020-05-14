@@ -34,7 +34,7 @@ public class MedalDaoTest {
     private static final String VALUE = "You have to walk a lot of kilometers!";
 
     private static MedalEntity medalEntity;
-    private static List<Map<String, Object>> medalList;
+    private static List<Map<String, MedalEntity>> medalList;
     private static List<DocumentSnapshot> snapshotList;
 
 
@@ -52,8 +52,7 @@ public class MedalDaoTest {
     public void setUp() {
         medalEntity = new MedalEntity("Walker", new ArrayList<>(), "You have to walk a lot!");
         medalList = new ArrayList<>();
-        Map<String, Object> auxMap = new HashMap<>();
-        auxMap.put("name", MEDAL_NAME);
+        Map<String, MedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", medalEntity);
         medalList.add(auxMap);
         medalList.add(auxMap);
@@ -75,10 +74,9 @@ public class MedalDaoTest {
 
     @Test
     public void shouldReturnAllMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(documentSnapshot.getId()).willReturn(MEDAL_NAME);
         given(documentSnapshot.toObject(any())).willReturn(medalEntity);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
-        List<Map<String, Object>> list = medalDao.getAllMedalsData();
+        List<Map<String, MedalEntity>> list = medalDao.getAllMedalsData();
 
         assertEquals(medalList, list, "Should return a List containing all medals Data");
     }

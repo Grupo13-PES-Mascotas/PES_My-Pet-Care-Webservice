@@ -53,7 +53,7 @@ public class UserMedalRestController {
      */
     @GetMapping("/{owner}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getAllMedalsData(@PathVariable String owner)
+    public List<Map<String, UserMedalEntity>> getAllMedalsData(@PathVariable String owner)
         throws DatabaseAccessException, DocumentException {
         return userMedalService.getAllUserMedalsData(owner);
     }

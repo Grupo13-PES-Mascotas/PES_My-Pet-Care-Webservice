@@ -27,7 +27,7 @@ public interface MedalDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, Object>> getAllMedalsData() throws DatabaseAccessException, DocumentException;
+    List<Map<String, MedalEntity>> getAllMedalsData() throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets the value for the specified field of the medal on the database.

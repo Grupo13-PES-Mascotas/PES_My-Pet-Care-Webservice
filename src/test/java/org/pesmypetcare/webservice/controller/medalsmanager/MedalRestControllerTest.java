@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MedalRestControllerTest {
 
     private static final MedalEntity MEDAL_ENTITY = new MedalEntity();
-    private static final List<Map<String, Object>> MEDAL_LIST = new ArrayList<>();
+    private static final List<Map<String, MedalEntity>> MEDAL_LIST = new ArrayList<>();
     private static final String MEDAL_NAME = "Walker";
     private static final String FIELD = "description";
     private static final String VALUE = "You have to walk a lot of kilometers!";
@@ -44,7 +44,7 @@ public class MedalRestControllerTest {
     private MedalService service;
 
     @Test
-    public void getUserMedalDataShouldReturnPetEntityAndStatusOk() throws Exception {
+    public void getUserMedalDataShouldReturnMedalEntityAndStatusOk() throws Exception {
         willReturn(MEDAL_ENTITY).given(service).getMedalData(anyString());
         mockMvc.perform(get(URL_BASE + SLASH + MEDAL_NAME))
             .andExpect(status().isOk());

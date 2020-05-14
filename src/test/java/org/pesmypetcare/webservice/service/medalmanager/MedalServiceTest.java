@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 public class MedalServiceTest {
-    private static final List<Map<String, Object>> MEDAL_LIST = new ArrayList<>();
+    private static final List<Map<String, MedalEntity>> MEDAL_LIST = new ArrayList<>();
     private static final MedalEntity MEDAL_ENTITY = new MedalEntity();
     private static final String MEDAL_NAME = "Walker";
     private static final String FIELD = "description";
@@ -53,7 +53,7 @@ public class MedalServiceTest {
     public void shouldReturnMedalEntityListWhenGetSetOfMedalsRetrieved()
         throws DatabaseAccessException, DocumentException {
         when(medalDao.getAllMedalsData()).thenReturn(MEDAL_LIST);
-        List<Map<String, Object>> list = service.getAllMedalsData();
+        List<Map<String, MedalEntity>> list = service.getAllMedalsData();
         assertSame(MEDAL_LIST, list, "Should return a list of medal entities");
     }
 

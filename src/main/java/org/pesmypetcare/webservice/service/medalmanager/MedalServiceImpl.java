@@ -24,7 +24,7 @@ public class MedalServiceImpl implements MedalService {
     }
 
     @Override
-    public List<Map<String, Object>> getAllMedalsData() throws DatabaseAccessException, DocumentException {
+    public List<Map<String, MedalEntity>> getAllMedalsData() throws DatabaseAccessException, DocumentException {
         return medalDao.getAllMedalsData();
     }
 

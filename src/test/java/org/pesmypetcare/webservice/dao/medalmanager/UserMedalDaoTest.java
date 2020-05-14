@@ -40,7 +40,7 @@ public class UserMedalDaoTest {
     private static final Double VALUE = 2.0;
 
     private static UserMedalEntity userMedalEntity;
-    private static List<Map<String, Object>> userMedalList;
+    private static List<Map<String, UserMedalEntity>> userMedalList;
     private static List<DocumentSnapshot> snapshotList;
 
 
@@ -60,8 +60,7 @@ public class UserMedalDaoTest {
     public void setUp() {
         userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>());
         userMedalList = new ArrayList<>();
-        Map<String, Object> auxMap = new HashMap<>();
-        auxMap.put("name", USER_MEDAL_NAME);
+        Map<String, UserMedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", userMedalEntity);
         userMedalList.add(auxMap);
         userMedalList.add(auxMap);
@@ -87,13 +86,12 @@ public class UserMedalDaoTest {
     @Test
     public void shouldReturnAllUserMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
-        given(documentSnapshot.getId()).willReturn(USER_MEDAL_NAME);
         given(documentSnapshot.toObject(any())).willReturn(userMedalEntity);
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
 
-        List<Map<String, Object>> list = userMedalDao.getAllUserMedalsData(OWNER);
+        List<Map<String, UserMedalEntity>> list = userMedalDao.getAllUserMedalsData(OWNER);
 
         assertEquals(userMedalList, list, "Should return a List containing all userMedals Data");
     }
@@ -114,8 +112,8 @@ public class UserMedalDaoTest {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
 
-        userMedalDao.updateField(OWNER, USER_MEDAL_NAME, FIELD, VALUE);
+        userMedalDao.updateField(OWNER, USER_MEDAL_NAME, FIELD, userMedalEntity);
 
-        verify(dbDoc).updateDocumentFields(same(batch), isA(String.class), same(FIELD), same(VALUE));
+        verify(dbDoc).updateDocumentFields(same(batch), isA(String.class), same(FIELD), same(userMedalEntity));
     }
 }

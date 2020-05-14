@@ -35,14 +35,13 @@ public class MedalDaoImpl implements MedalDao {
     }
 
     @Override
-    public List<Map<String, Object>> getAllMedalsData() throws DatabaseAccessException, DocumentException {
+    public List<Map<String, MedalEntity>> getAllMedalsData() throws DatabaseAccessException {
         initializeWithCollectionPath();
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
-        List<Map<String, Object>> externalList = new ArrayList<>();
+        List<Map<String, MedalEntity>> externalList = new ArrayList<>();
 
         for (DocumentSnapshot medalDocument : medalsDocuments) {
-            Map<String, Object> internalList = new HashMap<>();
-            internalList.put("name", medalDocument.getId());
+            Map<String, MedalEntity> internalList = new HashMap<>();
             internalList.put("body", medalDocument.toObject(MedalEntity.class));
             externalList.add(internalList);
         }
