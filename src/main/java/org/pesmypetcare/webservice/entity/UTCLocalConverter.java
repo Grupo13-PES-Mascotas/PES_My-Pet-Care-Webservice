@@ -16,7 +16,7 @@ public class UTCLocalConverter {
     }
 
     public static String convertUTCtoLocal(String datein) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         Date date = sdf.parse(datein);
         sdf.setTimeZone(TimeZone.getDefault());
@@ -24,7 +24,7 @@ public class UTCLocalConverter {
     }
 
     public static String convertLocaltoUTC(String datein) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT, Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
         Date date = sdf.parse(datein);
         sdf.setTimeZone(TimeZone.getTimeZone(UTC));
