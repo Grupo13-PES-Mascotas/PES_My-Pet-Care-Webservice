@@ -29,7 +29,8 @@ public interface UserMedalService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException, DocumentException;
+    List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+        DocumentException;
 
     /**
      * Updates the medal's field.
