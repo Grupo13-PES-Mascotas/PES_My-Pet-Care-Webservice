@@ -81,7 +81,8 @@ public class GroupDaoImpl implements GroupDao {
         throws DatabaseAccessException, DocumentException {
         String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
         documentAdapter
-            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens", token);
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
+                FieldValue.arrayUnion(token));
     }
 
     @Override

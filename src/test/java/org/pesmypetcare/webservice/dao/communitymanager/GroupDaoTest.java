@@ -253,7 +253,7 @@ class GroupDaoTest {
             verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
             verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
-                or(eq(GROUPS_FIELD), eq("notification-tokens")), or(eq(token), any(FieldValue.class)));
+                or(eq(GROUPS_FIELD), eq("notification-tokens")), any(FieldValue.class));
             verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
         }
 
