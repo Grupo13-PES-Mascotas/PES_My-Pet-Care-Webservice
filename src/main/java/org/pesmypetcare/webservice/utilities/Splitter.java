@@ -10,14 +10,14 @@ import java.util.List;
  * @author Santiago Del Rey
  */
 public class Splitter {
-    private static final double MAX_CHUNK_SIZE = Math.pow(2, 20);
+    private static final double MAX_CHUNK_SIZE = Math.pow(2, 10);
 
     private Splitter() { }
 
     public static List<Blob> splitImage(byte[] image) {
         int length = image.length;
+        System.out.println(length);
         List<Blob> imageChunks = new ArrayList<>();
-        int chunk = 0;
         if (length > MAX_CHUNK_SIZE) {
             for (int i = 0; i < length; i += MAX_CHUNK_SIZE) {
                 byte[] imageChunk;
@@ -27,7 +27,6 @@ public class Splitter {
                     imageChunk = Arrays.copyOfRange(image, i, length);
                 }
                 imageChunks.add(Blob.fromBytes(imageChunk));
-                ++chunk;
             }
         } else {
             imageChunks.add(Blob.fromBytes(image));

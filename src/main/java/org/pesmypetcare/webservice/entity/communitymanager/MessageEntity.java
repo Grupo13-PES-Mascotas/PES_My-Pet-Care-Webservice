@@ -44,12 +44,14 @@ public class MessageEntity {
      * @return A list with the chunks
      */
     private List<Blob> decodeAndSplitImage(String encodedImage) {
+        System.out.println(encodedImage.length());
         List<Blob> image = new ArrayList<>();
         if (encodedImage != null) {
             if (!encodedImage.isEmpty()) {
                 image = Splitter.splitImage(Base64.getDecoder().decode(encodedImage));
             }
         }
+        System.out.println(image.size());
         return image;
     }
 }

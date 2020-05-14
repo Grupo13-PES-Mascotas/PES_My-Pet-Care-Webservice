@@ -158,7 +158,7 @@ public class ForumDaoImpl implements ForumDao {
         documentAdapter.commitBatch(batch);
         /*MulticastMessage multicastMessage = MulticastMessage.builder().putData("creator", message.getCreator()).putData("text",
             message.getText()).addToken("token").build();
-        BatchResponse response = FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);*/
+        FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);*/
     }
 
     @Override
