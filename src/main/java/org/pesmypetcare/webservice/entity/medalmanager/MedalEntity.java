@@ -23,7 +23,7 @@ public class MedalEntity {
 
     public MedalEntity() { }
 
-    public MedalEntity(String name, ArrayList<Double> levels, String description) {
+    public MedalEntity(String name, List<Double> levels, String description) {
         this.name = name;
         this.levels = levels;
         this.description = description;

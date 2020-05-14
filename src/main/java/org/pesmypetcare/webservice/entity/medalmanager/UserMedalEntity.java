@@ -21,7 +21,7 @@ public class UserMedalEntity {
 
     public UserMedalEntity() { }
 
-    public UserMedalEntity(String name, Double progress, Double currentLevel, ArrayList<String> completedLevelsDate) {
+    public UserMedalEntity(String name, Double progress, Double currentLevel, List<String> completedLevelsDate) {
         for (String date : completedLevelsDate) {
             checkDateFormat(date);
         }
