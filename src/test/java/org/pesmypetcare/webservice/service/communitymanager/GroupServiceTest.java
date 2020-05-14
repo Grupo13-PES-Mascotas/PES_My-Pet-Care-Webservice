@@ -76,8 +76,8 @@ class GroupServiceTest {
         private String newName;
         private String username;
         private String token;
-        private ArrayList<String> newTags;
-        private ArrayList<String> deletedTags;
+        private List<String> newTags;
+        private List<String> deletedTags;
 
 
         @AfterEach

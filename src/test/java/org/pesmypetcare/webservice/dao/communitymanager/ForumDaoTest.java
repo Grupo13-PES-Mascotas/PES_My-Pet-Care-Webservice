@@ -7,6 +7,7 @@ import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -52,17 +54,19 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith({MockitoExtension.class})
 class ForumDaoTest {
-    private String groupName;
-    private String forumName;
-    private String groupId;
-    private String forumId;
-    private String tagsPath;
-    private String messagePath;
-    private String tagPath;
-    private ForumEntity forumEntity;
-    private List<String> tags;
-    private Message message;
-    private MessageEntity messageEntity;
+    private static String groupName;
+    private static String forumName;
+    private static String groupId;
+    private static String forumId;
+    private static String tagsPath;
+    private static String messagePath;
+    private static String tagPath;
+    private static String username;
+    private static String date;
+    private static ForumEntity forumEntity;
+    private static List<String> tags;
+    private static Message message;
+    private static MessageEntity messageEntity;
     private List<QueryDocumentSnapshot> queryDocumentSnapshots;
 
     @Mock
@@ -86,15 +90,15 @@ class ForumDaoTest {
 
     @InjectMocks
     private ForumDao dao = new ForumDaoImpl();
-    private String username;
 
-
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void beforeAll() {
         groupName = "Dogs";
         forumName = "Huskies";
         groupId = "asd2d9833jdaA3";
         forumId = "ad33i8jf93";
+        username = "John";
+        date = "2020-05-01T17:48:15";
         forumEntity = new ForumEntity();
         forumEntity.setName(forumName);
         tags = new ArrayList<>();
@@ -108,9 +112,13 @@ class ForumDaoTest {
         message.setText("Some text");
         message.setEncodedImage("ZGFkYTIxM2FkMw==");
         messageEntity = new MessageEntity(message);
+    }
+
+
+    @BeforeEach
+    public void setUp() {
         queryDocumentSnapshots = new ArrayList<>();
         queryDocumentSnapshots.add(documentSnapshot);
-        username = "John";
     }
 
     @Test
@@ -184,7 +192,7 @@ class ForumDaoTest {
         willDoNothing().given(documentAdapter).setDocumentFields(anyString(), anyMap(), any(WriteBatch.class));
     }
 
-    private void verifyAddForumToTag(String forumName) throws DatabaseAccessException, DocumentException {
+    private void verifyAddForumToTag(String forumName) throws DatabaseAccessException {
         Map<String, Object> data = new HashMap<>();
         data.put("forums", FieldValue.arrayUnion(forumName));
         verify(documentAdapter).documentExists(eq(tagPath));
@@ -257,17 +265,20 @@ class ForumDaoTest {
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
-                willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(),
-                    any(FieldValue.class), any(WriteBatch.class));
+                willDoNothing().given(documentAdapter)
+                    .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
                 mockAddForumToTag();
 
                 dao.updateTags(groupName, forumName, tags, tags);
-                verify(documentAdapter).updateDocumentFields(eq(forumPath), eq("tags"),
-                    eq(FieldValue.arrayRemove(tags.toArray())), same(batch));
-                verify(documentAdapter).updateDocumentFields(eq(tagPath), eq("forums"),
-                    eq(FieldValue.arrayRemove(forumName)), same(batch));
-                verify(documentAdapter).updateDocumentFields(eq(forumPath), eq("tags"),
-                    eq(FieldValue.arrayUnion(tags.toArray())), same(batch));
+                verify(documentAdapter)
+                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayRemove(tags.toArray())),
+                        same(batch));
+                verify(documentAdapter)
+                    .updateDocumentFields(eq(tagPath), eq("forums"), eq(FieldValue.arrayRemove(forumName)),
+                        same(batch));
+                verify(documentAdapter)
+                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayUnion(tags.toArray())),
+                        same(batch));
                 verifyAddForumToTag(forumName);
             }
 
@@ -278,7 +289,7 @@ class ForumDaoTest {
                     .willReturn(documentReference);
 
                 dao.postMessage(groupName, forumName, message);
-                verify(documentAdapter).createDocument(eq(messagePath), eq(messageEntity), same(batch));
+                verify(documentAdapter).createDocument(eq(messagePath), isA(MessageEntity.class), same(batch));
             }
 
             @Nested
@@ -306,8 +317,8 @@ class ForumDaoTest {
                     verify(documentAdapter).getStringFromDocument(eq(forumNamePath), eq("forum"));
                     verify(documentAdapter).deleteDocument(eq(forumPath), same(batch));
                     verify(documentAdapter).deleteDocument(eq(forumNamePath), same(batch));
-                    verify(collectionAdapter).getDocumentsWhereArrayContains(eq(tagsPath), eq("forums"),
-                        same(forumName));
+                    verify(collectionAdapter)
+                        .getDocumentsWhereArrayContains(eq(tagsPath), eq("forums"), same(forumName));
                     Map<String, Object> data = new HashMap<>();
                     data.put("forums", FieldValue.arrayRemove(forumName));
                     verify(batch).update(same(documentReference), eq(data));
@@ -317,11 +328,11 @@ class ForumDaoTest {
                 public void updateName() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
                     given(documentAdapter.documentExists(anyString())).willReturn(false);
-                    willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(), anyString(),
-                        any(WriteBatch.class));
+                    willDoNothing().given(documentAdapter)
+                        .updateDocumentFields(anyString(), anyString(), anyString(), any(WriteBatch.class));
                     willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
-                    willDoNothing().given(documentAdapter).updateDocumentFields(anyString(), anyString(),
-                        any(FieldValue.class), any(WriteBatch.class));
+                    willDoNothing().given(documentAdapter)
+                        .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
                     mockAddForumToTag();
                     given(
                         documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
@@ -339,7 +350,7 @@ class ForumDaoTest {
 
                 @Test
                 public void deleteMessage()
-                    throws DatabaseAccessException, DocumentException, ExecutionException, InterruptedException {
+                    throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
@@ -349,10 +360,10 @@ class ForumDaoTest {
                     given(batch.delete(any(DocumentReference.class))).willReturn(batch);
                     willDoNothing().given(storageDao).deleteImageByName(anyString());
 
-                    dao.deleteMessage(groupName, forumName, username, "2020-05-01T17:48:15");
-                    verify(collectionAdapter).getDocumentsWhereEqualTo(
-                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
-                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    dao.deleteMessage(groupName, forumName, username, date);
+                    verify(collectionAdapter)
+                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
+                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
                     verify(storageDao).deleteImageByName(eq("some-path"));
                     verify(batch).delete(same(documentReference));
                 }
@@ -364,12 +375,13 @@ class ForumDaoTest {
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
                         .willReturn(query);
                     given(documentSnapshot.getReference()).willReturn(documentReference);
-                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class))).willReturn(batch);
+                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class)))
+                        .willReturn(batch);
 
-                    dao.addUserToLikedByOfMessage(username, groupName, forumName, username, "2020-05-01T17:48:15");
-                    verify(collectionAdapter).getDocumentsWhereEqualTo(
-                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
-                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    dao.addUserToLikedByOfMessage(username, groupName, forumName, username, date);
+                    verify(collectionAdapter)
+                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
+                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
                 }
 
@@ -380,12 +392,13 @@ class ForumDaoTest {
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
                         .willReturn(query);
                     given(documentSnapshot.getReference()).willReturn(documentReference);
-                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class))).willReturn(batch);
+                    given(batch.update(any(DocumentReference.class), anyString(), any(FieldValue.class)))
+                        .willReturn(batch);
 
-                    dao.removeUserFromLikedByOfMessage(username, groupName, forumName, username, "2020-05-01T17:48:15");
-                    verify(collectionAdapter).getDocumentsWhereEqualTo(
-                        eq(Path.ofCollection(Collections.messages, groupId, forumId)), eq("creator"), eq(username),
-                        eq("publicationDate"), eq("2020-05-01T17:48:15"));
+                    dao.removeUserFromLikedByOfMessage(username, groupName, forumName, username, date);
+                    verify(collectionAdapter)
+                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
+                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
                 }
             }

@@ -34,6 +34,7 @@ class StorageServiceTest {
     private static ImageEntity imageEntity;
     private static StorageForm storageForm;
     private static String owner;
+    private static String groupName;
     private static String expectedDownload;
     private static Map<String, String> images;
 
@@ -56,6 +57,7 @@ class StorageServiceTest {
         expectedDownload = Base64.encodeBase64String(img);
         images = new HashMap<>();
         images.put("Linux", expectedDownload);
+        groupName = "Dogs";
     }
 
     @Test
@@ -76,14 +78,14 @@ class StorageServiceTest {
     public void saveGroupImage() throws DatabaseAccessException, DocumentException {
         given(groupDao.groupNameInUse(anyString())).willReturn(true);
         willDoNothing().given(storageDao).uploadGroupImage(any(ImageEntity.class));
-        service.saveGroupImage("my-token", "Dogs", imageEntity);
+        service.saveGroupImage("my-token", groupName, imageEntity);
         verify(storageDao).uploadGroupImage(same(imageEntity));
     }
 
     @Test
     public void saveGroupImageShouldFailWhenTheGroupDoesNotExist() throws DatabaseAccessException {
         given(groupDao.groupNameInUse(anyString())).willReturn(false);
-        assertThrows(DocumentException.class, () -> service.saveGroupImage("my-token", "Dogs", imageEntity),
+        assertThrows(DocumentException.class, () -> service.saveGroupImage("my-token", groupName, imageEntity),
             "Should throw an exception when the group does not exist.");
     }
 
@@ -105,7 +107,7 @@ class StorageServiceTest {
     @Test
     public void getAllPostImagesFromForum() throws DatabaseAccessException, DocumentException {
         given(storageDao.downloadAllPostsImagesFromForum(anyString(), anyString())).willReturn(images);
-        Map<String, String> resultMap = service.getAllPostsImagesFromForum("Dogs", "Huskies");
+        Map<String, String> resultMap = service.getAllPostsImagesFromForum(groupName, "Huskies");
         assertEquals(images, resultMap,
             "Should return a map with the images paths and their images as a base64 encoded string");
     }

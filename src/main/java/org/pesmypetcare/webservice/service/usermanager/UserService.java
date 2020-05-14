@@ -76,5 +76,13 @@ public interface UserService {
      */
     boolean existsUsername(String username) throws DatabaseAccessException;
 
+    /**
+     * Saves the FCM token of the user.
+     * @param token The user token
+     * @throws DatabaseAccessException If an error occurs when saving the token
+     * @throws DocumentException When the user does not exist
+     */
+    void saveMessagingToken(String token) throws DatabaseAccessException, DocumentException;
+
     List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException;
 }

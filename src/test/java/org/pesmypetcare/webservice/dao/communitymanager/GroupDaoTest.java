@@ -58,6 +58,8 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class GroupDaoTest {
+    private static final String GROUP_FIELD = "group";
+    private static final String GROUPS_FIELD = "groups";
     private String groupName;
     private String groupId;
     private String username;
@@ -178,7 +180,7 @@ class GroupDaoTest {
     }
 
     private void mockGetGroupId() throws DatabaseAccessException, DocumentException {
-        given(documentAdapter.getStringFromDocument(eq(groupNamePath), eq("group"))).willReturn(groupId);
+        given(documentAdapter.getStringFromDocument(eq(groupNamePath), eq(GROUP_FIELD))).willReturn(groupId);
     }
 
     private void mockQuery() throws ExecutionException, InterruptedException {
@@ -195,8 +197,8 @@ class GroupDaoTest {
     public void updateNameShouldFailIfNewNameAlreadyInUse() throws DatabaseAccessException, DocumentException {
         mockGetGroupId();
         given(documentAdapter.batch()).willReturn(batch);
-        willDoNothing().given(documentAdapter).updateDocumentFields(any(WriteBatch.class), anyString(), anyString(),
-            any());
+        willDoNothing().given(documentAdapter)
+            .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any());
         given(documentAdapter.documentExists(anyString())).willReturn(true);
         assertThrows(DocumentException.class, () -> dao.updateField(groupName, field, newName),
             "Update group name should fail if the new name is already in use.");
@@ -225,8 +227,8 @@ class GroupDaoTest {
             lenient().when(documentAdapter.createDocumentWithId(anyString(), anyString(), any(), any(WriteBatch.class)))
                 .thenReturn(docRef);
             given(documentAdapter.documentExists(anyString())).willReturn(true);
-            lenient().doNothing().when(documentAdapter).updateDocumentFields(anyString(), anyString(), any(),
-                any(WriteBatch.class));
+            lenient().doNothing().when(documentAdapter)
+                .updateDocumentFields(anyString(), anyString(), any(), any(WriteBatch.class));
             given(docRef.getId()).willReturn(groupId);
             given(userDao.getUid(anyString())).willReturn(userId);
 
@@ -235,10 +237,10 @@ class GroupDaoTest {
             GroupEntity entity = new GroupEntity(groupName, username, "", tags);
             dao.createGroup(entity);
             verify(documentAdapter).createDocument(eq(groupsPath), same(entity), same(batch));
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss",
-                new Locale("es", "ES"));
+            DateTimeFormatter timeFormatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
             Map<String, Object> data = new HashMap<>();
-            data.put("group", groupId);
+            data.put(GROUP_FIELD, groupId);
             String membersPath = Path.ofCollection(Collections.members, groupId);
             Map<String, Object> data2 = new HashMap<>();
             data2.put("user", username);
@@ -248,7 +250,7 @@ class GroupDaoTest {
                 same(batch));
             verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
-            verify(documentAdapter).updateDocumentFields(same(batch), eq(tagPath), eq("groups"), any(FieldValue.class));
+            verify(documentAdapter).updateDocumentFields(same(batch), eq(tagPath), eq(GROUPS_FIELD), any(FieldValue.class));
         }
 
         @Test
@@ -265,17 +267,16 @@ class GroupDaoTest {
             willDoNothing().given(storageDao).deleteImageByName(anyString());
 
             dao.deleteGroup(groupName);
-            verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq("group"));
-            verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(
-                AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
-                AdditionalMatchers.or(eq("groups"), eq("groupSubscriptions")), eq(groupName));
-            verify(batch).update(same(docRef), AdditionalMatchers.or(eq("groups"), eq("groupSubscriptions")),
+            verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq(GROUP_FIELD));
+            verify(collectionAdapter, times(2))
+                .getDocumentsWhereArrayContains(AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
+                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
+            verify(batch).update(same(docRef), AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")),
                 eq(FieldValue.arrayRemove(groupName)));
             String groupPath = Path.ofDocument(Collections.groups, groupId);
-            verify(documentAdapter, times(2)).deleteDocument(AdditionalMatchers.or(eq(groupPath), eq(groupNamePath)),
-                same(batch));
-            verify(documentAdapter).getDocumentField(eq(groupPath), eq(FieldPath.of("icon",
-                "path")));
+            verify(documentAdapter, times(2))
+                .deleteDocument(AdditionalMatchers.or(eq(groupPath), eq(groupNamePath)), same(batch));
+            verify(documentAdapter).getDocumentField(eq(groupPath), eq(FieldPath.of("icon", "path")));
             verify(storageDao).deleteImageByName(same(imagePath));
         }
 
@@ -283,29 +284,29 @@ class GroupDaoTest {
         public void updateField()
             throws DatabaseAccessException, DocumentException, ExecutionException, InterruptedException {
             mockGetGroupId();
-            willDoNothing().given(documentAdapter).updateDocumentFields(any(WriteBatch.class), anyString(), anyString(),
-                any());
+            willDoNothing().given(documentAdapter)
+                .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any());
             given(documentAdapter.documentExists(anyString())).willReturn(false, true);
             given(collectionAdapter.getDocumentsWhereArrayContains(anyString(), anyString(), any())).willReturn(query);
             mockQuery();
             given(documentSnapshot.getId()).willReturn(tag);
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
-            lenient().when(
-                documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
+            lenient()
+                .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
 
             dao.updateField(groupName, field, newName);
             verify(documentAdapter).updateDocumentFields(same(batch), eq(groupPath), eq(field), eq(newName));
-            verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(
-                AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
-                AdditionalMatchers.or(eq("groups"), eq("groupSubscriptions")), eq(groupName));
+            verify(collectionAdapter, times(2))
+                .getDocumentsWhereArrayContains(AdditionalMatchers.or(eq(tagsPath), eq(usersPath)),
+                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
             verify(documentAdapter).updateDocumentFields(same(batch), AdditionalMatchers.or(eq(groupPath), eq(tagPath)),
-                AdditionalMatchers.or(eq("groups"), eq("name")), AdditionalMatchers.or(eq(newName),
+                AdditionalMatchers.or(eq(GROUPS_FIELD), eq("name")), AdditionalMatchers.or(eq(newName),
                     AdditionalMatchers.or(eq(FieldValue.arrayRemove(groupId)), eq(FieldValue.arrayUnion(groupId)))));
             verify(documentAdapter).documentExists(tagPath);
             verify(documentAdapter).deleteDocument(eq(groupNamePath), same(batch));
             Map<String, String> docData = new HashMap<>();
-            docData.put("group", groupId);
+            docData.put(GROUP_FIELD, groupId);
             verify(documentAdapter).createDocumentWithId(eq(groupNamesPath), same(newName), eq(docData), same(batch));
             verify(documentAdapter).commitBatch(same(batch));
         }
@@ -314,8 +315,8 @@ class GroupDaoTest {
         public void subscribe() throws DatabaseAccessException, DocumentException {
             given(userDao.getUid(anyString())).willReturn(userId);
             mockGetGroupId();
-            lenient().when(
-                documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
+            lenient()
+                .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
 
             dao.subscribe(groupName, username);
@@ -341,8 +342,8 @@ class GroupDaoTest {
         @Test
         public void updateTags() throws DatabaseAccessException, DocumentException {
             mockGetGroupId();
-            willDoNothing().given(documentAdapter).updateDocumentFields(any(WriteBatch.class), anyString(), anyString(),
-                any());
+            willDoNothing().given(documentAdapter)
+                .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any());
             given(documentAdapter.documentExists(tagPath)).willReturn(false);
             given(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .willReturn(docRef);
@@ -352,11 +353,12 @@ class GroupDaoTest {
             List<String> newTags = new ArrayList<>();
             newTags.add(tag);
             dao.updateTags(groupName, newTags, deletedTags);
-            verify(documentAdapter, times(2)).updateDocumentFields(same(batch),
-                AdditionalMatchers.or(eq(groupPath), eq(tagPath)), AdditionalMatchers.or(eq("groups"), eq("tags")),
-                AdditionalMatchers.or(eq(FieldValue.arrayRemove(groupId)), AdditionalMatchers
-                    .or(eq(FieldValue.arrayUnion(newTags.toArray())),
-                        eq(FieldValue.arrayRemove(deletedTags.toArray())))));
+            verify(documentAdapter, times(2))
+                .updateDocumentFields(same(batch), AdditionalMatchers.or(eq(groupPath), eq(tagPath)),
+                    AdditionalMatchers.or(eq(GROUPS_FIELD), eq("tags")), AdditionalMatchers
+                        .or(eq(FieldValue.arrayRemove(groupId)), AdditionalMatchers
+                            .or(eq(FieldValue.arrayUnion(newTags.toArray())),
+                                eq(FieldValue.arrayRemove(deletedTags.toArray())))));
             verify(documentAdapter).createDocumentWithId(eq(tagsPath), eq(tag), anyMap(), same(batch));
         }
     }

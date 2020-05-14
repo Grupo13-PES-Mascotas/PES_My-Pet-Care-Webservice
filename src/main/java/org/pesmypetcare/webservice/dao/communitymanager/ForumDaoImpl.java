@@ -36,6 +36,7 @@ public class ForumDaoImpl implements ForumDao {
     private static final String TAGS_FIELD = "tags";
     private static final String FORUMS_FIELD = "forums";
     private static final String FORUM_FIELD = "forum";
+    private static final String LIKED_BY_FIELD = "likedBy";
     private final DateTimeFormatter timeFormatter;
     @Autowired
     private GroupDao groupDao;
@@ -60,10 +61,10 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         forumEntity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
         WriteBatch batch = documentAdapter.batch();
-        String parentId = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup),
-            "group");
-        DocumentReference forumRef = documentAdapter.createDocument(Path.ofCollection(Collections.forums, parentId),
-            forumEntity, batch);
+        String parentId = documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup), "group");
+        DocumentReference forumRef = documentAdapter
+            .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
         saveForumName(parentGroup, name, forumRef.getId(), batch);
         //String creator = forumEntity.getCreator();
@@ -92,15 +93,15 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
-        return documentAdapter.getDocumentDataAsObject(Path.ofDocument(Collections.forums, groupId, forumId),
-            ForumEntity.class);
+        return documentAdapter
+            .getDocumentDataAsObject(Path.ofDocument(Collections.forums, groupId, forumId), ForumEntity.class);
     }
 
     @Override
     public List<ForumEntity> getAllForumsFromGroup(String groupName) throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(groupName);
-        List<DocumentSnapshot> snapshots = collectionAdapter.listAllCollectionDocumentSnapshots(
-            Path.ofCollection(Collections.forums, groupId));
+        List<DocumentSnapshot> snapshots = collectionAdapter
+            .listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.forums, groupId));
         List<ForumEntity> forumList = new ArrayList<>();
         for (DocumentSnapshot forumSnapshot : snapshots) {
             forumList.add(forumSnapshot.toObject(ForumEntity.class));
@@ -117,8 +118,8 @@ public class ForumDaoImpl implements ForumDao {
         WriteBatch batch = documentAdapter.batch();
         String forumId = getForumId(parentGroup, currentName);
         String groupId = groupDao.getGroupId(parentGroup);
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName,
-            batch);
+        documentAdapter
+            .updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName, batch);
         changeNameInTags(currentName, newName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forumsNames, parentGroup, currentName), batch);
         saveForumName(parentGroup, newName, forumId, batch);
@@ -147,8 +148,7 @@ public class ForumDaoImpl implements ForumDao {
         String forumId = getForumId(parentGroup, forumName);
         MessageEntity messageEntity = new MessageEntity(message);
         WriteBatch batch = documentAdapter.batch();
-        DocumentReference docRef = documentAdapter.createDocument(
-            Path.ofCollection(Collections.messages, groupId, forumId), messageEntity, batch);
+        documentAdapter.createDocument(Path.ofCollection(Collections.messages, groupId, forumId), messageEntity, batch);
         /*ImageEntity imageEntity = message.getImage();
         if (imageEntity != null) {
             String imagePath = storageDao.uploadPostImage(parentGroup, forumName, imageEntity);
@@ -156,9 +156,14 @@ public class ForumDaoImpl implements ForumDao {
                 docRef.getId()), "imagePath", imagePath);
         }*/
         documentAdapter.commitBatch(batch);
-        /*MulticastMessage multicastMessage = MulticastMessage.builder().putData("creator", message.getCreator()).putData("text",
+        /*MulticastMessage multicastMessage = MulticastMessage.builder().putData("creator", message.getCreator())
+        .putData("text",
             message.getText()).addToken("token").build();
-        FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);*/
+        try {
+            FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+        }*/
     }
 
     @Override
@@ -179,9 +184,8 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(group);
         String forumId = getForumId(group, forum);
-        List<DocumentSnapshot> messages =
-            collectionAdapter.listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.messages, groupId,
-                forumId));
+        List<DocumentSnapshot> messages = collectionAdapter
+            .listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.messages, groupId, forumId));
         List<String> imagesPaths = new ArrayList<>();
         for (DocumentSnapshot message : messages) {
             String imagePath = message.getString("imagePath");
@@ -193,20 +197,20 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void addUserToLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException {
+    public void addUserToLikedByOfMessage(String username, String parentGroup, String forumName, String creator,
+                                          String date) throws DatabaseAccessException, DocumentException {
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
         WriteBatch batch = documentAdapter.batch();
-        batch.update(messageSnapshot.getReference(), "likedBy", FieldValue.arrayUnion(username));
+        batch.update(messageSnapshot.getReference(), LIKED_BY_FIELD, FieldValue.arrayUnion(username));
         documentAdapter.commitBatch(batch);
     }
 
     @Override
-    public void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException {
+    public void removeUserFromLikedByOfMessage(String username, String parentGroup, String forumName, String creator,
+                                               String date) throws DatabaseAccessException, DocumentException {
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
         WriteBatch batch = documentAdapter.batch();
-        batch.update(messageSnapshot.getReference(), "likedBy", FieldValue.arrayRemove(username));
+        batch.update(messageSnapshot.getReference(), LIKED_BY_FIELD, FieldValue.arrayRemove(username));
         documentAdapter.commitBatch(batch);
     }
 
@@ -221,8 +225,8 @@ public class ForumDaoImpl implements ForumDao {
     private void saveForumName(String parentGroup, String name, String id, WriteBatch batch) {
         Map<String, Object> docData = new HashMap<>();
         docData.put(FORUM_FIELD, id);
-        documentAdapter.createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData,
-            batch);
+        documentAdapter
+            .createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData, batch);
     }
 
     /**
@@ -254,8 +258,8 @@ public class ForumDaoImpl implements ForumDao {
      * @throws DocumentException When the document does not exist
      */
     private String getForumId(String groupName, String forumName) throws DatabaseAccessException, DocumentException {
-        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.forumsNames, groupName, forumName),
-            FORUM_FIELD);
+        return documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.forumsNames, groupName, forumName), FORUM_FIELD);
     }
 
     /**
@@ -267,8 +271,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void deleteForumFromAllTags(String forum, WriteBatch batch) throws DatabaseAccessException {
         try {
-            ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter.getDocumentsWhereArrayContains(
-                Path.ofCollection(Collections.tags), FORUMS_FIELD, forum);
+            ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter
+                .getDocumentsWhereArrayContains(Path.ofCollection(Collections.tags), FORUMS_FIELD, forum);
             try {
                 Map<String, Object> data = new HashMap<>();
                 for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
@@ -293,8 +297,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void changeNameInTags(String currentName, String newName, WriteBatch batch) throws DatabaseAccessException {
         try {
-            ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter.getDocumentsWhereArrayContains(
-                Path.ofCollection(Collections.tags), FORUMS_FIELD, currentName);
+            ApiFuture<QuerySnapshot> querySnapshot = collectionAdapter
+                .getDocumentsWhereArrayContains(Path.ofCollection(Collections.tags), FORUMS_FIELD, currentName);
             try {
                 for (DocumentSnapshot document : querySnapshot.get().getDocuments()) {
                     deleteForumFromTag(document.getId(), currentName, batch);
@@ -317,8 +321,9 @@ public class ForumDaoImpl implements ForumDao {
      * @param batch The batch of writes to which it belongs
      */
     private void deleteForumFromTag(String tag, String forum, WriteBatch batch) {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.tags, tag), FORUMS_FIELD,
-            FieldValue.arrayRemove(forum), batch);
+        documentAdapter
+            .updateDocumentFields(Path.ofDocument(Collections.tags, tag), FORUMS_FIELD, FieldValue.arrayRemove(forum),
+                batch);
     }
 
     /**
@@ -360,6 +365,7 @@ public class ForumDaoImpl implements ForumDao {
 
     /**
      * Gets a forum message.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
@@ -373,8 +379,9 @@ public class ForumDaoImpl implements ForumDao {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         try {
-            return collectionAdapter.getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId),
-                "creator", creator, "publicationDate", date).get().getDocuments().get(0);
+            return collectionAdapter
+                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator", creator,
+                    "publicationDate", date).get().getDocuments().get(0);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the message");

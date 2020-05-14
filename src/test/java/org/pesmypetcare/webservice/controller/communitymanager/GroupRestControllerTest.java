@@ -47,6 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class GroupRestControllerTest {
     private static final String BASE_URL = "/community/";
+    private static final String GROUP_FIELD = "group";
     private String creator;
     private String json;
     private String groupName;
@@ -88,13 +89,13 @@ class GroupRestControllerTest {
     @Test
     public void deleteGroup() throws Exception {
         willDoNothing().given(service).deleteGroup(anyString());
-        mockMvc.perform(delete(BASE_URL).param("group", groupName)).andExpect(status().isNoContent());
+        mockMvc.perform(delete(BASE_URL).param(GROUP_FIELD, groupName)).andExpect(status().isNoContent());
     }
 
     @Test
     public void getGroup() throws Exception {
         given(service.getGroup(anyString())).willReturn(group);
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL).param("group", groupName)).andExpect(status().isOk())
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL).param(GROUP_FIELD, groupName)).andExpect(status().isOk())
             .andReturn();
         String result = mvcResult.getResponse().getContentAsString();
         assertEquals("Should return the requested group.", json, result);
@@ -113,7 +114,7 @@ class GroupRestControllerTest {
     @Test
     public void getGroupShouldReturnNotFoundWhenTheGroupDoesNotExist() throws Exception {
         willThrow(new DocumentException("document-not-exists", "")).given(service).getGroup(anyString());
-        mockMvc.perform(get(BASE_URL).param("group", groupName)).andExpect(status().isNotFound());
+        mockMvc.perform(get(BASE_URL).param(GROUP_FIELD, groupName)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -122,7 +123,7 @@ class GroupRestControllerTest {
         data.put("name", "German Shepherds");
         String request = mapper.writeValueAsString(data);
         willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL).param("group", groupName).param("field", "name")
+        mockMvc.perform(put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "name")
             .contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(status().isNoContent());
     }
 
@@ -141,28 +142,28 @@ class GroupRestControllerTest {
     public void updateTags() throws Exception {
         Map<String, List<String>> updateValues = new HashMap<>();
         willDoNothing().given(service).updateTags(anyString(), anyList(), anyList());
-        mockMvc.perform(put(BASE_URL + "tags").param("group", groupName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put(BASE_URL + "tags").param(GROUP_FIELD, groupName).contentType(MediaType.APPLICATION_JSON)
             .content(mapper.writeValueAsString(updateValues))).andExpect(status().isNoContent());
     }
 
     @Test
     public void subscribe() throws Exception {
         willDoNothing().given(service).subscribe(anyString(), anyString(), anyString());
-        mockMvc.perform(post(BASE_URL + "subscribe").header("token", "my-token").param("group", groupName)
+        mockMvc.perform(post(BASE_URL + "subscribe").header("token", "my-token").param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isCreated());
     }
 
     @Test
     public void unsubscribe() throws Exception {
         willDoNothing().given(service).unsubscribe(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(BASE_URL + "unsubscribe").header("token", "my-token").param("group", groupName)
+        mockMvc.perform(delete(BASE_URL + "unsubscribe").header("token", "my-token").param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isNoContent());
     }
 
     @Test
     public void existsGroup() throws Exception {
         given(service.groupNameInUse(anyString())).willReturn(true);
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "groups").param("group", groupName)).andExpect(
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "groups").param(GROUP_FIELD, groupName)).andExpect(
             status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
         TypeReference<HashMap<String, Boolean>> typeRef = new TypeReference<HashMap<String, Boolean>>() { };

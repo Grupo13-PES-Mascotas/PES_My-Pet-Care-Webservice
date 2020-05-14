@@ -49,6 +49,7 @@ class StorageDaoTest {
     private String formPath;
     private String expectedDownload;
     private String petName;
+    private String groupName;
     private Map<String, String> images;
     private List<Map<String, Object>> pets;
 
@@ -65,6 +66,7 @@ class StorageDaoTest {
 
     @InjectMocks
     private StorageDao dao = new StorageDaoImpl();
+    private String forumName;
 
     @BeforeEach
     public void setUp() {
@@ -72,6 +74,8 @@ class StorageDaoTest {
         owner = "user";
         entityPath = "user/Linux-image.png";
         formPath = "user/pets/Linux-image.png";
+        groupName = "Dogs";
+        forumName = "Huskies";
         initializeImageEntity();
         storageForm = new StorageForm("user/pets", "Linux-image.png");
         expectedDownload = Base64.encodeBase64String(img);
@@ -112,9 +116,7 @@ class StorageDaoTest {
     public void uploadPostImage() {
         given(bucket.create(anyString(), any(byte[].class))).willReturn(blob);
 
-        String group = "Dogs";
-        String forum = "Huskies";
-        dao.uploadPostImage(group, forum, imageEntity);
+        dao.uploadPostImage(groupName, forumName, imageEntity);
         verify(bucket).create(isA(String.class),
             same(imageEntity.getImg()));
     }
@@ -147,7 +149,7 @@ class StorageDaoTest {
         given(bucket.get(anyString())).willReturn(blob);
         given(blob.getContent()).willReturn(img);
 
-        Map<String, String> resultMap = dao.downloadAllPostsImagesFromForum("Dogs", "Huskies");
+        Map<String, String> resultMap = dao.downloadAllPostsImagesFromForum(groupName, forumName);
         images.clear();
         images.put("some/image/path", expectedDownload);
         assertEquals(images, resultMap,

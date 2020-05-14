@@ -217,23 +217,24 @@ class ForumServiceTest {
 
             @Test
             public void addUserToLikedByOfMessage() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).addUserToLikedByOfMessage(anyString(), anyString(), anyString(),
-                    anyString(), anyString());
+                willDoNothing().given(forumDao)
+                    .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString());
 
                 service.addUserToLikedByOfMessage(token, creator, groupName, forumName, creator, date);
-                verify(forumDao).addUserToLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
-                    same(date));
+                verify(forumDao)
+                    .addUserToLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
+                        same(date));
             }
 
             @Test
             public void removeUserFromLikedByOfMessage() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(),
-                    anyString(), anyString());
+                willDoNothing().given(forumDao)
+                    .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString());
 
                 service.removeUserFromLikedByOfMessage(token, creator, groupName, forumName, creator, date);
-                verify(forumDao).removeUserFromLikedByOfMessage(same(creator), same(groupName), same(forumName),
-                    same(creator),
-                    same(date));
+                verify(forumDao)
+                    .removeUserFromLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
+                        same(date));
             }
         }
     }

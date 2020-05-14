@@ -27,6 +27,7 @@ import java.util.Map;
  */
 @Repository
 public class StorageDaoImpl implements StorageDao {
+    private static final String GROUPS_ROOT_FOLDER = "Groups/";
     private final DateTimeFormatter timeFormatter;
     private Bucket storageBucket;
     @Autowired
@@ -66,7 +67,7 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public void uploadGroupImage(ImageEntity image) throws DatabaseAccessException, DocumentException {
         String imageName = image.getImgName();
-        String path = "Groups/" + image.getUid() + "/" + imageName;
+        String path = GROUPS_ROOT_FOLDER + image.getUid() + "/" + imageName;
         Map<String, String> imageMap = new HashMap<>();
         imageMap.put("path", path);
         imageMap.put("lastModified", timeFormatter.format(LocalDateTime.now()));
@@ -77,7 +78,7 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public String uploadPostImage(String group, String forum, ImageEntity image) {
         String imageName = image.getUid() + "-" + timeFormatter.format(LocalDateTime.now());
-        String path = "Groups/" + group + "/" + forum + "/" + imageName;
+        String path = GROUPS_ROOT_FOLDER + group + "/" + forum + "/" + imageName;
         storageBucket.create(path, image.getImg());
         return path;
     }

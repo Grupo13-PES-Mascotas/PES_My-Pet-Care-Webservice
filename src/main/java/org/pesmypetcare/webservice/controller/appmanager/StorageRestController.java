@@ -83,7 +83,7 @@ public class StorageRestController {
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
-    @GetMapping(value = "/image/{user}")
+    @GetMapping("/image/{user}")
     @ResponseBody
     public String downloadUserImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                                     @RequestParam String name) {
@@ -99,7 +99,7 @@ public class StorageRestController {
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
-    @GetMapping(value = "/image/{user}/pets/{name}")
+    @GetMapping("/image/{user}/pets/{name}")
     @ResponseBody
     public String downloadPetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
                                    @PathVariable String name) {
@@ -115,7 +115,7 @@ public class StorageRestController {
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
-    @GetMapping(value = "/image/groups/{group}")
+    @GetMapping("/image/groups/{group}")
     @ResponseBody
     public String downloadGroupImage(@PathVariable String group, @RequestParam String name) {
         String path = "Groups/" + group;
@@ -132,7 +132,7 @@ public class StorageRestController {
      * @throws DatabaseAccessException When an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    @GetMapping(value = "/image/{user}/pets")
+    @GetMapping("/image/{user}/pets")
     @ResponseBody
     public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token, @PathVariable String user)
         throws DatabaseAccessException, DocumentException {
@@ -148,7 +148,7 @@ public class StorageRestController {
      * @throws DatabaseAccessException When an error occurs when accessing the database
      * @throws DocumentException When either the group or forum do not exist
      */
-    @GetMapping(value = "/image/{group}/{forum}")
+    @GetMapping("/image/{group}/{forum}")
     @ResponseBody
     public Map<String, String> downloadAllPostsImages(@RequestHeader(TOKEN) String token, @PathVariable String group,
                                                       @PathVariable String forum)

@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.builders.Collections;
+import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
@@ -21,6 +22,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -43,7 +45,8 @@ public class UserDaoImpl implements UserDao {
     private static final String USER_KEY = "user";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
-    private final String UPDATE_FAILED_CODE = "update-failed";
+    private static final String UPDATE_FAILED_CODE = "update-failed";
+    private final String FIELD_LIKED_BY = "likedBy";
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
@@ -52,6 +55,8 @@ public class UserDaoImpl implements UserDao {
     private PetDao petDao;
     @Autowired
     private FirestoreCollection collectionAdapter;
+    @Autowired
+    private FirestoreDocument documentAdapter;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
@@ -170,6 +175,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException {
+        WriteBatch batch = documentAdapter.batch();
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), "FCM", token);
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
     public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
         throws DatabaseAccessException {
         DocumentReference subscriptions = users.document(getUid(username)).collection("forumSubscriptions")
@@ -218,15 +230,15 @@ public class UserDaoImpl implements UserDao {
      */
     private void deleteUserLikes(String username, WriteBatch batch) throws DatabaseAccessException {
         ApiFuture<QuerySnapshot> documentSnapshots = collectionAdapter
-            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), "likedBy",
+            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), FIELD_LIKED_BY,
                 username);
         try {
             for (DocumentSnapshot document : documentSnapshots.get().getDocuments()) {
-                batch.update(document.getReference(), "likedBy", FieldValue.arrayRemove(username));
+                batch.update(document.getReference(), FIELD_LIKED_BY, FieldValue.arrayRemove(username));
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            throw new DatabaseAccessException("update-failed", "The deletion of the user likes failed");
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "The deletion of the user likes failed");
         }
     }
 

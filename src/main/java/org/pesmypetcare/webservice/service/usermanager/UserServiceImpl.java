@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void saveMessagingToken(String token) throws DatabaseAccessException, DocumentException {
+        userDao.saveMessagingToken("uid", token);
+    }
+
+    @Override
     public List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException {
         return userDao.getUserSubscriptions(username);
     }
