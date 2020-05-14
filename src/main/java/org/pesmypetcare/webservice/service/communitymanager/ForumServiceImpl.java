@@ -107,7 +107,6 @@ public class ForumServiceImpl implements ForumService {
                                           String creator, String date)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            System.out.println(parentGroup + " " + forumName);
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
             forumDao.addUserToLikedByOfMessage(username, parentGroup, forumName, creator, date);

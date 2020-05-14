@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
-import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
@@ -104,11 +103,11 @@ class ForumDaoTest {
         tagsPath = Path.ofCollection(Collections.tags);
         tagPath = Path.ofDocument(Collections.tags, "dogs");
         messagePath = Path.ofCollection(Collections.messages, groupId, forumId);
-        messageEntity = new MessageEntity();
-        messageEntity.setCreator(username);
-        messageEntity.setText("Some text");
         message = new Message();
-        message.setMessage(messageEntity);
+        message.setCreator(username);
+        message.setText("Some text");
+        message.setEncodedImage("ZGFkYTIxM2FkMw==");
+        messageEntity = new MessageEntity(message);
         queryDocumentSnapshots = new ArrayList<>();
         queryDocumentSnapshots.add(documentSnapshot);
         username = "John";
@@ -277,20 +276,9 @@ class ForumDaoTest {
                 mockGetGroupAndForumIds();
                 given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class)))
                     .willReturn(documentReference);
-                String messageId = "1";
-                given(documentReference.getId()).willReturn(messageId);
-                String imagePath = "some-path";
-                given(storageDao.uploadPostImage(anyString(), anyString(), any(ImageEntity.class))).willReturn(
-                    imagePath);
 
-                ImageEntity image = new ImageEntity();
-                message.setImage(image);
                 dao.postMessage(groupName, forumName, message);
                 verify(documentAdapter).createDocument(eq(messagePath), eq(messageEntity), same(batch));
-                verify(storageDao).uploadPostImage(same(groupName), same(forumName), same(image));
-                verify(documentAdapter).updateDocumentFields(same(batch),
-                    eq(Path.ofDocument(Collections.messages, groupId, forumId, messageId)), eq("imagePath"),
-                    eq(imagePath));
             }
 
             @Nested

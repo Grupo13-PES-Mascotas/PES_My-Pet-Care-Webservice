@@ -9,7 +9,6 @@ import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
-import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
@@ -146,17 +145,16 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
-        MessageEntity messageEntity = message.getMessage();
-        messageEntity.setPublicationDate(timeFormatter.format(LocalDateTime.now()));
+        MessageEntity messageEntity = new MessageEntity(message);
         WriteBatch batch = documentAdapter.batch();
         DocumentReference docRef = documentAdapter.createDocument(
             Path.ofCollection(Collections.messages, groupId, forumId), messageEntity, batch);
-        ImageEntity imageEntity = message.getImage();
+        /*ImageEntity imageEntity = message.getImage();
         if (imageEntity != null) {
             String imagePath = storageDao.uploadPostImage(parentGroup, forumName, imageEntity);
             documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.messages, groupId, forumId,
                 docRef.getId()), "imagePath", imagePath);
-        }
+        }*/
         documentAdapter.commitBatch(batch);
     }
 

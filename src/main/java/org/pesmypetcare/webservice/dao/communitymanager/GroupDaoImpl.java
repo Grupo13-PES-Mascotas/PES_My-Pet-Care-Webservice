@@ -62,8 +62,10 @@ public class GroupDaoImpl implements GroupDao {
         saveUserAsMember(groupRef.getId(), userDao.getUid(creator), creator, batch);
         userDao.addGroupSubscription(creator, name, batch);
         List<String> tags = entity.getTags();
-        for (String tag : tags) {
-            addGroupToTag(tag, name, batch);
+        if (tags != null) {
+            for (String tag : tags) {
+                addGroupToTag(tag, name, batch);
+            }
         }
         documentAdapter.commitBatch(batch);
     }
@@ -106,7 +108,6 @@ public class GroupDaoImpl implements GroupDao {
         throws DatabaseAccessException, DocumentException {
         String id = getGroupId(name);
         WriteBatch batch = documentAdapter.batch();
-        System.out.println(field + " " + newValue);
         documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.groups, id), field, newValue);
         if ("name".equals(field)) {
             if (groupNameInUse((String) newValue)) {
