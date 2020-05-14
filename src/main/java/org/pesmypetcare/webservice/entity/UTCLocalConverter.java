@@ -1,4 +1,4 @@
-package org.pesmypetcare.webservice.service;
+package org.pesmypetcare.webservice.entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
