@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.entity.medalmanager;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Oriol Catalán
@@ -14,7 +15,7 @@ public class MedalEntity {
     public static final String DESCRIPTION = "description";
     public static final String ICON_LOCATION = "iconLocation";
     private String name;
-    private ArrayList<Double> levels;
+    private List<Double> levels;
     private String description;
     private String iconLocation;
 

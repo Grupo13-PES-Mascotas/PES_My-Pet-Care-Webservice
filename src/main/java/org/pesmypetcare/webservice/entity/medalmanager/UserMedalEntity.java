@@ -3,6 +3,7 @@ package org.pesmypetcare.webservice.entity.medalmanager;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Oriol Catalán
@@ -16,7 +17,7 @@ public class UserMedalEntity {
     private String name;
     private Double progress;
     private Double currentLevel;
-    private ArrayList<String> completedLevelsDate;
+    private List<String> completedLevelsDate;
 
     public UserMedalEntity() { }
 
