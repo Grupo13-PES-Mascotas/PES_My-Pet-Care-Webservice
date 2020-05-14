@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.cloud.StorageClient;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ public class FirebaseFactory {
     private Firestore firestore;
     private FirebaseAuth firebaseAuth;
     private StorageClient storageClient;
+    private FirebaseMessaging firebaseMessaging;
 
     private FirebaseFactory() {
         setGoogleCredentials();
@@ -31,6 +33,7 @@ public class FirebaseFactory {
         initializeFirebaseAuth(firebaseApp);
         initializeFirestore();
         initializeStorage(firebaseApp);
+        initializeFirebaseMessaging(firebaseApp);
     }
 
     /**
@@ -66,6 +69,14 @@ public class FirebaseFactory {
      */
     public Bucket getStorage() {
         return storageClient.bucket();
+    }
+
+    /**
+     * Gets the instance that manages the application messaging.
+     * @return The instance that handles the messaging
+     */
+    public FirebaseMessaging getFirebaseMessaging() {
+        return firebaseMessaging;
     }
 
     /**
@@ -114,9 +125,17 @@ public class FirebaseFactory {
 
     /**
      * Creates the StorageClient instance.
-     * @param firebaseApp The FirebaseApp used to initialize the FirebaseAuth instance
+     * @param firebaseApp The FirebaseApp used to initialize the StorageClient instance
      */
     private void initializeStorage(FirebaseApp firebaseApp) {
         storageClient = StorageClient.getInstance(firebaseApp);
+    }
+
+    /**
+     * Creates the FirebaseMessaging instance.
+     * @param firebaseApp The FirebaseApp used to initialize the FirebaseMessaging instance
+     */
+    private void initializeFirebaseMessaging(FirebaseApp firebaseApp) {
+        firebaseMessaging = FirebaseMessaging.getInstance(firebaseApp);
     }
 }

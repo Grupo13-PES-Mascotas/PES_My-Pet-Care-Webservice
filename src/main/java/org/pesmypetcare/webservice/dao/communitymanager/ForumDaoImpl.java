@@ -156,6 +156,9 @@ public class ForumDaoImpl implements ForumDao {
                 docRef.getId()), "imagePath", imagePath);
         }*/
         documentAdapter.commitBatch(batch);
+        /*MulticastMessage multicastMessage = MulticastMessage.builder().putData("creator", message.getCreator()).putData("text",
+            message.getText()).addToken("token").build();
+        BatchResponse response = FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);*/
     }
 
     @Override
@@ -234,11 +237,10 @@ public class ForumDaoImpl implements ForumDao {
         Map<String, Object> data = new HashMap<>();
         data.put(FORUMS_FIELD, FieldValue.arrayUnion(name));
         String path = Path.ofDocument(Collections.tags, tag);
-        try {
-            documentAdapter.getDocumentSnapshot(path);
-            documentAdapter.setDocumentFields(path, data, batch);
-        } catch (DocumentException e) {
+        if (documentAdapter.documentExists(path)) {
             documentAdapter.updateDocumentFields(path, data, batch);
+        } else {
+            documentAdapter.setDocumentFields(path, data, batch);
         }
     }
 

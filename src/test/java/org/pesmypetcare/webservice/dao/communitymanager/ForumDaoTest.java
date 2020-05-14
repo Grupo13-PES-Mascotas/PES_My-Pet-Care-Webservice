@@ -179,15 +179,15 @@ class ForumDaoTest {
         given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(forumId);
     }
 
-    private void mockAddForumToTag() throws DatabaseAccessException, DocumentException {
-        given(documentAdapter.getDocumentSnapshot(anyString())).willReturn(null);
+    private void mockAddForumToTag() throws DatabaseAccessException {
+        given(documentAdapter.documentExists(anyString())).willReturn(false);
         willDoNothing().given(documentAdapter).setDocumentFields(anyString(), anyMap(), any(WriteBatch.class));
     }
 
     private void verifyAddForumToTag(String forumName) throws DatabaseAccessException, DocumentException {
         Map<String, Object> data = new HashMap<>();
         data.put("forums", FieldValue.arrayUnion(forumName));
-        verify(documentAdapter).getDocumentSnapshot(eq(tagPath));
+        verify(documentAdapter).documentExists(eq(tagPath));
         verify(documentAdapter).setDocumentFields(eq(tagPath), eq(data), same(batch));
     }
 
