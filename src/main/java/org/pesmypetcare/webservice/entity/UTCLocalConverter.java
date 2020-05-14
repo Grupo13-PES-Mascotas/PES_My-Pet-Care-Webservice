@@ -3,9 +3,10 @@ package org.pesmypetcare.webservice.entity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
-public class UTCLocalConverter {
+class UTCLocalConverter {
 
     private static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String UTC = "UTC";
