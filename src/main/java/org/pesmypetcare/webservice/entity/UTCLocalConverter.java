@@ -6,27 +6,30 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class UTCLocalConverter {
+
+    private static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String UTC = "UTC";
+
     public static String convertUTCtoLocal(String datein) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         Date date = sdf.parse(datein);
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(date);
     }
 
-    public static String convertLocaltoUTC(String datein) throws ParseException{
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        TimeZone tz = TimeZone.getDefault();
+    public static String convertLocaltoUTC(String datein) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
         sdf.setTimeZone(TimeZone.getDefault());
         Date date = sdf.parse(datein);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         return sdf.format(date);
     }
 
-    public static String getCurrentUTC(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm:ss");
+    public static String getCurrentUTC() {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATEFORMAT);
         Date date2 = new Date();
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         return sdf.format(date2);
     }
 }
