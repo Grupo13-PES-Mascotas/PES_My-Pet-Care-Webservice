@@ -1,11 +1,15 @@
 package org.pesmypetcare.webservice.service.usermanager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +19,14 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private FirebaseAuth auth;
+
     @Autowired
     private UserDao userDao;
+
+    public UserServiceImpl() {
+        this.auth = FirebaseFactory.getInstance().getFirebaseAuth();
+    }
 
     @Override
     public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
@@ -51,8 +61,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveMessagingToken(String token) throws DatabaseAccessException, DocumentException {
-        userDao.saveMessagingToken("uid", token);
+    public void saveMessagingToken(String token, String fcmToken)
+        throws DatabaseAccessException, DocumentException, BadCredentialsException {
+        try {
+            FirebaseToken firebaseToken = auth.verifyIdToken(token);
+            userDao.saveMessagingToken(firebaseToken.getUid(), token);
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            throw new BadCredentialsException("The token provided is not correct.");
+        }
     }
 
     @Override

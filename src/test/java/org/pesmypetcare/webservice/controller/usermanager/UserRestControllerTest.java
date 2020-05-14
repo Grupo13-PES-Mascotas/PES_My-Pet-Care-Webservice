@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -80,10 +82,18 @@ class UserRestControllerTest {
         List<String> subscriptions = new ArrayList<>();
         subscriptions.add("Dogs");
         willReturn(subscriptions).given(service).getUserSubscriptions(myToken, username);
-        MvcResult mvcResult = mockMvc.perform(get("/users/subscriptions").header(token, myToken)
-            .param("username", username)).andExpect(status().isOk()).andReturn();
+        MvcResult mvcResult = mockMvc
+            .perform(get("/users/subscriptions").header(token, myToken).param("username", username))
+            .andExpect(status().isOk()).andReturn();
         String result = mvcResult.getResponse().getContentAsString();
         assertEquals("Should return all the group subscriptions of the user.",
             new ObjectMapper().writeValueAsString(subscriptions), result);
+    }
+
+    @Test
+    public void saveMessagingToken() throws Exception {
+        willDoNothing().given(service).saveMessagingToken(anyString(), anyString());
+        mockMvc.perform(put("/users").header(token, myToken).header("fcmToken", myToken)).andExpect(status().isNoContent());
+        verify(service).saveMessagingToken(same(myToken), same(myToken));
     }
 }

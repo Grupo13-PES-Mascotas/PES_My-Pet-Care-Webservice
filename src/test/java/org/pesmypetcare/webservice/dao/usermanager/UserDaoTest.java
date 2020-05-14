@@ -27,6 +27,7 @@ import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -117,6 +119,7 @@ class UserDaoTest {
 
     @InjectMocks
     private final UserDao dao = new UserDaoImpl();
+    private String encodedPassword;
 
     @BeforeEach
     public void setUp() {
@@ -125,6 +128,7 @@ class UserDaoTest {
         username = "John";
         newUsername = "Michael";
         email = "user@email.com";
+        encodedPassword = new BCryptPasswordEncoder().encode(password);
         userEntity = new UserEntity(username, password, email);
         docData = new HashMap<>();
         docData.put(USER_FIELD, uid);
@@ -151,7 +155,8 @@ class UserDaoTest {
         verify(usedUsernames, times(2)).document(same(username));
         verify(batch).set(usernameRef, docData);
         verify(users).document(same(uid));
-        verify(batch).set(userRef, userEntity);
+        userEntity.setPassword(encodedPassword);
+        verify(batch).set(same(userRef), eq(userEntity));
         verify(myAuth).getUser(same(uid));
         verify(updateRequest).setDisplayName(same(username));
         verify(batch).commit();
@@ -321,10 +326,10 @@ class UserDaoTest {
         dao.updateField(username, PASSWORD_FIELD, password);
         verify(usedUsernames).document(same(username));
         verify(oldSnapshot).get(same(USER_FIELD));
-        verify(updateRequest).setPassword(same(password));
+        verify(updateRequest).setPassword(not(eq(password)));
         verify(myAuth).updateUserAsync(same(updateRequest));
         verify(users).document(same(uid));
-        verify(userRef).update(same(PASSWORD_FIELD), same(password));
+        verify(userRef).update(same(PASSWORD_FIELD), not(eq(password)));
     }
 
     @Test

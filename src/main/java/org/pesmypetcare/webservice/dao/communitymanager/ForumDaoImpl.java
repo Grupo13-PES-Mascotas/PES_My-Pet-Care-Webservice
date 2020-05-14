@@ -6,6 +6,8 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MulticastMessage;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
@@ -14,6 +16,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,14 +159,19 @@ public class ForumDaoImpl implements ForumDao {
                 docRef.getId()), "imagePath", imagePath);
         }*/
         documentAdapter.commitBatch(batch);
-        /*MulticastMessage multicastMessage = MulticastMessage.builder().putData("creator", message.getCreator())
-        .putData("text",
-            message.getText()).addToken("token").build();
+        Map<String, String> notificationData = new HashMap<>();
+        notificationData.put("group", parentGroup);
+        notificationData.put(FORUM_FIELD, forumName);
+        notificationData.put("creator", message.getCreator());
+        MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData).addToken(
+            "c61zZpw4GlE:APA91bHj1eOAQlFrgVwLoGNiIZsx7yLfc_ljYkRAx7OK5t0e0Pmg9xriuzrpzeFisonFeKS1QDbap4wVe8PX9"
+                + "-D0nfM1Zw0X4ijmm6SEAGzOMOrP0_FInmJHm3aAYTzvgvQHPYjaQZit")
+            .build();
         try {
             FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     @Override
