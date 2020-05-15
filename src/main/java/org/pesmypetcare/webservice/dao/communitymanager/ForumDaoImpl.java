@@ -40,6 +40,7 @@ public class ForumDaoImpl implements ForumDao {
     private static final String FORUMS_FIELD = "forums";
     private static final String FORUM_FIELD = "forum";
     private static final String LIKED_BY_FIELD = "likedBy";
+    private static final String GROUP_FIELD = "group";
     private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
@@ -67,7 +68,7 @@ public class ForumDaoImpl implements ForumDao {
         forumEntity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         String parentId = documentAdapter
-            .getStringFromDocument(Path.ofDocument(Collections.groups_names, parentGroup), "group");
+            .getStringFromDocument(Path.ofDocument(Collections.groups_names, parentGroup), GROUP_FIELD);
         DocumentReference forumRef = documentAdapter
             .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
@@ -397,7 +398,7 @@ public class ForumDaoImpl implements ForumDao {
     private MulticastMessage buildMulticastMessage(String groupName, String forumName, Message message,
                                                    List<String> deviceTokens) {
         Map<String, String> notificationData = new HashMap<>();
-        notificationData.put("group", groupName);
+        notificationData.put(GROUP_FIELD, groupName);
         notificationData.put(FORUM_FIELD, forumName);
         notificationData.put("creator", message.getCreator());
         return MulticastMessage.builder().putAllData(notificationData).addAllTokens(deviceTokens).build();
