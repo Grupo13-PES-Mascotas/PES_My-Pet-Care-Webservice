@@ -12,14 +12,12 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -28,7 +26,6 @@ import java.util.Map;
 @Repository
 public class StorageDaoImpl implements StorageDao {
     private static final String GROUPS_ROOT_FOLDER = "Groups/";
-    private final DateTimeFormatter timeFormatter;
     private Bucket storageBucket;
     @Autowired
     private PetDao petDao;
@@ -39,13 +36,11 @@ public class StorageDaoImpl implements StorageDao {
 
     public StorageDaoImpl() {
         storageBucket = FirebaseFactory.getInstance().getStorage();
-        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
     }
 
     public StorageDaoImpl(PetDao petDao) {
         storageBucket = FirebaseFactory.getInstance().getStorage();
         this.petDao = petDao;
-        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
     }
 
     @Override
@@ -70,14 +65,14 @@ public class StorageDaoImpl implements StorageDao {
         String path = GROUPS_ROOT_FOLDER + image.getUid() + "/" + imageName;
         Map<String, String> imageMap = new HashMap<>();
         imageMap.put("path", path);
-        imageMap.put("lastModified", timeFormatter.format(LocalDateTime.now()));
+        imageMap.put("lastModified", UTCLocalConverter.getCurrentUTC());
         groupDao.updateField(image.getUid(), "icon", imageMap);
         storageBucket.create(path, image.getImg());
     }
 
     @Override
     public String uploadPostImage(String group, String forum, ImageEntity image) {
-        String imageName = image.getUid() + "-" + timeFormatter.format(LocalDateTime.now());
+        String imageName = image.getUid() + "-" + UTCLocalConverter.getCurrentUTC();
         String path = GROUPS_ROOT_FOLDER + group + "/" + forum + "/" + imageName;
         storageBucket.create(path, image.getImg());
         return path;

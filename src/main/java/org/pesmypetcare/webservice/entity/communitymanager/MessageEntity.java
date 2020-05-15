@@ -2,13 +2,11 @@ package org.pesmypetcare.webservice.entity.communitymanager;
 
 import com.google.cloud.firestore.Blob;
 import lombok.Data;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author Santiago Del Rey
@@ -32,8 +30,7 @@ public class MessageEntity {
         this.creator = message.getCreator();
         this.text = message.getText();
         this.likedBy = new ArrayList<>();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
-        this.publicationDate = timeFormatter.format(LocalDateTime.now());
+        this.publicationDate = UTCLocalConverter.getCurrentUTC();
         this.image = decodeImage(message.getEncodedImage());
     }
 
