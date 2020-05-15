@@ -119,7 +119,7 @@ public class ForumDaoImpl implements ForumDao {
     public void updateName(String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
         if (forumNameInUse(parentGroup, newName)) {
-            throw new DatabaseAccessException("invalid-request", "The name is already in use");
+            throw new DocumentException("document-already-exists", "The forum name is already in use");
         }
         WriteBatch batch = documentAdapter.batch();
         String forumId = getForumId(parentGroup, currentName);

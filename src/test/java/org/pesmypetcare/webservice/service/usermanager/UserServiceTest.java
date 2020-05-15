@@ -123,7 +123,7 @@ class UserServiceTest {
     @Test
     public void saveMessagingTokenShouldThrowBadCredentialExceptionWhenTheTokenIsNotValid() {
         assertThrows(BadCredentialsException.class, () -> {
-            willThrow(BadCredentialsException.class).given(auth).verifyIdToken(same(TOKEN));
+            willThrow(FirebaseAuthException.class).given(auth).verifyIdToken(same(TOKEN));
             service.saveMessagingToken(TOKEN, fcmToken);
         }, "Should throw BadCredentialsException when the authentication is invalid.");
     }

@@ -98,6 +98,7 @@ class ForumDaoTest {
     @InjectMocks
     private ForumDao dao = new ForumDaoImpl();
     private String publicationDate;
+    private String newName;
 
     @BeforeAll
     public static void beforeAll() {
@@ -127,6 +128,7 @@ class ForumDaoTest {
         queryDocumentSnapshots = new ArrayList<>();
         queryDocumentSnapshots.add(documentSnapshot);
         publicationDate = "publicationDate";
+        newName = "German Shepherds";
     }
 
     @Test
@@ -188,6 +190,14 @@ class ForumDaoTest {
         paths.add(imagePath);
         List<String> result = dao.getAllPostImagesPaths(groupName, forumName);
         assertEquals(paths, result, "Should return all the path images of the forum posts.");
+    }
+
+    @Test
+    public void updateNameShouldFailWhenTheNewNameIsInUse() {
+        assertThrows(DocumentException.class, () -> {
+            given(documentAdapter.documentExists(anyString())).willReturn(true);
+            dao.updateName(groupName, forumName, newName);
+        }, "Should fail when the name is already in use.");
     }
 
     private void mockGetGroupAndForumIds() throws DatabaseAccessException, DocumentException {
@@ -362,11 +372,9 @@ class ForumDaoTest {
                         .willReturn(query);
                     given(documentSnapshot.getId()).willReturn("dogs");
 
-                    String newName = "German Shepherds";
                     dao.updateName(groupName, forumName, newName);
                     verifyAddForumToTag(newName);
                     verifySaveForumName(newName);
-
                 }
 
                 @Test
