@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -41,6 +42,7 @@ class UserServiceTest {
     private String newEmail;
     private UserEntity user;
     private String uid;
+    private String fcmToken;
 
     @Mock
     private UserDao userDao;
@@ -56,6 +58,7 @@ class UserServiceTest {
         username = "user";
         newEmail = "new-user@email.com";
         user = new UserEntity(username, "123456", "user@email");
+        fcmToken = "fmcToken";
     }
 
     @Test
@@ -111,7 +114,6 @@ class UserServiceTest {
         given(firebaseToken.getUid()).willReturn(uid);
         willDoNothing().given(userDao).saveMessagingToken(anyString(), anyString());
 
-        String fcmToken = "fcmToken";
         service.saveMessagingToken(TOKEN, fcmToken);
         verify(auth).verifyIdToken(same(TOKEN));
         verify(firebaseToken).getUid();
@@ -120,9 +122,10 @@ class UserServiceTest {
 
     @Test
     public void saveMessagingTokenShouldThrowBadCredentialExceptionWhenTheTokenIsNotValid() {
-        String fmcToken = "fmcToken";
-        assertThrows(BadCredentialsException.class, () -> service.saveMessagingToken(TOKEN, fmcToken),
-            "Should throw BadCredentialsException when the authentication is invalid.");
+        assertThrows(BadCredentialsException.class, () -> {
+            willThrow(BadCredentialsException.class).given(auth).verifyIdToken(same(TOKEN));
+            service.saveMessagingToken(TOKEN, fcmToken);
+        }, "Should throw BadCredentialsException when the authentication is invalid.");
     }
 
     @Test

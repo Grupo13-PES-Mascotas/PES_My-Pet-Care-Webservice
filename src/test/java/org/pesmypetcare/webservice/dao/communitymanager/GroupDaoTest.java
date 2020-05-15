@@ -26,14 +26,12 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -241,14 +239,12 @@ class GroupDaoTest {
             GroupEntity entity = new GroupEntity(groupName, username, "", tags);
             dao.createGroup(entity);
             verify(documentAdapter).createDocument(eq(groupsPath), same(entity), same(batch));
-            DateTimeFormatter timeFormatter = DateTimeFormatter
-                .ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
             Map<String, Object> data = new HashMap<>();
             data.put(GROUP_FIELD, groupId);
             String membersPath = Path.ofCollection(Collections.members, groupId);
             Map<String, Object> data2 = new HashMap<>();
             data2.put("user", username);
-            data2.put("date", timeFormatter.format(LocalDateTime.now()));
+            data2.put("date", UTCLocalConverter.getCurrentUTC());
             verify(documentAdapter)
                 .createDocumentWithId(or(eq(groupNamesPath), eq(membersPath)), or(eq(groupName), eq(userId)),
                     or(eq(data), eq(data2)), same(batch));

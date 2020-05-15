@@ -21,15 +21,13 @@ import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -42,7 +40,6 @@ public class ForumDaoImpl implements ForumDao {
     private static final String FORUMS_FIELD = "forums";
     private static final String FORUM_FIELD = "forum";
     private static final String LIKED_BY_FIELD = "likedBy";
-    private final DateTimeFormatter timeFormatter;
     private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
@@ -56,7 +53,6 @@ public class ForumDaoImpl implements ForumDao {
     private FirestoreCollection collectionAdapter;
 
     public ForumDaoImpl() {
-        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
         firebaseMessaging = FirebaseFactory.getInstance().getFirebaseMessaging();
     }
 
@@ -68,7 +64,7 @@ public class ForumDaoImpl implements ForumDao {
     @Override
     public void createForum(String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
-        forumEntity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
+        forumEntity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         String parentId = documentAdapter
             .getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup), "group");
@@ -381,10 +377,10 @@ public class ForumDaoImpl implements ForumDao {
             .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
         String userUid = userDao.getUid(message.getCreator());
         String userFcmToken = userDao.getField(userUid, "FCM");
-        deviceTokens.remove(userFcmToken);
         if (deviceTokens != null) {
             if (!deviceTokens.isEmpty()) {
                 try {
+                    deviceTokens.remove(userFcmToken);
                     MulticastMessage multicastMessage = buildMulticastMessage(groupName, forumName, message,
                         deviceTokens);
                     firebaseMessaging.sendMulticast(multicastMessage);
