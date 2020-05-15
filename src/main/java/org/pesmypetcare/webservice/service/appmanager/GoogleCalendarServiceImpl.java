@@ -29,6 +29,9 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void createSecondaryCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
+        if (petDao.getSimpleField(owner, petName, CALENDAR_ID) != null) {
+            throw new CalendarAccessException("409", "This pet already has a secondary calendar");
+        }
         Calendar calendar = new Calendar();
         calendar.setSummary("My Pet Care: " + petName);
         calendar.setTimeZone("Europe/Madrid");
@@ -39,6 +42,9 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     @Override
     public void deleteSecondaryCalendar(String accessToken, String owner, String petName)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
+        if (petDao.getSimpleField(owner, petName, CALENDAR_ID) == null) {
+            throw new CalendarAccessException("409", "This pet does not have a secondary calendar");
+        }
         String calendarId = (String) petDao.getSimpleField(owner, petName, CALENDAR_ID);
         googleCalendarDao.deleteSecondaryCalendar(accessToken, calendarId);
         petDao.updateSimpleField(owner, petName, CALENDAR_ID, null);
