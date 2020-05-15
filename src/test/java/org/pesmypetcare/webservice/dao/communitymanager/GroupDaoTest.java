@@ -256,7 +256,8 @@ class GroupDaoTest {
             verify(documentAdapter).documentExists(eq(tagPath));
             verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
                 or(eq(GROUPS_FIELD), eq(NOTIFICATIONS_FIELD)), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
+            verify(documentAdapter)
+                .getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test
@@ -330,7 +331,8 @@ class GroupDaoTest {
             verify(documentAdapter).createDocumentWithId(eq(membersPath), same(userId), anyMap(), same(batch));
             verify(documentAdapter)
                 .updateDocumentFields(same(batch), eq(groupPath), eq(NOTIFICATIONS_FIELD), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
+            verify(documentAdapter)
+                .getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test
@@ -349,7 +351,8 @@ class GroupDaoTest {
             verify(userDao).deleteGroupSubscription(same(userId), same(groupName), same(batch));
             verify(documentAdapter)
                 .updateDocumentFields(same(batch), eq(groupPath), eq(NOTIFICATIONS_FIELD), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
+            verify(documentAdapter)
+                .getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test

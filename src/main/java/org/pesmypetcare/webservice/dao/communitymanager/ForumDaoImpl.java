@@ -367,6 +367,7 @@ public class ForumDaoImpl implements ForumDao {
 
     /**
      * Sends a multicast notification to all the users subscribed to the group notifications.
+     *
      * @param groupId The ID of the group where the forum belong
      * @param groupName The name of the group where the forum belongs
      * @param forumName The name of the forum where the message belongs
@@ -384,7 +385,8 @@ public class ForumDaoImpl implements ForumDao {
         if (deviceTokens != null) {
             if (!deviceTokens.isEmpty()) {
                 try {
-                    MulticastMessage multicastMessage = buildMulticastMessage(groupName, forumName, message, deviceTokens);
+                    MulticastMessage multicastMessage = buildMulticastMessage(groupName, forumName, message,
+                        deviceTokens);
                     firebaseMessaging.sendMulticast(multicastMessage);
                 } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
@@ -395,6 +397,7 @@ public class ForumDaoImpl implements ForumDao {
 
     /**
      * Builds a notification multicast message.
+     *
      * @param groupName The name of the group where the forum belongs
      * @param forumName The name of the forum where the message belongs
      * @param message The message to be notified
@@ -407,8 +410,7 @@ public class ForumDaoImpl implements ForumDao {
         notificationData.put("group", groupName);
         notificationData.put(FORUM_FIELD, forumName);
         notificationData.put("creator", message.getCreator());
-        return MulticastMessage.builder().putAllData(notificationData)
-            .addAllTokens(deviceTokens).build();
+        return MulticastMessage.builder().putAllData(notificationData).addAllTokens(deviceTokens).build();
     }
 
     /**

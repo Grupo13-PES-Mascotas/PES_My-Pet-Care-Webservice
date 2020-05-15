@@ -39,6 +39,7 @@ public class GroupDaoImpl implements GroupDao {
     private static final String GROUP_SUBSCRIPTIONS_FIELDS = "groupSubscriptions";
     private static final String NOTIFICATIONS_FIELD = "notification-tokens";
     private static final String FCM_FIELD = "FCM";
+    private static final String DATE_FIELD = "date";
 
     @Autowired
     private UserDao userDao;
@@ -191,7 +192,7 @@ public class GroupDaoImpl implements GroupDao {
     private void saveUserAsMember(String groupId, String userUid, String username, WriteBatch batch) {
         Map<String, Object> data = new HashMap<>();
         data.put("user", username);
-        data.put("date", UTCLocalConverter.getCurrentUTC());
+        data.put(DATE_FIELD, UTCLocalConverter.getCurrentUTC());
         documentAdapter.createDocumentWithId(Path.ofCollection(Collections.members, groupId), userUid, data, batch);
     }
 
@@ -277,7 +278,7 @@ public class GroupDaoImpl implements GroupDao {
         List<DocumentSnapshot> membersList = collectionAdapter
             .listAllCollectionDocumentSnapshots(Path.ofCollection(Collections.members, id));
         for (DocumentSnapshot member : membersList) {
-            members.put(member.getString("user"), member.getString("date"));
+            members.put(member.getString("user"), member.getString(DATE_FIELD));
         }
         return members;
     }
