@@ -231,7 +231,8 @@ class FirestoreCollectionAdapterTest {
                 .getDocumentsWhereEqualTo(COLLECTION_PATH, FIELD_PATH, VALUE, FIELD_PATH_2, VALUE_2);
             assertEquals(apiFuture, result,
                 "Should return all documents from " + COLLECTION_PATH + " where " + FIELD + " in " + FIELD_PATH
-                    + " is equals to " + VALUE + " and " + FIELD_2 + " in " + FIELD_PATH_2 + " is equals to " + VALUE_2);
+                    + " is equals to " + VALUE + " and " + FIELD_2 + " in " + FIELD_PATH_2 + " is equals to "
+                    + VALUE_2);
         }
 
         @Test
@@ -278,7 +279,8 @@ class FirestoreCollectionAdapterTest {
                 .getDocumentsWhereArrayContains(COLLECTION_PATH, ARRAY_PATH, VALUE, ARRAY_PATH_2, VALUE_2);
             assertEquals(apiFuture, result,
                 "Should return all documents from " + COLLECTION_PATH + " where the array" + ARRAY + " in " + ARRAY_PATH
-                    + " contains " + VALUE + " and the array " + ARRAY_2 + " in " + ARRAY_PATH_2 + " contains " + VALUE_2);
+                    + " contains " + VALUE + " and the array " + ARRAY_2 + " in " + ARRAY_PATH_2 + " contains "
+                    + VALUE_2);
         }
 
         @Test
