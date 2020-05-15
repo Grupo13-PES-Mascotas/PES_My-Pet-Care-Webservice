@@ -37,14 +37,14 @@ public class UTCLocalConverter {
 
     /**
      * Converts the specified date as a String from local timezone to UTC.
-     * @param datein the String to be converted
-     * @return a String with the datein converted to UTC timezone
+     * @param dateIn the String to be converted
+     * @return a String with the dateIn converted to UTC timezone
      * @throws ParseException constructs a ParseException with the specified detail message and offset
      */
-    public static String convertLocaltoUTC(String datein) throws ParseException {
+    public static String convertLocalToUTC(String dateIn) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
         sdf.setTimeZone(TimeZone.getDefault());
-        Date date = sdf.parse(datein);
+        Date date = sdf.parse(dateIn);
         sdf.setTimeZone(TimeZone.getTimeZone(UTC));
         return sdf.format(date);
     }

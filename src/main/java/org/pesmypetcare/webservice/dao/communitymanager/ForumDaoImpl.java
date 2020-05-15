@@ -162,19 +162,7 @@ public class ForumDaoImpl implements ForumDao {
                 docRef.getId()), "imagePath", imagePath);
         }*/
         documentAdapter.commitBatch(batch);
-        List<String> deviceTokens = (List<String>) documentAdapter
-            .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
-        Map<String, String> notificationData = new HashMap<>();
-        notificationData.put("group", parentGroup);
-        notificationData.put(FORUM_FIELD, forumName);
-        notificationData.put("creator", message.getCreator());
-        MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData)
-            .addAllTokens(deviceTokens).build();
-        try {
-            firebaseMessaging.sendMulticast(multicastMessage);
-        } catch (FirebaseMessagingException e) {
-            e.printStackTrace();
-        }
+        sendNotificationToSubscribers(groupId, parentGroup, forumName, message);
     }
 
     @Override
@@ -371,6 +359,36 @@ public class ForumDaoImpl implements ForumDao {
             FieldValue.arrayRemove(deletedTags.toArray()), batch);
         for (String tag : deletedTags) {
             deleteForumFromTag(tag, forumName, batch);
+        }
+    }
+
+    /**
+     * Sends a multicast notification to all the users subscribed to the group notifications.
+     * @param groupId The ID of the group where the forum belong
+     * @param groupName The name of the group where the forum belongs
+     * @param forumName The name of the forum where the message belongs
+     * @param message The message to be notified
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    private void sendNotificationToSubscribers(String groupId, String groupName, String forumName, Message message)
+        throws DatabaseAccessException, DocumentException {
+        List<String> deviceTokens = (List<String>) documentAdapter
+            .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
+        if (deviceTokens != null) {
+            if (!deviceTokens.isEmpty()) {
+                Map<String, String> notificationData = new HashMap<>();
+                notificationData.put("group", groupName);
+                notificationData.put(FORUM_FIELD, forumName);
+                notificationData.put("creator", message.getCreator());
+                MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData)
+                    .addAllTokens(deviceTokens).build();
+                try {
+                    firebaseMessaging.sendMulticast(multicastMessage);
+                } catch (FirebaseMessagingException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
