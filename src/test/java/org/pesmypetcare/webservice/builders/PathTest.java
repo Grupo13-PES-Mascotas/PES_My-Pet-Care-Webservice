@@ -31,13 +31,13 @@ class PathTest {
 
     @Test
     public void buildGroupNamePath() {
-        String path = Path.ofDocument(Collections.groupsNames, groupName);
+        String path = Path.ofDocument(Collections.groups_names, groupName);
         assertEquals("groups_names/" + groupName, path, "Should return the path to the group name.");
     }
 
     @Test
     public void buildGroupNamesCollectionPath() {
-        String path = Path.ofCollection(Collections.groupsNames);
+        String path = Path.ofCollection(Collections.groups_names);
         assertEquals("groups_names", path, "Should return the path to the group names collection.");
     }
 
@@ -57,13 +57,13 @@ class PathTest {
     @Test
     public void buildUsernamePath() {
         String username = "John";
-        String path = Path.ofDocument(Collections.usernames, username);
+        String path = Path.ofDocument(Collections.used_usernames, username);
         assertEquals("used_usernames/" + username, path, "Should return the path to the username.");
     }
 
     @Test
     public void buildUsernamesCollectionPath() {
-        String path = Path.ofCollection(Collections.usernames);
+        String path = Path.ofCollection(Collections.used_usernames);
         assertEquals("used_usernames", path, "Should return the path to the usernames collection.");
     }
 
@@ -94,16 +94,16 @@ class PathTest {
     @Test
     public void buildForumNamePath() {
         String forumName = "Huskies";
-        String path = Path.ofDocument(Collections.forumsNames, groupName, forumName);
+        String path = Path.ofDocument(Collections.forum_names, groupName, forumName);
         assertEquals("groups_names/" + groupName + "/forums/" + forumName, path,
             "Should return the path to the forum name.");
     }
 
     @Test
     public void buildForumNamesCollectionPath() {
-        String path = Path.ofCollection(Collections.forumsNames, groupName);
-        assertEquals("groups_names/" + groupName + "/forums", path,
-            "Should return the path to the collectionof forum names.");
+        String path = Path.ofCollection(Collections.forum_names, groupName);
+        assertEquals("groups_names/" + groupName + "/forum_names", path,
+            "Should return the path to the collection of forum names.");
     }
 
     @Test
@@ -265,7 +265,7 @@ class PathTest {
     }
 
     @Test
-    public void buildExerciceEntriesCollectionPath() {
+    public void buildExerciseEntriesCollectionPath() {
         String path = Path.ofCollection(Collections.exercises, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/exercises", path,
             "Should return the path to the exercise entries collection.");

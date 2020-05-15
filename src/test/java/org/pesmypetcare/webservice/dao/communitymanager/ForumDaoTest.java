@@ -208,7 +208,7 @@ class ForumDaoTest {
     }
 
     private void verifySaveForumName(String forumName) {
-        String forumNamePath = Path.ofCollection(Collections.forumsNames, groupName);
+        String forumNamePath = Path.ofCollection(Collections.forum_names, groupName);
         Map<String, Object> docData = new HashMap<>();
         docData.put("forum", forumId);
         verify(documentAdapter).createDocumentWithId(eq(forumNamePath), eq(forumName), eq(docData), same(batch));
@@ -264,7 +264,7 @@ class ForumDaoTest {
 
                 verifyAddForumToTag(forumName);
 
-                String groupPath = Path.ofDocument(Collections.groupsNames, groupName);
+                String groupPath = Path.ofDocument(Collections.groups_names, groupName);
                 verify(documentAdapter).getStringFromDocument(eq(groupPath), eq("group"));
                 verify(documentAdapter).createDocument(eq(forumsPath), same(forumEntity), same(batch));
                 verifySaveForumName(forumName);
@@ -334,7 +334,7 @@ class ForumDaoTest {
 
                     dao.deleteForum(groupName, forumName);
                     verify(groupDao).getGroupId(same(groupName));
-                    String forumNamePath = Path.ofDocument(Collections.forumsNames, groupName, forumName);
+                    String forumNamePath = Path.ofDocument(Collections.forum_names, groupName, forumName);
                     verify(documentAdapter).getStringFromDocument(eq(forumNamePath), eq("forum"));
                     verify(documentAdapter).deleteDocument(eq(forumPath), same(batch));
                     verify(documentAdapter).deleteDocument(eq(forumNamePath), same(batch));

@@ -22,7 +22,7 @@ public class Path {
      * Here are some examples of how the method should be used:
      * <blockquote><pre>
      *     //Path to the Dogs group
-     *     String path = Path.ofDocument(Collections.groupsNames, "Dogs");
+     *     String path = Path.ofDocument(Collections.group_names, "Dogs");
      *
      *     //Path to the Huskies forum in the Dogs group
      *     String path = Path.ofDocument(Collections.forumsNames, "Dogs", "Huskies");
@@ -40,14 +40,14 @@ public class Path {
         checkProvidedIds(collection, ids);
         switch (collection) {
             case groups:
-            case groupsNames:
+            case groups_names:
             case tags:
-            case usernames:
+            case used_usernames:
             case users:
             case medals:
                 return DOCUMENT_PATH.buildOneLevelPath(collection, ids).toString();
             case forums:
-            case forumsNames:
+            case forum_names:
             case pets:
             case userMedals:
             case members:
@@ -95,15 +95,15 @@ public class Path {
         checkProvidedIds(collection, ids);
         switch (collection) {
             case groups:
-            case groupsNames:
+            case groups_names:
             case tags:
-            case usernames:
+            case used_usernames:
             case users:
             case medals:
                 COLLECTION_PATH.throwExceptionIfWrongNumArgs(0, ids.length);
                 return COLLECTION_PATH.buildRootCollectionPath(collection);
             case forums:
-            case forumsNames:
+            case forum_names:
             case pets:
             case userMedals:
             case members:
@@ -168,8 +168,8 @@ public class Path {
      * @return True if it is a root collection
      */
     private static boolean isRootCollection(Collections collection) {
-        return collection.equals(Collections.groups) || collection.equals(Collections.groupsNames) || collection
-            .equals(Collections.tags) || collection.equals(Collections.usernames) || collection
+        return collection.equals(Collections.groups) || collection.equals(Collections.groups_names) || collection
+            .equals(Collections.tags) || collection.equals(Collections.used_usernames) || collection
             .equals(Collections.users) || collection.equals(Collections.medals);
     }
 }

@@ -58,7 +58,7 @@ public class ForumDaoImpl implements ForumDao {
 
     @Override
     public boolean forumNameInUse(String parentGroup, String forumName) throws DatabaseAccessException {
-        return documentAdapter.documentExists(Path.ofDocument(Collections.forumsNames, parentGroup, forumName));
+        return documentAdapter.documentExists(Path.ofDocument(Collections.forum_names, parentGroup, forumName));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ForumDaoImpl implements ForumDao {
         forumEntity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         String parentId = documentAdapter
-            .getStringFromDocument(Path.ofDocument(Collections.groupsNames, parentGroup), "group");
+            .getStringFromDocument(Path.ofDocument(Collections.groups_names, parentGroup), "group");
         DocumentReference forumRef = documentAdapter
             .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
@@ -89,7 +89,7 @@ public class ForumDaoImpl implements ForumDao {
         WriteBatch batch = documentAdapter.batch();
         deleteForumFromAllTags(forumName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forums, groupId, forumId), batch);
-        documentAdapter.deleteDocument(Path.ofDocument(Collections.forumsNames, parentGroup, forumName), batch);
+        documentAdapter.deleteDocument(Path.ofDocument(Collections.forum_names, parentGroup, forumName), batch);
         documentAdapter.commitBatch(batch);
     }
 
@@ -126,7 +126,7 @@ public class ForumDaoImpl implements ForumDao {
         documentAdapter
             .updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName, batch);
         changeNameInTags(currentName, newName, batch);
-        documentAdapter.deleteDocument(Path.ofDocument(Collections.forumsNames, parentGroup, currentName), batch);
+        documentAdapter.deleteDocument(Path.ofDocument(Collections.forum_names, parentGroup, currentName), batch);
         saveForumName(parentGroup, newName, forumId, batch);
         documentAdapter.commitBatch(batch);
     }
@@ -218,7 +218,7 @@ public class ForumDaoImpl implements ForumDao {
         Map<String, Object> docData = new HashMap<>();
         docData.put(FORUM_FIELD, id);
         documentAdapter
-            .createDocumentWithId(Path.ofCollection(Collections.forumsNames, parentGroup), name, docData, batch);
+            .createDocumentWithId(Path.ofCollection(Collections.forum_names, parentGroup), name, docData, batch);
     }
 
     /**
@@ -251,7 +251,7 @@ public class ForumDaoImpl implements ForumDao {
      */
     private String getForumId(String groupName, String forumName) throws DatabaseAccessException, DocumentException {
         return documentAdapter
-            .getStringFromDocument(Path.ofDocument(Collections.forumsNames, groupName, forumName), FORUM_FIELD);
+            .getStringFromDocument(Path.ofDocument(Collections.forum_names, groupName, forumName), FORUM_FIELD);
     }
 
     /**

@@ -81,7 +81,7 @@ public class GroupDaoImpl implements GroupDao {
         deleteAllMembers(name, batch);
         deleteGroupIcon(id);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.groups, id), batch);
-        documentAdapter.deleteDocument(Path.ofDocument(Collections.groupsNames, name), batch);
+        documentAdapter.deleteDocument(Path.ofDocument(Collections.groups_names, name), batch);
         documentAdapter.commitBatch(batch);
     }
 
@@ -118,7 +118,7 @@ public class GroupDaoImpl implements GroupDao {
             }
             changeNameInTags(name, (String) newValue, batch);
             changeNameInSubscription(name, (String) newValue, batch);
-            documentAdapter.deleteDocument(Path.ofDocument(Collections.groupsNames, name), batch);
+            documentAdapter.deleteDocument(Path.ofDocument(Collections.groups_names, name), batch);
             saveGroupName((String) newValue, id, batch);
         }
         documentAdapter.commitBatch(batch);
@@ -126,7 +126,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public boolean groupNameInUse(String name) throws DatabaseAccessException {
-        return documentAdapter.documentExists(Path.ofDocument(Collections.groupsNames, name));
+        return documentAdapter.documentExists(Path.ofDocument(Collections.groups_names, name));
     }
 
     @Override
@@ -178,7 +178,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public String getGroupId(String name) throws DatabaseAccessException, DocumentException {
-        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.groupsNames, name), FIELD_GROUP);
+        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.groups_names, name), FIELD_GROUP);
     }
 
     /**
@@ -293,7 +293,7 @@ public class GroupDaoImpl implements GroupDao {
     private void saveGroupName(String name, String groupId, WriteBatch batch) {
         Map<String, String> docData = new HashMap<>();
         docData.put(FIELD_GROUP, groupId);
-        documentAdapter.createDocumentWithId(Path.ofCollection(Collections.groupsNames), name, docData, batch);
+        documentAdapter.createDocumentWithId(Path.ofCollection(Collections.groups_names), name, docData, batch);
     }
 
     /**

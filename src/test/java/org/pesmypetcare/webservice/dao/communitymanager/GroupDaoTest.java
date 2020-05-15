@@ -110,7 +110,7 @@ class GroupDaoTest {
         tagsPath = Path.ofCollection(Collections.tags);
         tagPath = Path.ofDocument(Collections.tags, tag);
         usersPath = Path.ofCollection(Collections.users);
-        groupNamePath = Path.ofDocument(Collections.groupsNames, groupName);
+        groupNamePath = Path.ofDocument(Collections.groups_names, groupName);
         token = "token";
     }
 
@@ -215,7 +215,7 @@ class GroupDaoTest {
             username = "John";
             userId = "sda23e8823nda";
             groupsPath = Path.ofCollection(Collections.groups);
-            groupNamesPath = Path.ofCollection(Collections.groupsNames);
+            groupNamesPath = Path.ofCollection(Collections.groups_names);
             given(documentAdapter.batch()).willReturn(batch);
             willDoNothing().given(documentAdapter).commitBatch(any(WriteBatch.class));
         }

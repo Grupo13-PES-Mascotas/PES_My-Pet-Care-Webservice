@@ -105,7 +105,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
      * @throws DocumentException When the document does not exist
      */
     private String getUserId(String username) throws DatabaseAccessException, DocumentException {
-        String usernamePath = Path.ofDocument(Collections.usernames, username);
+        String usernamePath = Path.ofDocument(Collections.used_usernames, username);
         return dbDoc.getStringFromDocument(usernamePath, "user");
     }
 
