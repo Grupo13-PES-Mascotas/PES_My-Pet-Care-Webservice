@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         throws DatabaseAccessException, DocumentException, BadCredentialsException {
         try {
             FirebaseToken firebaseToken = auth.verifyIdToken(token);
-            userDao.saveMessagingToken(firebaseToken.getUid(), token);
+            userDao.saveMessagingToken(firebaseToken.getUid(), fcmToken);
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             throw new BadCredentialsException("The token provided is not correct.");
