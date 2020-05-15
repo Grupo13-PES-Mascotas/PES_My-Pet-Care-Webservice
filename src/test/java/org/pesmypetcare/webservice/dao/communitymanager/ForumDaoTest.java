@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
@@ -74,6 +75,8 @@ class ForumDaoTest {
 
     @Mock
     private GroupDao groupDao;
+    @Mock
+    private UserDao userDao;
     @Mock
     private StorageDao storageDao;
     @Mock
@@ -293,15 +296,21 @@ class ForumDaoTest {
                 given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class)))
                     .willReturn(documentReference);
                 List<String> devices = new ArrayList<>();
-                devices.add("adanj3n2");
+                String fcmToken = "adanj3n2";
+                devices.add(fcmToken);
+                devices.add("ffkjkke");
                 given(documentAdapter.getDocumentField(anyString(), anyString())).willReturn(devices);
                 given(firebaseMessaging.sendMulticast(any(MulticastMessage.class))).willReturn(null);
+                given(userDao.getUid(anyString())).willReturn(username);
+                given(userDao.getField(anyString(), anyString())).willReturn(fcmToken);
 
                 dao.postMessage(groupName, forumName, message);
                 verify(documentAdapter).createDocument(eq(messagePath), isA(MessageEntity.class), same(batch));
                 verify(documentAdapter)
                     .getDocumentField(eq(Path.ofDocument(Collections.groups, groupId)), eq("notification-tokens"));
                 verify(firebaseMessaging).sendMulticast(isA(MulticastMessage.class));
+                verify(userDao).getUid(eq(username));
+                verify(userDao).getField(eq(username), eq("FCM"));
             }
 
             @Nested

@@ -12,6 +12,7 @@ import com.google.firebase.messaging.MulticastMessage;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
@@ -45,6 +46,8 @@ public class ForumDaoImpl implements ForumDao {
     private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private UserDao userDao;
     @Autowired
     private StorageDao storageDao;
     @Autowired
@@ -375,6 +378,9 @@ public class ForumDaoImpl implements ForumDao {
         throws DatabaseAccessException, DocumentException {
         List<String> deviceTokens = (List<String>) documentAdapter
             .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
+        String userUid = userDao.getUid(message.getCreator());
+        String userFcmToken = userDao.getField(userUid, "FCM");
+        deviceTokens.remove(userFcmToken);
         if (deviceTokens != null) {
             if (!deviceTokens.isEmpty()) {
                 Map<String, String> notificationData = new HashMap<>();
