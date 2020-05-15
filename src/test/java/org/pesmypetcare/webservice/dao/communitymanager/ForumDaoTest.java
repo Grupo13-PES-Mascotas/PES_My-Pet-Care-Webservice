@@ -7,6 +7,9 @@ import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MulticastMessage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -73,6 +76,8 @@ class ForumDaoTest {
     private GroupDao groupDao;
     @Mock
     private StorageDao storageDao;
+    @Mock
+    private FirebaseMessaging firebaseMessaging;
     @Mock
     private FirestoreDocument documentAdapter;
     @Mock
@@ -283,13 +288,20 @@ class ForumDaoTest {
             }
 
             @Test
-            public void postMessage() throws DatabaseAccessException, DocumentException {
+            public void postMessage() throws DatabaseAccessException, DocumentException, FirebaseMessagingException {
                 mockGetGroupAndForumIds();
                 given(documentAdapter.createDocument(anyString(), any(MessageEntity.class), any(WriteBatch.class)))
                     .willReturn(documentReference);
+                List<String> devices = new ArrayList<>();
+                devices.add("adanj3n2");
+                given(documentAdapter.getDocumentField(anyString(), anyString())).willReturn(devices);
+                given(firebaseMessaging.sendMulticast(any(MulticastMessage.class))).willReturn(null);
 
                 dao.postMessage(groupName, forumName, message);
                 verify(documentAdapter).createDocument(eq(messagePath), isA(MessageEntity.class), same(batch));
+                verify(documentAdapter)
+                    .getDocumentField(eq(Path.ofDocument(Collections.groups, groupId)), eq("notification-tokens"));
+                verify(firebaseMessaging).sendMulticast(isA(MulticastMessage.class));
             }
 
             @Nested
@@ -349,8 +361,7 @@ class ForumDaoTest {
                 }
 
                 @Test
-                public void deleteMessage()
-                    throws DatabaseAccessException, DocumentException {
+                public void deleteMessage() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))

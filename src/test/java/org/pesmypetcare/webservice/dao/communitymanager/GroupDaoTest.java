@@ -234,6 +234,7 @@ class GroupDaoTest {
             given(docRef.getId()).willReturn(groupId);
             given(userDao.getUid(anyString())).willReturn(userId);
             given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(token);
+
             List<String> tags = new ArrayList<>();
             tags.add(tag);
             GroupEntity entity = new GroupEntity(groupName, username, "", tags);
@@ -319,11 +320,16 @@ class GroupDaoTest {
             lenient()
                 .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
+            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM")))
+                .willReturn(token);
 
             dao.subscribe(groupName, username);
             verify(userDao).addGroupSubscription(same(username), same(groupName), same(batch));
             String membersPath = Path.ofCollection(Collections.members, groupId);
             verify(documentAdapter).createDocumentWithId(eq(membersPath), same(userId), anyMap(), same(batch));
+            verify(documentAdapter)
+                .updateDocumentFields(same(batch), eq(groupPath), eq("notification-tokens"), any(FieldValue.class));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
         }
 
         @Test
@@ -332,12 +338,17 @@ class GroupDaoTest {
             mockGetGroupId();
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
             willDoNothing().given(userDao).deleteGroupSubscription(anyString(), anyString(), any(WriteBatch.class));
+            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM")))
+                .willReturn(token);
 
             dao.unsubscribe(groupName, username);
             verify(userDao).getUid(same(username));
             String memberPath = Path.ofDocument(Collections.members, groupId, userId);
             verify(documentAdapter).deleteDocument(eq(memberPath), same(batch));
             verify(userDao).deleteGroupSubscription(same(userId), same(groupName), same(batch));
+            verify(documentAdapter)
+                .updateDocumentFields(same(batch), eq(groupPath), eq("notification-tokens"), any(FieldValue.class));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
         }
 
         @Test

@@ -77,14 +77,6 @@ public class GroupDaoImpl implements GroupDao {
         documentAdapter.commitBatch(batch);
     }
 
-    private void addUserToGroupNotifications(String userUid, String groupId, WriteBatch batch)
-        throws DatabaseAccessException, DocumentException {
-        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
-        documentAdapter
-            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
-                FieldValue.arrayUnion(token));
-    }
-
     @Override
     public void deleteGroup(String name) throws DatabaseAccessException, DocumentException {
         String id = getGroupId(name);
@@ -148,6 +140,7 @@ public class GroupDaoImpl implements GroupDao {
         WriteBatch batch = documentAdapter.batch();
         saveUserAsMember(groupId, userUid, username, batch);
         userDao.addGroupSubscription(username, group, batch);
+        addUserToGroupNotifications(userUid, groupId, batch);
         documentAdapter.commitBatch(batch);
     }
 
@@ -158,6 +151,7 @@ public class GroupDaoImpl implements GroupDao {
         WriteBatch batch = documentAdapter.batch();
         deleteUserFromMember(groupId, userUid, batch);
         userDao.deleteGroupSubscription(userUid, group, batch);
+        removeUserFromGroupNotifications(userUid, groupId, batch);
         documentAdapter.commitBatch(batch);
     }
 
@@ -204,6 +198,38 @@ public class GroupDaoImpl implements GroupDao {
         data.put("user", username);
         data.put("date", timeFormatter.format(LocalDateTime.now()));
         documentAdapter.createDocumentWithId(Path.ofCollection(Collections.members, groupId), userUid, data, batch);
+    }
+
+    /**
+     * Adds a user to the group notification list.
+     * @param userUid The user's UID
+     * @param groupId The group ID
+     * @param batch The batch where to write
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
+     */
+    private void addUserToGroupNotifications(String userUid, String groupId, WriteBatch batch)
+        throws DatabaseAccessException, DocumentException {
+        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
+        documentAdapter
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
+                FieldValue.arrayUnion(token));
+    }
+
+    /**
+     * Removes a user from the group notification list.
+     * @param userUid The user's UID
+     * @param groupId The group ID
+     * @param batch The batch where to write
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the group does not exist
+     */
+    private void removeUserFromGroupNotifications(String userUid, String groupId, WriteBatch batch)
+        throws DatabaseAccessException, DocumentException {
+        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
+        documentAdapter
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
+                FieldValue.arrayRemove(token));
     }
 
     /**

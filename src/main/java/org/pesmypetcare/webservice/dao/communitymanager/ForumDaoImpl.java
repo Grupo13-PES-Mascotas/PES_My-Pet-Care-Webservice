@@ -6,6 +6,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MulticastMessage;
 import org.pesmypetcare.webservice.builders.Collections;
@@ -41,6 +42,7 @@ public class ForumDaoImpl implements ForumDao {
     private static final String FORUM_FIELD = "forum";
     private static final String LIKED_BY_FIELD = "likedBy";
     private final DateTimeFormatter timeFormatter;
+    private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
     @Autowired
@@ -52,6 +54,7 @@ public class ForumDaoImpl implements ForumDao {
 
     public ForumDaoImpl() {
         timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
+        firebaseMessaging = FirebaseFactory.getInstance().getFirebaseMessaging();
     }
 
     @Override
@@ -159,16 +162,16 @@ public class ForumDaoImpl implements ForumDao {
                 docRef.getId()), "imagePath", imagePath);
         }*/
         documentAdapter.commitBatch(batch);
+        List<String> deviceTokens = (List<String>) documentAdapter
+            .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
         Map<String, String> notificationData = new HashMap<>();
         notificationData.put("group", parentGroup);
         notificationData.put(FORUM_FIELD, forumName);
         notificationData.put("creator", message.getCreator());
-        MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData).addToken(
-            "c61zZpw4GlE:APA91bHj1eOAQlFrgVwLoGNiIZsx7yLfc_ljYkRAx7OK5t0e0Pmg9xriuzrpzeFisonFeKS1QDbap4wVe8PX9"
-                + "-D0nfM1Zw0X4ijmm6SEAGzOMOrP0_FInmJHm3aAYTzvgvQHPYjaQZit")
-            .build();
+        MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData)
+            .addAllTokens(deviceTokens).build();
         try {
-            FirebaseFactory.getInstance().getFirebaseMessaging().sendMulticast(multicastMessage);
+            firebaseMessaging.sendMulticast(multicastMessage);
         } catch (FirebaseMessagingException e) {
             e.printStackTrace();
         }
