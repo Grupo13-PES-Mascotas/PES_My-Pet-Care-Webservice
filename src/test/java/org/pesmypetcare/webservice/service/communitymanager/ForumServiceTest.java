@@ -84,7 +84,7 @@ class ForumServiceTest {
     public void getAllForumsFromGroupShouldThrowDocumentExceptionWhenTheGroupDoesNotExist() {
         assertThrows(DocumentException.class, () -> {
             lenient().when(groupDao.groupNameInUse(anyString())).thenReturn(false);
-            service.getForum(groupName, forumName);
+            service.getAllForumsFromGroup(groupName);
         });
     }
 

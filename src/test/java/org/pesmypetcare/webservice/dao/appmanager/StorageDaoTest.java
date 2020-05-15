@@ -165,6 +165,16 @@ class StorageDaoTest {
     }
 
     @Test
+    public void deleteUserImage() {
+        given(bucket.get("profile.png")).willReturn(blob);
+
+        StorageForm form = new StorageForm();
+        form.setImageName("profile.png");
+        dao.deleteImage(form);
+        verify(blob).delete();
+    }
+
+    @Test
     public void deleteImage() {
         given(bucket.get(formPath)).willReturn(blob);
 
