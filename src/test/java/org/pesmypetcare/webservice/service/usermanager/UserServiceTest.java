@@ -13,6 +13,10 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -100,5 +104,15 @@ class UserServiceTest {
         String fmcToken = "fmcToken";
         assertThrows(BadCredentialsException.class, () -> service.saveMessagingToken(TOKEN, fmcToken),
             "Should throw BadCredentialsException when the authentication is invalid.");
+    }
+
+    @Test
+    public void getUserSubscriptions() throws DatabaseAccessException {
+        List<String> subscriptions = new ArrayList<>();
+        subscriptions.add("Dogs");
+        given(userDao.getUserSubscriptions(anyString())).willReturn(subscriptions);
+
+        List<String> result = service.getUserSubscriptions(TOKEN, username);
+        assertEquals(subscriptions, result, "Should return all the user subscriptions to groups.");
     }
 }

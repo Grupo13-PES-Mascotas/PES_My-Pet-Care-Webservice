@@ -128,6 +128,16 @@ class GroupRestControllerTest {
     }
 
     @Test
+    public void updateFieldShouldReturnBadRequestWhenIncorrectField() throws Exception {
+        Map<String, String> data = new HashMap<>();
+        data.put("breed", "German Shepherds");
+        String request = mapper.writeValueAsString(data);
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
+        mockMvc.perform(put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "breed")
+            .contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void getAllTags() throws Exception {
         Map<String, TagEntity> tags = new HashMap<>();
         TagEntity tag = new TagEntity();

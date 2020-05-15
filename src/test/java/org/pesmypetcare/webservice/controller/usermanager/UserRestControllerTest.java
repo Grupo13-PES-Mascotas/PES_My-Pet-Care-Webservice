@@ -59,9 +59,15 @@ class UserRestControllerTest {
     }
 
     @Test
-    public void deleteAccountShouldReturnStatusNoContent() throws Exception {
+    public void deleteAccount() throws Exception {
         willDoNothing().given(service).deleteById(anyString(), anyString());
         mockMvc.perform(delete(URL).header(token, myToken)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteUserFromDb() throws Exception {
+        willDoNothing().given(service).deleteFromDatabase(anyString(), anyString());
+        mockMvc.perform(delete(URL).header(token, myToken).param("db", "true")).andExpect(status().isNoContent());
     }
 
     @Test
