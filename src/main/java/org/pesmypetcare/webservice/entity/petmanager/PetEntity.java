@@ -90,13 +90,39 @@ public class PetEntity {
 
     /**
      * Checks that field has the correct format for a Pet collection attribute.
-     * @param field Name of the attribute collection. Possible fields: meals, trainings, washes, weights
+     * @param field Name of the attribute collection. Possible fields: meals, weights, exercises, washes,
+     *              vaccinations, illnesses, medications, vet_visits
      */
     public static void checkCollectionField(String field) {
         if (!MEALS.equals(field) && !WEIGHTS.equals(field) && !EXERCISES.equals(field) && !WASHES.equals(field)
             && !VACCINATIONS.equals(field) && !ILLNESSES.equals(field) && !MEDICATIONS.equals(field)
             && !VET_VISITS.equals(field)) {
             throw new IllegalArgumentException(FIELD_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * Checks that field and key have the correct format of a Pet attribute.
+     * @param field Name of the attribute collection. Possible fields: meals, weights, exercises, washes,
+     *      *              vaccinations, illnesses, medications, vet_visits
+     * @param key Key of the attribute
+     */
+    public static void checkCollectionKey(String field, String key) {
+        switch (field) {
+            case MEALS:
+            case WEIGHTS:
+            case EXERCISES:
+            case WASHES:
+            case VACCINATIONS:
+            case ILLNESSES:
+            case VET_VISITS:
+                checkDateFormat(key);
+                break;
+            case MEDICATIONS:
+                checkDatePlusNameFormat(key);
+                break;
+            default:
+                throw new IllegalArgumentException(FIELD_NOT_EXISTS);
         }
     }
 

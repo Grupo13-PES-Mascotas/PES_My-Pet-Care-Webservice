@@ -121,6 +121,21 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
+    public void deleteFieldCollectionElementsPreviousToKey(String owner, String name, String field, String key)
+        throws DatabaseAccessException, DocumentException {
+        initializeFieldWithCollectionPath(owner, name, field);
+        List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
+
+        for (DocumentSnapshot fieldDocument : fieldsDocuments) {
+            String documentKey = fieldDocument.getId();
+            if (documentKey.compareTo(key) < 0) {
+                batch.delete(fieldDocument.getReference());
+            }
+        }
+        dbDoc.commitBatch(batch);
+    }
+
+    @Override
     public List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
         throws DatabaseAccessException, DocumentException {
         initializeFieldWithCollectionPath(owner, name, field);

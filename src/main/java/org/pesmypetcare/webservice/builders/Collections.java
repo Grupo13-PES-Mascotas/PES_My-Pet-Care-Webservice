@@ -25,5 +25,7 @@ public enum Collections {
     trainings,
     weekTrainings,
     kcals,
-    kcalsAverages
+    kcalsAverages,
+    medals,
+    userMedals
 }

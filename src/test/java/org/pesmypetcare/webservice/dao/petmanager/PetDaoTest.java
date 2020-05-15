@@ -2,6 +2,7 @@ package org.pesmypetcare.webservice.dao.petmanager;
 
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,18 +37,21 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class PetDaoTest {
-    private static final List<Map<String, Object>> PET_LIST = new ArrayList<>();
-    private static final List<DocumentSnapshot> PET_SNAPSHOT_LIST = new ArrayList<>();
-    private static final PetEntity PET_ENTITY = new PetEntity();
     private static final String OWNER = "OwnerUsername";
     private static final String OWNER_ID = "OwnerId";
     private static final String PET_NAME = "PetName";
+    private static final String MEAL_KEY = "1997-01-08T15:20:30";
     private static final String SIMPLE_FIELD = "gender";
     private static final GenderType VALUE = GenderType.Other;
     private static final String COLLECTION_FIELD = "trainings";
     private static final String KEY_1 = "1996-01-08T12:20:30";
-    private static final String KEY_2 = "1996-01-08T15:20:30";
-    private static final Map<String, Object> COLLECTION_ELEMENT_BODY = new HashMap<>();
+    private static final String KEY_2 = "1998-01-08T15:20:30";
+    private static PetEntity petEntity;
+    private static List<Map<String, Object>> petList;
+    private static List<Map<String, Object>> mealList;
+    private static List<DocumentSnapshot> snapshotList;
+    private static Map<String, Object> collectionElementBody;
+    private static Map<String, Object> mealMap;
 
     @Mock
     private FirestoreCollection dbCol;
@@ -57,9 +61,39 @@ class PetDaoTest {
     private WriteBatch batch;
     @Mock
     private StorageDao storageDao;
+    @Mock
+    private DocumentSnapshot documentSnapshot;
 
     @InjectMocks
     private PetDao petDao = new PetDaoImpl();
+
+    @BeforeEach
+    public void setUp() {
+        petEntity = new PetEntity(GenderType.Female, "Huskie", "1996-01-08T12:20:30",
+            "One limb lost", "Constant attention", 85.0, null,
+            null);
+        petList = new ArrayList<>();
+        Map<String, Object> auxMap = new HashMap<>();
+        auxMap.put("name", PET_NAME);
+        auxMap.put("body", petEntity);
+        petList.add(auxMap);
+        petList.add(auxMap);
+        petList.add(auxMap);
+        snapshotList = new ArrayList<>();
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
+        snapshotList.add(documentSnapshot);
+        mealMap = new HashMap<>();
+        mealMap.put("mealName", "Asparagus");
+        mealMap.put("kcal", 84.0);
+        collectionElementBody = new HashMap<>();
+        collectionElementBody.put("key", MEAL_KEY);
+        collectionElementBody.put("body", mealMap);
+        mealList = new ArrayList<>();
+        mealList.add(collectionElementBody);
+        mealList.add(collectionElementBody);
+        mealList.add(collectionElementBody);
+    }
 
     @Test
     public void shouldCreatePetOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
@@ -69,9 +103,9 @@ class PetDaoTest {
             any(WriteBatch.class))).willReturn(null);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
-        petDao.createPet(OWNER, PET_NAME, PET_ENTITY);
+        petDao.createPet(OWNER, PET_NAME, petEntity);
 
-        verify(dbDoc).createDocumentWithId(isA(String.class), same(PET_NAME), same(PET_ENTITY), same(batch));
+        verify(dbDoc).createDocumentWithId(isA(String.class), same(PET_NAME), same(petEntity), same(batch));
     }
 
     @Test
@@ -92,7 +126,7 @@ class PetDaoTest {
     public void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
         petDao.deleteAllPets(OWNER);
@@ -104,22 +138,24 @@ class PetDaoTest {
     public void shouldReturnPetEntityFromDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(PET_ENTITY);
+        given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(petEntity);
 
         PetEntity result = petDao.getPetData(OWNER, PET_NAME);
 
-        assertSame(PET_ENTITY, result, "Should return Pet Entity");
+        assertSame(petEntity, result, "Should return Pet Entity");
     }
 
     @Test
     public void shouldReturnAllPetsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
+        given(documentSnapshot.getId()).willReturn(PET_NAME);
+        given(documentSnapshot.toObject(any())).willReturn(petEntity);
 
         List<Map<String, Object>> list = petDao.getAllPetsData(OWNER);
 
-        assertEquals(PET_LIST, list, "Should return a List containing all pets Data");
+        assertEquals(petList, list, "Should return a List containing all pets Data");
     }
 
     @Test
@@ -156,14 +192,29 @@ class PetDaoTest {
     }
 
     @Test
+    public void shouldDeleteFieldCollectionElementsPreviousToKeyWhenRequested() throws DatabaseAccessException,
+        DocumentException {
+        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
+        given(dbCol.batch()).willReturn(batch);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(new ArrayList<>());
+        willDoNothing().given(dbDoc).commitBatch(batch);
+
+        petDao.deleteFieldCollectionElementsPreviousToKey(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
+
+        verify(dbDoc).commitBatch(same(batch));
+    }
+
+    @Test
     public void shouldGetFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
+        given(documentSnapshot.getId()).willReturn(MEAL_KEY);
+        given(documentSnapshot.getData()).willReturn(mealMap);
 
         List<Map<String, Object>> list = petDao.getFieldCollection(OWNER, PET_NAME, COLLECTION_FIELD);
 
-        assertEquals(PET_LIST, list, "Should return a List containing all field collection Data");
+        assertEquals(mealList, list, "Should return a List containing all field collection Data");
     }
 
     @Test
@@ -171,12 +222,14 @@ class PetDaoTest {
         throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(PET_SNAPSHOT_LIST);
+        given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
+        given(documentSnapshot.getId()).willReturn(MEAL_KEY);
+        given(documentSnapshot.getData()).willReturn(mealMap);
 
         List<Map<String, Object>> list = petDao.getFieldCollectionElementsBetweenKeys(OWNER, PET_NAME, COLLECTION_FIELD,
             KEY_1, KEY_2);
 
-        assertEquals(PET_LIST, list, "Should return a List containing the field collection Data between the "
+        assertEquals(mealList, list, "Should return a List containing the field collection Data between the "
             + "specified keys");
     }
 
@@ -189,9 +242,9 @@ class PetDaoTest {
             .willReturn(null);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
-        petDao.addFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
+        petDao.addFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, collectionElementBody);
 
-        verify(dbDoc).createDocumentWithId(isA(String.class), same(KEY_1), same(COLLECTION_ELEMENT_BODY), same(batch));
+        verify(dbDoc).createDocumentWithId(isA(String.class), same(KEY_1), same(collectionElementBody), same(batch));
     }
 
     @Test
@@ -211,19 +264,19 @@ class PetDaoTest {
         given(dbCol.batch()).willReturn(batch);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
-        petDao.updateFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, COLLECTION_ELEMENT_BODY);
+        petDao.updateFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1, collectionElementBody);
 
-        verify(dbDoc).updateDocumentFields(isA(String.class), same(COLLECTION_ELEMENT_BODY), same(batch));
+        verify(dbDoc).updateDocumentFields(isA(String.class), same(collectionElementBody), same(batch));
     }
 
     @Test
     public void shouldGetFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
-        given(dbDoc.getDocumentData(anyString())).willReturn(COLLECTION_ELEMENT_BODY);
+        given(dbDoc.getDocumentData(anyString())).willReturn(collectionElementBody);
 
         Map<String, Object> result = petDao.getFieldCollectionElement(OWNER, PET_NAME, COLLECTION_FIELD, KEY_1);
 
-        assertSame(COLLECTION_ELEMENT_BODY, result, "Should return elemnt data in a Map<String, Object>");
+        assertSame(collectionElementBody, result, "Should return elemnt data in a Map<String, Object>");
     }
 }

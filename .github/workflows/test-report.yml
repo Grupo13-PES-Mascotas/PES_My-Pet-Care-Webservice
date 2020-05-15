@@ -1,4 +1,4 @@
-name: Run tests and send report
+name: tests
 
 on:
   push:
