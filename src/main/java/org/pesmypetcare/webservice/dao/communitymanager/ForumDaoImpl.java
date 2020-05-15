@@ -154,12 +154,6 @@ public class ForumDaoImpl implements ForumDao {
         MessageEntity messageEntity = new MessageEntity(message);
         WriteBatch batch = documentAdapter.batch();
         documentAdapter.createDocument(Path.ofCollection(Collections.messages, groupId, forumId), messageEntity, batch);
-        /*ImageEntity imageEntity = message.getImage();
-        if (imageEntity != null) {
-            String imagePath = storageDao.uploadPostImage(parentGroup, forumName, imageEntity);
-            documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.messages, groupId, forumId,
-                docRef.getId()), "imagePath", imagePath);
-        }*/
         documentAdapter.commitBatch(batch);
         sendNotificationToSubscribers(groupId, parentGroup, forumName, message);
     }
