@@ -18,15 +18,13 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -39,7 +37,8 @@ public class GroupDaoImpl implements GroupDao {
     private static final String FIELD_GROUPS = "groups";
     private static final String FIELD_TAGS = "tags";
     private static final String GROUP_SUBSCRIPTIONS_FIELDS = "groupSubscriptions";
-    private final DateTimeFormatter timeFormatter;
+    private static final String NOTIFICATIONS_FIELD = "notification-tokens";
+    private static final String FCM_FIELD = "FCM";
 
     @Autowired
     private UserDao userDao;
@@ -50,13 +49,9 @@ public class GroupDaoImpl implements GroupDao {
     @Autowired
     private FirestoreCollection collectionAdapter;
 
-    public GroupDaoImpl() {
-        timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", new Locale("es", "ES"));
-    }
-
     @Override
     public void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException {
-        entity.setCreationDate(timeFormatter.format(LocalDateTime.now()));
+        entity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         DocumentReference groupRef = documentAdapter
             .createDocument(Path.ofCollection(Collections.groups), entity, batch);
@@ -196,7 +191,7 @@ public class GroupDaoImpl implements GroupDao {
     private void saveUserAsMember(String groupId, String userUid, String username, WriteBatch batch) {
         Map<String, Object> data = new HashMap<>();
         data.put("user", username);
-        data.put("date", timeFormatter.format(LocalDateTime.now()));
+        data.put("date", UTCLocalConverter.getCurrentUTC());
         documentAdapter.createDocumentWithId(Path.ofCollection(Collections.members, groupId), userUid, data, batch);
     }
 
@@ -210,9 +205,9 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void addUserToGroupNotifications(String userUid, String groupId, WriteBatch batch)
         throws DatabaseAccessException, DocumentException {
-        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
+        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), FCM_FIELD);
         documentAdapter
-            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), NOTIFICATIONS_FIELD,
                 FieldValue.arrayUnion(token));
     }
 
@@ -226,9 +221,9 @@ public class GroupDaoImpl implements GroupDao {
      */
     private void removeUserFromGroupNotifications(String userUid, String groupId, WriteBatch batch)
         throws DatabaseAccessException, DocumentException {
-        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), "FCM");
+        String token = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, userUid), FCM_FIELD);
         documentAdapter
-            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), "notification-tokens",
+            .updateDocumentFields(batch, Path.ofDocument(Collections.groups, groupId), NOTIFICATIONS_FIELD,
                 FieldValue.arrayRemove(token));
     }
 

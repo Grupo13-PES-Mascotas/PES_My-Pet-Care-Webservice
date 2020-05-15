@@ -87,6 +87,7 @@ public class UserRestController {
 
     /**
      * Gets all the group subscriptions of the user.
+     *
      * @param token The personal access token of the user
      * @param username The user's username
      * @return A list with all the groups the user is subscribed to
@@ -100,6 +101,7 @@ public class UserRestController {
 
     /**
      * Saves a token for the application messaging.
+     *
      * @param token The personal access token of the user
      * @param fcmToken The FCM token to save
      * @throws DatabaseAccessException If an error occurs when updating the database
@@ -107,8 +109,8 @@ public class UserRestController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void saveMessagingToken(@RequestHeader String token, @RequestHeader String fcmToken) throws DatabaseAccessException,
-        DocumentException {
+    public void saveMessagingToken(@RequestHeader String token, @RequestHeader String fcmToken)
+        throws DatabaseAccessException, DocumentException {
         userService.saveMessagingToken(token, fcmToken);
     }
 }

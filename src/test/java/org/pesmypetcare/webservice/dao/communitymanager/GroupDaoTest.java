@@ -60,6 +60,9 @@ import static org.mockito.Mockito.verify;
 class GroupDaoTest {
     private static final String GROUP_FIELD = "group";
     private static final String GROUPS_FIELD = "groups";
+    private static final String NAME_FIELD = "name";
+    private static final String FCM_FIELD = "FCM";
+    private static final String NOTIFICATIONS_FIELD = "notification-tokens";
     private String groupName;
     private String groupId;
     private String username;
@@ -73,7 +76,6 @@ class GroupDaoTest {
     private String usersPath;
     private String groupNamePath;
     private String newName;
-    private String field;
 
     @Mock
     private UserDao userDao;
@@ -106,7 +108,6 @@ class GroupDaoTest {
         date = "2020-05-01T17:48:15";
         tag = "dogs";
         newName = "Small Dogs";
-        field = "name";
         groupPath = Path.ofDocument(Collections.groups, groupId);
         tagsPath = Path.ofCollection(Collections.tags);
         tagPath = Path.ofDocument(Collections.tags, tag);
@@ -202,7 +203,7 @@ class GroupDaoTest {
         willDoNothing().given(documentAdapter)
             .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any());
         given(documentAdapter.documentExists(anyString())).willReturn(true);
-        assertThrows(DocumentException.class, () -> dao.updateField(groupName, field, newName),
+        assertThrows(DocumentException.class, () -> dao.updateField(groupName, NAME_FIELD, newName),
             "Update group name should fail if the new name is already in use.");
     }
 
@@ -254,8 +255,8 @@ class GroupDaoTest {
             verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
             verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
-                or(eq(GROUPS_FIELD), eq("notification-tokens")), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
+                or(eq(GROUPS_FIELD), eq(NOTIFICATIONS_FIELD)), any(FieldValue.class));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test
@@ -298,12 +299,12 @@ class GroupDaoTest {
                 .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
 
-            dao.updateField(groupName, field, newName);
-            verify(documentAdapter).updateDocumentFields(same(batch), eq(groupPath), eq(field), eq(newName));
+            dao.updateField(groupName, NAME_FIELD, newName);
+            verify(documentAdapter).updateDocumentFields(same(batch), eq(groupPath), eq(NAME_FIELD), eq(newName));
             verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(or(eq(tagsPath), eq(usersPath)),
                 or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
             verify(documentAdapter)
-                .updateDocumentFields(same(batch), or(eq(groupPath), eq(tagPath)), or(eq(GROUPS_FIELD), eq("name")),
+                .updateDocumentFields(same(batch), or(eq(groupPath), eq(tagPath)), or(eq(GROUPS_FIELD), eq(NAME_FIELD)),
                     or(eq(newName), or(eq(FieldValue.arrayRemove(groupId)), eq(FieldValue.arrayUnion(groupId)))));
             verify(documentAdapter).documentExists(tagPath);
             verify(documentAdapter).deleteDocument(eq(groupNamePath), same(batch));
@@ -320,7 +321,7 @@ class GroupDaoTest {
             lenient()
                 .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
-            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM")))
+            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD)))
                 .willReturn(token);
 
             dao.subscribe(groupName, username);
@@ -328,8 +329,8 @@ class GroupDaoTest {
             String membersPath = Path.ofCollection(Collections.members, groupId);
             verify(documentAdapter).createDocumentWithId(eq(membersPath), same(userId), anyMap(), same(batch));
             verify(documentAdapter)
-                .updateDocumentFields(same(batch), eq(groupPath), eq("notification-tokens"), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
+                .updateDocumentFields(same(batch), eq(groupPath), eq(NOTIFICATIONS_FIELD), any(FieldValue.class));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test
@@ -338,7 +339,7 @@ class GroupDaoTest {
             mockGetGroupId();
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
             willDoNothing().given(userDao).deleteGroupSubscription(anyString(), anyString(), any(WriteBatch.class));
-            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM")))
+            given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD)))
                 .willReturn(token);
 
             dao.unsubscribe(groupName, username);
@@ -347,8 +348,8 @@ class GroupDaoTest {
             verify(documentAdapter).deleteDocument(eq(memberPath), same(batch));
             verify(userDao).deleteGroupSubscription(same(userId), same(groupName), same(batch));
             verify(documentAdapter)
-                .updateDocumentFields(same(batch), eq(groupPath), eq("notification-tokens"), any(FieldValue.class));
-            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq("FCM"));
+                .updateDocumentFields(same(batch), eq(groupPath), eq(NOTIFICATIONS_FIELD), any(FieldValue.class));
+            verify(documentAdapter).getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD));
         }
 
         @Test

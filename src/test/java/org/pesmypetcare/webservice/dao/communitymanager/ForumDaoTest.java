@@ -70,7 +70,6 @@ class ForumDaoTest {
     private static ForumEntity forumEntity;
     private static List<String> tags;
     private static Message message;
-    private static MessageEntity messageEntity;
     private List<QueryDocumentSnapshot> queryDocumentSnapshots;
 
     @Mock
@@ -98,6 +97,7 @@ class ForumDaoTest {
 
     @InjectMocks
     private ForumDao dao = new ForumDaoImpl();
+    private String publicationDate;
 
     @BeforeAll
     public static void beforeAll() {
@@ -119,7 +119,6 @@ class ForumDaoTest {
         message.setCreator(username);
         message.setText("Some text");
         message.setEncodedImage("ZGFkYTIxM2FkMw==");
-        messageEntity = new MessageEntity(message);
     }
 
 
@@ -127,6 +126,7 @@ class ForumDaoTest {
     public void setUp() {
         queryDocumentSnapshots = new ArrayList<>();
         queryDocumentSnapshots.add(documentSnapshot);
+        publicationDate = "publicationDate";
     }
 
     @Test
@@ -383,7 +383,7 @@ class ForumDaoTest {
                     dao.deleteMessage(groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
+                            eq("creator"), eq(username), eq(publicationDate), eq(date));
                     verify(storageDao).deleteImageByName(eq("some-path"));
                     verify(batch).delete(same(documentReference));
                 }
@@ -401,7 +401,7 @@ class ForumDaoTest {
                     dao.addUserToLikedByOfMessage(username, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
+                            eq("creator"), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
                 }
 
@@ -418,7 +418,7 @@ class ForumDaoTest {
                     dao.removeUserFromLikedByOfMessage(username, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq("publicationDate"), eq(date));
+                            eq("creator"), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
                 }
             }

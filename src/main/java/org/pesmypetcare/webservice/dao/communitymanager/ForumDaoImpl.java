@@ -383,19 +383,32 @@ public class ForumDaoImpl implements ForumDao {
         deviceTokens.remove(userFcmToken);
         if (deviceTokens != null) {
             if (!deviceTokens.isEmpty()) {
-                Map<String, String> notificationData = new HashMap<>();
-                notificationData.put("group", groupName);
-                notificationData.put(FORUM_FIELD, forumName);
-                notificationData.put("creator", message.getCreator());
-                MulticastMessage multicastMessage = MulticastMessage.builder().putAllData(notificationData)
-                    .addAllTokens(deviceTokens).build();
                 try {
+                    MulticastMessage multicastMessage = buildMulticastMessage(groupName, forumName, message, deviceTokens);
                     firebaseMessaging.sendMulticast(multicastMessage);
                 } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    /**
+     * Builds a notification multicast message.
+     * @param groupName The name of the group where the forum belongs
+     * @param forumName The name of the forum where the message belongs
+     * @param message The message to be notified
+     * @param deviceTokens The list of device tokes to which send the notification
+     * @return The multicast message
+     */
+    private MulticastMessage buildMulticastMessage(String groupName, String forumName, Message message,
+                                                   List<String> deviceTokens) {
+        Map<String, String> notificationData = new HashMap<>();
+        notificationData.put("group", groupName);
+        notificationData.put(FORUM_FIELD, forumName);
+        notificationData.put("creator", message.getCreator());
+        return MulticastMessage.builder().putAllData(notificationData)
+            .addAllTokens(deviceTokens).build();
     }
 
     /**
