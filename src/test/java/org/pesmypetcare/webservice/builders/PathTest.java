@@ -82,15 +82,13 @@ class PathTest {
     @Test
     public void buildForumPath() {
         String path = Path.ofDocument(Collections.forums, groupId, forumId);
-        assertEquals("groups/" + groupId + "/forums/" + forumId, path,
-            "Should return the path to the forum.");
+        assertEquals("groups/" + groupId + "/forums/" + forumId, path, "Should return the path to the forum.");
     }
 
     @Test
     public void buildForumsCollectionPath() {
         String path = Path.ofCollection(Collections.forums, groupId);
-        assertEquals("groups/" + groupId + "/forums", path,
-            "Should return the path to a forums collection.");
+        assertEquals("groups/" + groupId + "/forums", path, "Should return the path to a forums collection.");
     }
 
     @Test
@@ -111,29 +109,25 @@ class PathTest {
     @Test
     public void buildPetPath() {
         String path = Path.ofDocument(Collections.pets, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName, path,
-            "Should return the path to the pet.");
+        assertEquals("users/" + userId + "/pets/" + petName, path, "Should return the path to the pet.");
     }
 
     @Test
     public void buildPetsCollectionPath() {
         String path = Path.ofCollection(Collections.pets, userId);
-        assertEquals("users/" + userId + "/pets", path,
-            "Should return the path to the pets collection.");
+        assertEquals("users/" + userId + "/pets", path, "Should return the path to the pets collection.");
     }
 
     @Test
     public void buildMemberPath() {
         String path = Path.ofDocument(Collections.members, groupId, userId);
-        assertEquals("groups/" + groupId + "/members/" + userId, path,
-            "Should return the path to the member.");
+        assertEquals("groups/" + groupId + "/members/" + userId, path, "Should return the path to the member.");
     }
 
     @Test
     public void buildMembersCollectionPath() {
         String path = Path.ofCollection(Collections.members, groupId);
-        assertEquals("groups/" + groupId + "/members", path,
-            "Should return the path to the members collection.");
+        assertEquals("groups/" + groupId + "/members", path, "Should return the path to the members collection.");
     }
 
     @Test
@@ -210,8 +204,8 @@ class PathTest {
     public void buildMedicationEntryPath() {
         String medicationName = "painkillers";
         String path = Path.ofDocument(Collections.medications, userId, petName, date + "-" + medicationName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/medications/" + date + "-" + medicationName,
-            path, "Should return the path to the medication entry.");
+        assertEquals("users/" + userId + "/pets/" + petName + "/medications/" + date + "-" + medicationName, path,
+            "Should return the path to the medication entry.");
     }
 
     @Test
@@ -321,9 +315,9 @@ class PathTest {
 
     @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
-        assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums), "Should fail"
-            + " when the numberof arguments passed is not the same as the required for the requested "
-            + "document.");
+        assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums),
+            "Should fail" + " when the numberof arguments passed is not the same as the required for the requested "
+                + "document.");
     }
 
     @Test
@@ -336,6 +330,18 @@ class PathTest {
     public void shouldFailIfAnyOfTheIdsIsNull() {
         assertThrows(IllegalArgumentException.class,
             () -> Path.ofDocument(Collections.messages, groupId, null, messageId),
-            "Should fail when the anyof the ids passed is null.");
+            "Should fail when any of the ids passed is null.");
+    }
+
+    @Test
+    public void collectionOfFieldShouldFailIfTheRequestedCollectionDoesNotExist() {
+        assertThrows(IllegalArgumentException.class, () -> Path.collectionOfField("something"),
+            "Should fail when the collection does not exist.");
+    }
+
+    @Test
+    public void shouldFailIfWrongNumberOfArgumentForRequest() {
+        assertThrows(IllegalArgumentException.class, () -> Path.ofCollection(Collections.groups, "extraId"),
+            "Should fail if the number of arguments passed is wrong");
     }
 }

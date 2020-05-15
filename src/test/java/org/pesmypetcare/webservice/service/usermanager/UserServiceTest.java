@@ -1,6 +1,8 @@
 package org.pesmypetcare.webservice.service.usermanager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +27,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -41,6 +44,8 @@ class UserServiceTest {
 
     @Mock
     private UserDao userDao;
+    @Mock
+    private FirebaseAuth auth;
 
     @InjectMocks
     private final UserService service = new UserServiceImpl();
@@ -97,6 +102,20 @@ class UserServiceTest {
         given(userDao.existsUsername(username)).willReturn(true);
 
         assertTrue(service.existsUsername(username), "Should return true if the username is already in use.");
+    }
+
+    @Test
+    public void saveMessagingToken() throws FirebaseAuthException, DatabaseAccessException, DocumentException {
+        FirebaseToken firebaseToken = mock(FirebaseToken.class);
+        given(auth.verifyIdToken(anyString())).willReturn(firebaseToken);
+        given(firebaseToken.getUid()).willReturn(uid);
+        willDoNothing().given(userDao).saveMessagingToken(anyString(), anyString());
+
+        String fcmToken = "fcmToken";
+        service.saveMessagingToken(TOKEN, fcmToken);
+        verify(auth).verifyIdToken(same(TOKEN));
+        verify(firebaseToken).getUid();
+        verify(userDao).saveMessagingToken(same(uid), same(fcmToken));
     }
 
     @Test

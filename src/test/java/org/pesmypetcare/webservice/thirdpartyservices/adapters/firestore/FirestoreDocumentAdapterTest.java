@@ -74,6 +74,7 @@ class FirestoreDocumentAdapterTest {
     private Iterable<DocumentReference> documentReferences;
     @Mock
     private Iterable<CollectionReference> collectionReferences;
+
     @InjectMocks
     private FirestoreDocument adapter = new FirestoreDocumentAdapter();
 
@@ -85,6 +86,13 @@ class FirestoreDocumentAdapterTest {
         aString = "John";
         fields.put(field, aString);
         pojo = new UserEntity();
+    }
+
+    @Test
+    public void batch() {
+        given(db.batch()).willReturn(batch);
+
+        assertEquals(batch, adapter.batch(), "Should return a write batch.");
     }
 
     @Test

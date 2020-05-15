@@ -97,6 +97,7 @@ public class Path {
             case tags:
             case usernames:
             case users:
+                COLLECTION_PATH.throwExceptionIfWrongNumArgs(0, ids.length);
                 return COLLECTION_PATH.buildRootCollectionPath(collection);
             case forums:
             case forumsNames:
