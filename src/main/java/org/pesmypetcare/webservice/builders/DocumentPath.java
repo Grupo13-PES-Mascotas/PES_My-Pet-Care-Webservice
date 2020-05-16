@@ -160,7 +160,8 @@ class DocumentPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToForumName(@NonNull String groupName, @NonNull String forumName) {
-        return buildPathToGroupName(groupName).append("/forums/").append(forumName);
+        return buildPathToGroupName(groupName).append('/').append(Collections.forum_names.name()).append('/')
+            .append(forumName);
     }
 
     /**

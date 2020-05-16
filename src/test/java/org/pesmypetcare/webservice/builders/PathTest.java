@@ -95,7 +95,7 @@ class PathTest {
     public void buildForumNamePath() {
         String forumName = "Huskies";
         String path = Path.ofDocument(Collections.forum_names, groupName, forumName);
-        assertEquals("groups_names/" + groupName + "/forums/" + forumName, path,
+        assertEquals("groups_names/" + groupName + "/forum_names/" + forumName, path,
             "Should return the path to the forum name.");
     }
 
