@@ -1,7 +1,7 @@
 package org.pesmypetcare.webservice.controller.communitymanager;
 
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
-import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
@@ -120,16 +120,16 @@ public class ForumRestController {
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
-     * @param messageEntity The message entity
+     * @param message The message to post
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or the forum do not exist
      */
     @PostMapping("/{parentGroup}/{forumName}")
     @ResponseStatus(HttpStatus.CREATED)
     public void postMessage(@RequestHeader String token, @PathVariable String parentGroup,
-                            @PathVariable String forumName, @RequestBody MessageEntity messageEntity)
+                            @PathVariable String forumName, @RequestBody Message message)
         throws DatabaseAccessException, DocumentException {
-        service.postMessage(token, parentGroup, forumName, messageEntity);
+        service.postMessage(token, parentGroup, forumName, message);
     }
 
     /**
@@ -149,5 +149,31 @@ public class ForumRestController {
                               @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
         throws DatabaseAccessException, DocumentException {
         service.deleteMessage(token, parentGroup, forumName, creator, date);
+    }
+
+    /**
+     * Adds or remove a like to a message of a forum.
+     *
+     * @param token The user's personal access token
+     * @param username The user's username
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's name
+     * @param date The publication date of the message
+     * @param like If true adds a like else removes it
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    @PutMapping("/{parentGroup}/{forumName}/messages")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void likeMessage(@RequestHeader String token, @PathVariable String parentGroup,
+                            @PathVariable String forumName, @RequestParam String username, @RequestParam String creator,
+                            @RequestParam String date, @RequestParam boolean like) throws DatabaseAccessException,
+        DocumentException {
+        if (like) {
+            service.addUserToLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
+        } else {
+            service.removeUserFromLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
+        }
     }
 }

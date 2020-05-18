@@ -85,9 +85,32 @@ public class UserRestController {
         userService.updateField(token, username, field, value.get(field));
     }
 
+    /**
+     * Gets all the group subscriptions of the user.
+     *
+     * @param token The personal access token of the user
+     * @param username The user's username
+     * @return A list with all the groups the user is subscribed to
+     * @throws DatabaseAccessException If an error occurs when updating the database
+     */
     @GetMapping("/subscriptions")
     public List<String> getUserSubscriptions(@RequestHeader String token, @RequestParam String username)
         throws DatabaseAccessException {
         return userService.getUserSubscriptions(token, username);
+    }
+
+    /**
+     * Saves a token for the application messaging.
+     *
+     * @param token The personal access token of the user
+     * @param fcmToken The FCM token to save
+     * @throws DatabaseAccessException If an error occurs when updating the database
+     * @throws DocumentException If the user of the token does not exist
+     */
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void saveMessagingToken(@RequestHeader String token, @RequestHeader String fcmToken)
+        throws DatabaseAccessException, DocumentException {
+        userService.saveMessagingToken(token, fcmToken);
     }
 }

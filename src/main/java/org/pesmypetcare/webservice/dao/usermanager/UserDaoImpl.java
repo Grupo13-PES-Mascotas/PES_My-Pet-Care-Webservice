@@ -12,6 +12,8 @@ import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
+import org.pesmypetcare.webservice.builders.Collections;
+import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
@@ -19,6 +21,10 @@ import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -40,12 +46,18 @@ public class UserDaoImpl implements UserDao {
     private static final String USER_KEY = "user";
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
-    private final String UPDATE_FAILED_CODE = "update-failed";
+    private static final String UPDATE_FAILED_CODE = "update-failed";
+    private final String FIELD_LIKED_BY = "likedBy";
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
-    private PetDao petDao;
     private Firestore db;
+    @Autowired
+    private PetDao petDao;
+    @Autowired
+    private FirestoreCollection collectionAdapter;
+    @Autowired
+    private FirestoreDocument documentAdapter;
 
     public UserDaoImpl() {
         FirebaseFactory firebaseFactory = FirebaseFactory.getInstance();
@@ -53,7 +65,6 @@ public class UserDaoImpl implements UserDao {
         db = firebaseFactory.getFirestore();
         users = db.collection("users");
         usedUsernames = db.collection("used_usernames");
-        petDao = new PetDaoImpl();
     }
 
     @Override
@@ -62,6 +73,8 @@ public class UserDaoImpl implements UserDao {
         if (!existsUsername(username)) {
             WriteBatch batch = db.batch();
             saveUsername(uid, username, batch);
+            String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
+            userEntity.setPassword(encodedPassword);
             batch.set(users.document(uid), userEntity);
             try {
                 batch.commit().get();
@@ -77,11 +90,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
-        petDao.deleteAllPets(uid);
-        deleteUserStorage(uid);
         DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
         throwExceptionIfUserDoesNotExist(userDoc);
+        petDao.deleteAllPets(uid);
+        deleteUserStorage(uid);
         String username = (String) userDoc.get(USERNAME_FIELD);
+        WriteBatch batch = collectionAdapter.batch();
+        deleteUserLikes(username, batch);
+        collectionAdapter.commitBatch(batch);
         usedUsernames.document(Objects.requireNonNull(username)).delete();
         users.document(uid).delete();
     }
@@ -162,6 +178,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException {
+        WriteBatch batch = documentAdapter.batch();
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), "FCM", token);
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
     public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
         throws DatabaseAccessException {
         DocumentReference subscriptions = users.document(getUid(username)).collection("forumSubscriptions")
@@ -200,6 +223,26 @@ public class UserDaoImpl implements UserDao {
     private void deleteUserStorage(String uid) {
         StorageDao storageDao = ((PetDaoImpl) petDao).getStorageDao();
         storageDao.deleteImageByName(uid + "/profile-image.png");
+    }
+
+    /**
+     * Deletes all the user likes to messages.
+     * @param username The user's username
+     * @param batch The batch where to write
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     */
+    private void deleteUserLikes(String username, WriteBatch batch) throws DatabaseAccessException {
+        ApiFuture<QuerySnapshot> documentSnapshots = collectionAdapter
+            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), FIELD_LIKED_BY,
+                username);
+        try {
+            for (DocumentSnapshot document : documentSnapshots.get().getDocuments()) {
+                batch.update(document.getReference(), FIELD_LIKED_BY, FieldValue.arrayRemove(username));
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            throw new DatabaseAccessException(UPDATE_FAILED_CODE, "The deletion of the user likes failed");
+        }
     }
 
     /**
@@ -351,18 +394,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     /**
-     * Updates the user's username.
+     * Updates the user's password.
      *
      * @param uid The unique identifier of the user
      * @param newPassword The new password for the account
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     private void updatePassword(String uid, String newPassword) throws FirebaseAuthException {
-        //TODO: Apply password encryption
         UserRecord.UpdateRequest updateRequest = getUserRecord(uid);
-        updateRequest.setPassword(newPassword);
+        String encodedPassword = new BCryptPasswordEncoder().encode(newPassword);
+        updateRequest.setPassword(encodedPassword);
         myAuth.updateUserAsync(updateRequest);
-        users.document(uid).update(PASSWORD_FIELD, newPassword);
+        users.document(uid).update(PASSWORD_FIELD, encodedPassword);
     }
 
     /**

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,18 +101,19 @@ class ForumRestControllerTest {
         given(service.getAllForumsFromGroup(anyString())).willReturn(forums);
         MvcResult mvcResult = mockMvc.perform(get(BASE_URL + parentGroup)).andExpect(status().isOk()).andReturn();
         String result = mvcResult.getResponse().getContentAsString();
-        assertEquals("Should return the requested forum.", mapper.writeValueAsString(forums), result);
+        assertEquals("Should return all the forums from the requested group.", mapper.writeValueAsString(forums),
+            result);
     }
 
     @Test
-    public void updateName() throws Exception {
+    public void updateTags() throws Exception {
         willDoNothing().given(service).updateTags(anyString(), anyString(), anyList(), anyList());
         mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).param("newName", "German Shepherds"))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    public void updateTags() throws Exception {
+    public void updateName() throws Exception {
         willDoNothing().given(service).updateName(anyString(), anyString(), anyString());
         mockMvc.perform(
             put(BASE_URL + "tags/" + parentGroup + "/" + forumName).contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -122,9 +124,9 @@ class ForumRestControllerTest {
     @Test
     public void postMessage() throws Exception {
         json = mapper.writeValueAsString(new MessageEntity());
-        willDoNothing().given(service).postMessage(anyString(), anyString(), anyString(), any(MessageEntity.class));
+        willDoNothing().given(service).postMessage(anyString(), anyString(), anyString(), any(Message.class));
         mockMvc.perform(post(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
-                            .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
+            .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
     }
 
     @Test
@@ -133,5 +135,24 @@ class ForumRestControllerTest {
         mockMvc.perform(
             delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
                 .param("date", creationDate)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void likeMessage() throws Exception {
+        willDoNothing().given(service)
+            .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+            .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "true"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void removeLikeFromMessage() throws Exception {
+        willDoNothing().given(service)
+            .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
+                anyString());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+            .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "false"))
+            .andExpect(status().isNoContent());
     }
 }

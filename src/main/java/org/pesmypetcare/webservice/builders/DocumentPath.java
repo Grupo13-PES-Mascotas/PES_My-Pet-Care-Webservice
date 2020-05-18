@@ -21,11 +21,11 @@ class DocumentPath extends PathBuilder {
         switch (collection) {
             case groups:
                 return buildPathToGroup(ids[0]);
-            case groupsNames:
+            case groups_names:
                 return buildPathToGroupName(ids[0]);
             case tags:
                 return buildPathToTag(ids[0]);
-            case usernames:
+            case used_usernames:
                 return buildPathToUsername(ids[0]);
             case users:
                 return buildPathToUser(ids[0]);
@@ -48,15 +48,13 @@ class DocumentPath extends PathBuilder {
         throwExceptionIfWrongNumArgs(2, ids.length);
         switch (collection) {
             case forums:
-                return buildPathToForum(ids[0], ids[1]);
-            case forumsNames:
+            case members:
+                return buildPathToGroupInnerDocument(ids[0], collection, ids[1]);
+            case forum_names:
                 return buildPathToForumName(ids[0], ids[1]);
             case pets:
-                return buildPathToPet(ids[0], ids[1]);
             case userMedals:
-                return buildPathToUserMedal(ids[0], ids[1]);
-            case members:
-                return buildPathToMember(ids[0], ids[1]);
+                return buildPathToUserInnerDocument(ids[0], collection, ids[1]);
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
         }
@@ -78,7 +76,7 @@ class DocumentPath extends PathBuilder {
         }
         switch (collection) {
             case messages:
-                return buildPathToMessage(ids[0], ids[1], ids[2]);
+                return buildPathToForumInnerDocument(ids[0], ids[1], collection, ids[2]);
             case kcals:
                 return buildPathToKcal(ids[0], ids[1], ids[2]);
             case meals:
@@ -113,41 +111,33 @@ class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds a path to a forum.
+     * Builds a path to a group inner document.
      *
      * @param groupId The group ID
-     * @param forumId The forum ID
+     * @param collection The collection which the document belongs to
+     * @param id The document ID
      * @return The path
      */
     @NonNull
-    private static StringBuilder buildPathToForum(@NonNull String groupId, @NonNull String forumId) {
-        return buildPathToGroup(groupId).append("/forums/").append(forumId);
+    private static StringBuilder buildPathToGroupInnerDocument(@NonNull String groupId, @NonNull Collections collection,
+                                                               @NonNull String id) {
+        return buildPathToGroup(groupId).append('/').append(collection.name()).append('/').append(id);
     }
 
     /**
-     * Builds a path to a message.
+     * Builds a path to a forum inner document.
      *
      * @param groupId The group ID
      * @param forumId The forum ID
-     * @param messageId The message ID
+     * @param collection The collection which the document belongs to
+     * @param id The document ID
      * @return The path
      */
     @NonNull
-    private static StringBuilder buildPathToMessage(@NonNull String groupId, @NonNull String forumId,
-                                                    @NonNull String messageId) {
-        return buildPathToForum(groupId, forumId).append("/messages/").append(messageId);
-    }
-
-    /**
-     * Builds a path to a member.
-     *
-     * @param groupId The group ID
-     * @param memberId The member ID
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToMember(@NonNull String groupId, @NonNull String memberId) {
-        return buildPathToGroup(groupId).append("/members/").append(memberId);
+    private static StringBuilder buildPathToForumInnerDocument(@NonNull String groupId, @NonNull String forumId,
+                                                               @NonNull Collections collection, @NonNull String id) {
+        return buildPathToGroupInnerDocument(groupId, Collections.forums, forumId).append('/').append(collection.name())
+            .append('/').append(id);
     }
 
     /**
@@ -170,7 +160,8 @@ class DocumentPath extends PathBuilder {
      */
     @NonNull
     private static StringBuilder buildPathToForumName(@NonNull String groupName, @NonNull String forumName) {
-        return buildPathToGroupName(groupName).append("/forums/").append(forumName);
+        return buildPathToGroupName(groupName).append('/').append(Collections.forum_names.name()).append('/')
+            .append(forumName);
     }
 
     /**
@@ -208,6 +199,7 @@ class DocumentPath extends PathBuilder {
 
     /**
      * Builds the path to a medal.
+     *
      * @param medalName The medal name
      * @return The path
      */
@@ -217,26 +209,17 @@ class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a pet.
+     * Builds the path to a user inner document.
      *
      * @param userId The user ID
-     * @param petName The pet name
+     * @param collection The inner collection which the document belongs to
+     * @param id The document ID
      * @return The path
      */
     @NonNull
-    private static StringBuilder buildPathToPet(@NonNull String userId, @NonNull String petName) {
-        return buildPathToUser(userId).append("/pets/").append(petName);
-    }
-
-    /**
-     * Builds the path to a medal.
-     * @param userId The user ID
-     * @param medalName The medal name
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToUserMedal(@NonNull String userId, @NonNull String medalName) {
-        return buildPathToUser(userId).append("/medals/").append(medalName);
+    private static StringBuilder buildPathToUserInnerDocument(@NonNull String userId, @NonNull Collections collection,
+                                                              @NonNull String id) {
+        return buildPathToUser(userId).append('/').append(collection.name()).append('/').append(id);
     }
 
     /**
@@ -250,7 +233,7 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToWeekTraining(@NonNull String userId, @NonNull String petName,
                                                          @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/weekTrainings/").append(date);
+        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/weekTrainings/").append(date);
     }
 
     /**
@@ -264,7 +247,7 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToKcalsAverage(@NonNull String userId, @NonNull String petName,
                                                          @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/kcalsAverages/").append(date);
+        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/kcalsAverages/").append(date);
     }
 
     /**
@@ -278,7 +261,7 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToFreqTraining(@NonNull String userId, @NonNull String petName,
                                                          @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/trainings/").append(date);
+        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/trainings/").append(date);
     }
 
     /**
@@ -293,7 +276,8 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToPetCollection(@NonNull String userId, @NonNull String petName,
                                                           @NonNull String collectionName, @NonNull String key) {
-        return buildPathToPet(userId, petName).append("/").append(collectionName).append("/").append(key);
+        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/").append(collectionName)
+            .append("/").append(key);
     }
 
     /**
@@ -307,6 +291,6 @@ class DocumentPath extends PathBuilder {
     @NonNull
     private static StringBuilder buildPathToKcal(@NonNull String userId, @NonNull String petName,
                                                  @NonNull String date) {
-        return buildPathToPet(userId, petName).append("/kcals/").append(date);
+        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/kcals/").append(date);
     }
 }

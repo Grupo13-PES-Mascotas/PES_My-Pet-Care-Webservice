@@ -117,6 +117,15 @@ public interface UserDao {
      */
     List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
 
+    /**
+     * Saves the FCM token of the user.
+     * @param uid The user UID
+     * @param token The user token
+     * @throws DatabaseAccessException If an error occurs when saving the token
+     * @throws DocumentException When the user does not exist
+     */
+    void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException;
+
     void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
         throws DatabaseAccessException;
 }

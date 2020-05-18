@@ -75,7 +75,7 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
         try {
             DocumentSnapshot snapshot = future.get();
             if (!documentSnapshotExists(snapshot)) {
-                throw new DocumentException("invalid-path", "The document does not exist");
+                throw new DocumentException("document-not-exists", "The document does not exist");
             }
             return snapshot;
         } catch (InterruptedException | ExecutionException e) {

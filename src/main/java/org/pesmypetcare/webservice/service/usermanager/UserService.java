@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.List;
 
@@ -75,6 +76,17 @@ public interface UserService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     boolean existsUsername(String username) throws DatabaseAccessException;
+
+    /**
+     * Saves the FCM token of the user.
+     * @param token The personal access token of the user
+     * @param fcmToken The FCM token to save
+     * @throws DatabaseAccessException If an error occurs when saving the token
+     * @throws DocumentException When the user does not exist
+     * @throws BadCredentialsException When the access token is not valid
+     */
+    void saveMessagingToken(String token, String fcmToken)
+        throws DatabaseAccessException, DocumentException, BadCredentialsException;
 
     List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException;
 }

@@ -15,16 +15,27 @@ public interface StorageService {
      * Saves an image to the storage.
      * @param image The image to save
      */
-    void saveImage(ImageEntity image);
+    void saveUserImage(ImageEntity image);
 
     /**
      * Saves a pet image to the storage.
      * @param owner The pet's owner
-     * @param image The image save
+     * @param image The image to save
      * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @throws DocumentException When the pet does not exist
      */
     void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Saves a group image to the storage.
+     * @param token The user personal access token
+     * @param group The group name
+     * @param image The image to save
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document group not exist
+     */
+    void saveGroupImage(String token, String group, ImageEntity image) throws DatabaseAccessException,
+        DocumentException;
 
     /**
      * Gets an image from the storage.
@@ -42,9 +53,20 @@ public interface StorageService {
     /**
      * Downloads all the images from the pets folder.
      * @param owner The path with the requested data
-     * @return A map with pets names and the their images as a byte array
-     * @throws DatabaseAccessException If an error occurs when accessing the database
-     * @throws DocumentException When the document does not exist
+     * @return A map with pets names and the their images as a base64 encoded byte array
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When the pet does not exist
      */
-    Map<String, String> getAllImages(String owner) throws DatabaseAccessException, DocumentException;
+    Map<String, String> getAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Downloads all the images from a forum folder.
+     * @param group The group name
+     * @param forum The forum name
+     * @return A map with the images paths and their images as a base64 encoded byte array
+     * @throws DatabaseAccessException When an error occurs when accessing the database
+     * @throws DocumentException When the either the group or forum do not exist
+     */
+    Map<String, String> getAllPostsImagesFromForum(String group, String forum)
+        throws DatabaseAccessException, DocumentException;
 }
