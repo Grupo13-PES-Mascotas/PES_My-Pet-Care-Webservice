@@ -101,7 +101,7 @@ jacocoTestReport {
     }
 
     def fileFilter = ['**/*Test*.*', '**/entity/**', '**/error/**', '**/*Factory.class', '**/form/**', '**/Web*.class',
-                        '**/*Service.class', '**/*Dao.class']
+                        '**/*Service.class', '**/*Dao.class', '**/FirestoreDocument.class', '**/FirestoreCollection.class']
     def debugTree = fileTree(dir: "${buildDir}/classes/", excludes: fileFilter)
 
     classDirectories.from = files([debugTree])
