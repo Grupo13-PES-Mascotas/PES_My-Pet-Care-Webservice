@@ -10,7 +10,7 @@ plugins {
     id 'maven'
 }
 
-group='com.github.Grupo13-PES-Mascotas'
+group = 'com.github.Grupo13-PES-Mascotas'
 version = '2.0.0'
 sourceCompatibility = '1.8'
 
@@ -99,5 +99,12 @@ jacocoTestReport {
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
     }
+
+    def fileFilter = ['**/*Test*.*', '**/entity/**', '**/error/**', '**/*Factory.class', '**/form/**', '**/Web*.class',
+                        '**/*Service.class', '**/*Dao.class', '**/FirestoreDocument.class', '**/FirestoreCollection.class']
+    def debugTree = fileTree(dir: "${buildDir}/classes/", excludes: fileFilter)
+
+    classDirectories.from = files([debugTree])
+
     dependsOn test
 }
