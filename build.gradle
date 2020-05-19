@@ -100,7 +100,8 @@ jacocoTestReport {
         html.destination file("${buildDir}/jacocoHtml")
     }
 
-    def fileFilter = ['**/*Test*.*', '**/entity/**', '**/error/**', '**/thirdpartyservices/**', '**/form/**', '**/Web*.class']
+    def fileFilter = ['**/*Test*.*', '**/entity/**', '**/error/**', '**/*Factory.class', '**/form/**', '**/Web*.class',
+                        '**/*Service.class', '**/*Dao.class']
     def debugTree = fileTree(dir: "${buildDir}/classes/", excludes: fileFilter)
 
     classDirectories.from = files([debugTree])
