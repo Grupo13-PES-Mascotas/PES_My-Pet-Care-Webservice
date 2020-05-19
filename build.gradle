@@ -99,5 +99,11 @@ jacocoTestReport {
         csv.enabled false
         html.destination file("${buildDir}/jacocoHtml")
     }
+
+    def fileFilter = ['**/*Test*.*', '**/*Binding.class']
+    def debugTree = fileTree(dir: "${buildDir}/classes/", excludes: fileFilter)
+
+    classDirectories.from = files([debugTree])
+
     dependsOn test
 }
