@@ -7,6 +7,7 @@ import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.auth.FirebaseAuth;
@@ -179,7 +180,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException {
+        String currentToken = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), "FCM");
         WriteBatch batch = documentAdapter.batch();
+        if (currentToken != null) {
+            updateTokenInSubscribedGroups(token, currentToken, batch);
+        }
         documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), "FCM", token);
         documentAdapter.commitBatch(batch);
     }
@@ -227,14 +232,14 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Deletes all the user likes to messages.
+     *
      * @param username The user's username
      * @param batch The batch where to write
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
     private void deleteUserLikes(String username, WriteBatch batch) throws DatabaseAccessException {
         ApiFuture<QuerySnapshot> documentSnapshots = collectionAdapter
-            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), FIELD_LIKED_BY,
-                username);
+            .getCollectionGroupDocumentsWhereArrayContains(Collections.messages.name(), FIELD_LIKED_BY, username);
         try {
             for (DocumentSnapshot document : documentSnapshots.get().getDocuments()) {
                 batch.update(document.getReference(), FIELD_LIKED_BY, FieldValue.arrayRemove(username));
@@ -465,6 +470,30 @@ public class UserDaoImpl implements UserDao {
     private void throwExceptionIfUserDoesNotExist(DocumentSnapshot userDoc) throws DatabaseAccessException {
         if (!userDoc.exists()) {
             throw new DatabaseAccessException(INVALID_USER, USER_DOES_NOT_EXIST_MESSAGE);
+        }
+    }
+
+    /**
+     * Updates the FCM token in all the groups the user is subscribed to.
+     * @param token The new FCM token
+     * @param currentToken The current FCM token
+     * @param batch The batch of writes
+     * @throws DatabaseAccessException When the operation is interrupted
+     * @throws DocumentException When the update fails
+     */
+    private void updateTokenInSubscribedGroups(String token, String currentToken, WriteBatch batch)
+        throws DatabaseAccessException, DocumentException {
+        ApiFuture<QuerySnapshot> subscribedGroups = collectionAdapter
+            .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
+        try {
+            for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
+                batch.update(group.getReference(), "FCM", FieldValue.arrayRemove(currentToken), "FCM",
+                    FieldValue.arrayUnion(token));
+            }
+        } catch (InterruptedException e) {
+            throw new DatabaseAccessException("write-failed", e.getMessage());
+        } catch (ExecutionException e) {
+            throw new DocumentException("write-failed", e.getMessage());
         }
     }
 }
