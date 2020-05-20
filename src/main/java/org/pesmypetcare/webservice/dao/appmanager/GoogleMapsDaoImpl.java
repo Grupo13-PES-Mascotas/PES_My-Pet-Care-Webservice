@@ -16,7 +16,7 @@ public class GoogleMapsDaoImpl implements GoogleMapsDao {
 
     public void test() throws InterruptedException, ApiException, IOException {
         GeoApiContext context = new GeoApiContext.Builder()
-            .apiKey("AIzaSyBJhfUFYUlDv_sY_fTD9r6e1W7zkpqka0M")
+            .apiKey("")
             .build();
         GeocodingResult[] results =  GeocodingApi.geocode(context,
             "1600 Amphitheatre Parkway Mountain View, CA 94043").await();
