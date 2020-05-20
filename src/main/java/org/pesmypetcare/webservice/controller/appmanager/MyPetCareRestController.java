@@ -2,6 +2,9 @@ package org.pesmypetcare.webservice.controller.appmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.maps.errors.ApiException;
+import org.pesmypetcare.webservice.dao.appmanager.GoogleMapsDao;
+import org.pesmypetcare.webservice.dao.appmanager.GoogleMapsDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.service.usermanager.UserService;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +55,14 @@ public class MyPetCareRestController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
         return response;
+    }
+
+    /**
+     * Function done only to do tests, it should be deleted before release
+     */
+    @GetMapping("/test")
+    public void testDaos() throws InterruptedException, ApiException, IOException {
+        GoogleMapsDaoImpl prova = new GoogleMapsDaoImpl();
+        prova.test();
     }
 }

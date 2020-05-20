@@ -30,6 +30,7 @@ ext {
 }
 
 dependencies {
+    implementation 'com.google.maps:google-maps-services:0.13.0'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev20200428-1.30.9'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
