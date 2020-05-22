@@ -62,7 +62,7 @@ public class MyPetCareRestController {
      */
     @GetMapping("/test")
     public void testDaos() throws InterruptedException, ApiException, IOException {
-        GoogleMapsDaoImpl prova = new GoogleMapsDaoImpl();
+        GoogleMapsDao prova = new GoogleMapsDaoImpl();
         prova.test();
     }
 }
