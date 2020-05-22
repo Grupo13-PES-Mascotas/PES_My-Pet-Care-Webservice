@@ -1,5 +1,8 @@
 package org.pesmypetcare.webservice.error;
 
+/**
+ * @author Santiago Del Rey
+ */
 public class DatabaseAccessException extends Exception {
     private final String errorCode;
 

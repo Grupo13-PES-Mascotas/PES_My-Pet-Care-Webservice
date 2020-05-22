@@ -8,10 +8,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.pesmypetcare.webservice.entity.ImageEntity;
+import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
-import org.pesmypetcare.webservice.service.StorageService;
+import org.pesmypetcare.webservice.service.appmanager.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +35,9 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @author Santiago Del Rey
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
@@ -70,33 +73,32 @@ class StorageRestControllerTest {
     }
 
     @Test
-    public void saveImage() throws Exception {
-        willDoNothing().given(service).saveImage(any(ImageEntity.class));
-        mockMvc.perform(put(BASE_URL)
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isOk());
+    public void saveImageShouldReturnStatusNoContent() throws Exception {
+        willDoNothing().given(service).saveUserImage(any(ImageEntity.class));
+        mockMvc.perform(put(BASE_URL).header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON).content(json))
+            .andExpect(status().isNoContent());
     }
 
     @Test
-    public void savePetImage() throws Exception {
+    public void savePetImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).savePetImage(anyString(), any(ImageEntity.class));
-        mockMvc.perform(put(BASE_URL + PETS_PICTURES_LOCATION)
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-            .andExpect(status().isOk());
+        mockMvc.perform(put(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)
+            .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isNoContent());
     }
 
     @Test
-    public void downloadImage() throws Exception {
+    public void saveGroupImageShouldReturnStatusNoContent() throws Exception {
+        willDoNothing().given(service).saveGroupImage(anyString(), anyString(), any(ImageEntity.class));
+        mockMvc.perform(put(BASE_URL + "/Dogs").header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON)
+            .content(json)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void downloadUserImage() throws Exception {
         given(service.getImage(any(StorageForm.class))).willReturn(downloadExpectedResult);
-        MvcResult response = mockMvc.perform(get(BASE_URL + "/user")
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("name", "profile.png"))
-            .andExpect(status().isOk()).andReturn();
+        MvcResult response = mockMvc.perform(get(BASE_URL + "/user").header(TOKEN, myToken)
+            .contentType(MediaType.APPLICATION_JSON).param("name", "profile.png")).andExpect(status().isOk())
+            .andReturn();
         String result = getContentAsString(response);
         assertEquals(downloadExpectedResult, result, ASSERT_MESSAGE);
     }
@@ -104,46 +106,63 @@ class StorageRestControllerTest {
     @Test
     public void downloadPetImage() throws Exception {
         given(service.getImage(any(StorageForm.class))).willReturn(downloadExpectedResult);
-        MvcResult response = mockMvc.perform(get(BASE_URL + "/user/pets/Toby-image.png")
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()).andReturn();
+        MvcResult response = mockMvc.perform(get(BASE_URL + "/user/pets/Toby-image.png").header(TOKEN, myToken)
+            .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        String result = getContentAsString(response);
+        assertEquals(downloadExpectedResult, result, ASSERT_MESSAGE);
+    }
+
+    @Test
+    public void downloadGroupImage() throws Exception {
+        given(service.getImage(any(StorageForm.class))).willReturn(downloadExpectedResult);
+        MvcResult response = mockMvc.perform(get(BASE_URL + "/groups/Dogs").header(TOKEN, myToken)
+            .param("name", "Dogs.png")).andExpect(status().isOk()).andReturn();
         String result = getContentAsString(response);
         assertEquals(downloadExpectedResult, result, ASSERT_MESSAGE);
     }
 
     @Test
     public void downloadAllPetsImages() throws Exception {
-        given(service.getAllImages(anyString())).willReturn(images);
-        MvcResult response = mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION)
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk()).andReturn();
+        given(service.getAllPetImages(anyString())).willReturn(images);
+        MvcResult response = mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)).andExpect(
+            status().isOk()).andReturn();
         String result = getContentAsString(response);
-        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() { };
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> resultMap = mapper.readValue(result, typeRef);
-        assertEquals(images, resultMap, "Should return a map with the pets names ant their profile"
-            + " image as a base64 encoded string");
+        assertEquals(images, resultMap,
+            "Should return a map with the pets names and their profile images as a base64 encoded string");
+    }
+
+    @Test
+    public void downloadAllPostsImages() throws Exception {
+        images.clear();
+        images.put("group/forum/image", downloadExpectedResult);
+        given(service.getAllPostsImagesFromForum(anyString(), anyString())).willReturn(images);
+        MvcResult response = mockMvc.perform(get(BASE_URL + "/Dogs/Huskies").header(TOKEN, myToken)).andExpect(
+            status().isOk()).andReturn();
+        String result = getContentAsString(response);
+        TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+        };
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> resultMap = mapper.readValue(result, typeRef);
+        assertEquals(images, resultMap,
+            "Should return a map with the posts images paths and their images as a base64 encoded string");
     }
 
     @Test
     public void shouldReturnErrorCode500WhenDatabaseFails() throws Exception {
-        willThrow(DatabaseAccessException.class).given(service).getAllImages(anyString());
-        mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION)
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().is5xxServerError());
+        willThrow(DatabaseAccessException.class).given(service).getAllPetImages(anyString());
+        mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)
+            .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is5xxServerError());
     }
 
     @Test
-    public void deleteImage() throws Exception {
+    public void deleteImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteImage(any(StorageForm.class));
-        mockMvc.perform(delete(BASE_URL)
-            .header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(form))
-            .andExpect(status().isOk());
+        mockMvc.perform(delete(BASE_URL).header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON).content(form))
+            .andExpect(status().isNoContent());
     }
 
     private String getContentAsString(MvcResult response) throws UnsupportedEncodingException {

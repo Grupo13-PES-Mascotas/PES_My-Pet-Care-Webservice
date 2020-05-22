@@ -1,0 +1,3 @@
+before_install:
+  - chmod +x ./.github/scripts/decrypt_key.sh
+  - ./.github/scripts/decrypt_key.sh

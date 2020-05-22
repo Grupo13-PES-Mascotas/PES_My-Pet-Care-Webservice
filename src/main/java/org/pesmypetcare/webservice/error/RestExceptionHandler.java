@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * @author Santiago Del Rey
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,6 +26,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         FirebaseAuthException ex) {
         String errorMessage = new FirebaseExceptionHandler().getErrorMessage(ex.getErrorCode());
         ErrorBody errorBody = new ErrorBody(errorMessage, ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
@@ -34,6 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorBody errorBody = new ErrorBody("Invalid argument", ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
@@ -45,6 +50,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DatabaseAccessException.class)
     protected ResponseEntity<Object> handleInvalidAccessToDatabase(DatabaseAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
+        if ("invalid-request".equals(ex.getErrorCode())) {
+            return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -56,6 +65,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InitializationException.class)
     protected ResponseEntity<Object> handleIncorrectInitialization(InitializationException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -67,7 +77,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CalendarAccessException.class)
     protected ResponseEntity<Object> handleIncorrectCalendarAccess(CalendarAccessException ex) {
         ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Creates the http response for the DocumentException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(DocumentException.class)
+    protected ResponseEntity<Object> handleInvalidDocumentRequest(DocumentException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        if ("document-not-exists".equals(ex.getErrorCode())) {
+            return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
 }
