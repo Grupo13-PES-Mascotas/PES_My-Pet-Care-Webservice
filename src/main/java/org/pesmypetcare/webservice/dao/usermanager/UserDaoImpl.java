@@ -48,7 +48,9 @@ public class UserDaoImpl implements UserDao {
     private static final String INVALID_USER = "invalid-user";
     private static final String INVALID_USERNAME = "invalid-username";
     private static final String UPDATE_FAILED_CODE = "update-failed";
-    private final String FIELD_LIKED_BY = "likedBy";
+    private static final String FIELD_LIKED_BY = "likedBy";
+    private static final String FCM = "FCM";
+    private static final String WRITE_FAILED_CODE = "write-failed";
     private FirebaseAuth myAuth;
     private CollectionReference users;
     private CollectionReference usedUsernames;
@@ -180,12 +182,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException {
-        String currentToken = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), "FCM");
+        String currentToken = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), FCM);
         WriteBatch batch = documentAdapter.batch();
         if (currentToken != null) {
             updateTokenInSubscribedGroups(token, currentToken, batch);
         }
-        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), "FCM", token);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), FCM, token);
         documentAdapter.commitBatch(batch);
     }
 
@@ -487,13 +489,13 @@ public class UserDaoImpl implements UserDao {
             .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
         try {
             for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
-                batch.update(group.getReference(), "FCM", FieldValue.arrayRemove(currentToken), "FCM",
+                batch.update(group.getReference(), FCM, FieldValue.arrayRemove(currentToken), FCM,
                     FieldValue.arrayUnion(token));
             }
         } catch (InterruptedException e) {
-            throw new DatabaseAccessException("write-failed", e.getMessage());
+            throw new DatabaseAccessException(WRITE_FAILED_CODE, e.getMessage());
         } catch (ExecutionException e) {
-            throw new DocumentException("write-failed", e.getMessage());
+            throw new DocumentException(WRITE_FAILED_CODE, e.getMessage());
         }
     }
 }
