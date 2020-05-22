@@ -176,14 +176,14 @@ class PathTest {
     public void buildFrequencyOfWashesEntryPath() {
         String path = Path.ofDocument(Collections.washes, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/washes/" + date, path,
-            "Should return the path to the frequencyof washes entry.");
+            "Should return the path to the frequency of washes entry.");
     }
 
     @Test
     public void buildFrequencyOfWashesEntriesCollectionPath() {
         String path = Path.ofCollection(Collections.washes, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/washes", path,
-            "Should return the path to the frequencyof washes entries collection.");
+            "Should return the path to the frequency of washes entries collection.");
     }
 
     @Test
@@ -260,7 +260,7 @@ class PathTest {
     @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
         assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums),
-            "Should fail" + " when the numberof arguments passed is not the same as the required for the requested "
+            "Should fail" + " when the number of arguments passed is not the same as the required for the requested "
                 + "document.");
     }
 
