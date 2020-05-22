@@ -43,7 +43,7 @@ class PetDaoTest {
     private static final String MEAL_KEY = "1997-01-08T15:20:30";
     private static final String SIMPLE_FIELD = "gender";
     private static final GenderType VALUE = GenderType.Other;
-    private static final String COLLECTION_FIELD = "trainings";
+    private static final String COLLECTION_FIELD = "illnesses";
     private static final String KEY_1 = "1996-01-08T12:20:30";
     private static final String KEY_2 = "1998-01-08T15:20:30";
     private static PetEntity petEntity;
