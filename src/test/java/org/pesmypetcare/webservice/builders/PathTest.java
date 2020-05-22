@@ -145,20 +145,6 @@ class PathTest {
     }
 
     @Test
-    public void buildKcalEntryPath() {
-        String path = Path.ofDocument(Collections.kcals, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcals/" + date, path,
-            "Should return the path to the kcal entry.");
-    }
-
-    @Test
-    public void buildKcalEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.kcals, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcals", path,
-            "Should return the path to the kcal entries collection.");
-    }
-
-    @Test
     public void buildMealEntryPath() {
         String path = Path.ofDocument(Collections.meals, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/meals/" + date, path,
@@ -190,14 +176,14 @@ class PathTest {
     public void buildFrequencyOfWashesEntryPath() {
         String path = Path.ofDocument(Collections.washes, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/washes/" + date, path,
-            "Should return the path to the frequencyof washes entry.");
+            "Should return the path to the frequency of washes entry.");
     }
 
     @Test
     public void buildFrequencyOfWashesEntriesCollectionPath() {
         String path = Path.ofCollection(Collections.washes, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/washes", path,
-            "Should return the path to the frequencyof washes entries collection.");
+            "Should return the path to the frequency of washes entries collection.");
     }
 
     @Test
@@ -272,51 +258,9 @@ class PathTest {
     }
 
     @Test
-    public void buildFrequencyOfTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.trainings, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/trainings/" + date, path,
-            "Should return the path to the frequency of training entry.");
-    }
-
-    @Test
-    public void buildFrequencyOfTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.trainings, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/trainings", path,
-            "Should return the path to the frequency of training entries collection.");
-    }
-
-    @Test
-    public void buildAverageKcalEntryPath() {
-        String path = Path.ofDocument(Collections.kcalsAverages, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcalsAverages/" + date, path,
-            "Should return the path to the average kcal entry.");
-    }
-
-    @Test
-    public void buildAverageKcalEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.kcalsAverages, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcalsAverages", path,
-            "Should return the path to the average kcal entries collection.");
-    }
-
-    @Test
-    public void buildWeekTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.weekTrainings, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/weekTrainings/" + date, path,
-            "Should return the path to the week training entry.");
-    }
-
-    @Test
-    public void buildWeekTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.weekTrainings, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/weekTrainings", path,
-            "Should return the path to the week training entries collection.");
-    }
-
-    @Test
     public void shouldFailWhenNumArgsDoesNotMatchTheRequiredForTheRequestedDocument() {
         assertThrows(IllegalArgumentException.class, () -> Path.ofDocument(Collections.forums),
-            "Should fail" + " when the numberof arguments passed is not the same as the required for the requested "
+            "Should fail" + " when the number of arguments passed is not the same as the required for the requested "
                 + "document.");
     }
 
