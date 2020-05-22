@@ -145,20 +145,6 @@ class PathTest {
     }
 
     @Test
-    public void buildKcalEntryPath() {
-        String path = Path.ofDocument(Collections.kcals, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcals/" + date, path,
-            "Should return the path to the kcal entry.");
-    }
-
-    @Test
-    public void buildKcalEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.kcals, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcals", path,
-            "Should return the path to the kcal entries collection.");
-    }
-
-    @Test
     public void buildMealEntryPath() {
         String path = Path.ofDocument(Collections.meals, userId, petName, date);
         assertEquals("users/" + userId + "/pets/" + petName + "/meals/" + date, path,
@@ -269,48 +255,6 @@ class PathTest {
         String path = Path.ofCollection(Collections.exercises, userId, petName);
         assertEquals("users/" + userId + "/pets/" + petName + "/exercises", path,
             "Should return the path to the exercise entries collection.");
-    }
-
-    @Test
-    public void buildFrequencyOfTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.trainings, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/trainings/" + date, path,
-            "Should return the path to the frequency of training entry.");
-    }
-
-    @Test
-    public void buildFrequencyOfTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.trainings, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/trainings", path,
-            "Should return the path to the frequency of training entries collection.");
-    }
-
-    @Test
-    public void buildAverageKcalEntryPath() {
-        String path = Path.ofDocument(Collections.kcalsAverages, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcalsAverages/" + date, path,
-            "Should return the path to the average kcal entry.");
-    }
-
-    @Test
-    public void buildAverageKcalEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.kcalsAverages, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/kcalsAverages", path,
-            "Should return the path to the average kcal entries collection.");
-    }
-
-    @Test
-    public void buildWeekTrainingEntryPath() {
-        String path = Path.ofDocument(Collections.weekTrainings, userId, petName, date);
-        assertEquals("users/" + userId + "/pets/" + petName + "/weekTrainings/" + date, path,
-            "Should return the path to the week training entry.");
-    }
-
-    @Test
-    public void buildWeekTrainingEntriesCollectionPath() {
-        String path = Path.ofCollection(Collections.weekTrainings, userId, petName);
-        assertEquals("users/" + userId + "/pets/" + petName + "/weekTrainings", path,
-            "Should return the path to the week training entries collection.");
     }
 
     @Test

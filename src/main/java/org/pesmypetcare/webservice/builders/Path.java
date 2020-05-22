@@ -53,10 +53,6 @@ public class Path {
             case members:
                 return DOCUMENT_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
-            case kcals:
-            case trainings:
-            case kcalsAverages:
-            case weekTrainings:
             case meals:
             case weights:
             case exercises:
@@ -109,10 +105,6 @@ public class Path {
             case members:
                 return COLLECTION_PATH.buildTwoLevelPath(collection, ids).toString();
             case messages:
-            case kcals:
-            case trainings:
-            case kcalsAverages:
-            case weekTrainings:
             case meals:
             case weights:
             case exercises:
