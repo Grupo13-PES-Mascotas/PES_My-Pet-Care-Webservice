@@ -77,8 +77,6 @@ class DocumentPath extends PathBuilder {
         switch (collection) {
             case messages:
                 return buildPathToForumInnerDocument(ids[0], ids[1], collection, ids[2]);
-            case kcals:
-                return buildPathToKcal(ids[0], ids[1], ids[2]);
             case meals:
             case weights:
             case exercises:
@@ -88,12 +86,6 @@ class DocumentPath extends PathBuilder {
             case medications:
             case vet_visits:
                 return buildPathToPetCollection(ids[0], ids[1], collection.name(), ids[2]);
-            case trainings:
-                return buildPathToFreqTraining(ids[0], ids[1], ids[2]);
-            case kcalsAverages:
-                return buildPathToKcalsAverage(ids[0], ids[1], ids[2]);
-            case weekTrainings:
-                return buildPathToWeekTraining(ids[0], ids[1], ids[2]);
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
         }
@@ -223,48 +215,6 @@ class DocumentPath extends PathBuilder {
     }
 
     /**
-     * Builds the path to a week training entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToWeekTraining(@NonNull String userId, @NonNull String petName,
-                                                         @NonNull String date) {
-        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/weekTrainings/").append(date);
-    }
-
-    /**
-     * Builds the path to an average kcals entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToKcalsAverage(@NonNull String userId, @NonNull String petName,
-                                                         @NonNull String date) {
-        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/kcalsAverages/").append(date);
-    }
-
-    /**
-     * Builds the path to a frequency of training entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToFreqTraining(@NonNull String userId, @NonNull String petName,
-                                                         @NonNull String date) {
-        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/trainings/").append(date);
-    }
-
-    /**
      * Builds the path to a pet collection entry.
      *
      * @param userId The user ID
@@ -280,17 +230,4 @@ class DocumentPath extends PathBuilder {
             .append("/").append(key);
     }
 
-    /**
-     * Builds the path to a kcal entry.
-     *
-     * @param userId The user ID
-     * @param petName The pet name
-     * @param date The date of creation
-     * @return The path
-     */
-    @NonNull
-    private static StringBuilder buildPathToKcal(@NonNull String userId, @NonNull String petName,
-                                                 @NonNull String date) {
-        return buildPathToUserInnerDocument(userId, Collections.pets, petName).append("/kcals/").append(date);
-    }
 }

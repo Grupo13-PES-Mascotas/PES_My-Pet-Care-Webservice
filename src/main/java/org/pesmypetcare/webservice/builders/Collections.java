@@ -22,10 +22,6 @@ public enum Collections {
     illnesses,
     medications,
     vet_visits,
-    trainings,
-    weekTrainings,
-    kcals,
-    kcalsAverages,
     medals,
     userMedals
 }

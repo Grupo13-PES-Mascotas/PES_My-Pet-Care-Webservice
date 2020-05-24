@@ -69,7 +69,6 @@ class CollectionPath extends PathBuilder {
         switch (collection) {
             case messages:
                 return buildPathToForumInnerCollection(ids[0], ids[1], Collections.forums, collection);
-            case kcals:
             case meals:
             case weights:
             case exercises:
@@ -78,9 +77,6 @@ class CollectionPath extends PathBuilder {
             case illnesses:
             case medications:
             case vet_visits:
-            case trainings:
-            case kcalsAverages:
-            case weekTrainings:
                 return buildPathToPetInnerCollection(ids[0], ids[1], collection);
             default:
                 throw new EnumConstantNotPresentException(Collections.class, collection.name());
