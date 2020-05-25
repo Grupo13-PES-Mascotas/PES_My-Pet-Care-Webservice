@@ -138,7 +138,7 @@ public class PetEntity {
                 checkMeals(key, body);
                 break;
             case WEIGHTS:
-                checkDateAndValueInteger(key, body);
+                checkDateAndValueDouble(key, body);
                 break;
             case EXERCISES:
                 checkExercises(key, body);
@@ -181,16 +181,16 @@ public class PetEntity {
 
     /**
      * Checks that key and body have the correct format for a date key and body with one element whose key is 'value'
-     * and has an Object of type Integer.
+     * and has an Object of type Double.
      * @param key Key of the attribute
      * @param body Body of the attribute
      */
-    public static void checkDateAndValueInteger(String key, Map<String, Object> body) {
+    public static void checkDateAndValueDouble(String key, Map<String, Object> body) {
         checkDateFormat(key);
         if (body.size() != 1 || !body.containsKey(VALUE)) {
             throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
-        if (!(body.get(VALUE) instanceof Integer)) {
+        if (!(body.get(VALUE) instanceof Integer) && !(body.get(VALUE) instanceof Double)) {
             throw new IllegalArgumentException(INCORRECT_BODY_FORMAT);
         }
     }
