@@ -5,4 +5,4 @@ Software project from FIB (Facultat d'Informàtica de Barcelona)
 
 ## Documentation
 Documentation for the current release:
- - [Webservice Javadoc](https://javadoc.jitpack.io/com/github/Grupo13-PES-Mascotas/PES_My-Pet-Care-Webservice/develop-5330235bba-1/javadoc/)
+ - [Webservice Javadoc](https://javadoc.jitpack.io/com/github/Grupo13-PES-Mascotas/PES_My-Pet-Care-Webservice/v2.0.1/javadoc/)

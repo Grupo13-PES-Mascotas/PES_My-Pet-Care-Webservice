@@ -144,9 +144,9 @@ public class GoogleCalendarRestController {
      */
     @DeleteMapping("/event/{owner}/{petName}")
     public void deleteEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                            @PathVariable String petName, @RequestBody Map<String, Object> body)
+                            @PathVariable String petName, @RequestBody Map<String, String> body)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.deleteEvent(accessToken, owner, petName, (String) body.get("eventId"));
+        googleCalendarService.deleteEvent(accessToken, owner, petName, body.get("eventId"));
     }
 
 }
