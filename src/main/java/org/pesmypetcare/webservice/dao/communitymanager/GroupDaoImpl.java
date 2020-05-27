@@ -249,7 +249,9 @@ public class GroupDaoImpl implements GroupDao {
     private void deleteGroupIcon(String id) throws DatabaseAccessException, DocumentException {
         String path = (String) documentAdapter
             .getDocumentField(Path.ofDocument(Collections.groups, id), FieldPath.of("icon", "path"));
-        storageDao.deleteImageByName(path);
+        if (path != null) {
+            storageDao.deleteImageByName(path);
+        }
     }
 
     /**
