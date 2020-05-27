@@ -95,9 +95,9 @@ public class UserDaoImpl implements UserDao {
     public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
         DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
         throwExceptionIfUserDoesNotExist(userDoc);
-        petDao.deleteAllPets(uid);
-        deleteUserStorage(uid);
         String username = (String) userDoc.get(USERNAME_FIELD);
+        petDao.deleteAllPets(username);
+        deleteUserStorage(uid);
         WriteBatch batch = collectionAdapter.batch();
         deleteUserLikes(username, batch);
         collectionAdapter.commitBatch(batch);

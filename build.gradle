@@ -11,7 +11,7 @@ plugins {
 }
 
 group = 'com.github.Grupo13-PES-Mascotas'
-version = '2.0.2'
+version = '2.0.3'
 sourceCompatibility = '1.8'
 
 configurations {
