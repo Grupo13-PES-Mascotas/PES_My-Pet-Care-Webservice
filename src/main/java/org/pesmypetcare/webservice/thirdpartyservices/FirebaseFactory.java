@@ -85,7 +85,7 @@ public class FirebaseFactory {
     private void setGoogleCredentials() {
         try {
             InputStream serviceAccount = Files
-                .newInputStream(Paths.get("./my-pet-care-production-firebase-adminsdk-c1es4-6387c47d60.json"));
+                .newInputStream(Paths.get("./my-pet-care-85883-firebase-adminsdk-voovm-0b4dfbf318.json"));
             googleCredentials = GoogleCredentials.fromStream(serviceAccount);
             serviceAccount.close();
         } catch (IOException e) {
@@ -101,8 +101,8 @@ public class FirebaseFactory {
     private FirebaseOptions getFirebaseOptions(GoogleCredentials googleCredentials) {
         return new FirebaseOptions.Builder()
             .setCredentials(googleCredentials)
-            .setDatabaseUrl("https://my-pet-care-production.firebaseio.com")
-            .setStorageBucket("my-pet-care-production.appspot.com")
+            .setDatabaseUrl("https://my-pet-care-85883.firebaseio.com")
+            .setStorageBucket("my-pet-care-85883.appspot.com")
             .build();
     }
 
