@@ -77,8 +77,10 @@ public class ForumDaoImpl implements ForumDao {
         //saveUserAsMember(userDao.getUid(creator), creator, forumRef, batch);
         //userDao.addForumSubscription(creator, parentGroup, name, batch);
         List<String> tags = forumEntity.getTags();
-        for (String tag : tags) {
-            addForumToTag(tag, name, batch);
+        if (tags != null) {
+            for (String tag : tags) {
+                addForumToTag(tag, name, batch);
+            }
         }
         documentAdapter.commitBatch(batch);
     }
