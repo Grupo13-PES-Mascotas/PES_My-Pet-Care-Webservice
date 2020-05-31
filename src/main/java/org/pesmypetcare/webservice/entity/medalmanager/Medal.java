@@ -12,5 +12,5 @@ public class Medal {
     private String name;
     private List<Double> levels;
     private String description;
-    private String medalIcon;
+    private String medalIconPath;
 }

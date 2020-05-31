@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -33,6 +34,7 @@ public class MedalDaoTest {
     private static final String FIELD = "description";
     private static final String VALUE = "You have to walk a lot of kilometers!";
 
+    private static Medal medal;
     private static MedalEntity medalEntity;
     private static List<Map<String, MedalEntity>> medalList;
     private static List<DocumentSnapshot> snapshotList;
@@ -50,7 +52,17 @@ public class MedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        medalEntity = new MedalEntity("Walker", new ArrayList<>(), "You have to walk a lot!");
+        medal = new Medal();
+        medal.setName("Walker");
+        medal.setDescription("You have to walk a lot!");
+        ArrayList aux = new ArrayList<>();
+        aux.add(5);
+        aux.add(10);
+        aux.add(25);
+        aux.add(50);
+        aux.add(100);
+        medal.setLevels(aux);
+        medal.setMedalIconPath("E:\\PES_WEB\\prova.png");
         medalList = new ArrayList<>();
         Map<String, MedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", medalEntity);

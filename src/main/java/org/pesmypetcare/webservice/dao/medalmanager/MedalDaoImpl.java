@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
+import com.google.cloud.firestore.WriteBatch;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import org.pesmypetcare.webservice.builders.Collections;
@@ -22,11 +23,20 @@ import java.util.Map;
 @Repository
 public class MedalDaoImpl implements MedalDao {
     private String path;
+    private WriteBatch batch;
 
     @Autowired
     private FirestoreCollection dbCol;
     @Autowired
     private FirestoreDocument dbDoc;
+
+    @Override
+    public void createMedal(String name, MedalEntity medal) throws DatabaseAccessException,
+        DocumentException {
+        initializeWithCollectionPath();
+        dbDoc.createDocumentWithId(path, name, medal, batch);
+        dbDoc.commitBatch(batch);
+    }
 
     @Override
     public MedalEntity getMedalData(String name) throws DatabaseAccessException, DocumentException {
@@ -61,6 +71,7 @@ public class MedalDaoImpl implements MedalDao {
      * @param medalName Medal name
      */
     private void initializeWithDocumentPath(String medalName) {
+        batch = dbCol.batch();
         path = Path.ofDocument(Collections.medals, medalName);
     }
 
@@ -68,6 +79,7 @@ public class MedalDaoImpl implements MedalDao {
      * Initializes the batch and path variables for the access, the path is set to the medal collection.
      */
     private void initializeWithCollectionPath() {
+        batch = dbCol.batch();
         path = Path.ofCollection(Collections.medals);
     }
 }
