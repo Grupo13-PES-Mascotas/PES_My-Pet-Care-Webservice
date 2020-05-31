@@ -4,7 +4,6 @@ import lombok.Data;
 
 import com.google.cloud.firestore.Blob;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
