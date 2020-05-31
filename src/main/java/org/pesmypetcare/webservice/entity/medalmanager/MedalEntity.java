@@ -4,12 +4,7 @@ import lombok.Data;
 
 import com.google.cloud.firestore.Blob;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,11 +26,11 @@ public class MedalEntity {
 
     public MedalEntity() { }
 
-    public MedalEntity(Medal medal) throws IOException {
+    public MedalEntity(Medal medal) {
         this.name = medal.getName();
         this.levels = medal.getLevels();
         this.description = medal.getDescription();
-        this.medalIcon = Blob.fromBytes(extractBytes(medal.getMedalIconPath()));
+        this.medalIcon = Blob.fromBytes(medal.getMedalIconPath());
     }
 
     /**
@@ -48,18 +43,5 @@ public class MedalEntity {
             throw new IllegalArgumentException("Field does not exists");
         }
     }
-
-    public byte[] extractBytes (String imagePath) throws IOException {
-        // open image
-        File imgPath = new File(imagePath);
-        BufferedImage bufferedImage = ImageIO.read(imgPath);
-
-        // get DataBufferBytes from Raster
-        WritableRaster raster = bufferedImage .getRaster();
-        DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-
-        return ( data.getData() );
-    }
-
 
 }

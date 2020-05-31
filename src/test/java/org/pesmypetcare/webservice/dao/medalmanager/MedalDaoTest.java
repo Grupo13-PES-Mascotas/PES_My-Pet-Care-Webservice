@@ -15,10 +15,7 @@ import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -55,22 +52,14 @@ public class MedalDaoTest {
         medal = new Medal();
         medal.setName("Walker");
         medal.setDescription("You have to walk a lot!");
-        ArrayList aux = new ArrayList<>();
-        aux.add(5);
-        aux.add(10);
-        aux.add(25);
-        aux.add(50);
-        aux.add(100);
-        medal.setLevels(aux);
-        medal.setMedalIconPath("E:\\PES_WEB\\prova.png");
+        medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
+        medal.setMedalIconPath(new byte[] {10, 55, 67 ,89, 103, 116});
         medalList = new ArrayList<>();
         Map<String, MedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", medalEntity);
         medalList.add(auxMap);
         medalList.add(auxMap);
-        medalList.add(auxMap);
         snapshotList = new ArrayList<>();
-        snapshotList.add(documentSnapshot);
         snapshotList.add(documentSnapshot);
         snapshotList.add(documentSnapshot);
     }
