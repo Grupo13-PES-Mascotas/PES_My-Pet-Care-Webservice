@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,21 @@ import java.util.Map;
 public class MedalRestController {
     @Autowired
     private MedalService medalService;
+
+
+    /**
+     * Creates a medal on the data base.
+     * @param name Name of the medal
+     * @param medal The medal entity that contains the attributes of the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
+     */
+    @PostMapping("/{name}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createMedal(@PathVariable String name, @RequestBody MedalEntity medal)
+        throws DatabaseAccessException, DocumentException {
+        medalService.createMedal(name, medal);
+    }
 
     /**
      * Gets a medal identified by its name and owner.

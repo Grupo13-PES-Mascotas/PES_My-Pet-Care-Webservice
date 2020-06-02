@@ -2,6 +2,8 @@ package org.pesmypetcare.webservice.entity.medalmanager;
 
 import lombok.Data;
 
+import com.google.cloud.firestore.Blob;
+
 import java.util.List;
 
 /**
@@ -13,19 +15,21 @@ public class MedalEntity {
     public static final String LEVELS = "levels";
     public static final String DESCRIPTION = "description";
     public static final String ICON_LOCATION = "iconLocation";
+    public static final String MEDAL_ICON = "medalIcon";
     private String name;
     private List<Double> levels;
     private String description;
-    private String iconLocation;
+    private Blob medalIcon;
 
 
 
     public MedalEntity() { }
 
-    public MedalEntity(String name, List<Double> levels, String description) {
-        this.name = name;
-        this.levels = levels;
-        this.description = description;
+    public MedalEntity(Medal medal) {
+        this.name = medal.getName();
+        this.levels = medal.getLevels();
+        this.description = medal.getDescription();
+        this.medalIcon = Blob.fromBytes(medal.getMedalIconPath());
     }
 
     /**
@@ -34,8 +38,9 @@ public class MedalEntity {
      */
     public static void checkField(String field) {
         if (!NAME.equals(field) && !LEVELS.equals(field) && !DESCRIPTION.equals(field)
-            && !ICON_LOCATION.equals(field)) {
+            && !ICON_LOCATION.equals(field) && !MEDAL_ICON.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");
         }
     }
+
 }
