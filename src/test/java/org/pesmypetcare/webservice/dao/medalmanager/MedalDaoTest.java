@@ -59,7 +59,7 @@ public class MedalDaoTest {
         medal.setName("Walker");
         medal.setDescription("You have to walk a lot!");
         medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
-        medal.setMedalIconPath(new byte[] {10, 55, 67 ,89, 103, 116});
+        medal.setMedalIconPath(new byte[] {10, 55, 67, 89, 103, 116});
         medalList = new ArrayList<>();
         Map<String, MedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", medalEntity);
