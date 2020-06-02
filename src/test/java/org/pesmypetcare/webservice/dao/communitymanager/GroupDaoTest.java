@@ -24,6 +24,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
@@ -93,6 +94,8 @@ class GroupDaoTest {
     private QuerySnapshot querySnapshot;
     @Mock
     private QueryDocumentSnapshot documentSnapshot;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
     private GroupDao dao = new GroupDaoImpl();
@@ -224,7 +227,7 @@ class GroupDaoTest {
         public void createGroup() throws DatabaseAccessException, DocumentException {
             given(documentAdapter.createDocument(anyString(), any(GroupEntity.class), any(WriteBatch.class)))
                 .willReturn(docRef);
-            willDoNothing().given(userDao).addGroupSubscription(anyString(), anyString(), any(WriteBatch.class));
+            willDoNothing().given(userDao).addGroupSubscription(any(UserToken.class), anyString(), any(WriteBatch.class));
             lenient().when(documentAdapter.createDocumentWithId(anyString(), anyString(), any(), any(WriteBatch.class)))
                 .thenReturn(docRef);
             given(documentAdapter.documentExists(anyString())).willReturn(true);
@@ -237,7 +240,7 @@ class GroupDaoTest {
             List<String> tags = new ArrayList<>();
             tags.add(tag);
             GroupEntity entity = new GroupEntity(groupName, username, "", tags);
-            dao.createGroup(entity);
+            dao.createGroup(userToken, entity);
             verify(documentAdapter).createDocument(eq(groupsPath), same(entity), same(batch));
             Map<String, Object> data = new HashMap<>();
             data.put(GROUP_FIELD, groupId);
@@ -248,7 +251,7 @@ class GroupDaoTest {
             verify(documentAdapter)
                 .createDocumentWithId(or(eq(groupNamesPath), eq(membersPath)), or(eq(groupName), eq(userId)),
                     or(eq(data), eq(data2)), same(batch));
-            verify(userDao).addGroupSubscription(eq(username), eq(groupName), same(batch));
+            verify(userDao).addGroupSubscription(same(userToken), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
             verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
                 or(eq(GROUPS_FIELD), eq(NOTIFICATIONS_FIELD)), any(FieldValue.class));
@@ -269,7 +272,7 @@ class GroupDaoTest {
             given(documentAdapter.getDocumentField(anyString(), any(FieldPath.class))).willReturn(imagePath);
             willDoNothing().given(storageDao).deleteImageByName(anyString());
 
-            dao.deleteGroup(groupName);
+            dao.deleteGroup(userToken, groupName);
             verify(documentAdapter).getStringFromDocument(eq(groupNamePath), eq(GROUP_FIELD));
             verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(or(eq(tagsPath), eq(usersPath)),
                 or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
@@ -321,8 +324,8 @@ class GroupDaoTest {
             given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD)))
                 .willReturn(token);
 
-            dao.subscribe(groupName, username);
-            verify(userDao).addGroupSubscription(same(username), same(groupName), same(batch));
+            dao.subscribe(groupName, userToken);
+            verify(userDao).addGroupSubscription(same(userToken), same(groupName), same(batch));
             String membersPath = Path.ofCollection(Collections.members, groupId);
             verify(documentAdapter).createDocumentWithId(eq(membersPath), same(userId), anyMap(), same(batch));
             verify(documentAdapter)
@@ -336,15 +339,16 @@ class GroupDaoTest {
             given(userDao.getUid(anyString())).willReturn(userId);
             mockGetGroupId();
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
-            willDoNothing().given(userDao).deleteGroupSubscription(anyString(), anyString(), any(WriteBatch.class));
+            willDoNothing().given(userDao)
+                .deleteGroupSubscription(any(UserToken.class), anyString(), any(WriteBatch.class));
             given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.users, userId)), eq(FCM_FIELD)))
                 .willReturn(token);
 
-            dao.unsubscribe(groupName, username);
+            dao.unsubscribe(groupName, userToken);
             verify(userDao).getUid(same(username));
             String memberPath = Path.ofDocument(Collections.members, groupId, userId);
             verify(documentAdapter).deleteDocument(eq(memberPath), same(batch));
-            verify(userDao).deleteGroupSubscription(same(userId), same(groupName), same(batch));
+            verify(userDao).deleteGroupSubscription(same(userToken), same(groupName), same(batch));
             verify(documentAdapter)
                 .updateDocumentFields(same(batch), eq(groupPath), eq(NOTIFICATIONS_FIELD), any(FieldValue.class));
             verify(documentAdapter)

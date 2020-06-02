@@ -15,19 +15,23 @@ import java.util.Map;
 public interface GroupService {
     /**
      * Creates a group.
+     *
+     * @param token The user's personal access token
      * @param entity The group entity with the group data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException;
+    void createGroup(String token, GroupEntity entity) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a group by name.
+     *
+     * @param token The user's personal access token
      * @param name The group name.
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void deleteGroup(String name) throws DatabaseAccessException, DocumentException;
+    void deleteGroup(String token, String name) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a group by its name.

@@ -36,8 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class UserRestControllerTest {
-    private static final String URL = "/users/John";
-    private static String username;
+    private static final String URL = "/users/";
     private static UserEntity userEntity;
     private static String jsonUpdate;
     private static String token;
@@ -51,7 +50,6 @@ class UserRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        username = "John";
         token = "token";
         myToken = "my-token";
         userEntity = new UserEntity();
@@ -60,25 +58,25 @@ class UserRestControllerTest {
 
     @Test
     public void deleteAccount() throws Exception {
-        willDoNothing().given(service).deleteById(anyString(), anyString());
+        willDoNothing().given(service).deleteById(anyString());
         mockMvc.perform(delete(URL).header(token, myToken)).andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteUserFromDb() throws Exception {
-        willDoNothing().given(service).deleteFromDatabase(anyString(), anyString());
+        willDoNothing().given(service).deleteFromDatabase(anyString());
         mockMvc.perform(delete(URL).header(token, myToken).param("db", "true")).andExpect(status().isNoContent());
     }
 
     @Test
     public void getUserDataShouldReturnUserDataAndStatusOk() throws Exception {
-        willReturn(userEntity).given(service).getUserData(token, username);
+        willReturn(userEntity).given(service).getUserData(token);
         mockMvc.perform(get(URL).header(token, myToken)).andExpect(status().isOk());
     }
 
     @Test
     public void updateFieldShouldReturnStatusNoContent() throws Exception {
-        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
         mockMvc.perform(put(URL).contentType(MediaType.APPLICATION_JSON).content(jsonUpdate).header(token, myToken))
             .andExpect(status().isNoContent());
     }
@@ -87,9 +85,9 @@ class UserRestControllerTest {
     public void getUserSubscriptions() throws Exception {
         List<String> subscriptions = new ArrayList<>();
         subscriptions.add("Dogs");
-        willReturn(subscriptions).given(service).getUserSubscriptions(myToken, username);
+        willReturn(subscriptions).given(service).getUserSubscriptions(myToken);
         MvcResult mvcResult = mockMvc
-            .perform(get("/users/subscriptions").header(token, myToken).param("username", username))
+            .perform(get(URL + "subscriptions").header(token, myToken))
             .andExpect(status().isOk()).andReturn();
         String result = mvcResult.getResponse().getContentAsString();
         assertEquals("Should return all the group subscriptions of the user.",
@@ -99,7 +97,7 @@ class UserRestControllerTest {
     @Test
     public void saveMessagingToken() throws Exception {
         willDoNothing().given(service).saveMessagingToken(anyString(), anyString());
-        mockMvc.perform(put("/users").header(token, myToken).header("fcmToken", myToken)).andExpect(status().isNoContent());
+        mockMvc.perform(put(URL + "fcm-token").header(token, myToken).header("fcmToken", myToken)).andExpect(status().isNoContent());
         verify(service).saveMessagingToken(same(myToken), same(myToken));
     }
 }

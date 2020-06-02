@@ -40,8 +40,9 @@ public class GroupRestController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGroup(@RequestBody GroupEntity entity) throws DatabaseAccessException, DocumentException {
-        service.createGroup(entity);
+    public void createGroup(@RequestHeader String token, @RequestBody GroupEntity entity) throws DatabaseAccessException,
+        DocumentException {
+        service.createGroup(token, entity);
     }
 
     /**
@@ -53,8 +54,9 @@ public class GroupRestController {
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGroup(@RequestParam String group) throws DatabaseAccessException, DocumentException {
-        service.deleteGroup(group);
+    public void deleteGroup(@RequestHeader String token, @RequestParam String group) throws DatabaseAccessException,
+        DocumentException {
+        service.deleteGroup(token, group);
     }
 
     /**

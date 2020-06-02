@@ -22,6 +22,7 @@ import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,17 +72,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+    public void createUser(UserToken token, UserEntity userEntity)
+        throws DatabaseAccessException, FirebaseAuthException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
             WriteBatch batch = db.batch();
-            saveUsername(uid, username, batch);
+            saveUsername(token.getUid(), username, batch);
             String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
             userEntity.setPassword(encodedPassword);
-            batch.set(users.document(uid), userEntity);
+            batch.set(users.document(token.getUid()), userEntity);
             try {
                 batch.commit().get();
-                updateDisplayName(uid, username);
+                updateDisplayName(token.getUid(), username);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 throw new DatabaseAccessException("creation-failed", "The user creation failed");
@@ -92,10 +94,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException {
+    public void deleteFromDatabase(UserToken token) throws DatabaseAccessException, DocumentException {
+        String uid = token.getUid();
         DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
         throwExceptionIfUserDoesNotExist(userDoc);
-        String username = (String) userDoc.get(USERNAME_FIELD);
+        String username = token.getUsername();
         petDao.deleteAllPets(username);
         deleteUserStorage(uid);
         WriteBatch batch = collectionAdapter.batch();
@@ -106,22 +109,22 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(String uid) throws FirebaseAuthException, DatabaseAccessException, DocumentException {
-        deleteFromDatabase(uid);
-        myAuth.deleteUser(uid);
+    public void deleteById(UserToken token) throws FirebaseAuthException, DatabaseAccessException, DocumentException {
+        deleteFromDatabase(token);
+        myAuth.deleteUser(token.getUid());
     }
 
     @Override
-    public UserEntity getUserData(String uid) throws DatabaseAccessException {
-        DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
+    public UserEntity getUserData(UserToken token) throws DatabaseAccessException {
+        DocumentSnapshot userDoc = getDocumentSnapshot(users, token.getUid());
         throwExceptionIfUserDoesNotExist(userDoc);
         return userDoc.toObject(UserEntity.class);
     }
 
     @Override
-    public void updateField(String username, String field, String newValue)
+    public void updateField(UserToken token, String field, String newValue)
         throws FirebaseAuthException, DatabaseAccessException {
-        String uid = getUid(username);
+        String uid = token.getUid();
         switch (field) {
             case USERNAME_FIELD:
                 updateUsername(uid, newValue);
@@ -144,10 +147,15 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public String getField(String uid, String field) throws DatabaseAccessException {
-        DocumentSnapshot userDoc = getDocumentSnapshot(users, uid);
+    public String getField(UserToken token, String field) throws DatabaseAccessException {
+        DocumentSnapshot userDoc = getDocumentSnapshot(users, token.getUid());
         throwExceptionIfUserDoesNotExist(userDoc);
         return (String) userDoc.get(field);
+    }
+
+    @Override
+    public String getFcmToken(String uid) throws DatabaseAccessException, DocumentException {
+        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), "FCM");
     }
 
     @Override
@@ -158,48 +166,37 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addGroupSubscription(String username, String groupName, WriteBatch batch)
-        throws DatabaseAccessException {
-        DocumentReference user = users.document(getUid(username));
+    public void addGroupSubscription(UserToken token, String groupName, WriteBatch batch) {
+        DocumentReference user = users.document(token.getUid());
         Map<String, Object> data = new HashMap<>();
         data.put("groupSubscriptions", FieldValue.arrayUnion(groupName));
         batch.update(user, data);
     }
 
     @Override
-    public void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch) {
-        DocumentReference user = users.document(userUid);
+    public void deleteGroupSubscription(UserToken token, String groupName, WriteBatch batch) {
+        DocumentReference user = users.document(token.getUid());
         Map<String, Object> data = new HashMap<>();
         data.put("groupSubscriptions", FieldValue.arrayRemove(groupName));
         batch.update(user, data);
     }
 
     @Override
-    public List<String> getUserSubscriptions(String username) throws DatabaseAccessException {
-        DocumentSnapshot user = getDocumentSnapshot(users, getUid(username));
+    public List<String> getUserSubscriptions(UserToken token) throws DatabaseAccessException {
+        DocumentSnapshot user = getDocumentSnapshot(users, token.getUid());
         return (List<String>) user.get("groupSubscriptions");
     }
 
     @Override
-    public void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException {
-        String currentToken = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), FCM);
+    public void saveMessagingToken(UserToken token, String fcmToken) throws DatabaseAccessException, DocumentException {
+        String currentToken = documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.users, token.getUid()), FCM);
         WriteBatch batch = documentAdapter.batch();
         if (currentToken != null) {
-            updateTokenInSubscribedGroups(token, currentToken, batch);
+            updateTokenInSubscribedGroups(fcmToken, currentToken, batch);
         }
-        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, uid), FCM, token);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.users, token.getUid()), FCM, fcmToken);
         documentAdapter.commitBatch(batch);
-    }
-
-    @Override
-    public void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
-        throws DatabaseAccessException {
-        DocumentReference subscriptions = users.document(getUid(username)).collection("forumSubscriptions")
-            .document(parentGroup + "-" + forumName);
-        Map<String, String> data = new HashMap<>();
-        data.put("group", parentGroup);
-        data.put("forum", forumName);
-        batch.set(subscriptions, data);
     }
 
     /**
@@ -477,6 +474,7 @@ public class UserDaoImpl implements UserDao {
 
     /**
      * Updates the FCM token in all the groups the user is subscribed to.
+     *
      * @param token The new FCM token
      * @param currentToken The current FCM token
      * @param batch The batch of writes

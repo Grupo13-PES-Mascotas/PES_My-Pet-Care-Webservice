@@ -14,6 +14,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -40,6 +43,9 @@ class GroupServiceTest {
 
     @Mock
     private GroupDao dao;
+
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
     private GroupService service = new GroupServiceImpl();
@@ -107,16 +113,16 @@ class GroupServiceTest {
             public void createGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
                 GroupEntity entity = new GroupEntity();
                 entity.setName(groupName);
-                assertThrows(DocumentException.class, () -> service.createGroup(entity),
+                assertThrows(DocumentException.class, () -> service.createGroup(token, entity),
                     "Should throw an exception when the group already exists.");
             }
 
             @Test
             public void deleteGroup() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(dao).deleteGroup(anyString());
+                willDoNothing().given(dao).deleteGroup(any(UserToken.class), anyString());
 
-                service.deleteGroup(groupName);
-                verify(dao).deleteGroup(same(groupName));
+                service.deleteGroup(token, groupName);
+                verify(dao).deleteGroup(userToken, same(groupName));
             }
 
             @Test
@@ -145,18 +151,18 @@ class GroupServiceTest {
 
             @Test
             public void subscribe() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(dao).subscribe(anyString(), anyString());
+                willDoNothing().given(dao).subscribe(anyString(), any(UserToken.class));
 
                 service.subscribe(token, groupName, username);
-                verify(dao).subscribe(same(groupName), same(username));
+                verify(dao).subscribe(same(groupName), eq(userToken));
             }
 
             @Test
             public void unsubscribe() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(dao).unsubscribe(anyString(), anyString());
+                willDoNothing().given(dao).unsubscribe(anyString(), any(UserToken.class));
 
                 service.unsubscribe(token, groupName, username);
-                verify(dao).unsubscribe(same(groupName), same(username));
+                verify(dao).unsubscribe(same(groupName), eq(userToken));
             }
 
             @Test
@@ -176,15 +182,15 @@ class GroupServiceTest {
             public void createGroup() throws DatabaseAccessException, DocumentException {
                 GroupEntity entity = new GroupEntity();
                 entity.setName(groupName);
-                willDoNothing().given(dao).createGroup(entity);
+                willDoNothing().given(dao).createGroup(any(UserToken.class), any(GroupEntity.class));
 
-                service.createGroup(entity);
-                verify(dao).createGroup(same(entity));
+                service.createGroup(token, entity);
+                verify(dao).createGroup(eq(userToken), same(entity));
             }
 
             @Test
             public void deleteGroupShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
-                assertThrows(DocumentException.class, () -> service.deleteGroup(groupName),
+                assertThrows(DocumentException.class, () -> service.deleteGroup(token, groupName),
                     "Should throw an exception when the group already exists.");
             }
 

@@ -16,10 +16,12 @@ import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class GroupDaoImpl implements GroupDao {
     private FirestoreCollection collectionAdapter;
 
     @Override
-    public void createGroup(GroupEntity entity) throws DatabaseAccessException, DocumentException {
+    public void createGroup(UserToken token, GroupEntity entity) throws DatabaseAccessException, DocumentException {
         entity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         DocumentReference groupRef = documentAdapter
@@ -59,10 +61,10 @@ public class GroupDaoImpl implements GroupDao {
         String name = entity.getName();
         String groupId = groupRef.getId();
         saveGroupName(name, groupId, batch);
-        String creator = entity.getCreator();
-        String userUid = userDao.getUid(creator);
+        String creator = token.getUsername();
+        String userUid = token.getUid();
         saveUserAsMember(groupId, userUid, creator, batch);
-        userDao.addGroupSubscription(creator, name, batch);
+        userDao.addGroupSubscription(token, name, batch);
         List<String> tags = entity.getTags();
         if (tags != null) {
             for (String tag : tags) {
@@ -74,15 +76,19 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void deleteGroup(String name) throws DatabaseAccessException, DocumentException {
+    public void deleteGroup(UserToken token, String name) throws DatabaseAccessException, DocumentException {
         String id = getGroupId(name);
-        WriteBatch batch = documentAdapter.batch();
-        deleteGroupFromAllTags(name, batch);
-        deleteAllMembers(name, batch);
-        deleteGroupIcon(id);
-        documentAdapter.deleteDocument(Path.ofDocument(Collections.groups, id), batch);
-        documentAdapter.deleteDocument(Path.ofDocument(Collections.groups_names, name), batch);
-        documentAdapter.commitBatch(batch);
+        String creator = documentAdapter.getStringFromDocument(Path.ofDocument(Collections.groups, id), "creator");
+        if (token.getUsername().equals(creator)) {
+            WriteBatch batch = documentAdapter.batch();
+            deleteGroupFromAllTags(name, batch);
+            deleteAllMembers(name, batch);
+            deleteGroupIcon(id);
+            documentAdapter.deleteDocument(Path.ofDocument(Collections.groups, id), batch);
+            documentAdapter.deleteDocument(Path.ofDocument(Collections.groups_names, name), batch);
+            documentAdapter.commitBatch(batch);
+        }
+        throw new BadCredentialsException("The user is not the creator of the group.");
     }
 
     @Override
@@ -130,23 +136,23 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void subscribe(String group, String username) throws DatabaseAccessException, DocumentException {
-        String userUid = userDao.getUid(username);
+    public void subscribe(String group, UserToken token) throws DatabaseAccessException, DocumentException {
+        String userUid = token.getUid();
         String groupId = getGroupId(group);
         WriteBatch batch = documentAdapter.batch();
-        saveUserAsMember(groupId, userUid, username, batch);
-        userDao.addGroupSubscription(username, group, batch);
+        saveUserAsMember(groupId, userUid, token.getUsername(), batch);
+        userDao.addGroupSubscription(token, group, batch);
         addUserToGroupNotifications(userUid, groupId, batch);
         documentAdapter.commitBatch(batch);
     }
 
     @Override
-    public void unsubscribe(String group, String username) throws DatabaseAccessException, DocumentException {
-        String userUid = userDao.getUid(username);
+    public void unsubscribe(String group, UserToken token) throws DatabaseAccessException, DocumentException {
+        String userUid = token.getUid();
         String groupId = getGroupId(group);
         WriteBatch batch = documentAdapter.batch();
         deleteUserFromMember(groupId, userUid, batch);
-        userDao.deleteGroupSubscription(userUid, group, batch);
+        userDao.deleteGroupSubscription(token, group, batch);
         removeUserFromGroupNotifications(userUid, groupId, batch);
         documentAdapter.commitBatch(batch);
     }

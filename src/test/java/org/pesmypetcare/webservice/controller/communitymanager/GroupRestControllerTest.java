@@ -48,6 +48,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GroupRestControllerTest {
     private static final String BASE_URL = "/community/";
     private static final String GROUP_FIELD = "group";
+    private static final String TOKEN_HEADER = "token";
+    private static final String TOKEN = "my-token";
     private String creator;
     private String json;
     private String groupName;
@@ -74,22 +76,22 @@ class GroupRestControllerTest {
 
     @Test
     public void createGroup() throws Exception {
-        willDoNothing().given(service).createGroup(any(GroupEntity.class));
-        mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(
+        willDoNothing().given(service).createGroup(anyString(), any(GroupEntity.class));
+        mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json).header(TOKEN_HEADER, TOKEN)).andExpect(
             status().isCreated());
     }
 
     @Test
     public void createGroupShouldReturnBadRequestIfGroupAlreadyExists() throws Exception {
-        willThrow(DocumentException.class).given(service).createGroup(any(GroupEntity.class));
+        willThrow(DocumentException.class).given(service).createGroup(anyString(), any(GroupEntity.class));
         mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(
             status().isBadRequest());
     }
 
     @Test
     public void deleteGroup() throws Exception {
-        willDoNothing().given(service).deleteGroup(anyString());
-        mockMvc.perform(delete(BASE_URL).param(GROUP_FIELD, groupName)).andExpect(status().isNoContent());
+        willDoNothing().given(service).deleteGroup(anyString(), anyString());
+        mockMvc.perform(delete(BASE_URL).header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)).andExpect(status().isNoContent());
     }
 
     @Test
@@ -159,14 +161,14 @@ class GroupRestControllerTest {
     @Test
     public void subscribe() throws Exception {
         willDoNothing().given(service).subscribe(anyString(), anyString(), anyString());
-        mockMvc.perform(post(BASE_URL + "subscribe").header("token", "my-token").param(GROUP_FIELD, groupName)
+        mockMvc.perform(post(BASE_URL + "subscribe").header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isCreated());
     }
 
     @Test
     public void unsubscribe() throws Exception {
         willDoNothing().given(service).unsubscribe(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(BASE_URL + "unsubscribe").header("token", "my-token").param(GROUP_FIELD, groupName)
+        mockMvc.perform(delete(BASE_URL + "unsubscribe").header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isNoContent());
     }
 

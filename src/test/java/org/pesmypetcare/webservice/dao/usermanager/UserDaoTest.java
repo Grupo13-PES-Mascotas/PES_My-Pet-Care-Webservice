@@ -26,6 +26,7 @@ import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -116,6 +117,8 @@ class UserDaoTest {
     private FirestoreCollection collectionAdapter;
     @Mock
     private QueryDocumentSnapshot queryDocumentSnapshot;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
     private final UserDao dao = new UserDaoImpl();
@@ -151,7 +154,7 @@ class UserDaoTest {
         given(batch.commit()).willReturn(batchResult);
         given(batchResult.get()).willReturn(null);
 
-        dao.createUser(uid, userEntity);
+        dao.createUser(userToken, userEntity);
         verify(usedUsernames, times(2)).document(same(username));
         verify(batch).set(usernameRef, docData);
         verify(users).document(same(uid));
@@ -184,7 +187,7 @@ class UserDaoTest {
         given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
         willDoNothing().given(collectionAdapter).commitBatch(any(WriteBatch.class));
 
-        dao.deleteById(username);
+        dao.deleteById(userToken);
         verify(petDao).deleteAllPets(same(username));
         verify(userRef).delete();
         verify(usernameRef).delete();
@@ -203,7 +206,7 @@ class UserDaoTest {
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
-        assertThrows(DatabaseAccessException.class, () -> dao.deleteById(username),
+        assertThrows(DatabaseAccessException.class, () -> dao.deleteById(userToken),
             "Should throw DatabaseAccessException when the deleting a non existent user");
     }
 
@@ -215,7 +218,7 @@ class UserDaoTest {
         given(snapshot.exists()).willReturn(true);
         given(snapshot.toObject(UserEntity.class)).willReturn(userEntity);
 
-        UserEntity actual = dao.getUserData(username);
+        UserEntity actual = dao.getUserData(userToken);
         assertSame(userEntity, actual, "Should return a user entity");
     }
 
@@ -225,7 +228,7 @@ class UserDaoTest {
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
-        assertThrows(DatabaseAccessException.class, () -> dao.getUserData(username),
+        assertThrows(DatabaseAccessException.class, () -> dao.getUserData(userToken),
             "Should return DatabaseAccessException if user doesn't exist");
     }
 
@@ -261,7 +264,7 @@ class UserDaoTest {
         given(batchResult.get()).willReturn(null);
 
 
-        dao.updateField(username, USERNAME_FIELD, newUsername);
+        dao.updateField(userToken, USERNAME_FIELD, newUsername);
         verify(usedUsernames, times(2)).document(same(username));
         verify(oldSnapshot).get(same(USER_FIELD));
         verify(myAuth, times(3)).getUser(same(uid));
@@ -299,7 +302,7 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
-        dao.updateField(username, EMAIL_FIELD, email);
+        dao.updateField(userToken, EMAIL_FIELD, email);
         verify(usedUsernames).document(same(username));
         verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setEmail(same(email));
@@ -323,7 +326,7 @@ class UserDaoTest {
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
-        dao.updateField(username, PASSWORD_FIELD, password);
+        dao.updateField(userToken, PASSWORD_FIELD, password);
         verify(usedUsernames).document(same(username));
         verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setPassword(not(eq(password)));
@@ -342,7 +345,7 @@ class UserDaoTest {
         given(snapshot.get(anyString())).willReturn(uid);
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(myAuth).getUser(uid);
-            dao.updateField(username, EMAIL_FIELD, email);
+            dao.updateField(userToken, EMAIL_FIELD, email);
         }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
     }
 
@@ -352,7 +355,7 @@ class UserDaoTest {
         given(usernameRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(false);
-        assertThrows(DatabaseAccessException.class, () -> dao.updateField(username, EMAIL_FIELD, email),
+        assertThrows(DatabaseAccessException.class, () -> dao.updateField(userToken, EMAIL_FIELD, email),
             "Should return DatabaseAccessException if the user does not exist");
     }
 }

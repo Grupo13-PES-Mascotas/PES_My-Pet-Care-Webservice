@@ -373,7 +373,7 @@ public class ForumDaoImpl implements ForumDao {
         List<String> deviceTokens = (List<String>) documentAdapter
             .getDocumentField(Path.ofDocument(Collections.groups, groupId), "notification-tokens");
         String userUid = userDao.getUid(message.getCreator());
-        String userFcmToken = userDao.getField(userUid, "FCM");
+        String userFcmToken = userDao.getFcmToken(userUid);
         if (deviceTokens != null) {
             if (!deviceTokens.isEmpty()) {
                 try {

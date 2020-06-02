@@ -312,7 +312,7 @@ class ForumDaoTest {
                 given(documentAdapter.getDocumentField(anyString(), anyString())).willReturn(devices);
                 given(firebaseMessaging.sendMulticast(any(MulticastMessage.class))).willReturn(null);
                 given(userDao.getUid(anyString())).willReturn(username);
-                given(userDao.getField(anyString(), anyString())).willReturn(fcmToken);
+                given(userDao.getFcmToken(anyString())).willReturn(fcmToken);
 
                 dao.postMessage(groupName, forumName, message);
                 verify(documentAdapter).createDocument(eq(messagePath), isA(MessageEntity.class), same(batch));
@@ -320,7 +320,7 @@ class ForumDaoTest {
                     .getDocumentField(eq(Path.ofDocument(Collections.groups, groupId)), eq("notification-tokens"));
                 verify(firebaseMessaging).sendMulticast(isA(MulticastMessage.class));
                 verify(userDao).getUid(eq(username));
-                verify(userDao).getField(eq(username), eq("FCM"));
+                verify(userDao).getFcmToken(eq(username));
             }
 
             @Nested

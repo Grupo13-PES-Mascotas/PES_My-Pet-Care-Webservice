@@ -1,15 +1,12 @@
 package org.pesmypetcare.webservice.service.usermanager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,40 +16,34 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
-    private FirebaseAuth auth;
-
     @Autowired
     private UserDao userDao;
 
-    public UserServiceImpl() {
-        this.auth = FirebaseFactory.getInstance().getFirebaseAuth();
+    @Override
+    public void createUser(String token, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+        userDao.createUser(new UserTokenImpl(token), userEntity);
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
-        userDao.createUser(uid, userEntity);
+    public void deleteFromDatabase(String token) throws DatabaseAccessException, DocumentException {
+        userDao.deleteFromDatabase(new UserTokenImpl(token));
     }
 
     @Override
-    public void deleteFromDatabase(String token, String uid) throws DatabaseAccessException, DocumentException {
-        userDao.deleteFromDatabase(uid);
-    }
-
-    @Override
-    public void deleteById(String token, String uid)
+    public void deleteById(String token)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        userDao.deleteById(uid);
+        userDao.deleteById(new UserTokenImpl(token));
     }
 
     @Override
-    public UserEntity getUserData(String token, String uid) throws DatabaseAccessException {
-        return userDao.getUserData(uid);
+    public UserEntity getUserData(String token) throws DatabaseAccessException {
+        return userDao.getUserData(new UserTokenImpl(token));
     }
 
     @Override
-    public void updateField(String token, String uid, String field, String newValue)
+    public void updateField(String token, String field, String newValue)
         throws FirebaseAuthException, DatabaseAccessException {
-        userDao.updateField(uid, field, newValue);
+        userDao.updateField(new UserTokenImpl(token), field, newValue);
     }
 
     @Override
@@ -62,18 +53,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveMessagingToken(String token, String fcmToken)
-        throws DatabaseAccessException, DocumentException, BadCredentialsException {
-        try {
-            FirebaseToken firebaseToken = auth.verifyIdToken(token);
-            userDao.saveMessagingToken(firebaseToken.getUid(), fcmToken);
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
-            throw new BadCredentialsException("The token provided is not correct.");
-        }
+        throws DatabaseAccessException, DocumentException {
+        userDao.saveMessagingToken(new UserTokenImpl(token), fcmToken);
     }
 
     @Override
-    public List<String> getUserSubscriptions(String token, String username) throws DatabaseAccessException {
-        return userDao.getUserSubscriptions(username);
+    public List<String> getUserSubscriptions(String token) throws DatabaseAccessException {
+        return userDao.getUserSubscriptions(new UserTokenImpl(token));
     }
 }

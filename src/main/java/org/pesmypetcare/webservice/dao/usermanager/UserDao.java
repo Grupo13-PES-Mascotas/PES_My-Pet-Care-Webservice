@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.List;
 
@@ -15,51 +16,51 @@ public interface UserDao {
     /**
      * Creates a user on the database.
      *
-     * @param uid The user's unique identifier
+     * @param token The user's Firebase token
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
+    void createUser(UserToken token, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
 
     /**
      * Deletes a user from database.
      *
-     * @param uid The user's unique identifier
+     * @param token The user's Firebase token
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    void deleteFromDatabase(String uid) throws DatabaseAccessException, DocumentException;
+    void deleteFromDatabase(UserToken token) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes the user with the specified uid from the database.
      *
-     * @param uid The uid of the user to delete
+     * @param token The user's Firebase token
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DocumentException When the document does not exist
      */
-    void deleteById(String uid) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
+    void deleteById(UserToken token) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
      * Gets the data of the specified user.
      *
-     * @param uid The unique identifier of the user
+     * @param token The user's Firebase token
      * @return The UserEntity with the users data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    UserEntity getUserData(String uid) throws DatabaseAccessException;
+    UserEntity getUserData(UserToken token) throws DatabaseAccessException;
 
     /**
      * Updates a user field.
      *
-     * @param username The user's username
+     * @param token The user's Firebase token
      * @param field The field to update
      * @param newValue The new field value
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    void updateField(String username, String field, String newValue)
+    void updateField(UserToken token, String field, String newValue)
         throws FirebaseAuthException, DatabaseAccessException;
 
     /**
@@ -74,58 +75,65 @@ public interface UserDao {
     /**
      * Gets a user field.
      *
-     * @param uid The user uid
+     * @param token The user's Firebase token
      * @param field The field to retrieve
      * @return The field requested
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
-    String getField(String uid, String field) throws DatabaseAccessException;
+    String getField(UserToken token, String field) throws DatabaseAccessException;
+
+    /**
+     * Returns the user FCM token.
+     * @param uid The user's UID
+     * @return The user's FCM token
+     * @throws DatabaseAccessException If an error occurs when retrieving the data
+     * @throws DocumentException If the user does not exist
+     */
+    String getFcmToken(String uid) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets the user's uid.
      *
      * @param username The user's username
      * @return The user's uid
-     * @throws DatabaseAccessException If the user doesn't exist
+     * @throws DatabaseAccessException If an error occurs when retrieving the data
      */
     String getUid(String username) throws DatabaseAccessException;
 
     /**
      * Creates an entry of the group in the subscription collection.
      *
-     * @param username The user's username
+     * @param token The user's Firebase token
      * @param groupName The group's name
      * @param batch The batch of writes to which it belongs
      */
-    void addGroupSubscription(String username, String groupName, WriteBatch batch) throws DatabaseAccessException;
+    void addGroupSubscription(UserToken token, String groupName, WriteBatch batch);
 
     /**
      * Deletes an entry of the group in the subscription collection.
      *
-     * @param userUid The user's uid
+     * @param token The user's Firebase token
      * @param groupName The group's name
      * @param batch The batch of writes to which it belongs
      */
-    void deleteGroupSubscription(String userUid, String groupName, WriteBatch batch);
+    void deleteGroupSubscription(UserToken token, String groupName, WriteBatch batch);
 
     /**
      * Gets all the user's group subscriptions.
      *
-     * @param username The user's username
+     * @param token The user's Firebase token
      * @return A list with the group subscriptions
      * @throws DatabaseAccessException If an error occurs when retrieving the data
      */
-    List<String> getUserSubscriptions(String username) throws DatabaseAccessException;
+    List<String> getUserSubscriptions(UserToken token) throws DatabaseAccessException;
 
     /**
      * Saves the FCM token of the user.
-     * @param uid The user UID
-     * @param token The user token
+     *
+     * @param token The user's Firebase token
+     * @param fcmToken The user's FCM token
      * @throws DatabaseAccessException If an error occurs when saving the token
      * @throws DocumentException When the user does not exist
      */
-    void saveMessagingToken(String uid, String token) throws DatabaseAccessException, DocumentException;
-
-    void addForumSubscription(String username, String parentGroup, String forumName, WriteBatch batch)
-        throws DatabaseAccessException;
+    void saveMessagingToken(UserToken token, String fcmToken) throws DatabaseAccessException, DocumentException;
 }
