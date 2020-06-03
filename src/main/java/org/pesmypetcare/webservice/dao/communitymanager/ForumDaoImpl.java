@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -40,7 +41,10 @@ public class ForumDaoImpl implements ForumDao {
     private static final String FORUMS_FIELD = "forums";
     private static final String FORUM_FIELD = "forum";
     private static final String LIKED_BY_FIELD = "likedBy";
+    private static final String REPORTED_BY_FIELD = "reportedBy";
+    private static final String BANNED_FIELD = "banned";
     private static final String GROUP_FIELD = "group";
+    private static final int COUNTER = 3;
     private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
@@ -171,6 +175,36 @@ public class ForumDaoImpl implements ForumDao {
             storageDao.deleteImageByName(imagePath);
         }
         batch.delete(messageSnapshot.getReference());
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
+    public void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
+        throws DatabaseAccessException, DocumentException {
+        // Cambiar les excepcions per unes que retornen 409
+        if (creator.equals(reporter)) {
+            throw new IllegalArgumentException("A message creator can't report its message");
+        }
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, FieldValue.arrayUnion(reporter));
+        ArrayList<String> messages = (ArrayList<String>) messageSnapshot.get(REPORTED_BY_FIELD);
+        if (messages != null && messages.contains(reporter)) {
+            throw new IllegalArgumentException("This user already reported the message");
+        }
+        if (messages != null && messages.size() > COUNTER-1) {
+            batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);
+        }
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
+    public void unbanMessage(String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, new ArrayList<String>());
+        batch.update(messageSnapshot.getReference(), BANNED_FIELD, false);
         documentAdapter.commitBatch(batch);
     }
 
@@ -422,9 +456,13 @@ public class ForumDaoImpl implements ForumDao {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         try {
-            return collectionAdapter
-                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator", creator,
-                    "publicationDate", date).get().getDocuments().get(0);
+            List<QueryDocumentSnapshot> messagesQuery = collectionAdapter
+                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator",
+                    creator, "publicationDate", date).get().getDocuments();
+            if (messagesQuery.size() == 0) {
+                throw new DatabaseAccessException("404", "Message Not Found");
+            }
+            return messagesQuery.get(0);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the message");

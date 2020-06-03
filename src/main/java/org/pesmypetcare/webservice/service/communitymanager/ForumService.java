@@ -105,6 +105,34 @@ public interface ForumService {
         throws DatabaseAccessException, DocumentException;
 
     /**
+     * Report a message from a forum.
+     *
+     * @param token The user's personal access token
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's username
+     * @param reporter The reporter's username
+     * @param date The message publication date
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    void reportMessage(String token, String parentGroup, String forumName, String creator, String reporter, String date)
+        throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Unbans a message from a forum.
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's username
+     * @param date The message publication date
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    void unbanMessage(String token, String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException;
+
+
+    /**
      * Adds a user to the likedBy list of a message.
      *
      * @param token The user's personal access token

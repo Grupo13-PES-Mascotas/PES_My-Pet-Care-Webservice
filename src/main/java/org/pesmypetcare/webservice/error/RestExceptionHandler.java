@@ -54,6 +54,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         if ("invalid-request".equals(ex.getErrorCode())) {
             return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
         }
+        if ("404".equals(ex.getErrorCode())) {
+            return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(errorBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
