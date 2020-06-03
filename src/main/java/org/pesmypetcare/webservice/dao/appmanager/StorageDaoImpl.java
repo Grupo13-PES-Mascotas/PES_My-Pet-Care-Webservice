@@ -12,6 +12,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -60,13 +61,14 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public void uploadGroupImage(ImageEntity image) throws DatabaseAccessException, DocumentException {
+    public void uploadGroupImage(UserToken token, ImageEntity image) throws DatabaseAccessException,
+        DocumentException {
         String imageName = image.getImgName();
         String path = GROUPS_ROOT_FOLDER + image.getUid() + "/" + imageName;
         Map<String, String> imageMap = new HashMap<>();
         imageMap.put("path", path);
         imageMap.put("lastModified", UTCLocalConverter.getCurrentUTC());
-        groupDao.updateField(image.getUid(), "icon", imageMap);
+        groupDao.updateField(token, image.getUid(), "icon", imageMap);
         storageBucket.create(path, image.getImg());
     }
 

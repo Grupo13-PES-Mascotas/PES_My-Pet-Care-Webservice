@@ -204,7 +204,7 @@ class GroupDaoTest {
         willDoNothing().given(documentAdapter)
             .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any());
         given(documentAdapter.documentExists(anyString())).willReturn(true);
-        assertThrows(DocumentException.class, () -> dao.updateField(groupName, NAME_FIELD, newName),
+        assertThrows(DocumentException.class, () -> dao.updateField(userToken, groupName, NAME_FIELD, newName),
             "Update group name should fail if the new name is already in use.");
     }
 
@@ -301,7 +301,7 @@ class GroupDaoTest {
                 .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
                 .thenReturn(docRef);
 
-            dao.updateField(groupName, NAME_FIELD, newName);
+            dao.updateField(userToken, groupName, NAME_FIELD, newName);
             verify(documentAdapter).updateDocumentFields(same(batch), eq(groupPath), eq(NAME_FIELD), eq(newName));
             verify(collectionAdapter, times(2)).getDocumentsWhereArrayContains(or(eq(tagsPath), eq(usersPath)),
                 or(eq(GROUPS_FIELD), eq("groupSubscriptions")), eq(groupName));
@@ -369,7 +369,7 @@ class GroupDaoTest {
             deletedTags.add(tag);
             List<String> newTags = new ArrayList<>();
             newTags.add(tag);
-            dao.updateTags(groupName, newTags, deletedTags);
+            dao.updateTags(userToken, groupName, newTags, deletedTags);
             verify(documentAdapter, times(2))
                 .updateDocumentFields(same(batch), or(eq(groupPath), eq(tagPath)), or(eq(GROUPS_FIELD), eq("tags")),
                     or(eq(FieldValue.arrayRemove(groupId)), or(eq(FieldValue.arrayUnion(newTags.toArray())),

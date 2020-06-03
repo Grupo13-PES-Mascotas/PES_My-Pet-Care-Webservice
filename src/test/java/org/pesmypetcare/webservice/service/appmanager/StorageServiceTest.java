@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -91,9 +92,9 @@ class StorageServiceTest {
         group.setCreator(owner);
         given(groupDao.getGroup(anyString())).willReturn(group);
         given(groupDao.groupNameInUse(anyString())).willReturn(true);
-        willDoNothing().given(storageDao).uploadGroupImage(any(ImageEntity.class));
+        willDoNothing().given(storageDao).uploadGroupImage(any(UserToken.class), any(ImageEntity.class));
         service.saveGroupImage("my-token", groupName, imageEntity);
-        verify(storageDao).uploadGroupImage(same(imageEntity));
+        verify(storageDao).uploadGroupImage(eq(userToken), same(imageEntity));
     }
 
     @Test

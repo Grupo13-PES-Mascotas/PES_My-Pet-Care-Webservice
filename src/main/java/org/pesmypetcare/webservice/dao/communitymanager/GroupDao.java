@@ -36,6 +36,7 @@ public interface GroupDao {
 
     /**
      * Gets a group by its name.
+     *
      * @param name The group name
      * @return The group
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -45,6 +46,7 @@ public interface GroupDao {
 
     /**
      * Gets all groups in database.
+     *
      * @return A list with all the groups
      * @throws DatabaseAccessException If an error occurs when accessing the database
      */
@@ -52,16 +54,20 @@ public interface GroupDao {
 
     /**
      * Updates a group field.
-     * @param name     The group name
-     * @param field    The field to update
+     *
+     * @param token The user's personal access token
+     * @param name The group name
+     * @param field The field to update
      * @param newValue The new field value
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When updating the name to one that already exists
      */
-    void updateField(String name, String field, Object newValue) throws DatabaseAccessException, DocumentException;
+    void updateField(UserToken token, String name, String field, Object newValue)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Checks whether a group name is already in use or not.
+     *
      * @param name The group name
      * @return True if the name is being used
      * @throws DatabaseAccessException If an error occurs when accessing the database
@@ -81,13 +87,15 @@ public interface GroupDao {
     /**
      * Updates the group tags.
      *
+     *
+     * @param token The user's personal access token
      * @param group The group name
      * @param newTags The new tags
      * @param deletedTags The deleted tags
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void updateTags(String group, List<String> newTags, List<String> deletedTags)
+    void updateTags(UserToken token, String group, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException;
 
     /**
@@ -110,6 +118,7 @@ public interface GroupDao {
 
     /**
      * Gets the group id.
+     *
      * @param name The group name
      * @return The group id
      * @throws DatabaseAccessException If an error occurs when accessing the database

@@ -4,6 +4,7 @@ import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.Map;
 
@@ -28,11 +29,13 @@ public interface StorageDao {
 
     /**
      * Uploads a group image to the storage.
+     *
+     * @param token The user's personal access token
      * @param image The image to upload
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void uploadGroupImage(ImageEntity image) throws DatabaseAccessException, DocumentException;
+    void uploadGroupImage(UserToken token, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Uploads a post image to the storage.

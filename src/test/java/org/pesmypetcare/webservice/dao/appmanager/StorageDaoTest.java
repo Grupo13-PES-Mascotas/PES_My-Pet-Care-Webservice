@@ -17,6 +17,7 @@ import org.pesmypetcare.webservice.entity.petmanager.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ class StorageDaoTest {
     private String groupName;
     private Map<String, String> images;
     private List<Map<String, Object>> pets;
+    private String forumName;
 
     @Mock
     private Bucket bucket;
@@ -63,10 +65,11 @@ class StorageDaoTest {
     private ForumDao forumDao;
     @Mock
     private Blob blob;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
     private StorageDao dao = new StorageDaoImpl();
-    private String forumName;
 
     @BeforeEach
     public void setUp() {
@@ -103,11 +106,11 @@ class StorageDaoTest {
 
     @Test
     public void uploadGroupImage() throws DatabaseAccessException, DocumentException {
-        willDoNothing().given(groupDao).updateField(anyString(), anyString(), anyMap());
+        willDoNothing().given(groupDao).updateField(any(UserToken.class), anyString(), anyString(), anyMap());
         given(bucket.create(anyString(), any(byte[].class))).willReturn(blob);
 
-        dao.uploadGroupImage(imageEntity);
-        verify(groupDao).updateField(same(imageEntity.getUid()), eq("icon"), isA(Map.class));
+        dao.uploadGroupImage(userToken, imageEntity);
+        verify(groupDao).updateField(eq(userToken), same(imageEntity.getUid()), eq("icon"), isA(Map.class));
         verify(bucket).create(eq("Groups/" + imageEntity.getUid() + "/" + imageEntity.getImgName()),
             same(imageEntity.getImg()));
     }

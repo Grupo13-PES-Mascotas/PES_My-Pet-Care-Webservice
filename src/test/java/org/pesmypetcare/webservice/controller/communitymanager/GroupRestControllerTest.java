@@ -77,21 +77,23 @@ class GroupRestControllerTest {
     @Test
     public void createGroup() throws Exception {
         willDoNothing().given(service).createGroup(anyString(), any(GroupEntity.class));
-        mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json).header(TOKEN_HEADER, TOKEN)).andExpect(
-            status().isCreated());
+        mockMvc
+            .perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json).header(TOKEN_HEADER, TOKEN))
+            .andExpect(status().isCreated());
     }
 
     @Test
     public void createGroupShouldReturnBadRequestIfGroupAlreadyExists() throws Exception {
         willThrow(DocumentException.class).given(service).createGroup(anyString(), any(GroupEntity.class));
-        mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(
-            status().isBadRequest());
+        mockMvc.perform(post(BASE_URL).contentType(MediaType.APPLICATION_JSON).content(json))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     public void deleteGroup() throws Exception {
         willDoNothing().given(service).deleteGroup(anyString(), anyString());
-        mockMvc.perform(delete(BASE_URL).header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)).andExpect(status().isNoContent());
+        mockMvc.perform(delete(BASE_URL).header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName))
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -124,8 +126,8 @@ class GroupRestControllerTest {
         Map<String, String> data = new HashMap<>();
         data.put("name", "German Shepherds");
         String request = mapper.writeValueAsString(data);
-        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "name")
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "name").header(TOKEN_HEADER, TOKEN)
             .contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(status().isNoContent());
     }
 
@@ -134,9 +136,10 @@ class GroupRestControllerTest {
         Map<String, String> data = new HashMap<>();
         data.put("breed", "German Shepherds");
         String request = mapper.writeValueAsString(data);
-        willDoNothing().given(service).updateField(anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "breed")
-            .contentType(MediaType.APPLICATION_JSON).content(request)).andExpect(status().isBadRequest());
+        willDoNothing().given(service).updateField(anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(
+            put(BASE_URL).param(GROUP_FIELD, groupName).param("field", "breed").contentType(MediaType.APPLICATION_JSON)
+                .content(request)).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -153,9 +156,10 @@ class GroupRestControllerTest {
     @Test
     public void updateTags() throws Exception {
         Map<String, List<String>> updateValues = new HashMap<>();
-        willDoNothing().given(service).updateTags(anyString(), anyList(), anyList());
-        mockMvc.perform(put(BASE_URL + "tags").param(GROUP_FIELD, groupName).contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(updateValues))).andExpect(status().isNoContent());
+        willDoNothing().given(service).updateTags(anyString(), anyString(), anyList(), anyList());
+        mockMvc.perform(put(BASE_URL + "tags").param(GROUP_FIELD, groupName).header(TOKEN_HEADER, TOKEN)
+            .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(updateValues)))
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -175,10 +179,11 @@ class GroupRestControllerTest {
     @Test
     public void existsGroup() throws Exception {
         given(service.groupNameInUse(anyString())).willReturn(true);
-        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "groups").param(GROUP_FIELD, groupName)).andExpect(
-            status().isOk()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get(BASE_URL + "groups").param(GROUP_FIELD, groupName))
+            .andExpect(status().isOk()).andReturn();
         String response = mvcResult.getResponse().getContentAsString();
-        TypeReference<HashMap<String, Boolean>> typeRef = new TypeReference<HashMap<String, Boolean>>() { };
+        TypeReference<HashMap<String, Boolean>> typeRef = new TypeReference<HashMap<String, Boolean>>() {
+        };
         Map<String, Boolean> result = mapper.readValue(response, typeRef);
         assertTrue("Should return if the group exists or not.", result.get("exists"));
     }

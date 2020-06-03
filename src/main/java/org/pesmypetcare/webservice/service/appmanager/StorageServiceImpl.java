@@ -49,7 +49,7 @@ public class StorageServiceImpl implements StorageService {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException("document-not-exists", "The group does not exist.");
         }
-        storageDao.uploadGroupImage(image);
+        storageDao.uploadGroupImage(userToken, image);
     }
 
     @Override

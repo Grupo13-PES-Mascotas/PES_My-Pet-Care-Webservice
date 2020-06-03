@@ -114,7 +114,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateField(String name, String field, Object newValue)
+    public void updateField(UserToken token, String name, String field, Object newValue)
         throws DatabaseAccessException, DocumentException {
         String id = getGroupId(name);
         WriteBatch batch = documentAdapter.batch();
@@ -159,7 +159,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void updateTags(String group, List<String> newTags, List<String> deletedTags)
+    public void updateTags(UserToken token, String group, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
         String id = getGroupId(group);
         WriteBatch batch = documentAdapter.batch();

@@ -138,18 +138,19 @@ class GroupServiceTest {
 
             @Test
             public void updateField() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(dao).updateField(anyString(), anyString(), anyString());
-
-                service.updateField(groupName, field, newName);
-                verify(dao).updateField(same(groupName), same(field), same(newName));
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(dao).updateField(any(UserToken.class), anyString(), anyString(), anyString());
+                service.updateField(token, groupName, field, newName);
+                verify(dao).updateField(eq(userToken), same(groupName), same(field), same(newName));
             }
 
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(dao).updateTags(anyString(), anyList(), anyList());
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(dao).updateTags(any(UserToken.class), anyString(), anyList(), anyList());
 
-                service.updateTags(groupName, newTags, deletedTags);
-                verify(dao).updateTags(same(groupName), same(newTags), same(deletedTags));
+                service.updateTags(token, groupName, newTags, deletedTags);
+                verify(dao).updateTags(eq(userToken), same(groupName), same(newTags), same(deletedTags));
             }
 
             @Test
@@ -208,13 +209,13 @@ class GroupServiceTest {
 
             @Test
             public void updateFieldShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
-                assertThrows(DocumentException.class, () -> service.updateField(groupName, field, newName),
+                assertThrows(DocumentException.class, () -> service.updateField(token, groupName, field, newName),
                     "Should throw an exception when the group already exists.");
             }
 
             @Test
             public void updateTagsShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
-                assertThrows(DocumentException.class, () -> service.updateTags(groupName, newTags, deletedTags),
+                assertThrows(DocumentException.class, () -> service.updateTags(token, groupName, newTags, deletedTags),
                     "Should throw an exception when the group already exists.");
             }
 

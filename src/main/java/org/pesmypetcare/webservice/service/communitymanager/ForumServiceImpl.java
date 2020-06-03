@@ -123,26 +123,4 @@ public class ForumServiceImpl implements ForumService {
             forumDao.removeUserFromLikedByOfMessage(username, parentGroup, forumName, creator, date);
         }
     }
-
-    /*@Override
-    public void subscribe(String token, String parentGroup, String forumName, String username) throws
-    DatabaseAccessException {
-        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
-        } else {
-            forumDao.subscribe(parentGroup, forumName, username);
-        }
-    }
-
-    @Override
-    public void unsubscribe(String token, String parentGroup, String forumName, String username) throws
-    DatabaseAccessException {
-        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
-            throw new DatabaseAccessException("invalid-request", "The forum does not exist");
-        } else {
-            forumDao.unsubscribe(parentGroup, forumName, username);
-        }
-    }*/
-
-
 }

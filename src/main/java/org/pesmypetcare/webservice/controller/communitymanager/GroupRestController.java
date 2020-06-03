@@ -34,6 +34,7 @@ public class GroupRestController {
     /**
      * Creates a group.
      *
+     * @param token The user's personal access token
      * @param entity The group entity
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      * @throws DocumentException When the group does not exist
@@ -48,6 +49,7 @@ public class GroupRestController {
     /**
      * Deletes a group.
      *
+     * @param token The user's personal access token
      * @param group The group name
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      * @throws DocumentException When the group does not exist
@@ -79,6 +81,8 @@ public class GroupRestController {
     /**
      * Updates a group field.
      *
+     *
+     * @param token The user's personal access token
      * @param group The group name
      * @param field The field to update
      * @param updateValue The new value stored in a map
@@ -87,13 +91,13 @@ public class GroupRestController {
      */
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateField(@RequestParam String group, @RequestParam String field,
+    public void updateField(@RequestHeader String token, @RequestParam String group, @RequestParam String field,
                             @RequestBody Map<String, String> updateValue)
         throws DatabaseAccessException, DocumentException {
         if (!("name".equals(field) || "description".equals(field))) {
             throw new IllegalArgumentException("Field must be either name or description");
         }
-        service.updateField(group, field, updateValue.get("value"));
+        service.updateField(token, group, field, updateValue.get("value"));
     }
 
     /**
@@ -110,6 +114,8 @@ public class GroupRestController {
     /**
      * Updates a the group tags.
      *
+     *
+     * @param token The user's personal access token
      * @param group The group name
      * @param updateValue The new value stored in a map
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
@@ -117,9 +123,10 @@ public class GroupRestController {
      */
     @PutMapping("/tags")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTags(@RequestParam String group, @RequestBody Map<String, List<String>> updateValue)
+    public void updateTags(@RequestHeader String token, @RequestParam String group,
+                           @RequestBody Map<String, List<String>> updateValue)
         throws DatabaseAccessException, DocumentException {
-        service.updateTags(group, updateValue.get("new"), updateValue.get("deleted"));
+        service.updateTags(token, group, updateValue.get("new"), updateValue.get("deleted"));
     }
 
     /**

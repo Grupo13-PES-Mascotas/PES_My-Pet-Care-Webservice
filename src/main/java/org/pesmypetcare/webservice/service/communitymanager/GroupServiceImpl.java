@@ -61,22 +61,22 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void updateField(String name, String field, String newValue)
+    public void updateField(String token, String name, String field, String newValue)
         throws DatabaseAccessException, DocumentException {
         if (!groupDao.groupNameInUse(name)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
         } else {
-            groupDao.updateField(name, field, newValue);
+            groupDao.updateField(makeUserToken(token), name, field, newValue);
         }
     }
 
     @Override
-    public void updateTags(String group, List<String> newTags, List<String> deletedTags)
+    public void updateTags(String token, String group, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
         } else {
-            groupDao.updateTags(group, newTags, deletedTags);
+            groupDao.updateTags(makeUserToken(token), group, newTags, deletedTags);
         }
     }
 
