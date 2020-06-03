@@ -116,13 +116,12 @@ public interface ForumService {
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
-     * @param reporter The reporter's username
      * @param date The message publication date
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      * @throws InvalidOperationException When the operation isn't allowed
      */
-    void reportMessage(String token, String parentGroup, String forumName, String creator, String reporter, String date)
+    void reportMessage(String token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException;
 
     /**

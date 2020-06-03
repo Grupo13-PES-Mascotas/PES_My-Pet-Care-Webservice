@@ -132,11 +132,7 @@ public class ForumDaoImpl implements ForumDao {
         }
         String forumId = getForumId(parentGroup, currentName);
         String groupId = groupDao.getGroupId(parentGroup);
-        String creator = documentAdapter
-            .getStringFromDocument(Path.ofDocument(Collections.forums, groupId, forumId), "creator");
-        if (!userToken.getUsername().equals(creator)) {
-            throw new BadCredentialsException("The user is not the creator of this forum.");
-        }
+        checkIfUserIsForumCreator(userToken, forumId, groupId);
         WriteBatch batch = documentAdapter.batch();
         documentAdapter
             .updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName, batch);
@@ -151,11 +147,7 @@ public class ForumDaoImpl implements ForumDao {
                            List<String> deletedTags) throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
-        String creator = documentAdapter
-            .getStringFromDocument(Path.ofDocument(Collections.forums, groupId, forumId), "creator");
-        if (!userToken.getUsername().equals(creator)) {
-            throw new BadCredentialsException("The user is not the creator of this forum.");
-        }
+        checkIfUserIsForumCreator(userToken, forumId, groupId);
         WriteBatch batch = documentAdapter.batch();
         if (deletedTags != null) {
             removeDeletedTags(groupId, forumId, forumName, deletedTags, batch);
@@ -192,7 +184,7 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
+    public void reportMessage(String reporter, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException {
         if (creator.equals(reporter)) {
             throw new InvalidOperationException("409", "A message creator can't report its message");
@@ -211,8 +203,11 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void unbanMessage(String parentGroup, String forumName, String creator, String date)
+    public void unbanMessage(UserToken token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException {
+        String forumId = getForumId(parentGroup, forumName);
+        String groupId = groupDao.getGroupId(parentGroup);
+        checkIfUserIsForumCreator(token, forumId, groupId);
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
         WriteBatch batch = documentAdapter.batch();
         batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, new ArrayList<String>());
@@ -478,6 +473,23 @@ public class ForumDaoImpl implements ForumDao {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the message");
+        }
+    }
+
+    /**
+     * Checks if a user is the creator of a the forum.
+     * @param token The token that contains the user information
+     * @param forumId The forum ID
+     * @param groupId The group ID
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    private void checkIfUserIsForumCreator(UserToken token, String forumId, String groupId)
+        throws DatabaseAccessException, DocumentException {
+        String forumCreator = documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.forums, groupId, forumId), "creator");
+        if (!token.getUsername().equals(forumCreator)) {
+            throw new BadCredentialsException("The user is not the creator of this forum.");
         }
     }
 }

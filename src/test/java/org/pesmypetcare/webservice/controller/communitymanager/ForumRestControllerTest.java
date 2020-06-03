@@ -143,8 +143,7 @@ class ForumRestControllerTest {
 
     @Test
     public void reportMessage() throws Exception {
-        willDoNothing().given(service).reportMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
-            anyString());
+        willDoNothing().given(service).reportMessage(anyString(), anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(
             put(BASE_URL + parentGroup + "/" + forumName + "/report_message").header(TOKEN_HEADER, myToken)
                 .param("creator", creator).param("date", creationDate).param("reporter", reporter))

@@ -161,7 +161,6 @@ public class ForumRestController {
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
-     * @param reporter The reporter's username
      * @param date The message publication date
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
@@ -170,10 +169,9 @@ public class ForumRestController {
     @PutMapping("/{parentGroup}/{forumName}/report_message")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reportMessage(@RequestHeader String token, @PathVariable String parentGroup,
-                              @PathVariable String forumName, @RequestParam String creator,
-                              @RequestParam String reporter, @RequestParam String date)
+                              @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException {
-        service.reportMessage(token, parentGroup, forumName, creator, reporter, date);
+        service.reportMessage(token, parentGroup, forumName, creator, date);
     }
 
     /**

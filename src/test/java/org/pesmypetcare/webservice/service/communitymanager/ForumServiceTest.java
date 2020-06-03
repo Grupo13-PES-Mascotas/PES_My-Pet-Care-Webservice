@@ -229,20 +229,21 @@ class ForumServiceTest {
 
             @Test
             public void reportMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
-                willDoNothing().given(forumDao).reportMessage(anyString(), anyString(), anyString(), anyString(),
-                    anyString());
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                given(userToken.getUsername()).willReturn(creator);
+                willDoNothing().given(forumDao).reportMessage(any(String.class), anyString(), anyString(), anyString(), anyString());
 
-                service.reportMessage(token, groupName, forumName, creator, newName, date);
-                verify(forumDao).reportMessage(same(groupName), same(forumName), same(creator),
-                    same(newName), same(date));
+                service.reportMessage(token, groupName, forumName, creator, date);
+                verify(forumDao).reportMessage(eq(creator), same(groupName), same(forumName), same(creator), same(date));
             }
 
             @Test
             public void unbanMessage() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).unbanMessage(anyString(), anyString(), anyString(), anyString());
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(forumDao).unbanMessage(any(UserToken.class), anyString(), anyString(), anyString(), anyString());
 
                 service.unbanMessage(token, groupName, forumName, creator, date);
-                verify(forumDao).unbanMessage(same(groupName), same(forumName), same(creator), same(date));
+                verify(forumDao).unbanMessage(eq(userToken), same(groupName), same(forumName), same(creator), same(date));
             }
 
             @Test

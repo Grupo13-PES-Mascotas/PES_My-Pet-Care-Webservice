@@ -111,13 +111,12 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void reportMessage(String token, String parentGroup, String forumName, String creator, String reporter,
-                              String date)
+    public void reportMessage(String token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.reportMessage(parentGroup, forumName, creator, reporter, date);
+            forumDao.reportMessage(makeUserToken(token).getUsername(), parentGroup, forumName, creator, date);
         }
     }
 
@@ -127,7 +126,7 @@ public class ForumServiceImpl implements ForumService {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.unbanMessage(parentGroup, forumName, creator, date);
+            forumDao.unbanMessage(makeUserToken(token), parentGroup, forumName, creator, date);
         }
     }
 

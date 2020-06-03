@@ -15,6 +15,7 @@ import java.util.List;
 public interface ForumDao {
     /**
      * Checks if a forum name is already in use in a group.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @return True if the forum name is already in use
@@ -24,6 +25,7 @@ public interface ForumDao {
 
     /**
      * Creates a forum in the given group.
+     *
      * @param parentGroup The group name
      * @param forumEntity The forum entity
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -33,16 +35,17 @@ public interface ForumDao {
 
     /**
      * Deletes a forum form the given group.
+     *
      * @param parentGroup The group name
      * @param forumName The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void deleteForum(String parentGroup, String forumName)
-        throws DatabaseAccessException, DocumentException;
+    void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a forum from a group.
+     *
      * @param parentGroup The group name
      * @param forumName The forum name
      * @return The forum entity
@@ -53,6 +56,7 @@ public interface ForumDao {
 
     /**
      * Gets all forums from a group.
+     *
      * @param groupName The group name
      * @return A list of forum entities
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -84,11 +88,12 @@ public interface ForumDao {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
-        throws DatabaseAccessException, DocumentException;
+    void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags,
+                    List<String> deletedTags) throws DatabaseAccessException, DocumentException;
 
     /**
      * Posts a message in a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param message The message to post
@@ -100,6 +105,7 @@ public interface ForumDao {
 
     /**
      * Deletes a message from a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
@@ -112,20 +118,23 @@ public interface ForumDao {
 
     /**
      * Reports a message from a forum and sets it as banned when the number of reports is higher than 3.
+     *
+     * @param reporter The reporter's username
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
-     * @param reporter The reporter's username
      * @param date The message publication date
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      * @throws InvalidOperationException When the operation isn't allowed
      */
-    void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
+    void reportMessage(String reporter, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException;
 
     /**
      * Unbans a message from a forum.
+     *
+     * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
@@ -133,11 +142,12 @@ public interface ForumDao {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void unbanMessage(String parentGroup, String forumName, String creator, String date)
+    void unbanMessage(UserToken token, String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets all images paths from all posts of a forum that have an image.
+     *
      * @param group The group name
      * @param forum The forum name
      * @return A list of paths to the posts images
@@ -148,6 +158,7 @@ public interface ForumDao {
 
     /**
      * Adds a user to the likedBy list of a message.
+     *
      * @param username The user's username
      * @param parentGroup The parent group name
      * @param forumName The forum name
@@ -161,6 +172,7 @@ public interface ForumDao {
 
     /**
      * Deletes a user from the likedBy list of a message.
+     *
      * @param username The user's username
      * @param parentGroup The parent group name
      * @param forumName The forum name

@@ -448,7 +448,7 @@ class ForumDaoTest {
                     given(documentSnapshot.get(anyString())).willReturn(usernameList);
                     given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
 
-                    dao.reportMessage(groupName, forumName, username, username2, date);
+                    dao.reportMessage(username2, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
@@ -461,13 +461,16 @@ class ForumDaoTest {
                 @Test
                 public void unbanMessage() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
+                    given(documentAdapter
+                        .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator"))).willReturn(username);
+                    given(userToken.getUsername()).willReturn(username);
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
                         .willReturn(query);
                     given(documentSnapshot.getReference()).willReturn(documentReference);
                     given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
 
-                    dao.unbanMessage(groupName, forumName, username, date);
+                    dao.unbanMessage(userToken, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
