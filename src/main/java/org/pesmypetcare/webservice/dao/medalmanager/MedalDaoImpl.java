@@ -99,7 +99,7 @@ public class MedalDaoImpl implements MedalDao {
         path = Path.ofCollection(Collections.used_usernames);
         List<DocumentSnapshot> allUsers = dbCol.listAllCollectionDocumentSnapshots(path);
         UserMedalEntity medalEntity  = new UserMedalEntity(medal.getName(), 0., 0.,
-            new ArrayList<>(), new Medal(medal));;
+            new ArrayList<>(), new Medal(medal));
         for (DocumentSnapshot user: allUsers) {
             userMedalDao.createUserMedal(user.getId(), medal.getName(), medalEntity);
         }
