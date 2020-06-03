@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.controller.medalmanager;
 
-import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;

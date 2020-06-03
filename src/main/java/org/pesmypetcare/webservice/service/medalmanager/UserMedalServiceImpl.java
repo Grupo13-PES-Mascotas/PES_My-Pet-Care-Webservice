@@ -19,7 +19,8 @@ public class UserMedalServiceImpl implements UserMedalService {
     private UserMedalDao userMedalDao;
 
     @Override
-    public void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException, DocumentException {
+    public void createUserMedal(String owner, String name, UserMedalEntity medal)
+        throws DatabaseAccessException, DocumentException {
         userMedalDao.createUserMedal(owner, name, medal);
     }
 

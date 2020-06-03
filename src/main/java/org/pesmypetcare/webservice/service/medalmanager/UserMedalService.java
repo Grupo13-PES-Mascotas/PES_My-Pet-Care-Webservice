@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.service.medalmanager;
 
-import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -21,7 +20,8 @@ public interface UserMedalService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException, DocumentException;
+    void createUserMedal(String owner, String name, UserMedalEntity medal)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a medal identified by its name and owner.
