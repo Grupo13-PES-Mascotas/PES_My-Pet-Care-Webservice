@@ -24,6 +24,7 @@ import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.Firesto
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -121,13 +122,17 @@ public class ForumDaoImpl implements ForumDao {
     @Override
     public void updateName(UserToken userToken, String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
-        //TODO: Use token
         if (forumNameInUse(parentGroup, newName)) {
             throw new DocumentException("document-already-exists", "The forum name is already in use");
         }
-        WriteBatch batch = documentAdapter.batch();
         String forumId = getForumId(parentGroup, currentName);
         String groupId = groupDao.getGroupId(parentGroup);
+        String creator = documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.forums, groupId, forumId), "creator");
+        if (!userToken.getUsername().equals(creator)) {
+            throw new BadCredentialsException("The user is not the creator of this forum.");
+        }
+        WriteBatch batch = documentAdapter.batch();
         documentAdapter
             .updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName, batch);
         changeNameInTags(currentName, newName, batch);
@@ -137,11 +142,15 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
-        throws DatabaseAccessException, DocumentException {
-        //TODO: Use token
+    public void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags,
+                           List<String> deletedTags) throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
+        String creator = documentAdapter
+            .getStringFromDocument(Path.ofDocument(Collections.forums, groupId, forumId), "creator");
+        if (!userToken.getUsername().equals(creator)) {
+            throw new BadCredentialsException("The user is not the creator of this forum.");
+        }
         WriteBatch batch = documentAdapter.batch();
         if (deletedTags != null) {
             removeDeletedTags(groupId, forumId, forumName, deletedTags, batch);

@@ -30,6 +30,7 @@ import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -68,6 +70,8 @@ class ForumDaoTest {
     private static String tagPath;
     private static String username;
     private static String date;
+    private String publicationDate;
+    private String newName;
     private static ForumEntity forumEntity;
     private static List<String> tags;
     private static Message message;
@@ -99,9 +103,7 @@ class ForumDaoTest {
     private UserToken userToken;
 
     @InjectMocks
-    private ForumDao dao = new ForumDaoImpl();
-    private String publicationDate;
-    private String newName;
+    private ForumDao dao = spy(new ForumDaoImpl());
 
     @BeforeAll
     public static void beforeAll() {
@@ -203,6 +205,28 @@ class ForumDaoTest {
         }, "Should fail when the name is already in use.");
     }
 
+    @Test
+    public void updateNameShouldFailIfUserIsNotTheForumCreator() throws DatabaseAccessException, DocumentException {
+        mockGetGroupAndForumIds();
+        given(userToken.getUsername()).willReturn(username);
+        given(documentAdapter
+            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator"))).willReturn("someOtherUser");
+        assertThrows(BadCredentialsException.class, () -> {
+            dao.updateName(userToken, groupName, forumName, newName);
+        });
+    }
+
+    @Test
+    public void updateTagsShouldFailIfUserIsNotTheForumCreator() throws DatabaseAccessException, DocumentException {
+        mockGetGroupAndForumIds();
+        given(userToken.getUsername()).willReturn(username);
+        given(documentAdapter
+            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator"))).willReturn("someOtherUser");
+        assertThrows(BadCredentialsException.class, () -> {
+            dao.updateTags(userToken, groupName, forumName, tags, tags);
+        });
+    }
+
     private void mockGetGroupAndForumIds() throws DatabaseAccessException, DocumentException {
         given(groupDao.getGroupId(anyString())).willReturn(groupId);
         given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(forumId);
@@ -286,6 +310,9 @@ class ForumDaoTest {
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
+                given(userToken.getUsername()).willReturn(username);
+                given(documentAdapter
+                    .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator"))).willReturn(username);
                 willDoNothing().given(documentAdapter)
                     .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
                 mockAddForumToTag();
@@ -361,6 +388,9 @@ class ForumDaoTest {
                 @Test
                 public void updateName() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
+                    given(userToken.getUsername()).willReturn(username);
+                    given(documentAdapter
+                        .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator"))).willReturn(username);
                     given(documentAdapter.documentExists(anyString())).willReturn(false);
                     willDoNothing().given(documentAdapter)
                         .updateDocumentFields(anyString(), anyString(), anyString(), any(WriteBatch.class));
