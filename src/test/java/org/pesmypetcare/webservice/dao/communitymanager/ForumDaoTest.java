@@ -27,6 +27,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
@@ -94,6 +95,8 @@ class ForumDaoTest {
     private QuerySnapshot querySnapshot;
     @Mock
     private QueryDocumentSnapshot documentSnapshot;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
     private ForumDao dao = new ForumDaoImpl();
@@ -196,7 +199,7 @@ class ForumDaoTest {
     public void updateNameShouldFailWhenTheNewNameIsInUse() {
         assertThrows(DocumentException.class, () -> {
             given(documentAdapter.documentExists(anyString())).willReturn(true);
-            dao.updateName(groupName, forumName, newName);
+            dao.updateName(userToken, groupName, forumName, newName);
         }, "Should fail when the name is already in use.");
     }
 
@@ -287,7 +290,7 @@ class ForumDaoTest {
                     .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
                 mockAddForumToTag();
 
-                dao.updateTags(groupName, forumName, tags, tags);
+                dao.updateTags(userToken, groupName, forumName, tags, tags);
                 verify(documentAdapter)
                     .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayRemove(tags.toArray())),
                         same(batch));
@@ -372,7 +375,7 @@ class ForumDaoTest {
                         .willReturn(query);
                     given(documentSnapshot.getId()).willReturn("dogs");
 
-                    dao.updateName(groupName, forumName, newName);
+                    dao.updateName(userToken, groupName, forumName, newName);
                     verifyAddForumToTag(newName);
                     verifySaveForumName(newName);
                 }

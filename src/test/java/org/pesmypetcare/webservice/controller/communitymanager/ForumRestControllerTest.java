@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class ForumRestControllerTest {
     private static final String BASE_URL = "/community/";
+    private static final String TOKEN_HEADER = "token";
     private String myToken;
     private String creationDate;
     private String creator;
@@ -107,16 +108,17 @@ class ForumRestControllerTest {
 
     @Test
     public void updateTags() throws Exception {
-        willDoNothing().given(service).updateTags(anyString(), anyString(), anyList(), anyList());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).param("newName", "German Shepherds"))
+        willDoNothing().given(service).updateTags(anyString(), anyString(), anyString(), anyList(), anyList());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).param("newName",
+            "German Shepherds"))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void updateName() throws Exception {
-        willDoNothing().given(service).updateName(anyString(), anyString(), anyString());
+        willDoNothing().given(service).updateName(anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(
-            put(BASE_URL + "tags/" + parentGroup + "/" + forumName).contentType(MediaType.APPLICATION_JSON_VALUE)
+            put(BASE_URL + "tags/" + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(new HashMap<String, List<String>>())))
             .andExpect(status().isNoContent());
     }
@@ -125,7 +127,7 @@ class ForumRestControllerTest {
     public void postMessage() throws Exception {
         json = mapper.writeValueAsString(new MessageEntity());
         willDoNothing().given(service).postMessage(anyString(), anyString(), anyString(), any(Message.class));
-        mockMvc.perform(post(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
+        mockMvc.perform(post(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken)
             .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
     }
 
@@ -133,7 +135,7 @@ class ForumRestControllerTest {
     public void deleteMessage() throws Exception {
         willDoNothing().given(service).createForum(anyString(), any(ForumEntity.class));
         mockMvc.perform(
-            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
+            delete(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).param("creator", creator)
                 .param("date", creationDate)).andExpect(status().isNoContent());
     }
 
@@ -141,7 +143,7 @@ class ForumRestControllerTest {
     public void likeMessage() throws Exception {
         willDoNothing().given(service)
             .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header(TOKEN_HEADER, myToken)
             .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "true"))
             .andExpect(status().isNoContent());
     }
@@ -151,7 +153,7 @@ class ForumRestControllerTest {
         willDoNothing().given(service)
             .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
                 anyString());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header("token", myToken)
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header(TOKEN_HEADER, myToken)
             .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "false"))
             .andExpect(status().isNoContent());
     }

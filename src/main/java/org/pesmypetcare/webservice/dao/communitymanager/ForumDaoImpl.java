@@ -19,6 +19,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
@@ -118,8 +119,9 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void updateName(String parentGroup, String currentName, String newName)
+    public void updateName(UserToken userToken, String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
+        //TODO: Use token
         if (forumNameInUse(parentGroup, newName)) {
             throw new DocumentException("document-already-exists", "The forum name is already in use");
         }
@@ -135,8 +137,9 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
+    public void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
+        //TODO: Use token
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         WriteBatch batch = documentAdapter.batch();

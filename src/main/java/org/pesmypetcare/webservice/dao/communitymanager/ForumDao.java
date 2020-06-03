@@ -4,6 +4,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.List;
 
@@ -60,17 +61,21 @@ public interface ForumDao {
 
     /**
      * Updates a forum name.
+     *
+     * @param userToken The user's personal access token
      * @param parentGroup The parent group name
      * @param currentName The current name
      * @param newName The new name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void updateName(String parentGroup, String currentName, String newName)
+    void updateName(UserToken userToken, String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException;
 
     /**
      * Updates the tags of a group.
+     *
+     * @param userToken The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param newTags The list of new tags
@@ -78,7 +83,7 @@ public interface ForumDao {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
+    void updateTags(UserToken userToken, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException;
 
     /**

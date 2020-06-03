@@ -14,6 +14,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,10 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -49,9 +53,11 @@ class ForumServiceTest {
     private GroupDao groupDao;
     @Mock
     private ForumDao forumDao;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
-    private ForumService service = new ForumServiceImpl();
+    private ForumService service = spy(new ForumServiceImpl());
 
     @BeforeEach
     public void setUp() {
@@ -116,12 +122,15 @@ class ForumServiceTest {
 
         @Test
         public void updateNameShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
-            assertThrows(DocumentException.class, () -> service.updateName(groupName, forumName, newName));
+            doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+            assertThrows(DocumentException.class, () -> service.updateName(token, groupName, forumName, newName));
         }
 
         @Test
         public void updateTagsShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
-            assertThrows(DocumentException.class, () -> service.updateTags(groupName, forumName, newTags, deletedTags));
+            doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+            assertThrows(DocumentException.class, () -> service.updateTags(token, groupName, forumName, newTags,
+                deletedTags));
         }
 
         @Test
@@ -185,18 +194,20 @@ class ForumServiceTest {
 
             @Test
             public void updateName() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).updateName(anyString(), anyString(), anyString());
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(forumDao).updateName(any(UserToken.class), anyString(), anyString(), anyString());
 
-                service.updateName(groupName, forumName, newName);
-                verify(forumDao).updateName(same(groupName), same(forumName), same(newName));
+                service.updateName(token, groupName, forumName, newName);
+                verify(forumDao).updateName(eq(userToken), same(groupName), same(forumName), same(newName));
             }
 
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).updateTags(anyString(), anyString(), anyList(), anyList());
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(forumDao).updateTags(any(UserToken.class), anyString(), anyString(), anyList(), anyList());
 
-                service.updateTags(groupName, forumName, newTags, deletedTags);
-                verify(forumDao).updateTags(same(groupName), same(forumName), same(newTags), same(deletedTags));
+                service.updateTags(token, groupName, forumName, newTags, deletedTags);
+                verify(forumDao).updateTags(eq(userToken), same(groupName), same(forumName), same(newTags), same(deletedTags));
             }
 
             @Test

@@ -6,6 +6,8 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,10 @@ public class ForumServiceImpl implements ForumService {
     private ForumDao forumDao;
     @Autowired
     private GroupDao groupDao;
+
+    public UserToken makeUserToken(String token) {
+        return new UserTokenImpl(token);
+    }
 
     @Override
     public void createForum(String parentGroup, ForumEntity forumEntity)
@@ -63,22 +69,22 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void updateName(String parentGroup, String currentName, String newName)
+    public void updateName(String token, String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, currentName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.updateName(parentGroup, currentName, newName);
+            forumDao.updateName(makeUserToken(token), parentGroup, currentName, newName);
         }
     }
 
     @Override
-    public void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
+    public void updateTags(String token, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.updateTags(parentGroup, forumName, newTags, deletedTags);
+            forumDao.updateTags(makeUserToken(token), parentGroup, forumName, newTags, deletedTags);
         }
     }
 

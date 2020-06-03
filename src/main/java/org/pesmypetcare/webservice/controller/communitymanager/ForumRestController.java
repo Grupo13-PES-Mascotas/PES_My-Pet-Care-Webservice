@@ -84,6 +84,7 @@ public class ForumRestController {
     /**
      * Updates a forum's name.
      *
+     * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forum The fourm name
      * @param newName The new name
@@ -92,14 +93,15 @@ public class ForumRestController {
      */
     @PutMapping("/{parentGroup}/{forum}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateName(@PathVariable String parentGroup, @PathVariable String forum, @RequestParam String newName)
-        throws DatabaseAccessException, DocumentException {
-        service.updateName(parentGroup, forum, newName);
+    public void updateName(@RequestHeader String token, @PathVariable String parentGroup, @PathVariable String forum,
+                           @RequestParam String newName) throws DatabaseAccessException, DocumentException {
+        service.updateName(token, parentGroup, forum, newName);
     }
 
     /**
      * Updates the list of tags of a forum.
      *
+     * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param tags A map with the lists of new tags and the deleted ones
@@ -108,10 +110,10 @@ public class ForumRestController {
      */
     @PutMapping("/tags/{parentGroup}/{forumName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTags(@PathVariable String parentGroup, @PathVariable String forumName,
-                           @RequestBody Map<String, List<String>> tags)
+    public void updateTags(@RequestHeader String token, @PathVariable String parentGroup,
+                           @PathVariable String forumName, @RequestBody Map<String, List<String>> tags)
         throws DatabaseAccessException, DocumentException {
-        service.updateTags(parentGroup, forumName, tags.get("new"), tags.get("deleted"));
+        service.updateTags(token, parentGroup, forumName, tags.get("new"), tags.get("deleted"));
     }
 
     /**
@@ -168,8 +170,8 @@ public class ForumRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void likeMessage(@RequestHeader String token, @PathVariable String parentGroup,
                             @PathVariable String forumName, @RequestParam String username, @RequestParam String creator,
-                            @RequestParam String date, @RequestParam boolean like) throws DatabaseAccessException,
-        DocumentException {
+                            @RequestParam String date, @RequestParam boolean like)
+        throws DatabaseAccessException, DocumentException {
         if (like) {
             service.addUserToLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
         } else {

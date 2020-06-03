@@ -55,18 +55,22 @@ public interface ForumService {
     /**
      * Updates a forum name.
      *
+     *
+     * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param currentName The current name
      * @param newName The new name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or the forum do not exist
      */
-    void updateName(String parentGroup, String currentName, String newName)
+    void updateName(String token, String parentGroup, String currentName, String newName)
         throws DatabaseAccessException, DocumentException;
 
     /**
      * Updates the tags of a group.
      *
+     *
+     * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param newTags The list of new tags
@@ -74,7 +78,7 @@ public interface ForumService {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or the forum do not exist
      */
-    void updateTags(String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
+    void updateTags(String token, String parentGroup, String forumName, List<String> newTags, List<String> deletedTags)
         throws DatabaseAccessException, DocumentException;
 
     /**
