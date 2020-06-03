@@ -47,16 +47,15 @@ public class StorageRestController {
      * Saves a pet image in user storage.
      *
      * @param token The personal access token of the user
-     * @param user The user's username
      * @param image The image entity containing the image, its path and name
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    @PutMapping("/image/{user}/pets")
+    @PutMapping("/image/pets")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void savePetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
-                             @RequestBody ImageEntity image) throws DatabaseAccessException, DocumentException {
-        storage.savePetImage(user, image);
+    public void savePetImage(@RequestHeader(TOKEN) String token, @RequestBody ImageEntity image)
+        throws DatabaseAccessException, DocumentException {
+        storage.savePetImage(token, image);
     }
 
     /**
@@ -141,6 +140,7 @@ public class StorageRestController {
 
     /**
      * Downloads all posts images from a forum.
+     *
      * @param token The personal access token of the user
      * @param group The group name
      * @param forum The forum name

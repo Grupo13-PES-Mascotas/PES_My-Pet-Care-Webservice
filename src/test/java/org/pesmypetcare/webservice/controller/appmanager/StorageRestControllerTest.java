@@ -82,7 +82,7 @@ class StorageRestControllerTest {
     @Test
     public void savePetImageShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).savePetImage(anyString(), any(ImageEntity.class));
-        mockMvc.perform(put(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)
+        mockMvc.perform(put(BASE_URL + "/pets").header(TOKEN, myToken)
             .contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isNoContent());
     }
 

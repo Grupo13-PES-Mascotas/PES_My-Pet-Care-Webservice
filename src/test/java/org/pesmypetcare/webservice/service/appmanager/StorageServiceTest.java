@@ -10,9 +10,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.communitymanager.GroupDao;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
+import org.pesmypetcare.webservice.entity.communitymanager.Group;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.form.StorageForm;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +27,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -42,9 +47,11 @@ class StorageServiceTest {
     private StorageDao storageDao;
     @Mock
     private GroupDao groupDao;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
-    private StorageService service = new StorageServiceImpl();
+    private StorageService service = spy(new StorageServiceImpl());
 
     @BeforeAll
     public static void setUp() {
@@ -69,6 +76,8 @@ class StorageServiceTest {
 
     @Test
     public void savePetImage() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUsername()).willReturn(owner);
         willDoNothing().given(storageDao).uploadPetImage(anyString(), any(ImageEntity.class));
         service.savePetImage(owner, imageEntity);
         verify(storageDao).uploadPetImage(same(owner), same(imageEntity));
@@ -76,6 +85,11 @@ class StorageServiceTest {
 
     @Test
     public void saveGroupImage() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUsername()).willReturn(owner);
+        Group group = new Group();
+        group.setCreator(owner);
+        given(groupDao.getGroup(anyString())).willReturn(group);
         given(groupDao.groupNameInUse(anyString())).willReturn(true);
         willDoNothing().given(storageDao).uploadGroupImage(any(ImageEntity.class));
         service.saveGroupImage("my-token", groupName, imageEntity);
@@ -83,9 +97,26 @@ class StorageServiceTest {
     }
 
     @Test
-    public void saveGroupImageShouldFailWhenTheGroupDoesNotExist() throws DatabaseAccessException {
+    public void saveGroupImageShouldFailWhenTheGroupDoesNotExist() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUsername()).willReturn(owner);
+        Group group = new Group();
+        group.setCreator(owner);
+        given(groupDao.getGroup(anyString())).willReturn(group);
         given(groupDao.groupNameInUse(anyString())).willReturn(false);
         assertThrows(DocumentException.class, () -> service.saveGroupImage("my-token", groupName, imageEntity),
+            "Should throw an exception when the group does not exist.");
+    }
+
+    @Test
+    public void saveGroupImageShouldFailWhenTheUserIsNotTheOwnerOfTheGroup() throws DatabaseAccessException,
+        DocumentException {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUsername()).willReturn("Mike");
+        Group group = new Group();
+        group.setCreator(owner);
+        given(groupDao.getGroup(anyString())).willReturn(group);
+        assertThrows(BadCredentialsException.class, () -> service.saveGroupImage("my-token", groupName, imageEntity),
             "Should throw an exception when the group does not exist.");
     }
 

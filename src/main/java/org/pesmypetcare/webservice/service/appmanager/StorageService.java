@@ -19,12 +19,12 @@ public interface StorageService {
 
     /**
      * Saves a pet image to the storage.
-     * @param owner The pet's owner
+     * @param token The pet's owner personal access token
      * @param image The image to save
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    void savePetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
+    void savePetImage(String token, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Saves a group image to the storage.
