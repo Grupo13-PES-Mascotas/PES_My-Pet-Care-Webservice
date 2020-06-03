@@ -6,6 +6,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.GroupEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.TagEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,16 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private GroupDao groupDao;
 
+    public UserToken makeUserToken(String token) {
+        return new UserTokenImpl(token);
+    }
+
     @Override
     public void createGroup(String token, GroupEntity entity) throws DatabaseAccessException, DocumentException {
         if (groupDao.groupNameInUse(entity.getName())) {
             throw new DocumentException("document-already-exists", "The name is already in use");
         } else {
-            groupDao.createGroup(new UserTokenImpl(token), entity);
+            groupDao.createGroup(makeUserToken(token), entity);
         }
     }
 
@@ -37,7 +42,7 @@ public class GroupServiceImpl implements GroupService {
         if (!groupDao.groupNameInUse(name)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
         } else {
-            groupDao.deleteGroup(new UserTokenImpl(token), name);
+            groupDao.deleteGroup(makeUserToken(token), name);
         }
     }
 
@@ -86,7 +91,7 @@ public class GroupServiceImpl implements GroupService {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
         } else {
-            groupDao.subscribe(group, new UserTokenImpl(token));
+            groupDao.subscribe(group, makeUserToken(token));
         }
     }
 
@@ -96,7 +101,7 @@ public class GroupServiceImpl implements GroupService {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
         } else {
-            groupDao.unsubscribe(group, new UserTokenImpl(token));
+            groupDao.unsubscribe(group, makeUserToken(token));
         }
     }
 

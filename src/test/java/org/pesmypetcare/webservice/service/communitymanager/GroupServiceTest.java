@@ -31,6 +31,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -48,7 +50,7 @@ class GroupServiceTest {
     private UserToken userToken;
 
     @InjectMocks
-    private GroupService service = new GroupServiceImpl();
+    private GroupService service = spy(new GroupServiceImpl());
 
     @BeforeEach
     public void setUp() {
@@ -119,10 +121,11 @@ class GroupServiceTest {
 
             @Test
             public void deleteGroup() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).deleteGroup(any(UserToken.class), anyString());
 
                 service.deleteGroup(token, groupName);
-                verify(dao).deleteGroup(userToken, same(groupName));
+                verify(dao).deleteGroup(same(userToken), same(groupName));
             }
 
             @Test
@@ -151,6 +154,7 @@ class GroupServiceTest {
 
             @Test
             public void subscribe() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).subscribe(anyString(), any(UserToken.class));
 
                 service.subscribe(token, groupName, username);
@@ -159,6 +163,7 @@ class GroupServiceTest {
 
             @Test
             public void unsubscribe() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).unsubscribe(anyString(), any(UserToken.class));
 
                 service.unsubscribe(token, groupName, username);
@@ -182,6 +187,7 @@ class GroupServiceTest {
             public void createGroup() throws DatabaseAccessException, DocumentException {
                 GroupEntity entity = new GroupEntity();
                 entity.setName(groupName);
+                doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).createGroup(any(UserToken.class), any(GroupEntity.class));
 
                 service.createGroup(token, entity);
