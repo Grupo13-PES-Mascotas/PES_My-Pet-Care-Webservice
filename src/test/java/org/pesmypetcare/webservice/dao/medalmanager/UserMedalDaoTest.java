@@ -15,7 +15,11 @@ import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
