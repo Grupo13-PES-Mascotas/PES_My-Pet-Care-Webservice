@@ -4,6 +4,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 import org.pesmypetcare.webservice.service.communitymanager.ForumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -162,13 +163,14 @@ public class ForumRestController {
      * @param date The message publication date
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
+     * @throws InvalidOperationException When the operation isn't allowed
      */
     @PutMapping("/{parentGroup}/{forumName}/report_message")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void reportMessage(@RequestHeader String token, @PathVariable String parentGroup,
                               @PathVariable String forumName, @RequestParam String creator,
                               @RequestParam String reporter, @RequestParam String date)
-        throws DatabaseAccessException, DocumentException {
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
         service.reportMessage(token, parentGroup, forumName, creator, reporter, date);
     }
 

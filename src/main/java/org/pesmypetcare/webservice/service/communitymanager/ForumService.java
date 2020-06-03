@@ -4,6 +4,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 
 import java.util.List;
 
@@ -115,9 +116,10 @@ public interface ForumService {
      * @param date The message publication date
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
+     * @throws InvalidOperationException When the operation isn't allowed
      */
     void reportMessage(String token, String parentGroup, String forumName, String creator, String reporter, String date)
-        throws DatabaseAccessException, DocumentException;
+        throws DatabaseAccessException, DocumentException, InvalidOperationException;
 
     /**
      * Unbans a message from a forum.

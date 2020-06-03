@@ -19,12 +19,14 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,17 +182,16 @@ public class ForumDaoImpl implements ForumDao {
 
     @Override
     public void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
-        throws DatabaseAccessException, DocumentException {
-        // Cambiar les excepcions per unes que retornen 409
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
         if (creator.equals(reporter)) {
-            throw new IllegalArgumentException("A message creator can't report its message");
+            throw new InvalidOperationException("409", "A message creator can't report its message");
         }
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
         WriteBatch batch = documentAdapter.batch();
         batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, FieldValue.arrayUnion(reporter));
         ArrayList<String> messages = (ArrayList<String>) messageSnapshot.get(REPORTED_BY_FIELD);
         if (messages != null && messages.contains(reporter)) {
-            throw new IllegalArgumentException("This user already reported the message");
+            throw new InvalidOperationException("409", "This user already reported the message");
         }
         if (messages != null && messages.size() > COUNTER-1) {
             batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);

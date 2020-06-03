@@ -61,6 +61,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Creates the http response for the InvalidOperationException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(InvalidOperationException.class)
+    protected ResponseEntity<Object> handleInvalidOperation(InvalidOperationException ex) {
+        ErrorBody errorBody = new ErrorBody(ex.getErrorCode(), ex);
+        ex.printStackTrace();
+        return new ResponseEntity<>(errorBody, HttpStatus.CONFLICT);
+    }
+
+    /**
      * Creates the http response for the InitializationException class.
      * @param ex The exception from which to create the response
      * @return The response entity created from the exception
