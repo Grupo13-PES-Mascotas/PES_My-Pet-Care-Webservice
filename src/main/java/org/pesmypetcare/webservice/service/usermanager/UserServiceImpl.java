@@ -5,6 +5,7 @@ import org.pesmypetcare.webservice.dao.usermanager.UserDao;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,33 +19,43 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    private UserToken userToken;
+
+    public UserToken makeUserToken(String token) {
+        return new UserTokenImpl(token);
+    }
 
     @Override
     public void createUser(String token, UserEntity userEntity)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        userDao.createUser(new UserTokenImpl(token), userEntity);
+        userToken = makeUserToken(token);
+        userDao.createUser(userToken, userEntity);
     }
 
     @Override
     public void deleteFromDatabase(String token) throws DatabaseAccessException, DocumentException {
-        userDao.deleteFromDatabase(new UserTokenImpl(token));
+        userToken = makeUserToken(token);
+        userDao.deleteFromDatabase(userToken);
     }
 
     @Override
     public void deleteById(String token)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        userDao.deleteById(new UserTokenImpl(token));
+        userToken = makeUserToken(token);
+        userDao.deleteById(userToken);
     }
 
     @Override
     public UserEntity getUserData(String token) throws DatabaseAccessException {
-        return userDao.getUserData(new UserTokenImpl(token));
+        userToken = makeUserToken(token);
+        return userDao.getUserData(userToken);
     }
 
     @Override
     public void updateField(String token, String field, String newValue)
         throws FirebaseAuthException, DatabaseAccessException {
-        userDao.updateField(new UserTokenImpl(token), field, newValue);
+        userToken = makeUserToken(token);
+        userDao.updateField(userToken, field, newValue);
     }
 
     @Override
@@ -55,11 +66,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveMessagingToken(String token, String fcmToken)
         throws DatabaseAccessException, DocumentException {
-        userDao.saveMessagingToken(new UserTokenImpl(token), fcmToken);
+        userToken = makeUserToken(token);
+        userDao.saveMessagingToken(userToken, fcmToken);
     }
 
     @Override
     public List<String> getUserSubscriptions(String token) throws DatabaseAccessException {
-        return userDao.getUserSubscriptions(new UserTokenImpl(token));
+        userToken = makeUserToken(token);
+        return userDao.getUserSubscriptions(userToken);
     }
 }

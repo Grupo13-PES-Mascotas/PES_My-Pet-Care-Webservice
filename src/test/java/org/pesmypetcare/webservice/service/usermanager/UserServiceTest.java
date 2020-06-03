@@ -1,8 +1,6 @@
 package org.pesmypetcare.webservice.service.usermanager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,8 +27,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -50,11 +48,9 @@ class UserServiceTest {
     private UserDao userDao;
     @Mock
     private UserToken userToken;
-    @Mock
-    private FirebaseAuth auth;
 
     @InjectMocks
-    private final UserService service = new UserServiceImpl();
+    private final UserService service = spy(new UserServiceImpl());
 
     @BeforeEach
     public void setUp() {
@@ -67,6 +63,7 @@ class UserServiceTest {
 
     @Test
     public void createUser() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(userDao).createUser(any(UserToken.class), any(UserEntity.class));
 
         service.createUser(token, user);
@@ -75,6 +72,7 @@ class UserServiceTest {
 
     @Test
     public void deleteById() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(userDao).deleteById(any(UserToken.class));
 
         service.deleteById(TOKEN);
@@ -83,6 +81,7 @@ class UserServiceTest {
 
     @Test
     public void deleteFromDatabase() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(userDao).deleteFromDatabase(any(UserToken.class));
 
         service.deleteFromDatabase(TOKEN);
@@ -91,6 +90,7 @@ class UserServiceTest {
 
     @Test
     public void getUserData() throws DatabaseAccessException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         given(userDao.getUserData(eq(userToken))).willReturn(user);
 
         UserEntity entity = service.getUserData(TOKEN);
@@ -99,6 +99,7 @@ class UserServiceTest {
 
     @Test
     public void updateField() throws FirebaseAuthException, DatabaseAccessException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(userDao).updateField(any(UserToken.class), anyString(), anyString());
         service.updateField(TOKEN, EMAIL_FIELD, newEmail);
         verify(userDao).updateField(same(userToken), same(EMAIL_FIELD), same(newEmail));
@@ -112,28 +113,23 @@ class UserServiceTest {
     }
 
     @Test
-    public void saveMessagingToken() throws FirebaseAuthException, DatabaseAccessException, DocumentException {
-        FirebaseToken firebaseToken = mock(FirebaseToken.class);
-        given(auth.verifyIdToken(anyString())).willReturn(firebaseToken);
-        given(firebaseToken.getUid()).willReturn(token);
+    public void saveMessagingToken() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(userDao).saveMessagingToken(any(UserToken.class), anyString());
 
         service.saveMessagingToken(TOKEN, fcmToken);
-        verify(auth).verifyIdToken(same(TOKEN));
-        verify(firebaseToken).getUid();
         verify(userDao).saveMessagingToken(same(userToken), same(fcmToken));
     }
 
     @Test
     public void saveMessagingTokenShouldThrowBadCredentialExceptionWhenTheTokenIsNotValid() {
-        assertThrows(BadCredentialsException.class, () -> {
-            willThrow(FirebaseAuthException.class).given(auth).verifyIdToken(same(TOKEN));
-            service.saveMessagingToken(TOKEN, fcmToken);
-        }, "Should throw BadCredentialsException when the authentication is invalid.");
+        assertThrows(BadCredentialsException.class, () -> service.saveMessagingToken(TOKEN, fcmToken),
+            "Should throw BadCredentialsException when the authentication is invalid.");
     }
 
     @Test
     public void getUserSubscriptions() throws DatabaseAccessException {
+        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
         List<String> subscriptions = new ArrayList<>();
         subscriptions.add("Dogs");
         given(userDao.getUserSubscriptions(any(UserToken.class))).willReturn(subscriptions);
