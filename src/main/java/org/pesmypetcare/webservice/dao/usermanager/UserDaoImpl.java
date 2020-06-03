@@ -73,21 +73,16 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void createUser(UserToken token, UserEntity userEntity)
-        throws DatabaseAccessException, FirebaseAuthException {
+        throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
-            WriteBatch batch = db.batch();
+            WriteBatch batch = documentAdapter.batch();
             saveUsername(token.getUid(), username, batch);
             String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
             userEntity.setPassword(encodedPassword);
-            batch.set(users.document(token.getUid()), userEntity);
-            try {
-                batch.commit().get();
-                updateDisplayName(token.getUid(), username);
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                throw new DatabaseAccessException("creation-failed", "The user creation failed");
-            }
+            documentAdapter.createDocumentWithId(Path.ofCollection(Collections.users), token.getUid(), userEntity, batch);
+            documentAdapter.commitBatch(batch);
+            updateDisplayName(token.getUid(), username);
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }
@@ -142,8 +137,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean existsUsername(String username) throws DatabaseAccessException {
-        DocumentSnapshot usernameDoc = getDocumentSnapshot(usedUsernames, username);
-        return usernameDoc.exists();
+        return documentAdapter.documentExists(Path.ofDocument(Collections.used_usernames, username));
     }
 
     @Override
@@ -421,7 +415,7 @@ public class UserDaoImpl implements UserDao {
     private void saveUsername(String uid, String username, WriteBatch batch) {
         Map<String, String> docData = new HashMap<>();
         docData.put(USER_KEY, uid);
-        batch.set(usedUsernames.document(username), docData);
+        documentAdapter.createDocumentWithId(Path.ofCollection(Collections.used_usernames), username, docData, batch);
     }
 
     /**

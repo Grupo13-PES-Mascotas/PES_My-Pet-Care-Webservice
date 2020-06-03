@@ -20,8 +20,10 @@ public interface UserDao {
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
+     * @throws DocumentException If the creation of the user fails
      */
-    void createUser(UserToken token, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException;
+    void createUser(UserToken token, UserEntity userEntity)
+        throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
      * Deletes a user from database.

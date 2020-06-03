@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
+import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
@@ -28,6 +29,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -114,6 +117,8 @@ class UserDaoTest {
     @Mock
     private ApiFuture<List<WriteResult>> batchResult;
     @Mock
+    private FirestoreDocument documentAdapter;
+    @Mock
     private FirestoreCollection collectionAdapter;
     @Mock
     private QueryDocumentSnapshot queryDocumentSnapshot;
@@ -140,42 +145,56 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldCreateUserOnDatabase()
-        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException {
-        given(usedUsernames.document(anyString())).willReturn(usernameRef);
-        given(users.document(anyString())).willReturn(userRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(snapshot);
-        given(snapshot.exists()).willReturn(false);
+    public void shouldCreateUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
+        given(userToken.getUid()).willReturn(uid);
+        given(documentAdapter.documentExists(eq(Path.ofDocument(Collections.used_usernames, username))))
+            .willReturn(false);
+        given(documentAdapter.batch()).willReturn(batch);
+        mockSaveUsername();
+        lenient().when(documentAdapter
+            .createDocumentWithId(eq(Path.ofCollection(Collections.users)), eq(uid), same(userEntity), same(batch)))
+            .thenReturn(userRef);
+        willDoNothing().given(documentAdapter).commitBatch(same(batch));
+        mockUpdateDisplayName();
+
+        dao.createUser(userToken, userEntity);
+        verifySaveUsername();
+        userEntity.setPassword(encodedPassword);
+        verify(updateRequest).setDisplayName(same(username));
+    }
+
+    private void mockSaveUsername() {
+        given(documentAdapter
+            .createDocumentWithId(eq(Path.ofCollection(Collections.used_usernames)), eq(username), eq(docData),
+                same(batch))).willReturn(userRef);
+    }
+
+    private void verifySaveUsername() {
+        Map<String, String> docData = new HashMap<>();
+        docData.put(USER_FIELD, uid);
+        verify(documentAdapter)
+            .createDocumentWithId(eq(Path.ofCollection(Collections.used_usernames)), eq(username), eq(docData),
+                same(batch));
+    }
+
+    private void mockUpdateDisplayName() throws FirebaseAuthException {
         given(myAuth.getUser(uid)).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
-        given(db.batch()).willReturn(batch);
-        given(batch.commit()).willReturn(batchResult);
-        given(batchResult.get()).willReturn(null);
-
-        dao.createUser(userToken, userEntity);
-        verify(usedUsernames, times(2)).document(same(username));
-        verify(batch).set(usernameRef, docData);
-        verify(users).document(same(uid));
-        userEntity.setPassword(encodedPassword);
-        verify(batch).set(same(userRef), eq(userEntity));
-        verify(myAuth).getUser(same(uid));
-        verify(updateRequest).setDisplayName(same(username));
-        verify(batch).commit();
     }
 
     @Test
     public void shouldDeleteUser()
         throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException,
         DocumentException {
+        given(userToken.getUid()).willReturn(uid);
+        given(userToken.getUsername()).willReturn(username);
         given(petDao.getStorageDao()).willReturn(storageDao);
         willDoNothing().given(storageDao).deleteImageByName(anyString());
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
         given(snapshot.exists()).willReturn(true);
-        given(snapshot.get(USERNAME_FIELD)).willReturn(username);
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(usernameRef.delete()).willReturn(null);
         given(collectionAdapter.getCollectionGroupDocumentsWhereArrayContains(anyString(), anyString(), any()))
@@ -191,7 +210,7 @@ class UserDaoTest {
         verify(petDao).deleteAllPets(same(username));
         verify(userRef).delete();
         verify(usernameRef).delete();
-        verify(myAuth).deleteUser(same(username));
+        verify(myAuth).deleteUser(same(uid));
         verify(collectionAdapter)
             .getCollectionGroupDocumentsWhereArrayContains(eq(Collections.messages.name()), eq("likedBy"),
                 same(username));
@@ -202,6 +221,7 @@ class UserDaoTest {
     @Test
     public void shouldThrowDatabaseAccessExceptionWhenDeleteFromDatabaseOfNonExistentUser()
         throws ExecutionException, InterruptedException {
+        given(userToken.getUid()).willReturn(uid);
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
@@ -212,6 +232,7 @@ class UserDaoTest {
 
     @Test
     public void shouldReturnUserEntity() throws ExecutionException, InterruptedException, DatabaseAccessException {
+        given(userToken.getUid()).willReturn(uid);
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
@@ -224,6 +245,7 @@ class UserDaoTest {
 
     @Test
     public void shouldFailIfUserDoesNotExist() throws ExecutionException, InterruptedException {
+        given(userToken.getUid()).willReturn(uid);
         given(users.document(anyString())).willReturn(userRef);
         given(userRef.get()).willReturn(future);
         given(future.get()).willReturn(snapshot);
@@ -235,11 +257,8 @@ class UserDaoTest {
     @Test
     public void shouldUpdateUsername()
         throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
+        given(userToken.getUid()).willReturn(uid);
         given(usedUsernames.document(username)).willReturn(usernameRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(oldSnapshot);
-        given(oldSnapshot.exists()).willReturn(true);
-        given(oldSnapshot.get(anyString())).willReturn(uid);
         given(usedUsernames.document(newUsername)).willReturn(newUsernameRef);
         given(newUsernameRef.get()).willReturn(newFuture);
         given(newFuture.get()).willReturn(snapshot);
@@ -262,14 +281,16 @@ class UserDaoTest {
         given(batch.update(any(DocumentReference.class), any())).willReturn(batch);
         given(batch.commit()).willReturn(batchResult);
         given(batchResult.get()).willReturn(null);
+        given(documentAdapter
+            .createDocumentWithId(eq(Path.ofCollection(Collections.used_usernames)), eq(newUsername), eq(docData),
+                same(batch))).willReturn(userRef);
 
 
         dao.updateField(userToken, USERNAME_FIELD, newUsername);
-        verify(usedUsernames, times(2)).document(same(username));
-        verify(oldSnapshot).get(same(USER_FIELD));
+        verify(usedUsernames).document(same(username));
         verify(myAuth, times(3)).getUser(same(uid));
         verify(userRecord, times(2)).getDisplayName();
-        verify(usedUsernames, times(2)).document(same(newUsername));
+        verify(usedUsernames).document(same(newUsername));
         verify(userRecord).updateRequest();
         verify(updateRequest).setDisplayName(same(newUsername));
         verify(myAuth).updateUserAsync(same(updateRequest));
@@ -278,9 +299,6 @@ class UserDaoTest {
         data.put(USER_FIELD, newUsername);
         verify(batch).update(groupRef, data);
         verify(batch).delete(same(usernameRef));
-        Map<String, String> data2 = new HashMap<>();
-        data2.put(USER_FIELD, uid);
-        verify(batch).set(newUsernameRef, data2);
         data = new HashMap<>();
         data.put(USERNAME_FIELD, newUsername);
         verify(batch).update(userRef, data);
@@ -289,12 +307,8 @@ class UserDaoTest {
 
     @Test
     public void shouldUpdateEmail()
-        throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
-        given(usedUsernames.document(username)).willReturn(usernameRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(oldSnapshot);
-        given(oldSnapshot.exists()).willReturn(true);
-        given(oldSnapshot.get(anyString())).willReturn(uid);
+        throws FirebaseAuthException, DatabaseAccessException {
+        given(userToken.getUid()).willReturn(uid);
         given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setEmail(anyString())).willReturn(updateRequest);
@@ -303,8 +317,6 @@ class UserDaoTest {
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
         dao.updateField(userToken, EMAIL_FIELD, email);
-        verify(usedUsernames).document(same(username));
-        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setEmail(same(email));
         verify(myAuth).updateUserAsync(same(updateRequest));
         verify(users).document(same(uid));
@@ -314,11 +326,7 @@ class UserDaoTest {
     @Test
     public void shouldUpdatePassword()
         throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
-        given(usedUsernames.document(username)).willReturn(usernameRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(oldSnapshot);
-        given(oldSnapshot.exists()).willReturn(true);
-        given(oldSnapshot.get(anyString())).willReturn(uid);
+        given(userToken.getUid()).willReturn(uid);
         given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setPassword(anyString())).willReturn(updateRequest);
@@ -327,8 +335,6 @@ class UserDaoTest {
         given(userRef.update(anyString(), anyString())).willReturn(null);
 
         dao.updateField(userToken, PASSWORD_FIELD, password);
-        verify(usedUsernames).document(same(username));
-        verify(oldSnapshot).get(same(USER_FIELD));
         verify(updateRequest).setPassword(not(eq(password)));
         verify(myAuth).updateUserAsync(same(updateRequest));
         verify(users).document(same(uid));
@@ -336,26 +342,11 @@ class UserDaoTest {
     }
 
     @Test
-    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingField()
-        throws ExecutionException, InterruptedException {
-        given(usedUsernames.document(anyString())).willReturn(usernameRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(snapshot);
-        given(snapshot.exists()).willReturn(true);
-        given(snapshot.get(anyString())).willReturn(uid);
+    public void shouldFailIfAnErrorOccursWhileRetrievingUserDataWhenUpdatingField() {
+        given(userToken.getUid()).willReturn(uid);
         assertThrows(FirebaseAuthException.class, () -> {
             willThrow(FirebaseAuthException.class).given(myAuth).getUser(uid);
             dao.updateField(userToken, EMAIL_FIELD, email);
         }, "Should return FirebaseAuthException if an error occurs while retrieving user data");
-    }
-
-    @Test
-    public void shouldFailWhenUpdatingFieldIfTheUserDoesNotExist() throws ExecutionException, InterruptedException {
-        given(usedUsernames.document(anyString())).willReturn(usernameRef);
-        given(usernameRef.get()).willReturn(future);
-        given(future.get()).willReturn(snapshot);
-        given(snapshot.exists()).willReturn(false);
-        assertThrows(DatabaseAccessException.class, () -> dao.updateField(userToken, EMAIL_FIELD, email),
-            "Should return DatabaseAccessException if the user does not exist");
     }
 }
