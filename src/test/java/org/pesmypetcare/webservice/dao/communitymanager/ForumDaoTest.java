@@ -405,7 +405,8 @@ class ForumDaoTest {
                 }
 
                 @Test
-                public void reportMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
+                public void reportMessage() throws DatabaseAccessException, DocumentException,
+                    InvalidOperationException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
@@ -457,7 +458,8 @@ class ForumDaoTest {
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
-                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
+                    verify(batch).update(same(documentReference), eq("likedBy"),
+                        eq(FieldValue.arrayUnion(username)));
                 }
 
                 @Test
@@ -474,7 +476,8 @@ class ForumDaoTest {
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
-                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
+                    verify(batch).update(same(documentReference), eq("likedBy"),
+                        eq(FieldValue.arrayRemove(username)));
                 }
             }
         }

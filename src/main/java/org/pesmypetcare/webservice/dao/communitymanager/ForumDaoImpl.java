@@ -26,7 +26,6 @@ import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.Firesto
 import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -193,7 +192,7 @@ public class ForumDaoImpl implements ForumDao {
         if (messages != null && messages.contains(reporter)) {
             throw new InvalidOperationException("409", "This user already reported the message");
         }
-        if (messages != null && messages.size() > COUNTER-1) {
+        if (messages != null && messages.size() > COUNTER - 1) {
             batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);
         }
         documentAdapter.commitBatch(batch);
