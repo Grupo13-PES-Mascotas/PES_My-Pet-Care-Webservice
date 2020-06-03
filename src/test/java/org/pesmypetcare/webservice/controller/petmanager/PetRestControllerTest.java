@@ -62,6 +62,8 @@ class PetRestControllerTest {
     private static final GenderType VALUE = GenderType.Male;
     private static final String urlBase = "/pet";
     private static final String COLLECTION_FIELD = "meals";
+    private static final String TOKEN_HEADER = "token";
+    private static final String TOKEN = "owner-token";
 
     @Autowired
     private MockMvc mockMvc;
@@ -72,61 +74,61 @@ class PetRestControllerTest {
     @Test
     public void createPetShouldReturnStatusCreated() throws Exception {
         willDoNothing().given(service).createPet(anyString(), anyString(), isA(PetEntity.class));
-        mockMvc.perform(post(urlBase + "/" + OWNER + "/" + PET_NAME)
+        mockMvc.perform(post(urlBase + "/" + PET_NAME)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON_PET_ENTITY))
+            .content(JSON_PET_ENTITY).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isCreated());
     }
 
     @Test
     public void deleteByOwnerAndNameShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteByOwnerAndName(anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME)
-            .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete(urlBase + "/" + PET_NAME)
+            .contentType(MediaType.APPLICATION_JSON).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteAllPetsShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteAllPets(anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER))
+        mockMvc.perform(delete(urlBase + "/" + OWNER).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void getPetDataShouldReturnPetEntityAndStatusOk() throws Exception {
         willReturn(PET_ENTITY).given(service).getPetData(anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME))
+        mockMvc.perform(get(urlBase + "/" + PET_NAME).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getAllPetsDataShouldReturnPetEntityListAndStatusOk() throws Exception {
         willReturn(PET_LIST).given(service).getAllPetsData(anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER))
+        mockMvc.perform(get(urlBase + "/" + OWNER).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getSimpleFieldShouldReturnFieldValueAndStatusOk() throws Exception {
         willReturn(VALUE).given(service).getSimpleField(anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME + "/simple/" + FIELD))
+        mockMvc.perform(get(urlBase + "/" + PET_NAME + "/simple/" + FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 
     @Test
     public void updateSimpleFieldShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateSimpleField(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(urlBase + "/" + OWNER + "/" + PET_NAME + "/simple/" + FIELD)
+        mockMvc.perform(put(urlBase + "/" + PET_NAME + "/simple/" + FIELD)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON_FIELD))
+            .content(JSON_FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteFieldCollectionShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteFieldCollection(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD))
+        mockMvc.perform(delete(urlBase + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
@@ -134,15 +136,15 @@ class PetRestControllerTest {
     public void deleteFieldCollectionElementsPreviousToKeyShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteFieldCollectionElementsPreviousToKey(anyString(), anyString(),
             anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" +
-            COLLECTION_FIELD + "/" + KEY_1))
+        mockMvc.perform(delete(urlBase + "/" + PET_NAME + "/collection/" +
+            COLLECTION_FIELD + "/" + KEY_1).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void getFieldCollectionShouldReturnStatusOk() throws Exception {
         willReturn(PET_LIST).given(service).getFieldCollection(anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD))
+        mockMvc.perform(get(urlBase + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 
@@ -150,9 +152,9 @@ class PetRestControllerTest {
     public void getFieldCollectionElementsBetweenKeysShouldReturnStatusOk() throws Exception {
         willReturn(PET_LIST).given(service).getFieldCollectionElementsBetweenKeys(anyString(), anyString(),
             anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" +
+        mockMvc.perform(get(urlBase + "/" + PET_NAME + "/collection/" +
             COLLECTION_FIELD + "/" + KEY_1
-            + "/" + KEY_2))
+            + "/" + KEY_2).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 
@@ -160,18 +162,18 @@ class PetRestControllerTest {
     public void addFieldCollectionElementShouldReturnStatusCreated() throws Exception {
         willDoNothing().given(service).addFieldCollectionElement(anyString(), anyString(), anyString(), anyString(),
             any(Map.class));
-        mockMvc.perform(post(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD + "/"
+        mockMvc.perform(post(urlBase + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD + "/"
             + KEY_1)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON_COLLECTION_FIELD))
+            .content(JSON_COLLECTION_FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isCreated());
     }
 
     @Test
     public void deleteFieldCollectionElementShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).deleteFieldCollectionElement(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + OWNER + "/" + PET_NAME + "/fullcollection/" +
-            COLLECTION_FIELD + "/" + KEY_1))
+        mockMvc.perform(delete(urlBase + "/" + PET_NAME + "/fullcollection/" +
+            COLLECTION_FIELD + "/" + KEY_1).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
@@ -179,10 +181,10 @@ class PetRestControllerTest {
     public void updateFieldCollectionElementShouldReturnStatusNoContent() throws Exception {
         willDoNothing().given(service).updateFieldCollectionElement(anyString(), anyString(), anyString(),
             anyString(), any(Map.class));
-        mockMvc.perform(put(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD + "/"
+        mockMvc.perform(put(urlBase + "/" + PET_NAME + "/collection/" + COLLECTION_FIELD + "/"
             + KEY_1)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JSON_COLLECTION_FIELD))
+            .content(JSON_COLLECTION_FIELD).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isNoContent());
     }
 
@@ -190,8 +192,8 @@ class PetRestControllerTest {
     public void getFieldCollectionElementShouldReturnStatusOk() throws Exception {
         willReturn(PET_FIELD_ELEMENT).given(service).getFieldCollectionElement(anyString(), anyString(), anyString(),
             anyString());
-        mockMvc.perform(get(urlBase + "/" + OWNER + "/" + PET_NAME + "/collection/" +
-            COLLECTION_FIELD + "/" + KEY_1))
+        mockMvc.perform(get(urlBase + "/" + PET_NAME + "/collection/" +
+            COLLECTION_FIELD + "/" + KEY_1).header(TOKEN_HEADER, TOKEN))
             .andExpect(status().isOk());
     }
 }

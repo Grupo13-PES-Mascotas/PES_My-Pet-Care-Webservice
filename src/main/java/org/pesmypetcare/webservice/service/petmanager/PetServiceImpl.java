@@ -4,6 +4,8 @@ import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.entity.petmanager.PetEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,91 +20,110 @@ public class PetServiceImpl implements PetService {
     @Autowired
     private PetDao petDao;
 
+    public UserToken makeUserToken(String token) {
+        return new UserTokenImpl(token);
+    }
+
     @Override
-    public void createPet(String owner, String name, PetEntity petEntity)
+    public void createPet(String token, String name, PetEntity petEntity)
         throws DatabaseAccessException, DocumentException {
-        petDao.createPet(owner, name, petEntity);
+        UserToken userToken = makeUserToken(token);
+        petDao.createPet(userToken.getUid(), name, petEntity);
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name)
+    public void deleteByOwnerAndName(String token, String name) throws DatabaseAccessException, DocumentException {
+        UserToken userToken = makeUserToken(token);
+        petDao.deleteByOwnerAndName(userToken.getUid(), name);
+    }
+
+    @Override
+    public void deleteAllPets(String token) throws DatabaseAccessException, DocumentException {
+        UserToken userToken = makeUserToken(token);
+        petDao.deleteAllPets(userToken.getUid());
+    }
+
+    @Override
+    public PetEntity getPetData(String token, String name) throws DatabaseAccessException, DocumentException {
+        UserToken userToken = makeUserToken(token);
+        return petDao.getPetData(userToken.getUid(), name);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllPetsData(String token) throws DatabaseAccessException, DocumentException {
+        UserToken userToken = makeUserToken(token);
+        return petDao.getAllPetsData(userToken.getUid());
+    }
+
+    @Override
+    public Object getSimpleField(String token, String name, String field)
         throws DatabaseAccessException, DocumentException {
-        petDao.deleteByOwnerAndName(owner, name);
+        UserToken userToken = makeUserToken(token);
+        return petDao.getSimpleField(userToken.getUid(), name, field);
     }
 
     @Override
-    public void deleteAllPets(String owner) throws DatabaseAccessException, DocumentException {
-        petDao.deleteAllPets(owner);
-    }
-
-    @Override
-    public PetEntity getPetData(String owner, String name) throws DatabaseAccessException, DocumentException {
-        return petDao.getPetData(owner, name);
-    }
-
-    @Override
-    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException, DocumentException {
-        return petDao.getAllPetsData(owner);
-    }
-
-    @Override
-    public Object getSimpleField(String owner, String name, String field)
+    public void updateSimpleField(String token, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException {
-        return petDao.getSimpleField(owner, name, field);
+        UserToken userToken = makeUserToken(token);
+        petDao.updateSimpleField(userToken.getUid(), name, field, value);
     }
 
     @Override
-    public void updateSimpleField(String owner, String name, String field, Object value)
+    public void deleteFieldCollection(String token, String name, String field)
         throws DatabaseAccessException, DocumentException {
-        petDao.updateSimpleField(owner, name, field, value);
+        UserToken userToken = makeUserToken(token);
+        petDao.deleteFieldCollection(userToken.getUid(), name, field);
     }
 
     @Override
-    public void deleteFieldCollection(String owner, String name, String field)
+    public void deleteFieldCollectionElementsPreviousToKey(String token, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
-        petDao.deleteFieldCollection(owner, name, field);
+        UserToken userToken = makeUserToken(token);
+        petDao.deleteFieldCollectionElementsPreviousToKey(userToken.getUid(), name, field, key);
     }
 
     @Override
-    public void deleteFieldCollectionElementsPreviousToKey(String owner, String name, String field, String key)
+    public List<Map<String, Object>> getFieldCollection(String token, String name, String field)
         throws DatabaseAccessException, DocumentException {
-        petDao.deleteFieldCollectionElementsPreviousToKey(owner, name, field, key);
+        UserToken userToken = makeUserToken(token);
+        return petDao.getFieldCollection(userToken.getUid(), name, field);
     }
 
     @Override
-    public List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
-        throws DatabaseAccessException, DocumentException {
-        return petDao.getFieldCollection(owner, name, field);
-    }
-
-    @Override
-    public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String owner, String name, String field,
+    public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String token, String name, String field,
                                                                            String key1, String key2)
         throws DatabaseAccessException, DocumentException {
-        return petDao.getFieldCollectionElementsBetweenKeys(owner, name, field, key1, key2);
+        UserToken userToken = makeUserToken(token);
+        return petDao.getFieldCollectionElementsBetweenKeys(userToken.getUid(), name, field, key1, key2);
     }
 
     @Override
-    public void addFieldCollectionElement(String owner, String name, String field, String key, Map<String, Object> body)
+    public void addFieldCollectionElement(String token, String name, String field, String key, Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        petDao.addFieldCollectionElement(owner, name, field, key, body);
+        UserToken userToken = makeUserToken(token);
+        petDao.addFieldCollectionElement(userToken.getUid(), name, field, key, body);
     }
 
     @Override
-    public void deleteFieldCollectionElement(String owner, String name, String field, String key)
+    public void deleteFieldCollectionElement(String token, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
-        petDao.deleteFieldCollectionElement(owner, name, field, key);
+        UserToken userToken = makeUserToken(token);
+        petDao.deleteFieldCollectionElement(userToken.getUid(), name, field, key);
     }
 
     @Override
-    public void updateFieldCollectionElement(String owner, String name, String field, String key, Map<String,
-        Object> body) throws DatabaseAccessException, DocumentException {
-        petDao.updateFieldCollectionElement(owner, name, field, key, body);
-    }
-
-    @Override
-    public Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
+    public void updateFieldCollectionElement(String token, String name, String field, String key,
+                                             Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        return petDao.getFieldCollectionElement(owner, name, field, key);
+        UserToken userToken = makeUserToken(token);
+        petDao.updateFieldCollectionElement(userToken.getUid(), name, field, key, body);
+    }
+
+    @Override
+    public Map<String, Object> getFieldCollectionElement(String token, String name, String field, String key)
+        throws DatabaseAccessException, DocumentException {
+        UserToken userToken = makeUserToken(token);
+        return petDao.getFieldCollectionElement(userToken.getUid(), name, field, key);
     }
 }
