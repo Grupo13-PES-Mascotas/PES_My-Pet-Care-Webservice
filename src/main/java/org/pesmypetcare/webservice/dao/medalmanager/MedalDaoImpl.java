@@ -98,10 +98,9 @@ public class MedalDaoImpl implements MedalDao {
     private void addMedalsToUsers(MedalEntity medal) throws DatabaseAccessException, DocumentException {
         path = Path.ofCollection(Collections.used_usernames);
         List<DocumentSnapshot> allUsers = dbCol.listAllCollectionDocumentSnapshots(path);
-        UserMedalEntity medalEntity;
+        UserMedalEntity medalEntity  = new UserMedalEntity(medal.getName(), 0., 0.,
+            new ArrayList<>(), new Medal(medal));;
         for (DocumentSnapshot user: allUsers) {
-            medalEntity = new UserMedalEntity(medal.getName(), 0., 0.,
-                new ArrayList<>(), new Medal(medal));
             userMedalDao.createUserMedal(user.getId(), medal.getName(), medalEntity);
         }
     }
