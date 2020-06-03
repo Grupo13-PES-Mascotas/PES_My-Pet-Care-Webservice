@@ -90,7 +90,7 @@ public class MedalDaoImpl implements MedalDao {
     }
 
     /**
-     * Insert the new medal to all users
+     * Insert the new medal to all users.
      * @param medal The new medal we had created before
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
