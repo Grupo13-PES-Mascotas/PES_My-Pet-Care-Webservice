@@ -44,8 +44,7 @@ public class UserMedalDaoTest {
     private static UserMedalEntity userMedalEntity;
     private static List<Map<String, UserMedalEntity>> userMedalList;
     private static List<DocumentSnapshot> snapshotList;
-    private static Medal medal;
-
+    private static Medal                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    medal;
 
     @Mock
     private FirestoreCollection dbCol;
@@ -81,7 +80,6 @@ public class UserMedalDaoTest {
     @Test
     public void shouldReturnUserMedalEntityFromDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(userMedalEntity);
 
@@ -94,7 +92,6 @@ public class UserMedalDaoTest {
     public void shouldReturnAllUserMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
         given(documentSnapshot.toObject(any())).willReturn(userMedalEntity);
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
 
@@ -116,7 +113,6 @@ public class UserMedalDaoTest {
 
     @Test
     public void shouldUpdateFieldWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
 
         userMedalDao.updateField(OWNER, USER_MEDAL_NAME, FIELD, userMedalEntity);

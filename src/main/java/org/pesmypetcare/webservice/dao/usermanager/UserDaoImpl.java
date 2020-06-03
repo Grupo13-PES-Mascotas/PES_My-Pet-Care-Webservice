@@ -16,6 +16,7 @@ import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
@@ -59,6 +60,8 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private PetDao petDao;
     @Autowired
+    private UserMedalDao medalDao;
+    @Autowired
     private FirestoreCollection collectionAdapter;
     @Autowired
     private FirestoreDocument documentAdapter;
@@ -80,7 +83,9 @@ public class UserDaoImpl implements UserDao {
             saveUsername(token.getUid(), username, batch);
             String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
             userEntity.setPassword(encodedPassword);
-            documentAdapter.createDocumentWithId(Path.ofCollection(Collections.users), token.getUid(), userEntity, batch);
+            documentAdapter
+                .createDocumentWithId(Path.ofCollection(Collections.users), token.getUid(), userEntity, batch);
+            medalDao.createAllUserMedals(username, batch);
             documentAdapter.commitBatch(batch);
             updateDisplayName(token.getUid(), username);
         } else {

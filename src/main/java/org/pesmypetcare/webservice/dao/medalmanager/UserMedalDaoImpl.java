@@ -26,7 +26,6 @@ import java.util.Map;
  */
 @Repository
 public class UserMedalDaoImpl implements UserMedalDao {
-    private String ownerId;
     private WriteBatch batch;
     private String path;
 
@@ -36,24 +35,29 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private FirestoreDocument dbDoc;
 
     @Override
-    public void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException,
+    public void createUserMedal(String userId, String name, UserMedalEntity medal) throws DatabaseAccessException,
         DocumentException {
-        initializeWithCollectionPath(owner);
+        initializeWithCollectionPath(userId);
         dbDoc.createDocumentWithId(path, name, medal, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
+    public void createUserMedal(String userId, String name, UserMedalEntity medal, WriteBatch batch) {
+        initializeWithCollectionPath(userId);
+        dbDoc.createDocumentWithId(path, name, medal, batch);
+    }
+
+    @Override
+    public UserMedalEntity getUserMedalData(String userId, String name) throws DatabaseAccessException,
         DocumentException {
-        initializeWithDocumentPath(owner, name);
+        initializeWithDocumentPath(userId, name);
         return dbDoc.getDocumentDataAsObject(path, UserMedalEntity.class);
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
-        DocumentException {
-        initializeWithCollectionPath(owner);
+    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String userId) throws DatabaseAccessException {
+        initializeWithCollectionPath(userId);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, UserMedalEntity>> externalList = new ArrayList<>();
 
@@ -66,27 +70,21 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public void updateField(String owner, String name, String field, Object value)
-        throws DatabaseAccessException, DocumentException {
-        initializeWithDocumentPath(owner, name);
+    public void updateField(String userId, String name, String field, Object value) {
+        initializeWithDocumentPath(userId, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
         batch.commit();
     }
 
     @Override
-    public Object getField(String owner, String name, String field) throws DatabaseAccessException,
+    public Object getField(String userId, String name, String field) throws DatabaseAccessException,
         DocumentException {
-        String medalPath = Path.ofDocument(Collections.userMedals, getUserId(owner), name);
+        String medalPath = Path.ofDocument(Collections.userMedals, getUserId(userId), name);
         return dbDoc.getDocumentField(medalPath, field);
     }
 
-    /**
-     * Create all user medals when user is created.
-     * @param username Username of the user.
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     */
-    public void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException {
+    @Override
+    public void createAllUserMedals(String username, WriteBatch batch) throws DatabaseAccessException, DocumentException {
         path = Path.ofCollection(Collections.medals);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         UserMedalEntity userMedal;
@@ -94,35 +92,27 @@ public class UserMedalDaoImpl implements UserMedalDao {
             MedalEntity medal = medalDocument.toObject(MedalEntity.class);
             userMedal = new UserMedalEntity(medal.getName(), 0., 0.,
                 new ArrayList<>(), new Medal(medal));
-            createUserMedal(username, medal.getName(), userMedal);
+            createUserMedal(username, medal.getName(), userMedal, batch);
         }
     }
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the medal document.
-     * @param owner Owner of the medal
+     * @param userId The user ID
      * @param medalName Medal name
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
      */
-    private void initializeWithDocumentPath(String owner, String medalName) throws DatabaseAccessException,
-        DocumentException {
-        ownerId = getUserId(owner);
+    private void initializeWithDocumentPath(String userId, String medalName) {
         batch = dbCol.batch();
-        path = Path.ofDocument(Collections.userMedals, ownerId, medalName);
+        path = Path.ofDocument(Collections.userMedals, userId, medalName);
     }
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the user's medal collection.
-     * @param owner Owner of the medals
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @param userId The user ID
      */
-    private void initializeWithCollectionPath(String owner) throws DatabaseAccessException,
-        DocumentException {
-        ownerId = getUserId(owner);
+    private void initializeWithCollectionPath(String userId) {
         batch = dbCol.batch();
-        path = Path.ofCollection(Collections.userMedals, ownerId);
+        path = Path.ofCollection(Collections.userMedals, userId);
     }
 
     /**

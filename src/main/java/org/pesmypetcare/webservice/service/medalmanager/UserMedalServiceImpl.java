@@ -4,6 +4,8 @@ import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,34 +20,38 @@ public class UserMedalServiceImpl implements UserMedalService {
     @Autowired
     private UserMedalDao userMedalDao;
 
+    public UserToken makeUserToken(String token) {
+        return new UserTokenImpl(token);
+    }
+
     @Override
-    public void createUserMedal(String owner, String name, UserMedalEntity medal)
+    public void createUserMedal(String token, String name, UserMedalEntity medal)
         throws DatabaseAccessException, DocumentException {
-        userMedalDao.createUserMedal(owner, name, medal);
+        userMedalDao.createUserMedal(makeUserToken(token).getUid(), name, medal);
     }
 
     @Override
-    public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
+    public UserMedalEntity getUserMedalData(String token, String name) throws DatabaseAccessException,
         DocumentException {
-        return userMedalDao.getUserMedalData(owner, name);
+        return userMedalDao.getUserMedalData(makeUserToken(token).getUid(), name);
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String token) throws DatabaseAccessException,
         DocumentException {
-        return userMedalDao.getAllUserMedalsData(owner);
+        return userMedalDao.getAllUserMedalsData(makeUserToken(token).getUid());
     }
 
     @Override
-    public void updateField(String owner, String name, String field, Object value) throws DatabaseAccessException,
+    public void updateField(String token, String name, String field, Object value) throws DatabaseAccessException,
         DocumentException {
-        userMedalDao.updateField(owner, name, field, value);
+        userMedalDao.updateField(makeUserToken(token).getUid(), name, field, value);
     }
 
     @Override
-    public Object getField(String owner, String name, String field) throws DatabaseAccessException,
+    public Object getField(String token, String name, String field) throws DatabaseAccessException,
         DocumentException {
-        return userMedalDao.getField(owner, name, field);
+        return userMedalDao.getField(makeUserToken(token).getUid(), name, field);
     }
 
 
