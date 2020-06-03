@@ -86,12 +86,13 @@ public class UserMedalDaoImpl implements UserMedalDao {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the document does not exist
      */
-    public void createAllUserMedals (String username) throws DatabaseAccessException, DocumentException {
+    public void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException {
         path = Path.ofCollection(Collections.medals);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
+        UserMedalEntity userMedal;
         for (DocumentSnapshot medalDocument : medalsDocuments) {
             MedalEntity medal = medalDocument.toObject(MedalEntity.class);
-            UserMedalEntity userMedal = new UserMedalEntity(medal.getName(), 0., 0.,
+            userMedal = new UserMedalEntity(medal.getName(), 0., 0.,
                 new ArrayList<>(), new Medal(medal));
             createUserMedal(username, medal.getName(), userMedal);
         }
