@@ -199,6 +199,7 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getDocumentsWhereFieldEqualToValues() {
             given(collectionReference.whereEqualTo(same(FIELD), same(VALUE))).willReturn(query);
+            given(query.whereEqualTo(anyString(), anyString())).willReturn(query);
             given(query.get()).willReturn(apiFuture);
             ApiFuture<QuerySnapshot> result = adapter
                 .getDocumentsWhereEqualTo(COLLECTION_PATH, FIELD, VALUE, FIELD_2, VALUE_2);
@@ -226,6 +227,7 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getDocumentsWhereFieldFromFieldPathsEqualToValue() {
             given(collectionReference.whereEqualTo(same(FIELD_PATH), same(VALUE))).willReturn(query);
+            given(query.whereEqualTo(any(FieldPath.class), anyString())).willReturn(query);
             given(query.get()).willReturn(apiFuture);
             ApiFuture<QuerySnapshot> result = adapter
                 .getDocumentsWhereEqualTo(COLLECTION_PATH, FIELD_PATH, VALUE, FIELD_PATH_2, VALUE_2);
@@ -246,6 +248,7 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getDocumentsWhereArraysContainValue() {
             given(collectionReference.whereArrayContains(same(ARRAY), same(VALUE))).willReturn(query);
+            given(query.whereArrayContains(anyString(), anyString())).willReturn(query);
             given(query.get()).willReturn(apiFuture);
 
             ApiFuture<QuerySnapshot> result = adapter
@@ -274,6 +277,7 @@ class FirestoreCollectionAdapterTest {
         @Test
         public void getDocumentsWhereArraysFromFieldPathsContainsValue() {
             given(collectionReference.whereArrayContains(same(ARRAY_PATH), same(VALUE))).willReturn(query);
+            given(query.whereArrayContains(any(FieldPath.class), anyString())).willReturn(query);
             given(query.get()).willReturn(apiFuture);
             ApiFuture<QuerySnapshot> result = adapter
                 .getDocumentsWhereArrayContains(COLLECTION_PATH, ARRAY_PATH, VALUE, ARRAY_PATH_2, VALUE_2);

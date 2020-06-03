@@ -4,6 +4,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 
 import java.util.List;
 
@@ -102,6 +103,32 @@ public interface ForumDao {
      * @throws DocumentException When either the group or forum do not exist
      */
     void deleteMessage(String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException;
+
+    /**
+     * Reports a message from a forum and sets it as banned when the number of reports is higher than 3.
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's username
+     * @param reporter The reporter's username
+     * @param date The message publication date
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     * @throws InvalidOperationException When the operation isn't allowed
+     */
+    void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
+        throws DatabaseAccessException, DocumentException, InvalidOperationException;
+
+    /**
+     * Unbans a message from a forum.
+     * @param parentGroup The parent group name
+     * @param forumName The forum name
+     * @param creator The creator's username
+     * @param date The message publication date
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When either the group or forum do not exist
+     */
+    void unbanMessage(String parentGroup, String forumName, String creator, String date)
         throws DatabaseAccessException, DocumentException;
 
     /**
