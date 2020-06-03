@@ -25,82 +25,83 @@ import java.util.Map;
 @RestController
 @RequestMapping("/calendar")
 public class GoogleCalendarRestController {
+    private static final String GOOGLE_TOKEN = "google-token";
     private static final String TOKEN = "token";
 
     @Autowired
     private GoogleCalendarService googleCalendarService;
 
     /**
-     * Creates a Secondary Google Calendar in the account specified by the accessToken.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * Creates a Secondary Google Calendar in the account specified by the googleToken.
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar is created for
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PostMapping("/{owner}/{petName}")
-    public void createSecondaryCalendar(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                                 @PathVariable String petName)
+    @PostMapping("/{petName}")
+    public void createSecondaryCalendar(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
+                                        @PathVariable String petName)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.createSecondaryCalendar(accessToken, owner, petName);
+        googleCalendarService.createSecondaryCalendar(googleToken, token, petName);
     }
 
     /**
-     * Deletes a Secondary Google Calendar in the account specified by the accessToken.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * Deletes a Secondary Google Calendar in the account specified by the googleToken.
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @DeleteMapping("/{owner}/{petName}")
-    public void deleteSecondaryCalendar(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                                 @PathVariable String petName)
+    @DeleteMapping("/{petName}")
+    public void deleteSecondaryCalendar(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
+                                        @PathVariable String petName)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.deleteSecondaryCalendar(accessToken, owner, petName);
+        googleCalendarService.deleteSecondaryCalendar(googleToken, token, petName);
     }
 
     /**
      * Returns all Calendar Events from a specified Calendar.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @return List containing all the Events from the specified Calendar
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/{owner}/{petName}")
-    public List<EventEntity> getAllEventsFromCalendar(@RequestHeader(TOKEN) String accessToken,
-                                                    @PathVariable String owner,
+    @GetMapping("/{petName}")
+    public List<EventEntity> getAllEventsFromCalendar(@RequestHeader(GOOGLE_TOKEN) String googleToken,
+                                                    @RequestHeader(TOKEN) String token,
                                          @PathVariable String petName)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        return googleCalendarService.getAllEventsFromCalendar(accessToken, owner, petName);
+        return googleCalendarService.getAllEventsFromCalendar(googleToken, token, petName);
     }
 
     /**
      * Creates an Event in a specified Google Calendar.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @param eventEntity Event to create
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PostMapping("/event/{owner}/{petName}")
-    public void createEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                     @PathVariable String petName, @RequestBody EventEntity eventEntity)
+    @PostMapping("/event/{petName}")
+    public void createEvent(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
+                            @PathVariable String petName, @RequestBody EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.createEvent(accessToken, owner, petName, eventEntity);
+        googleCalendarService.createEvent(googleToken, token, petName, eventEntity);
     }
 
     /**
      * Retrieves an Event in a specified Google Calendar.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @param body Body of the request containing the id of the event to retrieve with key eventId assigned
      * @return Event retrieved
@@ -108,45 +109,45 @@ public class GoogleCalendarRestController {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @GetMapping("/event/{owner}/{petName}")
-    public EventEntity retrieveEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
-                              @PathVariable String petName, @RequestBody Map<String, Object> body)
+    @GetMapping("/event/{petName}")
+    public EventEntity retrieveEvent(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
+                                     @PathVariable String petName, @RequestBody Map<String, Object> body)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        return googleCalendarService.retrieveEvent(accessToken, owner, petName, (String) body.get("eventId"));
+        return googleCalendarService.retrieveEvent(googleToken, token, petName, (String) body.get("eventId"));
     }
 
     /**
      * Updates an Event in a specified Google Calendar.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @param eventEntity New Event that overwrites the past event with the same id
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @PutMapping("/event/{owner}/{petName}")
-    public void updateEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+    @PutMapping("/event/{petName}")
+    public void updateEvent(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
                             @PathVariable String petName, @RequestBody EventEntity eventEntity)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.updateEvent(accessToken, owner, petName, eventEntity);
+        googleCalendarService.updateEvent(googleToken, token, petName, eventEntity);
     }
 
     /**
      * Deletes an Event in a specified Google Calendar.
-     * @param accessToken oauth2 token needed to access the Google Calendar
-     * @param owner Name of the owner of the pet
+     * @param googleToken oauth2 token needed to access the Google Calendar
+     * @param token Access token of the owner of the pet
      * @param petName Name of the pet the calendar belongs to
      * @param body Body of the request containing the id of the event to delete with key eventId assigned
      * @throws CalendarAccessException If an error occurs when accessing the calendar
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    @DeleteMapping("/event/{owner}/{petName}")
-    public void deleteEvent(@RequestHeader(TOKEN) String accessToken, @PathVariable String owner,
+    @DeleteMapping("/event/{petName}")
+    public void deleteEvent(@RequestHeader(GOOGLE_TOKEN) String googleToken, @RequestHeader(TOKEN) String token,
                             @PathVariable String petName, @RequestBody Map<String, String> body)
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
-        googleCalendarService.deleteEvent(accessToken, owner, petName, body.get("eventId"));
+        googleCalendarService.deleteEvent(googleToken, token, petName, body.get("eventId"));
     }
 
 }

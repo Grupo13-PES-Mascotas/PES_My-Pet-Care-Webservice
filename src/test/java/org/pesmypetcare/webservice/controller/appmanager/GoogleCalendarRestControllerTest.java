@@ -34,11 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class GoogleCalendarRestControllerTest {
+    private static final String GOOGLE_TOKEN = "google-token";
     private static final String TOKEN = "token";
     private static String jsonEventEntity;
     private static String jsonEventId;
     private static List<Event> eventList;
     private static EventEntity eventEntity;
+    private static String googleToken;
     private static String accessToken;
     private static String owner;
     private static String petName;
@@ -54,7 +56,8 @@ public class GoogleCalendarRestControllerTest {
     public static void setUp() {
         owner = "My owner";
         petName = "My petName";
-        accessToken = "tokem";
+        googleToken = "token";
+        accessToken = "token";
         eventList = new ArrayList<>();
         eventEntity = new EventEntity();
         urlBase = "/calendar";
@@ -77,32 +80,32 @@ public class GoogleCalendarRestControllerTest {
     @Test
     public void createSecondaryCalendarShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).createSecondaryCalendar(anyString(), anyString(), anyString());
-        mockMvc.perform(post(urlBase + "/" + owner + "/" + petName)
-            .header(TOKEN, accessToken))
+        mockMvc.perform(post(urlBase + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken))
             .andExpect(status().isOk());
     }
 
     @Test
     public void deleteSecondaryCalendarShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteSecondaryCalendar(anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/" + owner + "/" + petName)
-            .header(TOKEN, accessToken))
+        mockMvc.perform(delete(urlBase + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken))
             .andExpect(status().isOk());
     }
 
     @Test
     public void getAllEventsFromCalendarShouldReturnAnEventListAndStatusOk() throws Exception {
         willReturn(eventList).given(service).getAllEventsFromCalendar(anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/" + owner + "/" + petName)
-            .header(TOKEN, accessToken))
+        mockMvc.perform(get(urlBase + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken))
             .andExpect(status().isOk());
     }
 
     @Test
     public void createEventShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).createEvent(anyString(), anyString(), anyString(), isA(EventEntity.class));
-        mockMvc.perform(post(urlBase + "/event/" + owner + "/" + petName)
-            .header(TOKEN, accessToken)
+        mockMvc.perform(post(urlBase + "/event/" + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonEventEntity))
             .andExpect(status().isOk());
@@ -111,8 +114,8 @@ public class GoogleCalendarRestControllerTest {
     @Test
     public void retrieveEventShouldReturnStatusOk() throws Exception {
         willReturn(eventEntity).given(service).retrieveEvent(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(get(urlBase + "/event/" + owner + "/" + petName)
-            .header(TOKEN, accessToken)
+        mockMvc.perform(get(urlBase + "/event/" + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonEventId))
             .andExpect(status().isOk());
@@ -121,8 +124,8 @@ public class GoogleCalendarRestControllerTest {
     @Test
     public void updateEventShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).updateEvent(anyString(), anyString(), anyString(), isA(EventEntity.class));
-        mockMvc.perform(put(urlBase + "/event/" + owner + "/" + petName)
-            .header(TOKEN, accessToken)
+        mockMvc.perform(put(urlBase + "/event/" + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonEventEntity))
             .andExpect(status().isOk());
@@ -131,8 +134,8 @@ public class GoogleCalendarRestControllerTest {
     @Test
     public void deleteEventShouldReturnStatusOk() throws Exception {
         willDoNothing().given(service).deleteEvent(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(delete(urlBase + "/event/" + owner + "/" + petName)
-            .header(TOKEN, accessToken)
+        mockMvc.perform(delete(urlBase + "/event/" + "/" + petName)
+            .header(GOOGLE_TOKEN, googleToken).header(TOKEN, accessToken)
             .contentType(MediaType.APPLICATION_JSON)
             .content(jsonEventId))
             .andExpect(status().isOk());

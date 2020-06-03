@@ -101,8 +101,6 @@ class UserDaoTest {
     @Mock
     private DocumentSnapshot snapshot;
     @Mock
-    private DocumentSnapshot oldSnapshot;
-    @Mock
     private QuerySnapshot querySnapshot;
     @Mock
     private UserRecord userRecord;
@@ -325,7 +323,7 @@ class UserDaoTest {
 
     @Test
     public void shouldUpdatePassword()
-        throws FirebaseAuthException, DatabaseAccessException, ExecutionException, InterruptedException {
+        throws FirebaseAuthException, DatabaseAccessException {
         given(userToken.getUid()).willReturn(uid);
         given(myAuth.getUser(anyString())).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
