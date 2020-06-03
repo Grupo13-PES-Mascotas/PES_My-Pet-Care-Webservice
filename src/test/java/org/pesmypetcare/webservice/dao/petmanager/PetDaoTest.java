@@ -97,7 +97,6 @@ class PetDaoTest {
 
     @Test
     public void shouldCreatePetOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.createDocumentWithId(anyString(), anyString(), any(PetEntity.class),
             any(WriteBatch.class))).willReturn(null);
@@ -124,7 +123,6 @@ class PetDaoTest {
 
     @Test
     public void shouldDeleteAllPetsOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         willDoNothing().given(dbDoc).commitBatch(batch);
@@ -136,7 +134,6 @@ class PetDaoTest {
 
     @Test
     public void shouldReturnPetEntityFromDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(petEntity);
 
@@ -147,7 +144,6 @@ class PetDaoTest {
 
     @Test
     public void shouldReturnAllPetsDataOnDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         given(documentSnapshot.getId()).willReturn(PET_NAME);
@@ -161,7 +157,6 @@ class PetDaoTest {
     @Test
     public void shouldReturnPetSimpleFieldFromDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
         Object petValue = petDao.getSimpleField(OWNER, PET_NAME, SIMPLE_FIELD);
@@ -171,7 +166,6 @@ class PetDaoTest {
 
     @Test
     public void shouldUpdateSimpleFieldWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
@@ -182,7 +176,6 @@ class PetDaoTest {
 
     @Test
     public void shouldDeleteFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
@@ -194,7 +187,6 @@ class PetDaoTest {
     @Test
     public void shouldDeleteFieldCollectionElementsPreviousToKeyWhenRequested() throws DatabaseAccessException,
         DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(new ArrayList<>());
         willDoNothing().given(dbDoc).commitBatch(batch);
@@ -206,7 +198,6 @@ class PetDaoTest {
 
     @Test
     public void shouldGetFieldCollectionWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         given(documentSnapshot.getId()).willReturn(MEAL_KEY);
@@ -220,7 +211,6 @@ class PetDaoTest {
     @Test
     public void shouldGetFieldCollectionElementsBetweenKeysWhenRequested()
         throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
         given(documentSnapshot.getId()).willReturn(MEAL_KEY);
@@ -235,7 +225,6 @@ class PetDaoTest {
 
     @Test
     public void shouldAddFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.createDocumentWithId(anyString(), anyString(), any(Map.class),
             any(WriteBatch.class)))
@@ -249,7 +238,6 @@ class PetDaoTest {
 
     @Test
     public void shouldDeleteFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
@@ -260,7 +248,6 @@ class PetDaoTest {
 
     @Test
     public void shouldUpdateFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         willDoNothing().given(dbDoc).commitBatch(batch);
 
@@ -271,7 +258,6 @@ class PetDaoTest {
 
     @Test
     public void shouldGetFieldCollectionElementWhenRequested() throws DatabaseAccessException, DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getDocumentData(anyString())).willReturn(collectionElementBody);
 

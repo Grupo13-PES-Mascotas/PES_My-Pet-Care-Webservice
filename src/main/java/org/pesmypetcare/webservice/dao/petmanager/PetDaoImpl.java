@@ -24,7 +24,6 @@ import java.util.Map;
  */
 @Repository
 public class PetDaoImpl implements PetDao {
-    private String ownerId;
     private WriteBatch batch;
     private String path;
 
@@ -48,16 +47,16 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void createPet(String owner, String name, PetEntity petEntity) throws DatabaseAccessException,
+    public void createPet(String ownerId, String name, PetEntity petEntity) throws DatabaseAccessException,
         DocumentException {
-        initializeWithCollectionPath(owner);
+        initializeWithCollectionPath(ownerId);
         dbDoc.createDocumentWithId(path, name, petEntity, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException, DocumentException {
-        initializeWithDocumentPath(owner, name);
+    public void deleteByOwnerAndName(String ownerId, String name) throws DatabaseAccessException, DocumentException {
+        initializeWithDocumentPath(ownerId, name);
         String imageLocation = dbDoc.getStringFromDocument(path, "profileImageLocation");
         dbDoc.deleteDocument(path, batch);
         dbDoc.commitBatch(batch);
@@ -65,8 +64,8 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void deleteAllPets(String owner) throws DatabaseAccessException, DocumentException {
-        initializeWithCollectionPath(owner);
+    public void deleteAllPets(String ownerId) throws DatabaseAccessException, DocumentException {
+        initializeWithCollectionPath(ownerId);
         List<DocumentSnapshot> petsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         dbCol.deleteCollection(path, batch);
         dbDoc.commitBatch(batch);
@@ -77,14 +76,14 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public PetEntity getPetData(String owner, String name) throws DatabaseAccessException, DocumentException {
-        initializeWithDocumentPath(owner, name);
+    public PetEntity getPetData(String ownerId, String name) throws DatabaseAccessException, DocumentException {
+        initializeWithDocumentPath(ownerId, name);
         return dbDoc.getDocumentDataAsObject(path, PetEntity.class);
     }
 
     @Override
-    public List<Map<String, Object>> getAllPetsData(String owner) throws DatabaseAccessException, DocumentException {
-        initializeWithCollectionPath(owner);
+    public List<Map<String, Object>> getAllPetsData(String ownerId) throws DatabaseAccessException {
+        initializeWithCollectionPath(ownerId);
         List<DocumentSnapshot> petsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
@@ -98,32 +97,32 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public Object getSimpleField(String owner, String name, String field)
+    public Object getSimpleField(String ownerId, String name, String field)
         throws DatabaseAccessException, DocumentException {
-        String petPath = Path.ofDocument(Collections.pets, getUserId(owner), name);
+        String petPath = Path.ofDocument(Collections.pets, ownerId, name);
         return dbDoc.getDocumentField(petPath, field);
     }
 
     @Override
-    public void updateSimpleField(String owner, String name, String field, Object value)
+    public void updateSimpleField(String ownerId, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException {
-        initializeWithDocumentPath(owner, name);
+        initializeWithDocumentPath(ownerId, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public void deleteFieldCollection(String owner, String name, String field)
+    public void deleteFieldCollection(String ownerId, String name, String field)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithCollectionPath(owner, name, field);
+        initializeFieldWithCollectionPath(ownerId, name, field);
         dbCol.deleteCollection(path, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public void deleteFieldCollectionElementsPreviousToKey(String owner, String name, String field, String key)
+    public void deleteFieldCollectionElementsPreviousToKey(String ownerId, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithCollectionPath(owner, name, field);
+        initializeFieldWithCollectionPath(ownerId, name, field);
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
 
         for (DocumentSnapshot fieldDocument : fieldsDocuments) {
@@ -136,9 +135,9 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public List<Map<String, Object>> getFieldCollection(String owner, String name, String field)
-        throws DatabaseAccessException, DocumentException {
-        initializeFieldWithCollectionPath(owner, name, field);
+    public List<Map<String, Object>> getFieldCollection(String ownerId, String name, String field)
+        throws DatabaseAccessException {
+        initializeFieldWithCollectionPath(ownerId, name, field);
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
@@ -152,10 +151,10 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String owner, String name, String field,
+    public List<Map<String, Object>> getFieldCollectionElementsBetweenKeys(String ownerId, String name, String field,
                                                                            String key1, String key2)
-        throws DatabaseAccessException, DocumentException {
-        initializeFieldWithCollectionPath(owner, name, field);
+        throws DatabaseAccessException {
+        initializeFieldWithCollectionPath(ownerId, name, field);
         List<DocumentSnapshot> fieldsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         List<Map<String, Object>> externalList = new ArrayList<>();
 
@@ -172,34 +171,34 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void addFieldCollectionElement(String owner, String name, String field, String key, Map<String, Object> body)
+    public void addFieldCollectionElement(String ownerId, String name, String field, String key, Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithCollectionPath(owner, name, field);
+        initializeFieldWithCollectionPath(ownerId, name, field);
         dbDoc.createDocumentWithId(path, key, body, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public void deleteFieldCollectionElement(String owner, String name, String field, String key)
+    public void deleteFieldCollectionElement(String ownerId, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithDocumentPath(owner, name, field, key);
+        initializeFieldWithDocumentPath(ownerId, name, field, key);
         dbDoc.deleteDocument(path, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public void updateFieldCollectionElement(String owner, String name, String field, String key,
+    public void updateFieldCollectionElement(String ownerId, String name, String field, String key,
                                              Map<String, Object> body)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithDocumentPath(owner, name, field, key);
+        initializeFieldWithDocumentPath(ownerId, name, field, key);
         dbDoc.updateDocumentFields(path, body, batch);
         dbDoc.commitBatch(batch);
     }
 
     @Override
-    public Map<String, Object> getFieldCollectionElement(String owner, String name, String field, String key)
+    public Map<String, Object> getFieldCollectionElement(String ownerId, String name, String field, String key)
         throws DatabaseAccessException, DocumentException {
-        initializeFieldWithDocumentPath(owner, name, field, key);
+        initializeFieldWithDocumentPath(ownerId, name, field, key);
         return dbDoc.getDocumentData(path);
     }
 
@@ -215,27 +214,19 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the pet document.
-     * @param owner Owner of the pet
+     * @param ownerId UID of the owner of the pets
      * @param petName Pet name
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
      */
-    private void initializeWithDocumentPath(String owner, String petName) throws DatabaseAccessException,
-        DocumentException {
-        ownerId = getUserId(owner);
+    private void initializeWithDocumentPath(String ownerId, String petName) {
         batch = dbCol.batch();
         path = Path.ofDocument(Collections.pets, ownerId, petName);
     }
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the user's pet collection.
-     * @param owner Owner of the pets
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
+     * @param ownerId UID of the owner of the pets
      */
-    private void initializeWithCollectionPath(String owner) throws DatabaseAccessException,
-        DocumentException {
-        ownerId = getUserId(owner);
+    private void initializeWithCollectionPath(String ownerId) {
         batch = dbCol.batch();
         path = Path.ofCollection(Collections.pets, ownerId);
     }
@@ -243,17 +234,13 @@ public class PetDaoImpl implements PetDao {
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
      * pet field document identified by key.
-     * @param owner Owner of the pet
+     * @param ownerId UID of the owner of the pets
      * @param petName Pet name
      * @param collectionName Name of the collection
      * @param key Id of the document we access
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
      */
-    private void initializeFieldWithDocumentPath(String owner, String petName, String collectionName, String key)
-        throws DatabaseAccessException, DocumentException {
+    private void initializeFieldWithDocumentPath(String ownerId, String petName, String collectionName, String key) {
         Collections collection = Path.collectionOfField(collectionName);
-        ownerId = getUserId(owner);
         batch = dbCol.batch();
         path = Path.ofDocument(collection, ownerId, petName, key);
     }
@@ -261,29 +248,13 @@ public class PetDaoImpl implements PetDao {
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
      * pet field collection.
-     * @param owner Owner of the pet
+     * @param ownerId  UID of the owner of the pets
      * @param petName Pet name
      * @param collectionName Name of the collection
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
      */
-    private void initializeFieldWithCollectionPath(String owner, String petName, String collectionName)
-        throws DatabaseAccessException, DocumentException {
+    private void initializeFieldWithCollectionPath(String ownerId, String petName, String collectionName) {
         Collections collection = Path.collectionOfField(collectionName);
-        ownerId = getUserId(owner);
         batch = dbCol.batch();
         path = Path.ofCollection(collection, ownerId, petName);
-    }
-
-    /**
-     * Returns the id of a user specifying its username.
-     * @param username Name of the user
-     * @return The user's id
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     */
-    private String getUserId(String username) throws DatabaseAccessException, DocumentException {
-        String usernamePath = Path.ofDocument(Collections.used_usernames, username);
-        return dbDoc.getStringFromDocument(usernamePath, "user");
     }
 }
