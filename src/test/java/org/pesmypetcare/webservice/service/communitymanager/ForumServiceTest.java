@@ -15,6 +15,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -224,6 +225,24 @@ class ForumServiceTest {
 
                 service.deleteMessage(token, groupName, forumName, creator, date);
                 verify(forumDao).deleteMessage(same(groupName), same(forumName), same(creator), same(date));
+            }
+
+            @Test
+            public void reportMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
+                willDoNothing().given(forumDao).reportMessage(anyString(), anyString(), anyString(), anyString(),
+                    anyString());
+
+                service.reportMessage(token, groupName, forumName, creator, newName, date);
+                verify(forumDao).reportMessage(same(groupName), same(forumName), same(creator),
+                    same(newName), same(date));
+            }
+
+            @Test
+            public void unbanMessage() throws DatabaseAccessException, DocumentException {
+                willDoNothing().given(forumDao).unbanMessage(anyString(), anyString(), anyString(), anyString());
+
+                service.unbanMessage(token, groupName, forumName, creator, date);
+                verify(forumDao).unbanMessage(same(groupName), same(forumName), same(creator), same(date));
             }
 
             @Test

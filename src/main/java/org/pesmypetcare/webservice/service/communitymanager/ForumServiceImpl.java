@@ -8,6 +8,7 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserTokenImpl;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,12 +100,34 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void deleteMessage(String token, String parentGroup, String forumName, String creator, String date)
+    public void deleteMessage(String token, String parentGroup, String forumName, String creator,
+                              String date)
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
             forumDao.deleteMessage(parentGroup, forumName, creator, date);
+        }
+    }
+
+    @Override
+    public void reportMessage(String token, String parentGroup, String forumName, String creator, String reporter,
+                              String date)
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
+        } else {
+            forumDao.reportMessage(parentGroup, forumName, creator, reporter, date);
+        }
+    }
+
+    @Override
+    public void unbanMessage(String token, String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException {
+        if (!forumDao.forumNameInUse(parentGroup, forumName)) {
+            throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
+        } else {
+            forumDao.unbanMessage(parentGroup, forumName, creator, date);
         }
     }
 

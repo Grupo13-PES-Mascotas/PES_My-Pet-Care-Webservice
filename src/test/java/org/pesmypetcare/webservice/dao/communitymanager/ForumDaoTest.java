@@ -28,6 +28,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -69,11 +70,13 @@ class ForumDaoTest {
     private static String messagePath;
     private static String tagPath;
     private static String username;
+    private static String username2;
     private static String date;
     private String publicationDate;
     private String newName;
     private static ForumEntity forumEntity;
     private static List<String> tags;
+    private static List<String> usernameList;
     private static Message message;
     private List<QueryDocumentSnapshot> queryDocumentSnapshots;
 
@@ -112,6 +115,11 @@ class ForumDaoTest {
         groupId = "asd2d9833jdaA3";
         forumId = "ad33i8jf93";
         username = "John";
+        username2 = "Henry";
+        usernameList = new ArrayList<>();
+        usernameList.add("John");
+        usernameList.add("Pedro");
+        usernameList.add("Chang");
         date = "2020-05-01T17:48:15";
         forumEntity = new ForumEntity();
         forumEntity.setName(forumName);
@@ -430,6 +438,46 @@ class ForumDaoTest {
                 }
 
                 @Test
+                public void reportMessage() throws DatabaseAccessException, DocumentException,
+                    InvalidOperationException {
+                    mockGetGroupAndForumIds();
+                    given(
+                        collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
+                        .willReturn(query);
+                    given(documentSnapshot.getReference()).willReturn(documentReference);
+                    given(documentSnapshot.get(anyString())).willReturn(usernameList);
+                    given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
+
+                    dao.reportMessage(groupName, forumName, username, username2, date);
+                    verify(collectionAdapter)
+                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
+                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                    verify(batch).update(same(documentReference), eq("reportedBy"),
+                        eq(FieldValue.arrayUnion(username2)));
+                    verify(batch).update(same(documentReference), eq("banned"),
+                        eq(true));
+                }
+
+                @Test
+                public void unbanMessage() throws DatabaseAccessException, DocumentException {
+                    mockGetGroupAndForumIds();
+                    given(
+                        collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
+                        .willReturn(query);
+                    given(documentSnapshot.getReference()).willReturn(documentReference);
+                    given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
+
+                    dao.unbanMessage(groupName, forumName, username, date);
+                    verify(collectionAdapter)
+                        .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
+                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                    verify(batch).update(same(documentReference), eq("reportedBy"),
+                        eq(new ArrayList()));
+                    verify(batch).update(same(documentReference), eq("banned"),
+                        eq(false));
+                }
+
+                @Test
                 public void addUserToLikedByOfMessage() throws DatabaseAccessException, DocumentException {
                     mockGetGroupAndForumIds();
                     given(
@@ -443,7 +491,8 @@ class ForumDaoTest {
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
-                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
+                    verify(batch).update(same(documentReference), eq("likedBy"),
+                        eq(FieldValue.arrayUnion(username)));
                 }
 
                 @Test
@@ -460,7 +509,8 @@ class ForumDaoTest {
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
-                    verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
+                    verify(batch).update(same(documentReference), eq("likedBy"),
+                        eq(FieldValue.arrayRemove(username)));
                 }
             }
         }

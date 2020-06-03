@@ -1,10 +1,12 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
 import com.google.cloud.firestore.WriteBatch;
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
+import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
@@ -29,6 +31,8 @@ public class MedalDaoImpl implements MedalDao {
     private FirestoreCollection dbCol;
     @Autowired
     private FirestoreDocument dbDoc;
+    @Autowired
+    private UserMedalDao userMedalDao;
 
     @Override
     public void createMedal(String name, MedalEntity medal) throws DatabaseAccessException,
@@ -36,6 +40,8 @@ public class MedalDaoImpl implements MedalDao {
         initializeWithCollectionPath();
         dbDoc.createDocumentWithId(path, name, medal, batch);
         dbDoc.commitBatch(batch);
+        MedalEntity auxiliar = getMedalData(name);
+        addMedalsToUsers(auxiliar);
     }
 
     @Override
@@ -81,5 +87,21 @@ public class MedalDaoImpl implements MedalDao {
     private void initializeWithCollectionPath() {
         batch = dbCol.batch();
         path = Path.ofCollection(Collections.medals);
+    }
+
+    /**
+     * Insert the new medal to all users.
+     * @param medal The new medal we had created before
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    private void addMedalsToUsers(MedalEntity medal) throws DatabaseAccessException, DocumentException {
+        path = Path.ofCollection(Collections.used_usernames);
+        List<DocumentSnapshot> allUsers = dbCol.listAllCollectionDocumentSnapshots(path);
+        UserMedalEntity medalEntity = new UserMedalEntity(medal.getName(), 0., 0.,
+            new ArrayList<>(), new Medal(medal));
+        for (DocumentSnapshot user: allUsers) {
+            userMedalDao.createUserMedal(user.getId(), medal.getName(), medalEntity);
+        }
     }
 }

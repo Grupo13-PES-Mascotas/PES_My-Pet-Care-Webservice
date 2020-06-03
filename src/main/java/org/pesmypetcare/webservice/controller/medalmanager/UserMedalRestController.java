@@ -28,7 +28,6 @@ public class UserMedalRestController {
     @Autowired
     private UserMedalService userMedalService;
 
-
     /**
      * Gets a medal identified by its name and owner.
      * @param owner Username of the owner of the medal

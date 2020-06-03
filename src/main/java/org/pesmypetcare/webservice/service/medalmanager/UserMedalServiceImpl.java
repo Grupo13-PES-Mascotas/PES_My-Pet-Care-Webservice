@@ -19,6 +19,12 @@ public class UserMedalServiceImpl implements UserMedalService {
     private UserMedalDao userMedalDao;
 
     @Override
+    public void createUserMedal(String owner, String name, UserMedalEntity medal)
+        throws DatabaseAccessException, DocumentException {
+        userMedalDao.createUserMedal(owner, name, medal);
+    }
+
+    @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
         DocumentException {
         return userMedalDao.getUserMedalData(owner, name);
@@ -41,4 +47,6 @@ public class UserMedalServiceImpl implements UserMedalService {
         DocumentException {
         return userMedalDao.getField(owner, name, field);
     }
+
+
 }
