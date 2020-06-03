@@ -234,8 +234,9 @@ class GroupDaoTest {
             lenient().doNothing().when(documentAdapter)
                 .updateDocumentFields(anyString(), anyString(), any(), any(WriteBatch.class));
             given(docRef.getId()).willReturn(groupId);
-            given(userDao.getUid(anyString())).willReturn(userId);
             given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(token);
+            given(userToken.getUid()).willReturn(userId);
+            given(userToken.getUsername()).willReturn(username);
 
             List<String> tags = new ArrayList<>();
             tags.add(tag);
@@ -250,7 +251,7 @@ class GroupDaoTest {
             data2.put("date", UTCLocalConverter.getCurrentUTC());
             verify(documentAdapter)
                 .createDocumentWithId(or(eq(groupNamesPath), eq(membersPath)), or(eq(groupName), eq(userId)),
-                    or(eq(data), eq(data2)), same(batch));
+                    or(eq(data), anyMap()), same(batch));
             verify(userDao).addGroupSubscription(same(userToken), eq(groupName), same(batch));
             verify(documentAdapter).documentExists(eq(tagPath));
             verify(documentAdapter, times(2)).updateDocumentFields(same(batch), or(eq(tagPath), eq(groupPath)),
@@ -262,7 +263,8 @@ class GroupDaoTest {
         @Test
         public void deleteGroup()
             throws ExecutionException, InterruptedException, DatabaseAccessException, DocumentException {
-            mockGetGroupId();
+            given(userToken.getUsername()).willReturn(username);
+            given(documentAdapter.getStringFromDocument(anyString(), anyString())).willReturn(groupId, username);
             given(collectionAdapter.getDocumentsWhereArrayContains(anyString(), anyString(), any())).willReturn(query);
             given(documentSnapshot.getReference()).willReturn(docRef);
             lenient().when(batch.update(any(DocumentReference.class), anyString(), any())).thenReturn(batch);
@@ -316,7 +318,7 @@ class GroupDaoTest {
 
         @Test
         public void subscribe() throws DatabaseAccessException, DocumentException {
-            given(userDao.getUid(anyString())).willReturn(userId);
+            given(userToken.getUid()).willReturn(userId);
             mockGetGroupId();
             lenient()
                 .when(documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
@@ -336,7 +338,7 @@ class GroupDaoTest {
 
         @Test
         public void unsubscribe() throws DatabaseAccessException, DocumentException {
-            given(userDao.getUid(anyString())).willReturn(userId);
+            given(userToken.getUid()).willReturn(userId);
             mockGetGroupId();
             willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
             willDoNothing().given(userDao)
@@ -345,7 +347,6 @@ class GroupDaoTest {
                 .willReturn(token);
 
             dao.unsubscribe(groupName, userToken);
-            verify(userDao).getUid(same(username));
             String memberPath = Path.ofDocument(Collections.members, groupId, userId);
             verify(documentAdapter).deleteDocument(eq(memberPath), same(batch));
             verify(userDao).deleteGroupSubscription(same(userToken), same(groupName), same(batch));

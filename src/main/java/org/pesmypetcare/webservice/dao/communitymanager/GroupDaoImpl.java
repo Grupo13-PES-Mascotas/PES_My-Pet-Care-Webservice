@@ -87,6 +87,7 @@ public class GroupDaoImpl implements GroupDao {
             documentAdapter.deleteDocument(Path.ofDocument(Collections.groups, id), batch);
             documentAdapter.deleteDocument(Path.ofDocument(Collections.groups_names, name), batch);
             documentAdapter.commitBatch(batch);
+            return;
         }
         throw new BadCredentialsException("The user is not the creator of the group.");
     }
