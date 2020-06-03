@@ -14,7 +14,6 @@ public class MedalEntity {
     public static final String NAME = "name";
     public static final String LEVELS = "levels";
     public static final String DESCRIPTION = "description";
-    public static final String ICON_LOCATION = "iconLocation";
     public static final String MEDAL_ICON = "medalIcon";
     private String name;
     private List<Double> levels;
@@ -38,7 +37,7 @@ public class MedalEntity {
      */
     public static void checkField(String field) {
         if (!NAME.equals(field) && !LEVELS.equals(field) && !DESCRIPTION.equals(field)
-            && !ICON_LOCATION.equals(field) && !MEDAL_ICON.equals(field)) {
+            && !MEDAL_ICON.equals(field)) {
             throw new IllegalArgumentException("Field does not exists");
         }
     }
