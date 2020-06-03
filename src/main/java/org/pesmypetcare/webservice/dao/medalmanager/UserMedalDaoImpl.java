@@ -1,6 +1,8 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
 
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
@@ -76,6 +78,23 @@ public class UserMedalDaoImpl implements UserMedalDao {
         DocumentException {
         String medalPath = Path.ofDocument(Collections.userMedals, getUserId(owner), name);
         return dbDoc.getDocumentField(medalPath, field);
+    }
+
+    /**
+     * Create all user medals when user is created.
+     * @param username Username of the user.
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    public void createAllUserMedals (String username) throws DatabaseAccessException, DocumentException {
+        path = Path.ofCollection(Collections.medals);
+        List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
+        for (DocumentSnapshot medalDocument : medalsDocuments) {
+            MedalEntity medal = medalDocument.toObject(MedalEntity.class);
+            UserMedalEntity userMedal = new UserMedalEntity(medal.getName(), 0., 0.,
+                new ArrayList<>(), new Medal(medal));
+            createUserMedal(username, medal.getName(), userMedal);
+        }
     }
 
     /**

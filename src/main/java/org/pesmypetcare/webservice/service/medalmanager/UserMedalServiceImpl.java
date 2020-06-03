@@ -47,4 +47,6 @@ public class UserMedalServiceImpl implements UserMedalService {
         DocumentException {
         return userMedalDao.getField(owner, name, field);
     }
+
+
 }
