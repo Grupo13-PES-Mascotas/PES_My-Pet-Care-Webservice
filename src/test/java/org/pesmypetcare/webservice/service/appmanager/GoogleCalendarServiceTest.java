@@ -16,6 +16,7 @@ import org.pesmypetcare.webservice.entity.appmanager.EventEntity;
 import org.pesmypetcare.webservice.error.CalendarAccessException;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -36,8 +39,9 @@ public class GoogleCalendarServiceTest {
     private static List<EventEntity> eventList;
     private static EventEntity eventEntity;
     private static Event event;
+    private static String googleToken;
     private static String accessToken;
-    private static String owner;
+    private static String ownerId;
     private static String petName;
     private static String date;
     private static String date2;
@@ -48,19 +52,22 @@ public class GoogleCalendarServiceTest {
     private GoogleCalendarDao googleCalendarDao;
     @Mock
     private PetDao petDao;
+    @Mock
+    private UserToken userToken;
 
     @InjectMocks
-    private GoogleCalendarService service = new GoogleCalendarServiceImpl();
+    private GoogleCalendarService service = spy(new GoogleCalendarServiceImpl());
 
     @BeforeAll
     public static void setUp() {
-        owner = "My owner";
         petName = "My petName";
+        ownerId = "ownerId";
         date = "2020-02-13T10:30:00.000+01:00";
         date2 = "2020-02-13T12:30:00.000+01:00";
         eventId = "My eventId";
         calendarId = "My calendarId";
-        accessToken = "tokem";
+        googleToken = "token";
+        accessToken = "token";
         eventList = new ArrayList<>();
         eventEntity = new EventEntity();
         eventEntity.setId(eventId);
@@ -82,8 +89,10 @@ public class GoogleCalendarServiceTest {
     @Test
     public void shouldReturnNothingWhenSecondaryCalendarCreated()
         throws CalendarAccessException, DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
         given(googleCalendarDao.createSecondaryCalendar(anyString(), isA(Calendar.class))).willReturn(calendarId);
-        service.createSecondaryCalendar(accessToken, owner, petName);
+        service.createSecondaryCalendar(googleToken, accessToken, petName);
         verify(googleCalendarDao).createSecondaryCalendar(isA(String.class), isA(Calendar.class));
         verify(petDao).updateSimpleField(isA(String.class), isA(String.class), isA(String.class), isA(String.class));
     }
@@ -91,8 +100,10 @@ public class GoogleCalendarServiceTest {
     @Test
     public void shouldReturnNothingWhenSecondaryCalendarDeleted() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        service.deleteSecondaryCalendar(accessToken, owner, petName);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        service.deleteSecondaryCalendar(googleToken, accessToken, petName);
         verify(googleCalendarDao).deleteSecondaryCalendar(isA(String.class), isA(String.class));
         verify(petDao).updateSimpleField(isA(String.class), isA(String.class), isA(String.class), isNull());
     }
@@ -100,34 +111,42 @@ public class GoogleCalendarServiceTest {
     @Test
     public void shouldReturnAListOfEventsWhenAllEventsFromCalendarRetrieved() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        List<EventEntity> response = service.getAllEventsFromCalendar(accessToken, owner, petName);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        List<EventEntity> response = service.getAllEventsFromCalendar(googleToken, accessToken, petName);
         assertEquals(eventList, response, "Should return an array of Event");
     }
 
     @Test
     public void shouldReturnNothingWhenEventCreated() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        service.createEvent(accessToken, owner, petName, eventEntity);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        service.createEvent(googleToken, accessToken, petName, eventEntity);
         verify(googleCalendarDao).createEvent(isA(String.class), isA(String.class), isA(Event.class));
     }
 
     @Test
     public void shouldReturnEventWhenEventRetrieved() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
         given(googleCalendarDao.retrieveEvent(anyString(), anyString(), anyString())).willReturn(event);
-        service.retrieveEvent(accessToken, owner, petName, eventId);
-        EventEntity response = service.retrieveEvent(accessToken, owner, petName, eventId);
+        service.retrieveEvent(googleToken, accessToken, petName, eventId);
+        EventEntity response = service.retrieveEvent(googleToken, accessToken, petName, eventId);
         assertEquals(eventEntity, response, "Should return an Event Entity");
     }
 
     @Test
     public void shouldReturnNothingWhenEventUpdated() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        service.updateEvent(accessToken, owner, petName, eventEntity);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        service.updateEvent(googleToken, accessToken, petName, eventEntity);
         verify(googleCalendarDao).updateEvent(isA(String.class), isA(String.class), isA(String.class),
             isA(Event.class));
     }
@@ -135,8 +154,10 @@ public class GoogleCalendarServiceTest {
     @Test
     public void shouldReturnNothingWhenEventDeleted() throws CalendarAccessException,
         DatabaseAccessException, DocumentException {
-        given(petDao.getSimpleField(owner, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
-        service.deleteEvent(accessToken, owner, petName, eventId);
+        doReturn(userToken).when((GoogleCalendarServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(ownerId);
+        given(petDao.getSimpleField(ownerId, petName, CALENDAR_ID_FIELD)).willReturn(calendarId);
+        service.deleteEvent(googleToken, accessToken, petName, eventId);
         verify(googleCalendarDao).deleteEvent(isA(String.class), isA(String.class), isA(String.class));
     }
 }
