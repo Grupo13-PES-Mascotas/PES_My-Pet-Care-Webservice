@@ -1,5 +1,6 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -11,6 +12,17 @@ import java.util.Map;
  * @author Oriol Catalán
  */
 public interface UserMedalDao {
+
+    /**
+     * Creates a medal on the data base.
+     * @param owner Username of the owner of the medal
+     * @param name Name of the medal
+     * @param medal The medal entity that contains the attributes of the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
+     */
+    void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException, DocumentException;
+
 
     /**
      * Gets a medal identified by its name and owner.

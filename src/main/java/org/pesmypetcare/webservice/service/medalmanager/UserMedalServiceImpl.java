@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.service.medalmanager;
 
 import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -17,6 +18,11 @@ import java.util.Map;
 public class UserMedalServiceImpl implements UserMedalService {
     @Autowired
     private UserMedalDao userMedalDao;
+
+    @Override
+    public void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException, DocumentException {
+        userMedalDao.createUserMedal(owner, name, medal);
+    }
 
     @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,

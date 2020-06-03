@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
 
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
@@ -32,6 +33,14 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private FirestoreCollection dbCol;
     @Autowired
     private FirestoreDocument dbDoc;
+
+    @Override
+    public void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException,
+        DocumentException {
+        initializeWithCollectionPath(owner);
+        dbDoc.createDocumentWithId(path, name, medal, batch);
+        dbDoc.commitBatch(batch);
+    }
 
     @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
