@@ -131,7 +131,7 @@ public interface ForumService {
      * @throws DocumentException When either the group or forum do not exist
      */
     void unbanMessage(String token, String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException;
+        throws DatabaseAccessException, DocumentException, InvalidOperationException;
 
 
     /**

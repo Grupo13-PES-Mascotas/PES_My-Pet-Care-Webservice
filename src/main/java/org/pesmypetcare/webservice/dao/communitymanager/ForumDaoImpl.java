@@ -187,24 +187,47 @@ public class ForumDaoImpl implements ForumDao {
         }
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
         WriteBatch batch = documentAdapter.batch();
-        batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, FieldValue.arrayUnion(reporter));
         ArrayList<String> messages = (ArrayList<String>) messageSnapshot.get(REPORTED_BY_FIELD);
-        if (messages != null && messages.contains(reporter)) {
-            throw new InvalidOperationException("409", "This user already reported the message");
-        }
-        if (messages != null && messages.size() > COUNTER - 1) {
-            batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);
+        if (messages == null) {
+            messages = new ArrayList<>();
+            messages.add(reporter);
+            batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, messages);
+        } else {
+            if (messages.contains(reporter)) {
+                throw new InvalidOperationException("409", "This user already reported the message");
+            }
+            batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, FieldValue.arrayUnion(reporter));
+            if (messages.size() == COUNTER) {
+                batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);
+                String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
+                String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
+                String path = Path.ofDocument(Collections.users, uid);
+                Long BanCounter = (Long) documentAdapter.getDocumentField(path, "messagesBanned");
+                if (BanCounter == null) {
+                    BanCounter = 0L;
+                }
+                documentAdapter.updateDocumentFields(batch, path, "messagesBanned", BanCounter + 1);
+            }
         }
         documentAdapter.commitBatch(batch);
     }
 
     @Override
     public void unbanMessage(String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException {
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
         DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        Boolean isMessageBanned = messageSnapshot.getBoolean(BANNED_FIELD);
+        if (isMessageBanned == null || !isMessageBanned) {
+            throw new InvalidOperationException("409", "The message wasn't banned");
+        }
         WriteBatch batch = documentAdapter.batch();
         batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, new ArrayList<String>());
         batch.update(messageSnapshot.getReference(), BANNED_FIELD, false);
+        String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
+        String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
+        String path = Path.ofDocument(Collections.users, uid);
+        Long BanCounter = (Long) documentAdapter.getDocumentField(path, "messagesBanned");
+        documentAdapter.updateDocumentFields(batch, path, "messagesBanned", BanCounter - 1);
         documentAdapter.commitBatch(batch);
     }
 

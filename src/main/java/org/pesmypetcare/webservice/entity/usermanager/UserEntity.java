@@ -14,6 +14,7 @@ public class UserEntity {
     private String password;
     private String email;
     private List<String> groupSubscriptions;
+    private Integer messagesBanned;
 
     public UserEntity() { }
 
@@ -22,6 +23,7 @@ public class UserEntity {
         this.password = password;
         this.email = email;
         groupSubscriptions = new ArrayList<>();
+        messagesBanned = 0;
     }
 
     /**
@@ -30,11 +32,14 @@ public class UserEntity {
      * @param password The user's password
      * @param email The user's email
      * @param groupSubscriptions The user's group subscriptions
+     * @param messagesBanned Number of messages created by the user that are banned.
      */
-    public UserEntity(String username, String password, String email, List<String> groupSubscriptions) {
+    public UserEntity(String username, String password, String email, List<String> groupSubscriptions,
+                      Integer messagesBanned) {
         setUsername(username);
         setPassword(password);
         setEmail(email);
         setGroupSubscriptions(groupSubscriptions);
+        setMessagesBanned(messagesBanned);
     }
 }

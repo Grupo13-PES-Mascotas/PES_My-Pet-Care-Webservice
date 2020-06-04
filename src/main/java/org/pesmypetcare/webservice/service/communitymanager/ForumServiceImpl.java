@@ -7,6 +7,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.error.InvalidOperationException;
+import org.pesmypetcare.webservice.utilities.UTCLocalConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,6 +101,7 @@ public class ForumServiceImpl implements ForumService {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
+
             forumDao.deleteMessage(parentGroup, forumName, creator, date);
         }
     }
@@ -117,7 +119,7 @@ public class ForumServiceImpl implements ForumService {
 
     @Override
     public void unbanMessage(String token, String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException {
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {

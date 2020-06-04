@@ -187,7 +187,7 @@ public class ForumRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unbanMessage(@RequestHeader String token, @PathVariable String parentGroup,
                               @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
-        throws DatabaseAccessException, DocumentException {
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
         service.unbanMessage(token, parentGroup, forumName, creator, date);
     }
 

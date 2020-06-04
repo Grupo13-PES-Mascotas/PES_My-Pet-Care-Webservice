@@ -421,17 +421,18 @@ class ForumDaoTest {
                             eq("creator"), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("reportedBy"),
                         eq(FieldValue.arrayUnion(username2)));
-                    verify(batch).update(same(documentReference), eq("banned"),
-                        eq(true));
+                    verify(batch).update(same(documentReference), eq("banned"), eq(true));
                 }
 
                 @Test
-                public void unbanMessage() throws DatabaseAccessException, DocumentException {
+                public void unbanMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
                         .willReturn(query);
+                    given(documentSnapshot.getBoolean(anyString())).willReturn(true);
                     given(documentSnapshot.getReference()).willReturn(documentReference);
+                    given(documentAdapter.getDocumentField(anyString(), anyString())).willReturn(1L);
                     given(batch.update(any(DocumentReference.class), anyString(), any())).willReturn(batch);
 
                     dao.unbanMessage(groupName, forumName, username, date);
