@@ -42,4 +42,16 @@ public class UserEntity {
         setGroupSubscriptions(groupSubscriptions);
         setMessagesBanned(messagesBanned);
     }
+
+    /**
+     * Creates a user from its data.
+     * @param userData The user data
+     */
+    public UserEntity(User userData) {
+        this.username = userData.getUsername();
+        this.password = userData.getPassword();
+        this.email = userData.getEmail();
+        this.groupSubscriptions = new ArrayList<>();
+        this.messagesBanned = 0;
+    }
 }
