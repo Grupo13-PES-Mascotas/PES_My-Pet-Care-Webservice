@@ -322,9 +322,8 @@ class ForumDaoTest {
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
                 given(userToken.getUsername()).willReturn(username);
-                given(documentAdapter
-                    .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq(CREATOR_FIELD)))
-                    .willReturn(username);
+                given(documentAdapter.getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)),
+                    eq(CREATOR_FIELD))).willReturn(username);
                 willDoNothing().given(documentAdapter)
                     .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
                 mockAddForumToTag();
@@ -336,9 +335,8 @@ class ForumDaoTest {
                 verify(documentAdapter)
                     .updateDocumentFields(eq(tagPath), eq("forums"), eq(FieldValue.arrayRemove(forumName)),
                         same(batch));
-                verify(documentAdapter)
-                    .updateDocumentFields(same(batch), eq(forumPath), eq("tags"),
-                        eq(FieldValue.arrayUnion(tags.toArray())));
+                verify(documentAdapter).updateDocumentFields(same(batch), eq(forumPath), eq("tags"),
+                    eq(FieldValue.arrayUnion(tags.toArray())));
                 verifyAddForumToTag(forumName);
             }
 
