@@ -129,7 +129,7 @@ public interface ForumDao {
      * @throws DocumentException When either the group or forum do not exist
      */
     void unbanMessage(String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException;
+        throws DatabaseAccessException, DocumentException, InvalidOperationException;
 
     /**
      * Gets all images paths from all posts of a forum that have an image.
