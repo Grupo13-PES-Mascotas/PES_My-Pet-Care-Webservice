@@ -2,7 +2,6 @@ package org.pesmypetcare.webservice.entity.usermanager;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,13 +17,13 @@ public class UserEntity {
 
     public UserEntity() { }
 
-    public UserEntity(String username, String password, String email) {
+    /*public UserEntity(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
         groupSubscriptions = new ArrayList<>();
         messagesBanned = 0;
-    }
+    }*/
 
     /**
      * Creates a user entity with the given username and email.
