@@ -67,5 +67,12 @@ public interface UserMedalDao {
      */
     Object getField(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
 
+    /**
+     * Create all user medals when user is created.
+     * @param username Username of the user.
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException;
 
 }

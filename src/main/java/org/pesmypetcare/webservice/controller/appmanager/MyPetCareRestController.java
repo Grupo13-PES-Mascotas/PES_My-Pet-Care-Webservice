@@ -34,7 +34,8 @@ public class MyPetCareRestController {
      */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody User user) throws DatabaseAccessException, FirebaseAuthException {
+    public void signUp(@RequestBody User user) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException {
         userService.createUser(user.getUid(), new UserEntity(user));
     }
 

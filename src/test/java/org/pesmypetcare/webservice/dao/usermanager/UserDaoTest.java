@@ -22,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDaoImpl;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
@@ -89,6 +91,8 @@ class UserDaoTest {
     @Mock
     private StorageDao storageDao;
     @Mock
+    private UserMedalDao medalDao;
+    @Mock
     private ApiFuture<DocumentSnapshot> future;
     @Mock
     private ApiFuture<DocumentSnapshot> newFuture;
@@ -148,6 +152,7 @@ class UserDaoTest {
         given(myAuth.getUser(uid)).willReturn(userRecord);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
+        willDoNothing().given(medalDao).createAllUserMedals(eq(username));
         given(db.batch()).willReturn(batch);
         given(batch.commit()).willReturn(batchResult);
         given(batchResult.get()).willReturn(null);

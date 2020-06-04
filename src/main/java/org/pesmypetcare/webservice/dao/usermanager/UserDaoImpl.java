@@ -87,7 +87,7 @@ public class UserDaoImpl implements UserDao {
             batch.set(users.document(uid), userEntity);
             try {
                 batch.commit().get();
-                ((UserMedalDaoImpl)userMedalDao).createAllUserMedals(username);
+                userMedalDao.createAllUserMedals(username);
                 updateDisplayName(uid, username);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();

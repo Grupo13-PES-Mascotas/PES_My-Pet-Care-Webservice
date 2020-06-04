@@ -78,12 +78,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
         return dbDoc.getDocumentField(medalPath, field);
     }
 
-    /**
-     * Create all user medals when user is created.
-     * @param username Username of the user.
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     */
+    @Override
     public void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException {
         path = Path.ofCollection(Collections.medals);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
