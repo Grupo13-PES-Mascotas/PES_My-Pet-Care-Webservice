@@ -51,18 +51,16 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException {
         initializeWithCollectionPath(owner);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
-        List<Map<String, UserMedalEntity>> externalList = new ArrayList<>();
+        List<UserMedalEntity> medalList = new ArrayList<>();
 
         for (DocumentSnapshot medalDocument : medalsDocuments) {
-            Map<String, UserMedalEntity> internalList = new HashMap<>();
-            internalList.put("body", medalDocument.toObject(UserMedalEntity.class));
-            externalList.add(internalList);
+            medalList.add(medalDocument.toObject(UserMedalEntity.class));
         }
-        return externalList;
+        return medalList;
     }
 
     @Override
