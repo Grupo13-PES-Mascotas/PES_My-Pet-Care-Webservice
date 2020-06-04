@@ -37,6 +37,7 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith(MockitoExtension.class)
 class StorageServiceTest {
+    private static final String TOKEN = "my-token";
     private static ImageEntity imageEntity;
     private static StorageForm storageForm;
     private static String owner;
@@ -70,8 +71,9 @@ class StorageServiceTest {
 
     @Test
     public void saveUserImage() {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
         willDoNothing().given(storageDao).uploadImage(any(ImageEntity.class));
-        service.saveUserImage(imageEntity);
+        service.saveUserImage(TOKEN, imageEntity);
         verify(storageDao).uploadImage(same(imageEntity));
     }
 
@@ -93,7 +95,7 @@ class StorageServiceTest {
         given(groupDao.getGroup(anyString())).willReturn(group);
         given(groupDao.groupNameInUse(anyString())).willReturn(true);
         willDoNothing().given(storageDao).uploadGroupImage(any(UserToken.class), any(ImageEntity.class));
-        service.saveGroupImage("my-token", groupName, imageEntity);
+        service.saveGroupImage(TOKEN, groupName, imageEntity);
         verify(storageDao).uploadGroupImage(eq(userToken), same(imageEntity));
     }
 
@@ -105,7 +107,7 @@ class StorageServiceTest {
         group.setCreator(owner);
         given(groupDao.getGroup(anyString())).willReturn(group);
         given(groupDao.groupNameInUse(anyString())).willReturn(false);
-        assertThrows(DocumentException.class, () -> service.saveGroupImage("my-token", groupName, imageEntity),
+        assertThrows(DocumentException.class, () -> service.saveGroupImage(TOKEN, groupName, imageEntity),
             "Should throw an exception when the group does not exist.");
     }
 
@@ -117,7 +119,7 @@ class StorageServiceTest {
         Group group = new Group();
         group.setCreator(owner);
         given(groupDao.getGroup(anyString())).willReturn(group);
-        assertThrows(BadCredentialsException.class, () -> service.saveGroupImage("my-token", groupName, imageEntity),
+        assertThrows(BadCredentialsException.class, () -> service.saveGroupImage(TOKEN, groupName, imageEntity),
             "Should throw an exception when the group does not exist.");
     }
 
@@ -146,7 +148,8 @@ class StorageServiceTest {
 
     @Test
     public void deleteImage() {
-        service.deleteImage(storageForm);
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        service.deleteImage(TOKEN, storageForm);
         verify(storageDao).deleteImage(storageForm);
     }
 }

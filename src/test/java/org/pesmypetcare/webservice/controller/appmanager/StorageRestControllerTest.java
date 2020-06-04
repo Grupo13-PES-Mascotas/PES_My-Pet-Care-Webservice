@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pesmypetcare.webservice.entity.appmanager.ImageEntity;
-import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.form.StorageForm;
 import org.pesmypetcare.webservice.service.appmanager.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -74,7 +72,7 @@ class StorageRestControllerTest {
 
     @Test
     public void saveImageShouldReturnStatusNoContent() throws Exception {
-        willDoNothing().given(service).saveUserImage(any(ImageEntity.class));
+        willDoNothing().given(service).saveUserImage(anyString(), any(ImageEntity.class));
         mockMvc.perform(put(BASE_URL).header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON).content(json))
             .andExpect(status().isNoContent());
     }
@@ -152,15 +150,8 @@ class StorageRestControllerTest {
     }
 
     @Test
-    public void shouldReturnErrorCode500WhenDatabaseFails() throws Exception {
-        willThrow(DatabaseAccessException.class).given(service).getAllPetImages(anyString());
-        mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)
-            .contentType(MediaType.APPLICATION_JSON)).andExpect(status().is5xxServerError());
-    }
-
-    @Test
     public void deleteImageShouldReturnStatusNoContent() throws Exception {
-        willDoNothing().given(service).deleteImage(any(StorageForm.class));
+        willDoNothing().given(service).deleteImage(anyString(), any(StorageForm.class));
         mockMvc.perform(delete(BASE_URL).header(TOKEN, myToken).contentType(MediaType.APPLICATION_JSON).content(form))
             .andExpect(status().isNoContent());
     }

@@ -40,7 +40,7 @@ public class StorageRestController {
     @PutMapping("/image")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void saveUserImage(@RequestHeader(TOKEN) String token, @RequestBody ImageEntity image) {
-        storage.saveUserImage(image);
+        storage.saveUserImage(token, image);
     }
 
     /**
@@ -77,14 +77,13 @@ public class StorageRestController {
     /**
      * Downloads an image from user storage.
      *
-     * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
     @GetMapping("/image/{user}")
     @ResponseBody
-    public String downloadUserImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
+    public String downloadUserImage(@PathVariable String user,
                                     @RequestParam String name) {
         StorageForm form = new StorageForm(user, name);
         return storage.getImage(form);
@@ -93,15 +92,13 @@ public class StorageRestController {
     /**
      * Downloads a pet image from user storage.
      *
-     * @param token The personal access token of the user
      * @param user The user's username
      * @param name The image name
      * @return The image as a base64 encoded byte array
      */
     @GetMapping("/image/{user}/pets/{name}")
     @ResponseBody
-    public String downloadPetImage(@RequestHeader(TOKEN) String token, @PathVariable String user,
-                                   @PathVariable String name) {
+    public String downloadPetImage(@PathVariable String user, @PathVariable String name) {
         String path = user + "/pets";
         StorageForm form = new StorageForm(path, name);
         return storage.getImage(form);
@@ -125,7 +122,6 @@ public class StorageRestController {
     /**
      * Downloads all pet profile pictures from user storage.
      *
-     * @param token The personal access token of the user
      * @param user The user's username
      * @return A map with the pets names and the their profile pictures as a byte array
      * @throws DatabaseAccessException When an error occurs when accessing the database
@@ -133,7 +129,7 @@ public class StorageRestController {
      */
     @GetMapping("/image/{user}/pets")
     @ResponseBody
-    public Map<String, String> downloadAllPetsImages(@RequestHeader(TOKEN) String token, @PathVariable String user)
+    public Map<String, String> downloadAllPetsImages(@PathVariable String user)
         throws DatabaseAccessException, DocumentException {
         return storage.getAllPetImages(user);
     }
@@ -141,7 +137,6 @@ public class StorageRestController {
     /**
      * Downloads all posts images from a forum.
      *
-     * @param token The personal access token of the user
      * @param group The group name
      * @param forum The forum name
      * @return A map with the pets names and the their profile pictures as a byte array
@@ -150,8 +145,7 @@ public class StorageRestController {
      */
     @GetMapping("/image/{group}/{forum}")
     @ResponseBody
-    public Map<String, String> downloadAllPostsImages(@RequestHeader(TOKEN) String token, @PathVariable String group,
-                                                      @PathVariable String forum)
+    public Map<String, String> downloadAllPostsImages(@PathVariable String group, @PathVariable String forum)
         throws DatabaseAccessException, DocumentException {
         return storage.getAllPostsImagesFromForum(group, forum);
     }
@@ -165,6 +159,6 @@ public class StorageRestController {
     @DeleteMapping("/image")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(@RequestHeader(TOKEN) String token, @RequestBody StorageForm storageForm) {
-        storage.deleteImage(storageForm);
+        storage.deleteImage(token, storageForm);
     }
 }

@@ -30,7 +30,8 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void saveUserImage(ImageEntity image) {
+    public void saveUserImage(String token, ImageEntity image) {
+        makeUserToken(token);
         storageDao.uploadImage(image);
     }
 
@@ -69,7 +70,8 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void deleteImage(StorageForm form) {
+    public void deleteImage(String token, StorageForm form) {
+        makeUserToken(token);
         storageDao.deleteImage(form);
     }
 }

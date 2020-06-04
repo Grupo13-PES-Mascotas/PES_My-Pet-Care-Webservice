@@ -13,9 +13,10 @@ import java.util.Map;
 public interface StorageService {
     /**
      * Saves an image to the storage.
+     * @param token The user's personal access token
      * @param image The image to save
      */
-    void saveUserImage(ImageEntity image);
+    void saveUserImage(String token, ImageEntity image);
 
     /**
      * Saves a pet image to the storage.
@@ -46,9 +47,10 @@ public interface StorageService {
 
     /**
      * Deletes an image from the storage.
+     * @param token The user's personal access token
      * @param form The form with the request data
      */
-    void deleteImage(StorageForm form);
+    void deleteImage(String token, StorageForm form);
 
     /**
      * Downloads all the images from the pets folder.
