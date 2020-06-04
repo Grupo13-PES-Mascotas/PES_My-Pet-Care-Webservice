@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.thirdpartyservices.adapters;
 
-import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +17,6 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
  */
 @ExtendWith(MockitoExtension.class)
 class UserTokenTest {
-    @Mock
-    private FirebaseToken token;
     @Mock
     private UserRecord userRecord;
 

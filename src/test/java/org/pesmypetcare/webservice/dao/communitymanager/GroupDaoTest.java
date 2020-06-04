@@ -227,7 +227,8 @@ class GroupDaoTest {
         public void createGroup() throws DatabaseAccessException, DocumentException {
             given(documentAdapter.createDocument(anyString(), any(GroupEntity.class), any(WriteBatch.class)))
                 .willReturn(docRef);
-            willDoNothing().given(userDao).addGroupSubscription(any(UserToken.class), anyString(), any(WriteBatch.class));
+            willDoNothing().given(userDao)
+                .addGroupSubscription(any(UserToken.class), anyString(), any(WriteBatch.class));
             lenient().when(documentAdapter.createDocumentWithId(anyString(), anyString(), any(), any(WriteBatch.class)))
                 .thenReturn(docRef);
             given(documentAdapter.documentExists(anyString())).willReturn(true);

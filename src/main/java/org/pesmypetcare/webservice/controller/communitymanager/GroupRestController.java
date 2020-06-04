@@ -41,8 +41,8 @@ public class GroupRestController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createGroup(@RequestHeader String token, @RequestBody GroupEntity entity) throws DatabaseAccessException,
-        DocumentException {
+    public void createGroup(@RequestHeader String token, @RequestBody GroupEntity entity)
+        throws DatabaseAccessException, DocumentException {
         service.createGroup(token, entity);
     }
 
@@ -56,8 +56,8 @@ public class GroupRestController {
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGroup(@RequestHeader String token, @RequestParam String group) throws DatabaseAccessException,
-        DocumentException {
+    public void deleteGroup(@RequestHeader String token, @RequestParam String group)
+        throws DatabaseAccessException, DocumentException {
         service.deleteGroup(token, group);
     }
 
@@ -80,7 +80,6 @@ public class GroupRestController {
 
     /**
      * Updates a group field.
-     *
      *
      * @param token The user's personal access token
      * @param group The group name
@@ -114,7 +113,6 @@ public class GroupRestController {
     /**
      * Updates a the group tags.
      *
-     *
      * @param token The user's personal access token
      * @param group The group name
      * @param updateValue The new value stored in a map
@@ -139,7 +137,8 @@ public class GroupRestController {
      */
     @PostMapping("/subscribe")
     @ResponseStatus(HttpStatus.CREATED)
-    public void subscribe(@RequestHeader("token") String token, @RequestParam String group) throws DatabaseAccessException, DocumentException {
+    public void subscribe(@RequestHeader("token") String token, @RequestParam String group)
+        throws DatabaseAccessException, DocumentException {
         service.subscribe(token, group);
     }
 
@@ -153,7 +152,8 @@ public class GroupRestController {
      */
     @DeleteMapping("/unsubscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group) throws DatabaseAccessException, DocumentException {
+    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group)
+        throws DatabaseAccessException, DocumentException {
         service.unsubscribe(token, group);
     }
 

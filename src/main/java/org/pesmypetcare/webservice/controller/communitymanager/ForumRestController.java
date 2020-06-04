@@ -36,7 +36,7 @@ public class ForumRestController {
     /**
      * Creates a forum.
      *
-     * @param token
+     * @param token The creator's personal access token
      * @param parentGroup The parent group name
      * @param forumEntity The forum entity with the forum data
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails

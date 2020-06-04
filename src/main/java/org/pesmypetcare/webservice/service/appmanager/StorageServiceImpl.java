@@ -23,7 +23,6 @@ public class StorageServiceImpl implements StorageService {
     private StorageDao storageDao;
     @Autowired
     private GroupDao groupDao;
-    private UserToken userToken;
 
     public UserToken makeUserToken(String token) {
         return new UserTokenImpl(token);
@@ -43,7 +42,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void saveGroupImage(String token, String group, ImageEntity image)
         throws DatabaseAccessException, DocumentException {
-        userToken = makeUserToken(token);
+        UserToken userToken = makeUserToken(token);
         if (!userToken.getUsername().equals(groupDao.getGroup(group).getCreator())) {
             throw new BadCredentialsException("The user is not the creator of the group");
         }

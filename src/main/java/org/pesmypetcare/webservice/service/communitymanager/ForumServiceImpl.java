@@ -106,7 +106,7 @@ public class ForumServiceImpl implements ForumService {
         throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
-        } else if (!makeUserToken(token).getUsername().equals(creator)){
+        } else if (!makeUserToken(token).getUsername().equals(creator)) {
             throw new BadCredentialsException("The user is not the creator of this forum.");
         }
         forumDao.deleteMessage(parentGroup, forumName, creator, date);
@@ -133,23 +133,24 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void addUserToLikedByOfMessage(String token, String parentGroup, String forumName, String creator, String date)
-        throws DatabaseAccessException, DocumentException {
+    public void addUserToLikedByOfMessage(String token, String parentGroup, String forumName, String creator,
+                                          String date) throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.addUserToLikedByOfMessage(makeUserToken(token).getUsername(), parentGroup, forumName, creator, date);
+            forumDao
+                .addUserToLikedByOfMessage(makeUserToken(token).getUsername(), parentGroup, forumName, creator, date);
         }
     }
 
     @Override
     public void removeUserFromLikedByOfMessage(String token, String parentGroup, String forumName, String creator,
-                                               String date)
-        throws DatabaseAccessException, DocumentException {
+                                               String date) throws DatabaseAccessException, DocumentException {
         if (!forumDao.forumNameInUse(parentGroup, forumName)) {
             throw new DocumentException(DOCUMENT_NOT_EXISTS, FORUM_DOES_NOT_EXISTS);
         } else {
-            forumDao.removeUserFromLikedByOfMessage(makeUserToken(token).getUsername(), parentGroup, forumName, creator, date);
+            forumDao.removeUserFromLikedByOfMessage(makeUserToken(token).getUsername(), parentGroup, forumName, creator,
+                date);
         }
     }
 }

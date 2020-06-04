@@ -136,7 +136,7 @@ class ForumRestControllerTest {
     public void deleteMessage() throws Exception {
         willDoNothing().given(service).deleteMessage(anyString(), anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(
-            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
+            delete(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).param("creator", creator)
                 .param("date", creationDate)).andExpect(status().isNoContent());
     }
 
@@ -151,7 +151,7 @@ class ForumRestControllerTest {
     @Test
     public void unbanMessage() throws Exception {
         willDoNothing().given(service).unbanMessage(anyString(), anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/unban_message").header("token", myToken)
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/unban_message").header(TOKEN_HEADER, myToken)
             .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
     }
 

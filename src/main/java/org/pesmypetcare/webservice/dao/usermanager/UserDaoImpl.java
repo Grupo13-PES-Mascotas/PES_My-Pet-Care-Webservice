@@ -52,6 +52,7 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_FAILED_CODE = "update-failed";
     private static final String FIELD_LIKED_BY = "likedBy";
     private static final String FCM = "FCM";
+    private static final String NOTIFICATIONS_FIELD = "notification-tokens";
     private static final String WRITE_FAILED_CODE = "write-failed";
     private FirebaseAuth myAuth;
     private CollectionReference users;
@@ -153,7 +154,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public String getFcmToken(String uid) throws DatabaseAccessException, DocumentException {
-        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), "FCM");
+        return documentAdapter.getStringFromDocument(Path.ofDocument(Collections.users, uid), FCM);
     }
 
     @Override
@@ -482,15 +483,15 @@ public class UserDaoImpl implements UserDao {
     private void updateTokenInSubscribedGroups(String token, String currentToken, WriteBatch batch)
         throws DatabaseAccessException, DocumentException {
         ApiFuture<QuerySnapshot> subscribedGroups = collectionAdapter
-            .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
+            .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), NOTIFICATIONS_FIELD, currentToken);
         try {
             List<String> tokens;
             for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
-                tokens = (List<String>) group.get("notification-tokens");
+                tokens = (List<String>) group.get(NOTIFICATIONS_FIELD);
                 if (tokens != null) {
                     tokens.remove(currentToken);
                     tokens.add(token);
-                    batch.update(group.getReference(), "notification-tokens", tokens);
+                    batch.update(group.getReference(), NOTIFICATIONS_FIELD, tokens);
                 }
             }
         } catch (InterruptedException e) {

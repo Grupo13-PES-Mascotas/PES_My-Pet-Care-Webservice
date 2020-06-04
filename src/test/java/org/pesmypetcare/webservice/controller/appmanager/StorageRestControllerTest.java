@@ -42,7 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class StorageRestControllerTest {
     private static final String BASE_URL = "/storage/image";
     private static final String TOKEN = "token";
-    private static final String PETS_PICTURES_LOCATION = "/user/pets";
     private static final String ASSERT_MESSAGE = "Should return the image as a base64 encoded string";
     private static String myToken;
     private static String json;

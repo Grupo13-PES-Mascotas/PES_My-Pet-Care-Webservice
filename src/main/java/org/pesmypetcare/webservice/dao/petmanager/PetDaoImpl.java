@@ -40,6 +40,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Gets the storage dao.
+     *
      * @return The storage dao
      */
     public StorageDao getStorageDao() {
@@ -47,8 +48,8 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void createPet(String ownerId, String name, PetEntity petEntity) throws DatabaseAccessException,
-        DocumentException {
+    public void createPet(String ownerId, String name, PetEntity petEntity)
+        throws DatabaseAccessException, DocumentException {
         initializeWithCollectionPath(ownerId);
         dbDoc.createDocumentWithId(path, name, petEntity, batch);
         dbDoc.commitBatch(batch);
@@ -171,8 +172,8 @@ public class PetDaoImpl implements PetDao {
     }
 
     @Override
-    public void addFieldCollectionElement(String ownerId, String name, String field, String key, Map<String, Object> body)
-        throws DatabaseAccessException, DocumentException {
+    public void addFieldCollectionElement(String ownerId, String name, String field, String key,
+                                          Map<String, Object> body) throws DatabaseAccessException, DocumentException {
         initializeFieldWithCollectionPath(ownerId, name, field);
         dbDoc.createDocumentWithId(path, key, body, batch);
         dbDoc.commitBatch(batch);
@@ -204,6 +205,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Deletes the pet profile image.
+     *
      * @param imageLocation The image location
      */
     private void deleteProfileImage(String imageLocation) {
@@ -214,6 +216,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the pet document.
+     *
      * @param ownerId UID of the owner of the pets
      * @param petName Pet name
      */
@@ -224,6 +227,7 @@ public class PetDaoImpl implements PetDao {
 
     /**
      * Initializes the ownerId, batch and path variables for the access, the path is set to the user's pet collection.
+     *
      * @param ownerId UID of the owner of the pets
      */
     private void initializeWithCollectionPath(String ownerId) {
@@ -234,6 +238,7 @@ public class PetDaoImpl implements PetDao {
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
      * pet field document identified by key.
+     *
      * @param ownerId UID of the owner of the pets
      * @param petName Pet name
      * @param collectionName Name of the collection
@@ -248,7 +253,8 @@ public class PetDaoImpl implements PetDao {
     /**
      * Initializes the collection, ownerId, batch and path variables for the access, the path is set to the user's
      * pet field collection.
-     * @param ownerId  UID of the owner of the pets
+     *
+     * @param ownerId UID of the owner of the pets
      * @param petName Pet name
      * @param collectionName Name of the collection
      */

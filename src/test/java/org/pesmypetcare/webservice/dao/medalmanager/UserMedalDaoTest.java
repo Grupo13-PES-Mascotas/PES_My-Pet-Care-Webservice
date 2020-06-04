@@ -36,7 +36,6 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class UserMedalDaoTest {
     private static final String OWNER = "OwnerUsername";
-    private static final String OWNER_ID = "OwnerId";
     private static final String USER_MEDAL_NAME = "UserMedalName";
     private static final String FIELD = "progress";
     private static final Double VALUE = 2.0;
@@ -44,7 +43,7 @@ public class UserMedalDaoTest {
     private static UserMedalEntity userMedalEntity;
     private static List<Map<String, UserMedalEntity>> userMedalList;
     private static List<DocumentSnapshot> snapshotList;
-    private static Medal                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    medal;
+    private static Medal medal;
 
     @Mock
     private FirestoreCollection dbCol;
@@ -63,7 +62,7 @@ public class UserMedalDaoTest {
         medal = new Medal();
         medal.setDescription("You have to walk a lot!");
         medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
-        medal.setMedalIcon(new byte[] {10, 55, 67, 89, 103, 116});
+        medal.setMedalIcon(new byte[]{10, 55, 67, 89, 103, 116});
         userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>(), medal);
         userMedalList = new ArrayList<>();
         Map<String, UserMedalEntity> auxMap = new HashMap<>();
@@ -78,8 +77,8 @@ public class UserMedalDaoTest {
     }
 
     @Test
-    public void shouldReturnUserMedalEntityFromDatabaseWhenRequested() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnUserMedalEntityFromDatabaseWhenRequested()
+        throws DatabaseAccessException, DocumentException {
         given(dbCol.batch()).willReturn(batch);
         given(dbDoc.getDocumentDataAsObject(anyString(), any())).willReturn(userMedalEntity);
 
@@ -89,8 +88,8 @@ public class UserMedalDaoTest {
     }
 
     @Test
-    public void shouldReturnAllUserMedalsDataOnDatabaseWhenRequested() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnAllUserMedalsDataOnDatabaseWhenRequested()
+        throws DatabaseAccessException, DocumentException {
         given(documentSnapshot.toObject(any())).willReturn(userMedalEntity);
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
@@ -101,8 +100,7 @@ public class UserMedalDaoTest {
     }
 
     @Test
-    public void shouldReturnUserMedalFromDatabaseWhenRequested() throws DatabaseAccessException,
-        DocumentException {
+    public void shouldReturnUserMedalFromDatabaseWhenRequested() throws DatabaseAccessException, DocumentException {
         given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
         Object userMedalValue = userMedalDao.getField(OWNER, USER_MEDAL_NAME, FIELD);

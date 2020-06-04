@@ -132,8 +132,8 @@ class ForumServiceTest {
         @Test
         public void updateTagsShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
-            assertThrows(DocumentException.class, () -> service.updateTags(token, groupName, forumName, newTags,
-                deletedTags));
+            assertThrows(DocumentException.class,
+                () -> service.updateTags(token, groupName, forumName, newTags, deletedTags));
         }
 
         @Test
@@ -208,10 +208,12 @@ class ForumServiceTest {
             @Test
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
-                willDoNothing().given(forumDao).updateTags(any(UserToken.class), anyString(), anyString(), anyList(), anyList());
+                willDoNothing().given(forumDao)
+                    .updateTags(any(UserToken.class), anyString(), anyString(), anyList(), anyList());
 
                 service.updateTags(token, groupName, forumName, newTags, deletedTags);
-                verify(forumDao).updateTags(eq(userToken), same(groupName), same(forumName), same(newTags), same(deletedTags));
+                verify(forumDao)
+                    .updateTags(eq(userToken), same(groupName), same(forumName), same(newTags), same(deletedTags));
             }
 
             @Test
@@ -236,19 +238,23 @@ class ForumServiceTest {
             public void reportMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
                 doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
                 given(userToken.getUsername()).willReturn(creator);
-                willDoNothing().given(forumDao).reportMessage(any(String.class), anyString(), anyString(), anyString(), anyString());
+                willDoNothing().given(forumDao)
+                    .reportMessage(any(String.class), anyString(), anyString(), anyString(), anyString());
 
                 service.reportMessage(token, groupName, forumName, creator, date);
-                verify(forumDao).reportMessage(eq(creator), same(groupName), same(forumName), same(creator), same(date));
+                verify(forumDao)
+                    .reportMessage(eq(creator), same(groupName), same(forumName), same(creator), same(date));
             }
 
             @Test
             public void unbanMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
                 doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
-                willDoNothing().given(forumDao).unbanMessage(any(UserToken.class), anyString(), anyString(), anyString(), anyString());
+                willDoNothing().given(forumDao)
+                    .unbanMessage(any(UserToken.class), anyString(), anyString(), anyString(), anyString());
 
                 service.unbanMessage(token, groupName, forumName, creator, date);
-                verify(forumDao).unbanMessage(eq(userToken), same(groupName), same(forumName), same(creator), same(date));
+                verify(forumDao)
+                    .unbanMessage(eq(userToken), same(groupName), same(forumName), same(creator), same(date));
             }
 
             @Test

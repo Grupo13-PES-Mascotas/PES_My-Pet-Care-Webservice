@@ -62,6 +62,7 @@ import static org.mockito.Mockito.verify;
  */
 @ExtendWith({MockitoExtension.class})
 class ForumDaoTest {
+    private static final String CREATOR_FIELD = "creator";
     private static String groupName;
     private static String forumName;
     private static String groupId;
@@ -72,12 +73,12 @@ class ForumDaoTest {
     private static String username;
     private static String username2;
     private static String date;
-    private String publicationDate;
-    private String newName;
     private static ForumEntity forumEntity;
     private static List<String> tags;
     private static List<String> usernameList;
     private static Message message;
+    private String publicationDate;
+    private String newName;
     private List<QueryDocumentSnapshot> queryDocumentSnapshots;
 
     @Mock
@@ -218,7 +219,7 @@ class ForumDaoTest {
         mockGetGroupAndForumIds();
         given(userToken.getUsername()).willReturn(username);
         given(documentAdapter
-            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator")))
+            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq(CREATOR_FIELD)))
             .willReturn("someOtherUser");
         assertThrows(BadCredentialsException.class, () -> {
             dao.updateName(userToken, groupName, forumName, newName);
@@ -230,7 +231,7 @@ class ForumDaoTest {
         mockGetGroupAndForumIds();
         given(userToken.getUsername()).willReturn(username);
         given(documentAdapter
-            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator")))
+            .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq(CREATOR_FIELD)))
             .willReturn("someOtherUser");
         assertThrows(BadCredentialsException.class, () -> {
             dao.updateTags(userToken, groupName, forumName, tags, tags);
@@ -322,7 +323,7 @@ class ForumDaoTest {
                 mockGetGroupAndForumIds();
                 given(userToken.getUsername()).willReturn(username);
                 given(documentAdapter
-                    .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq("creator")))
+                    .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)), eq(CREATOR_FIELD)))
                     .willReturn(username);
                 willDoNothing().given(documentAdapter)
                     .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
@@ -379,7 +380,7 @@ class ForumDaoTest {
                     given(userToken.getUsername()).willReturn(username);
                     given(documentAdapter
                         .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)),
-                            eq("creator"))).willReturn(username);
+                            eq(CREATOR_FIELD))).willReturn(username);
                     willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
                     given(
                         collectionAdapter.getDocumentsWhereArrayContains(anyString(), anyString(), anyString(), any()))
@@ -406,7 +407,7 @@ class ForumDaoTest {
                     given(userToken.getUsername()).willReturn(username);
                     given(documentAdapter
                         .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)),
-                            eq("creator"))).willReturn(username);
+                            eq(CREATOR_FIELD))).willReturn(username);
                     given(documentAdapter.documentExists(anyString())).willReturn(false);
                     willDoNothing().given(documentAdapter)
                         .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), anyString());
@@ -440,7 +441,7 @@ class ForumDaoTest {
                     dao.deleteMessage(groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                            eq(CREATOR_FIELD), eq(username), eq(publicationDate), eq(date));
                     verify(storageDao).deleteImageByName(eq("some-path"));
                     verify(batch).delete(same(documentReference));
                 }
@@ -459,7 +460,7 @@ class ForumDaoTest {
                     dao.reportMessage(username2, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                            eq(CREATOR_FIELD), eq(username), eq(publicationDate), eq(date));
                     verify(batch)
                         .update(same(documentReference), eq("reportedBy"), eq(FieldValue.arrayUnion(username2)));
                     verify(batch).update(same(documentReference), eq("banned"), eq(true));
@@ -471,7 +472,7 @@ class ForumDaoTest {
                     mockGetGroupAndForumIds();
                     given(documentAdapter
                         .getStringFromDocument(eq(Path.ofDocument(Collections.forums, groupId, forumId)),
-                            eq("creator"))).willReturn(username);
+                            eq(CREATOR_FIELD))).willReturn(username);
                     given(userToken.getUsername()).willReturn(username);
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))
@@ -484,7 +485,7 @@ class ForumDaoTest {
                     dao.unbanMessage(userToken, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                            eq(CREATOR_FIELD), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("reportedBy"), eq(new ArrayList()));
                     verify(batch).update(same(documentReference), eq("banned"), eq(false));
                 }
@@ -502,7 +503,7 @@ class ForumDaoTest {
                     dao.addUserToLikedByOfMessage(username, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                            eq(CREATOR_FIELD), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayUnion(username)));
                 }
 
@@ -519,7 +520,7 @@ class ForumDaoTest {
                     dao.removeUserFromLikedByOfMessage(username, groupName, forumName, username, date);
                     verify(collectionAdapter)
                         .getDocumentsWhereEqualTo(eq(Path.ofCollection(Collections.messages, groupId, forumId)),
-                            eq("creator"), eq(username), eq(publicationDate), eq(date));
+                            eq(CREATOR_FIELD), eq(username), eq(publicationDate), eq(date));
                     verify(batch).update(same(documentReference), eq("likedBy"), eq(FieldValue.arrayRemove(username)));
                 }
             }

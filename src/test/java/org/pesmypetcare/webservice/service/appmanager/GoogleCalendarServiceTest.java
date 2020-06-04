@@ -66,8 +66,7 @@ public class GoogleCalendarServiceTest {
         date2 = "2020-02-13T12:30:00.000+01:00";
         eventId = "My eventId";
         calendarId = "My calendarId";
-        googleToken = "token";
-        accessToken = "token";
+        accessToken = googleToken = "token";
         eventList = new ArrayList<>();
         eventEntity = new EventEntity();
         eventEntity.setId(eventId);
