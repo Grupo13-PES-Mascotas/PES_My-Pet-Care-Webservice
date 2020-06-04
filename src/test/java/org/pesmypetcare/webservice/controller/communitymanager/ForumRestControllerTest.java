@@ -78,14 +78,15 @@ class ForumRestControllerTest {
     @Test
     public void createForum() throws Exception {
         willDoNothing().given(service).createForum(anyString(), anyString(), any(ForumEntity.class));
-        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json).header(TOKEN_HEADER, myToken))
-            .andExpect(status().isCreated());
+        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json)
+            .header(TOKEN_HEADER, myToken)).andExpect(status().isCreated());
     }
 
     @Test
     public void deleteForum() throws Exception {
-        willDoNothing().given(service).deleteForum(anyString(), anyString());
-        mockMvc.perform(delete(BASE_URL + parentGroup).param("forum", forumName)).andExpect(status().isNoContent());
+        willDoNothing().given(service).deleteForum(anyString(), anyString(), anyString());
+        mockMvc.perform(delete(BASE_URL + parentGroup).header(TOKEN_HEADER, myToken).param("forum", forumName))
+            .andExpect(status().isNoContent());
     }
 
     @Test
@@ -111,18 +112,16 @@ class ForumRestControllerTest {
     @Test
     public void updateTags() throws Exception {
         willDoNothing().given(service).updateTags(anyString(), anyString(), anyString(), anyList(), anyList());
-        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).param("newName",
-            "German Shepherds"))
-            .andExpect(status().isNoContent());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken)
+            .param("newName", "German Shepherds")).andExpect(status().isNoContent());
     }
 
     @Test
     public void updateName() throws Exception {
         willDoNothing().given(service).updateName(anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(
-            put(BASE_URL + "tags/" + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken).contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapper.writeValueAsString(new HashMap<String, List<String>>())))
-            .andExpect(status().isNoContent());
+        mockMvc.perform(put(BASE_URL + "tags/" + parentGroup + "/" + forumName).header(TOKEN_HEADER, myToken)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsString(new HashMap<String, List<String>>()))).andExpect(status().isNoContent());
     }
 
     @Test
@@ -137,32 +136,29 @@ class ForumRestControllerTest {
     public void deleteMessage() throws Exception {
         willDoNothing().given(service).deleteMessage(anyString(), anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(
-            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
-                .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
+            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
+                .param("date", creationDate)).andExpect(status().isNoContent());
     }
 
     @Test
     public void reportMessage() throws Exception {
         willDoNothing().given(service).reportMessage(anyString(), anyString(), anyString(), anyString(), anyString());
-        mockMvc.perform(
-            put(BASE_URL + parentGroup + "/" + forumName + "/report_message").header(TOKEN_HEADER, myToken)
-                .param("creator", creator).param("date", creationDate).param("reporter", reporter))
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/report_message").header(TOKEN_HEADER, myToken)
+            .param("creator", creator).param("date", creationDate).param("reporter", reporter))
             .andExpect(status().isNoContent());
     }
 
     @Test
     public void unbanMessage() throws Exception {
-        willDoNothing().given(service).unbanMessage(anyString(), anyString(), anyString(), anyString(),
-            anyString());
-        mockMvc.perform(
-            put(BASE_URL + parentGroup + "/" + forumName + "/unban_message").header("token", myToken)
-                .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
+        willDoNothing().given(service).unbanMessage(anyString(), anyString(), anyString(), anyString(), anyString());
+        mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/unban_message").header("token", myToken)
+            .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
     }
 
     @Test
     public void likeMessage() throws Exception {
         willDoNothing().given(service)
-            .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(), anyString());
+            .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header(TOKEN_HEADER, myToken)
             .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "true"))
             .andExpect(status().isNoContent());
@@ -171,7 +167,7 @@ class ForumRestControllerTest {
     @Test
     public void removeLikeFromMessage() throws Exception {
         willDoNothing().given(service)
-            .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
+            .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(),
                 anyString());
         mockMvc.perform(put(BASE_URL + parentGroup + "/" + forumName + "/messages").header(TOKEN_HEADER, myToken)
             .param("username", creator).param("creator", creator).param("date", creationDate).param("like", "false"))

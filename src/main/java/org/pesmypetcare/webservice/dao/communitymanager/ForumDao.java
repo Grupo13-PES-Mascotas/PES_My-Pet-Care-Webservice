@@ -4,8 +4,8 @@ import org.pesmypetcare.webservice.entity.communitymanager.ForumEntity;
 import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
-import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 import org.pesmypetcare.webservice.error.InvalidOperationException;
+import org.pesmypetcare.webservice.thirdpartyservices.adapters.UserToken;
 
 import java.util.List;
 
@@ -26,24 +26,26 @@ public interface ForumDao {
     /**
      * Creates a forum in the given group.
      *
-     *
      * @param token The creator's personal access token
      * @param parentGroup The group name
      * @param forumEntity The forum entity
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the group does not exist
      */
-    void createForum(UserToken token, String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
+    void createForum(UserToken token, String parentGroup, ForumEntity forumEntity)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a forum form the given group.
      *
+     * @param userToken The creator's personal access token
      * @param parentGroup The group name
      * @param forumName The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException;
+    void deleteForum(UserToken userToken, String parentGroup, String forumName)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a forum from a group.

@@ -92,9 +92,11 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException {
+    public void deleteForum(UserToken userToken, String parentGroup, String forumName)
+        throws DatabaseAccessException, DocumentException {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
+        checkIfUserIsForumCreator(userToken, forumId, groupId);
         WriteBatch batch = documentAdapter.batch();
         deleteForumFromAllTags(forumName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forums, groupId, forumId), batch);
@@ -134,7 +136,7 @@ public class ForumDaoImpl implements ForumDao {
         checkIfUserIsForumCreator(userToken, forumId, groupId);
         WriteBatch batch = documentAdapter.batch();
         documentAdapter
-            .updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), "name", newName, batch);
+            .updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), "name", newName);
         changeNameInTags(currentName, newName, batch);
         documentAdapter.deleteDocument(Path.ofDocument(Collections.forum_names, parentGroup, currentName), batch);
         saveForumName(parentGroup, newName, forumId, batch);
@@ -209,8 +211,7 @@ public class ForumDaoImpl implements ForumDao {
                 if (bannnedMessagesCounter == null) {
                     bannnedMessagesCounter = 0L;
                 }
-                documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD,
-                    bannnedMessagesCounter + 1);
+                documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD, bannnedMessagesCounter + 1);
             }
         }
         documentAdapter.commitBatch(batch);
@@ -397,8 +398,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void addNewTags(String groupId, String forumId, String forumName, List<String> newTags, WriteBatch batch)
         throws DatabaseAccessException {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
-            FieldValue.arrayUnion(newTags.toArray()), batch);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
+            FieldValue.arrayUnion(newTags.toArray()));
         for (String tag : newTags) {
             addForumToTag(tag, forumName, batch);
         }
@@ -487,8 +488,8 @@ public class ForumDaoImpl implements ForumDao {
         String forumId = getForumId(parentGroup, forumName);
         try {
             List<QueryDocumentSnapshot> messagesQuery = collectionAdapter
-                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator",
-                    creator, "publicationDate", date).get().getDocuments();
+                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator", creator,
+                    "publicationDate", date).get().getDocuments();
             if (messagesQuery.size() == 0) {
                 throw new DatabaseAccessException("404", "Message Not Found");
             }
@@ -501,6 +502,7 @@ public class ForumDaoImpl implements ForumDao {
 
     /**
      * Checks if a user is the creator of a the forum.
+     *
      * @param token The token that contains the user information
      * @param forumId The forum ID
      * @param groupId The group ID

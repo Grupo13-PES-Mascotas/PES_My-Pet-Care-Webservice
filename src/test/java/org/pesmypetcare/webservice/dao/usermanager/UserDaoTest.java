@@ -268,7 +268,7 @@ class UserDaoTest {
         given(userRecord.getDisplayName()).willReturn(username);
         given(userRecord.updateRequest()).willReturn(updateRequest);
         given(updateRequest.setDisplayName(anyString())).willReturn(updateRequest);
-        given(myAuth.updateUserAsync(any(UserRecord.UpdateRequest.class))).willReturn(null);
+        given(myAuth.updateUser(any(UserRecord.UpdateRequest.class))).willReturn(null);
         given(users.document(anyString())).willReturn(userRef);
         given(db.collectionGroup(anyString())).willReturn(query);
         given(db.collection(anyString())).willReturn(groups);
@@ -294,7 +294,7 @@ class UserDaoTest {
         verify(usedUsernames).document(same(newUsername));
         verify(userRecord).updateRequest();
         verify(updateRequest).setDisplayName(same(newUsername));
-        verify(myAuth).updateUserAsync(same(updateRequest));
+        verify(myAuth).updateUser(same(updateRequest));
         verify(users).document(same(uid));
         Map<String, Object> data = new HashMap<>();
         data.put(USER_FIELD, newUsername);

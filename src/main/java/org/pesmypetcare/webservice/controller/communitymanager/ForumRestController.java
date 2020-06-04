@@ -36,7 +36,6 @@ public class ForumRestController {
     /**
      * Creates a forum.
      *
-     *
      * @param token
      * @param parentGroup The parent group name
      * @param forumEntity The forum entity with the forum data
@@ -46,14 +45,14 @@ public class ForumRestController {
     @PostMapping("/{parentGroup}")
     @ResponseStatus(HttpStatus.CREATED)
     public void createForum(@RequestHeader String token, @PathVariable String parentGroup,
-                            @RequestBody ForumEntity forumEntity)
-        throws DatabaseAccessException, DocumentException {
+                            @RequestBody ForumEntity forumEntity) throws DatabaseAccessException, DocumentException {
         service.createForum(token, parentGroup, forumEntity);
     }
 
     /**
      * Deletes a forum.
      *
+     * @param token The creator's personal access token
      * @param parentGroup The parent group name
      * @param forum The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -61,9 +60,9 @@ public class ForumRestController {
      */
     @DeleteMapping("/{parentGroup}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteForum(@PathVariable String parentGroup, @RequestParam String forum)
+    public void deleteForum(@RequestHeader String token, @PathVariable String parentGroup, @RequestParam String forum)
         throws DatabaseAccessException, DocumentException {
-        service.deleteForum(parentGroup, forum);
+        service.deleteForum(token, parentGroup, forum);
     }
 
     /**
@@ -179,6 +178,7 @@ public class ForumRestController {
 
     /**
      * Unbans a message from a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
@@ -189,7 +189,7 @@ public class ForumRestController {
     @PutMapping("/{parentGroup}/{forumName}/unban_message")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unbanMessage(@RequestHeader String token, @PathVariable String parentGroup,
-                              @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
+                             @PathVariable String forumName, @RequestParam String creator, @RequestParam String date)
         throws DatabaseAccessException, DocumentException, InvalidOperationException {
         service.unbanMessage(token, parentGroup, forumName, creator, date);
     }
@@ -198,7 +198,6 @@ public class ForumRestController {
      * Adds or remove a like to a message of a forum.
      *
      * @param token The user's personal access token
-     * @param username The user's username
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's name
@@ -210,13 +209,13 @@ public class ForumRestController {
     @PutMapping("/{parentGroup}/{forumName}/messages")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void likeMessage(@RequestHeader String token, @PathVariable String parentGroup,
-                            @PathVariable String forumName, @RequestParam String username, @RequestParam String creator,
+                            @PathVariable String forumName, @RequestParam String creator,
                             @RequestParam String date, @RequestParam boolean like)
         throws DatabaseAccessException, DocumentException {
         if (like) {
-            service.addUserToLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
+            service.addUserToLikedByOfMessage(token, parentGroup, forumName, creator, date);
         } else {
-            service.removeUserFromLikedByOfMessage(token, username, parentGroup, forumName, creator, date);
+            service.removeUserFromLikedByOfMessage(token, parentGroup, forumName, creator, date);
         }
     }
 }

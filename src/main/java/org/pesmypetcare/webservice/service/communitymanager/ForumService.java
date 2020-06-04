@@ -15,24 +15,26 @@ public interface ForumService {
     /**
      * Creates a forum in the given group.
      *
-     *
      * @param token The creator's personal access token
      * @param parentGroup The group name
      * @param forumEntity The forum entity
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the group does not exist
      */
-    void createForum(String token, String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
+    void createForum(String token, String parentGroup, ForumEntity forumEntity)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a forum form the given group.
      *
+     * @param token The creator's personal access token
      * @param parentGroup The group name
      * @param forumName The forum name
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or the forum do not exist
      */
-    void deleteForum(String parentGroup, String forumName) throws DatabaseAccessException, DocumentException;
+    void deleteForum(String token, String parentGroup, String forumName)
+        throws DatabaseAccessException, DocumentException;
 
     /**
      * Gets a forum from a group.
@@ -58,7 +60,6 @@ public interface ForumService {
     /**
      * Updates a forum name.
      *
-     *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
      * @param currentName The current name
@@ -71,7 +72,6 @@ public interface ForumService {
 
     /**
      * Updates the tags of a group.
-     *
      *
      * @param token The user's personal access token
      * @param parentGroup The parent group name
@@ -128,6 +128,7 @@ public interface ForumService {
 
     /**
      * Unbans a message from a forum.
+     *
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's username
@@ -143,7 +144,6 @@ public interface ForumService {
      * Adds a user to the likedBy list of a message.
      *
      * @param token The user's personal access token
-     * @param username The user's username
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's name
@@ -151,14 +151,13 @@ public interface ForumService {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void addUserToLikedByOfMessage(String token, String username, String parentGroup, String forumName, String creator,
+    void addUserToLikedByOfMessage(String token, String parentGroup, String forumName, String creator,
                                    String date) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a user from the likedBy list of a message.
      *
      * @param token The user's personal access token
-     * @param username The user's username
      * @param parentGroup The parent group name
      * @param forumName The forum name
      * @param creator The creator's name
@@ -166,6 +165,6 @@ public interface ForumService {
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When either the group or forum do not exist
      */
-    void removeUserFromLikedByOfMessage(String token, String username, String parentGroup, String forumName,
+    void removeUserFromLikedByOfMessage(String token, String parentGroup, String forumName,
                                         String creator, String date) throws DatabaseAccessException, DocumentException;
 }

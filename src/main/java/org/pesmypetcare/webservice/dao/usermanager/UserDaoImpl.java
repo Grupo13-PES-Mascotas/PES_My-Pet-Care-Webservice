@@ -83,8 +83,7 @@ public class UserDaoImpl implements UserDao {
             saveUsername(uid, username, batch);
             String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
             userEntity.setPassword(encodedPassword);
-            documentAdapter
-                .createDocumentWithId(Path.ofCollection(Collections.users), uid, userEntity, batch);
+            documentAdapter.createDocumentWithId(Path.ofCollection(Collections.users), uid, userEntity, batch);
             medalDao.createAllUserMedals(uid, batch);
             documentAdapter.commitBatch(batch);
             updateDisplayName(uid, username);
@@ -445,7 +444,7 @@ public class UserDaoImpl implements UserDao {
     private void updateDisplayName(String uid, String newUsername) throws FirebaseAuthException {
         UserRecord.UpdateRequest updateRequest = getUserRecord(uid);
         updateRequest.setDisplayName(newUsername);
-        myAuth.updateUserAsync(updateRequest);
+        myAuth.updateUser(updateRequest);
     }
 
     /**
@@ -485,9 +484,14 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<QuerySnapshot> subscribedGroups = collectionAdapter
             .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
         try {
+            List<String> tokens;
             for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
-                batch.update(group.getReference(), FCM, FieldValue.arrayRemove(currentToken), FCM,
-                    FieldValue.arrayUnion(token));
+                tokens = (List<String>) group.get("notification-tokens");
+                if (tokens != null) {
+                    tokens.remove(currentToken);
+                    tokens.add(token);
+                    batch.update(group.getReference(), "notification-tokens", tokens);
+                }
             }
         } catch (InterruptedException e) {
             throw new DatabaseAccessException(WRITE_FAILED_CODE, e.getMessage());

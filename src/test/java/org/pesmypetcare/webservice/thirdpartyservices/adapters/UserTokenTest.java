@@ -1,6 +1,7 @@
 package org.pesmypetcare.webservice.thirdpartyservices.adapters;
 
 import com.google.firebase.auth.FirebaseToken;
+import com.google.firebase.auth.UserRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,26 +20,28 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 class UserTokenTest {
     @Mock
     private FirebaseToken token;
+    @Mock
+    private UserRecord userRecord;
 
     @InjectMocks
     private UserToken userToken = new UserTokenImpl();
 
     @Test
     public void getUsername() {
-        given(token.getName()).willReturn("John");
+        given(userRecord.getDisplayName()).willReturn("John");
         assertEquals("Should return the user's username.", "John", userToken.getUsername());
     }
 
     @Test
     public void getEmail() {
-        given(token.getName()).willReturn("some@email.com");
-        assertEquals("Should return the user's email.", "some@email.com", userToken.getUsername());
+        given(userRecord.getEmail()).willReturn("some@email.com");
+        assertEquals("Should return the user's email.", "some@email.com", userToken.getEmail());
     }
 
     @Test
     public void getUid() {
-        given(token.getName()).willReturn("11231");
-        assertEquals("Should return the user's UID.", "11231", userToken.getUsername());
+        given(userRecord.getUid()).willReturn("11231");
+        assertEquals("Should return the user's UID.", "11231", userToken.getUid());
     }
 
     @Test

@@ -114,7 +114,8 @@ class ForumServiceTest {
 
         @Test
         public void deleteForumShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
-            assertThrows(DocumentException.class, () -> service.deleteForum(groupName, forumName));
+            doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+            assertThrows(DocumentException.class, () -> service.deleteForum(token, groupName, forumName));
         }
 
         @Test
@@ -149,13 +150,13 @@ class ForumServiceTest {
         @Test
         public void addUserToLikedByOfMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
-                () -> service.addUserToLikedByOfMessage(token, creator, groupName, forumName, creator, date));
+                () -> service.addUserToLikedByOfMessage(token, groupName, forumName, creator, date));
         }
 
         @Test
         public void removeUserFromLikedByOfMessageShouldThrowDocumentExceptionWhenTheForumDoesNotExistInTheGroup() {
             assertThrows(DocumentException.class,
-                () -> service.removeUserFromLikedByOfMessage(token, creator, groupName, forumName, creator, date));
+                () -> service.removeUserFromLikedByOfMessage(token, groupName, forumName, creator, date));
         }
     }
 
@@ -188,10 +189,11 @@ class ForumServiceTest {
 
             @Test
             public void deleteForum() throws DatabaseAccessException, DocumentException {
-                willDoNothing().given(forumDao).deleteForum(anyString(), anyString());
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                willDoNothing().given(forumDao).deleteForum(any(UserToken.class), anyString(), anyString());
 
-                service.deleteForum(groupName, forumName);
-                verify(forumDao).deleteForum(same(groupName), same(forumName));
+                service.deleteForum(token, groupName, forumName);
+                verify(forumDao).deleteForum(same(userToken), same(groupName), same(forumName));
             }
 
             @Test
@@ -222,6 +224,8 @@ class ForumServiceTest {
 
             @Test
             public void deleteMessage() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                given(userToken.getUsername()).willReturn(creator);
                 willDoNothing().given(forumDao).deleteMessage(anyString(), anyString(), anyString(), anyString());
 
                 service.deleteMessage(token, groupName, forumName, creator, date);
@@ -249,10 +253,12 @@ class ForumServiceTest {
 
             @Test
             public void addUserToLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                given(userToken.getUsername()).willReturn(creator);
                 willDoNothing().given(forumDao)
                     .addUserToLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString());
 
-                service.addUserToLikedByOfMessage(token, creator, groupName, forumName, creator, date);
+                service.addUserToLikedByOfMessage(token, groupName, forumName, creator, date);
                 verify(forumDao)
                     .addUserToLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
                         same(date));
@@ -260,10 +266,12 @@ class ForumServiceTest {
 
             @Test
             public void removeUserFromLikedByOfMessage() throws DatabaseAccessException, DocumentException {
+                doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+                given(userToken.getUsername()).willReturn(creator);
                 willDoNothing().given(forumDao)
                     .removeUserFromLikedByOfMessage(anyString(), anyString(), anyString(), anyString(), anyString());
 
-                service.removeUserFromLikedByOfMessage(token, creator, groupName, forumName, creator, date);
+                service.removeUserFromLikedByOfMessage(token, groupName, forumName, creator, date);
                 verify(forumDao)
                     .removeUserFromLikedByOfMessage(same(creator), same(groupName), same(forumName), same(creator),
                         same(date));
