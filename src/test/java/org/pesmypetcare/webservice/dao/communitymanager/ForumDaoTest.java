@@ -425,7 +425,8 @@ class ForumDaoTest {
                 }
 
                 @Test
-                public void unbanMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
+                public void unbanMessage() throws DatabaseAccessException, DocumentException,
+                    InvalidOperationException {
                     mockGetGroupAndForumIds();
                     given(
                         collectionAdapter.getDocumentsWhereEqualTo(anyString(), anyString(), any(), anyString(), any()))

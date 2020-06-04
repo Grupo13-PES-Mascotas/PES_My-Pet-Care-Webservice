@@ -44,6 +44,7 @@ public class ForumDaoImpl implements ForumDao {
     private static final String LIKED_BY_FIELD = "likedBy";
     private static final String REPORTED_BY_FIELD = "reportedBy";
     private static final String BANNED_FIELD = "banned";
+    private static final String MESSAGES_BANNED_FIELD = "messagesBanned";
     private static final String GROUP_FIELD = "group";
     private static final int COUNTER = 3;
     private FirebaseMessaging firebaseMessaging;
@@ -202,11 +203,12 @@ public class ForumDaoImpl implements ForumDao {
                 String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
                 String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
                 String path = Path.ofDocument(Collections.users, uid);
-                Long BanCounter = (Long) documentAdapter.getDocumentField(path, "messagesBanned");
-                if (BanCounter == null) {
-                    BanCounter = 0L;
+                Long bannnedMessagesCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
+                if (bannnedMessagesCounter == null) {
+                    bannnedMessagesCounter = 0L;
                 }
-                documentAdapter.updateDocumentFields(batch, path, "messagesBanned", BanCounter + 1);
+                documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD,
+                    bannnedMessagesCounter + 1);
             }
         }
         documentAdapter.commitBatch(batch);
@@ -226,8 +228,8 @@ public class ForumDaoImpl implements ForumDao {
         String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
         String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
         String path = Path.ofDocument(Collections.users, uid);
-        Long BanCounter = (Long) documentAdapter.getDocumentField(path, "messagesBanned");
-        documentAdapter.updateDocumentFields(batch, path, "messagesBanned", BanCounter - 1);
+        Long BanCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
+        documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD, BanCounter - 1);
         documentAdapter.commitBatch(batch);
     }
 
