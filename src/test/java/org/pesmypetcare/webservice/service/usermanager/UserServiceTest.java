@@ -62,7 +62,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void createUser() throws DatabaseAccessException, FirebaseAuthException {
+    public void createUser() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         willDoNothing().given(userDao).createUser(anyString(), any(UserEntity.class));
 
         service.createUser(uid, user);
