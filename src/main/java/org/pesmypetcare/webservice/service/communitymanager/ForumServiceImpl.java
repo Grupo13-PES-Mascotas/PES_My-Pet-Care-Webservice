@@ -32,12 +32,12 @@ public class ForumServiceImpl implements ForumService {
     }
 
     @Override
-    public void createForum(String parentGroup, ForumEntity forumEntity)
+    public void createForum(String token, String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
         if (forumDao.forumNameInUse(parentGroup, forumEntity.getName())) {
             throw new DocumentException(DOCUMENT_ALREADY_EXISTS, "The name is already in use");
         } else {
-            forumDao.createForum(parentGroup, forumEntity);
+            forumDao.createForum(makeUserToken(token), parentGroup, forumEntity);
         }
     }
 

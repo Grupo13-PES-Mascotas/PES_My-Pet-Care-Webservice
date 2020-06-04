@@ -54,12 +54,12 @@ public interface StorageService {
 
     /**
      * Downloads all the images from the pets folder.
-     * @param owner The path with the requested data
+     * @param token The user's access token
      * @return A map with pets names and the their images as a base64 encoded byte array
      * @throws DatabaseAccessException When an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    Map<String, String> getAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
+    Map<String, String> getAllPetImages(String token) throws DatabaseAccessException, DocumentException;
 
     /**
      * Downloads all the images from a forum folder.

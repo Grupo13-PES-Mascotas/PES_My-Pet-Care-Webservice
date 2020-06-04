@@ -77,8 +77,8 @@ class ForumRestControllerTest {
 
     @Test
     public void createForum() throws Exception {
-        willDoNothing().given(service).createForum(anyString(), any(ForumEntity.class));
-        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json))
+        willDoNothing().given(service).createForum(anyString(), anyString(), any(ForumEntity.class));
+        mockMvc.perform(post(BASE_URL + parentGroup).contentType(MediaType.APPLICATION_JSON).content(json).header(TOKEN_HEADER, myToken))
             .andExpect(status().isCreated());
     }
 

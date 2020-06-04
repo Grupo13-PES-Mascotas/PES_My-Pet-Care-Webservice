@@ -37,7 +37,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void savePetImage(String token, ImageEntity image) throws DatabaseAccessException, DocumentException {
-        storageDao.uploadPetImage(makeUserToken(token).getUsername(), image);
+        storageDao.uploadPetImage(makeUserToken(token).getUid(), image);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Map<String, String> getAllPetImages(String owner) throws DatabaseAccessException, DocumentException {
-        return storageDao.downloadAllPetImages(owner);
+    public Map<String, String> getAllPetImages(String token) throws DatabaseAccessException, DocumentException {
+        return storageDao.downloadAllPetImages(makeUserToken(token).getUid());
     }
 
     @Override

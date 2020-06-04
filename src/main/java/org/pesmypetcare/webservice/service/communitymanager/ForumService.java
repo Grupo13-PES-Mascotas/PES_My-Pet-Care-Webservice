@@ -15,12 +15,14 @@ public interface ForumService {
     /**
      * Creates a forum in the given group.
      *
+     *
+     * @param token The creator's personal access token
      * @param parentGroup The group name
      * @param forumEntity The forum entity
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
      * @throws DocumentException When the group does not exist
      */
-    void createForum(String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
+    void createForum(String token, String parentGroup, ForumEntity forumEntity) throws DatabaseAccessException, DocumentException;
 
     /**
      * Deletes a forum form the given group.

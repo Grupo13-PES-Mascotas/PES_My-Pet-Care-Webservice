@@ -104,11 +104,12 @@ class ForumServiceTest {
 
         @Test
         public void createForum() throws DatabaseAccessException, DocumentException {
-            willDoNothing().given(forumDao).createForum(anyString(), any(ForumEntity.class));
+            doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
+            willDoNothing().given(forumDao).createForum(any(UserToken.class), anyString(), any(ForumEntity.class));
 
-            service.createForum(groupName, forumEntity);
+            service.createForum(token, groupName, forumEntity);
             verify(forumDao).forumNameInUse(same(groupName), same(forumEntity.getName()));
-            verify(forumDao).createForum(same(groupName), same(forumEntity));
+            verify(forumDao).createForum(same(userToken), same(groupName), same(forumEntity));
         }
 
         @Test
@@ -167,7 +168,7 @@ class ForumServiceTest {
 
         @Test
         public void createForumShouldThrowDocumentExceptionWhenTheForumNameAlreadyExistsInTheGroup() {
-            assertThrows(DocumentException.class, () -> service.createForum(groupName, forumEntity));
+            assertThrows(DocumentException.class, () -> service.createForum(token, groupName, forumEntity));
         }
 
         @Test

@@ -134,15 +134,13 @@ public class GroupRestController {
      *
      * @param token The personal access token of the user
      * @param group The group name
-     * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      * @throws DocumentException When the group does not exist
      */
     @PostMapping("/subscribe")
     @ResponseStatus(HttpStatus.CREATED)
-    public void subscribe(@RequestHeader("token") String token, @RequestParam String group,
-                          @RequestParam String username) throws DatabaseAccessException, DocumentException {
-        service.subscribe(token, group, username);
+    public void subscribe(@RequestHeader("token") String token, @RequestParam String group) throws DatabaseAccessException, DocumentException {
+        service.subscribe(token, group);
     }
 
     /**
@@ -150,15 +148,13 @@ public class GroupRestController {
      *
      * @param token The personal access token of the user
      * @param group The group name
-     * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      * @throws DocumentException When the group does not exist
      */
     @DeleteMapping("/unsubscribe")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group,
-                            @RequestParam String username) throws DatabaseAccessException, DocumentException {
-        service.unsubscribe(token, group, username);
+    public void unsubscribe(@RequestHeader("token") String token, @RequestParam String group) throws DatabaseAccessException, DocumentException {
+        service.unsubscribe(token, group);
     }
 
     /**

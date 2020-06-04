@@ -164,14 +164,14 @@ class GroupRestControllerTest {
 
     @Test
     public void subscribe() throws Exception {
-        willDoNothing().given(service).subscribe(anyString(), anyString(), anyString());
+        willDoNothing().given(service).subscribe(anyString(), anyString());
         mockMvc.perform(post(BASE_URL + "subscribe").header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isCreated());
     }
 
     @Test
     public void unsubscribe() throws Exception {
-        willDoNothing().given(service).unsubscribe(anyString(), anyString(), anyString());
+        willDoNothing().given(service).unsubscribe(anyString(), anyString());
         mockMvc.perform(delete(BASE_URL + "unsubscribe").header(TOKEN_HEADER, TOKEN).param(GROUP_FIELD, groupName)
             .param("username", creator)).andExpect(status().isNoContent());
     }

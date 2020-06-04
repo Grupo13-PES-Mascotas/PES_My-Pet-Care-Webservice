@@ -36,6 +36,8 @@ public class ForumRestController {
     /**
      * Creates a forum.
      *
+     *
+     * @param token
      * @param parentGroup The parent group name
      * @param forumEntity The forum entity with the forum data
      * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
@@ -43,9 +45,10 @@ public class ForumRestController {
      */
     @PostMapping("/{parentGroup}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createForum(@PathVariable String parentGroup, @RequestBody ForumEntity forumEntity)
+    public void createForum(@RequestHeader String token, @PathVariable String parentGroup,
+                            @RequestBody ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
-        service.createForum(parentGroup, forumEntity);
+        service.createForum(token, parentGroup, forumEntity);
     }
 
     /**

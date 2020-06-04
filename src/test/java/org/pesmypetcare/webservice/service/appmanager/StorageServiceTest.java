@@ -80,7 +80,7 @@ class StorageServiceTest {
     @Test
     public void savePetImage() throws DatabaseAccessException, DocumentException {
         doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
-        given(userToken.getUsername()).willReturn(owner);
+        given(userToken.getUid()).willReturn(owner);
         willDoNothing().given(storageDao).uploadPetImage(anyString(), any(ImageEntity.class));
         service.savePetImage(owner, imageEntity);
         verify(storageDao).uploadPetImage(same(owner), same(imageEntity));
@@ -132,6 +132,8 @@ class StorageServiceTest {
 
     @Test
     public void getAllPetImages() throws DatabaseAccessException, DocumentException {
+        doReturn(userToken).when((StorageServiceImpl) service).makeUserToken(anyString());
+        given(userToken.getUid()).willReturn(owner);
         given(storageDao.downloadAllPetImages(same(owner))).willReturn(images);
         Map<String, String> resultMap = service.getAllPetImages(owner);
         assertEquals(images, resultMap,

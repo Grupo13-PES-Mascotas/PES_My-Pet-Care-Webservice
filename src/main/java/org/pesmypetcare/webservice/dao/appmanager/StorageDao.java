@@ -20,12 +20,12 @@ public interface StorageDao {
 
     /**
      * Uploads a pet image to the storage.
-     * @param owner The pet's owner
+     * @param ownerId The pet's owner UID
      * @param image The image to upload
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    void uploadPetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException;
+    void uploadPetImage(String ownerId, ImageEntity image) throws DatabaseAccessException, DocumentException;
 
     /**
      * Uploads a group image to the storage.
@@ -55,12 +55,12 @@ public interface StorageDao {
 
     /**
      * Downloads all the images from the pets folder.
-     * @param owner The path with the requested data
+     * @param ownerId The owner's UID
      * @return A map with pets names and the their images as a base64 encoded byte array
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document pet does not exist
      */
-    Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException, DocumentException;
+    Map<String, String> downloadAllPetImages(String ownerId) throws DatabaseAccessException, DocumentException;
 
     /**
      * Downloads all the images from a forum folder.

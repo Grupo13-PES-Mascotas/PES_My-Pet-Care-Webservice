@@ -122,7 +122,7 @@ class StorageRestControllerTest {
     @Test
     public void downloadAllPetsImages() throws Exception {
         given(service.getAllPetImages(anyString())).willReturn(images);
-        MvcResult response = mockMvc.perform(get(BASE_URL + PETS_PICTURES_LOCATION).header(TOKEN, myToken)).andExpect(
+        MvcResult response = mockMvc.perform(get(BASE_URL + "/allpets").header(TOKEN, myToken)).andExpect(
             status().isOk()).andReturn();
         String result = getContentAsString(response);
         TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {

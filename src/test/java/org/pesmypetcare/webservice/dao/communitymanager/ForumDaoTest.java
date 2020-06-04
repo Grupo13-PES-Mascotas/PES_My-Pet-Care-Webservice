@@ -284,7 +284,7 @@ class ForumDaoTest {
         public void createForumShouldThrowDocumentExceptionWhenTheGroupDoesNotExist()
             throws DatabaseAccessException, DocumentException {
             willThrow(DocumentException.class).given(documentAdapter).getStringFromDocument(anyString(), anyString());
-            assertThrows(DocumentException.class, () -> dao.createForum(groupName, forumEntity),
+            assertThrows(DocumentException.class, () -> dao.createForum(userToken, groupName, forumEntity),
                 "Create forum should fail when the group does not exist.");
         }
 
@@ -305,7 +305,7 @@ class ForumDaoTest {
                 mockAddForumToTag();
                 given(documentReference.getId()).willReturn(forumId);
 
-                dao.createForum(groupName, forumEntity);
+                dao.createForum(userToken, groupName, forumEntity);
 
                 verifyAddForumToTag(forumName);
 

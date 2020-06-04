@@ -67,11 +67,10 @@ public interface GroupService {
      *
      * @param token The personal access token of the user
      * @param group The group name
-     * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the group does not exist
      */
-    void subscribe(String token, String group, String username) throws DatabaseAccessException, DocumentException;
+    void subscribe(String token, String group) throws DatabaseAccessException, DocumentException;
 
     /**
      * Updates the group tags.
@@ -100,11 +99,10 @@ public interface GroupService {
      *
      * @param token The personal access token of the user
      * @param group The group name
-     * @param username The user's username
      * @throws DatabaseAccessException If an error occurs when accessing or modifying the database
      * @throws DocumentException When the group does not exist
      */
-    void unsubscribe(String token, String group, String username) throws DatabaseAccessException, DocumentException;
+    void unsubscribe(String token, String group) throws DatabaseAccessException, DocumentException;
 
     /**
      * Checks whether a group name is already in use or not.

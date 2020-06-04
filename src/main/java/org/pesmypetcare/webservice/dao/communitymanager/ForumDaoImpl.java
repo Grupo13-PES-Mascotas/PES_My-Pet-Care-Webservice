@@ -70,8 +70,9 @@ public class ForumDaoImpl implements ForumDao {
     }
 
     @Override
-    public void createForum(String parentGroup, ForumEntity forumEntity)
+    public void createForum(UserToken token, String parentGroup, ForumEntity forumEntity)
         throws DatabaseAccessException, DocumentException {
+        forumEntity.setCreator(token.getUsername());
         forumEntity.setCreationDate(UTCLocalConverter.getCurrentUTC());
         WriteBatch batch = documentAdapter.batch();
         String parentId = documentAdapter
@@ -80,9 +81,6 @@ public class ForumDaoImpl implements ForumDao {
             .createDocument(Path.ofCollection(Collections.forums, parentId), forumEntity, batch);
         String name = forumEntity.getName();
         saveForumName(parentGroup, name, forumRef.getId(), batch);
-        //String creator = forumEntity.getCreator();
-        //saveUserAsMember(userDao.getUid(creator), creator, forumRef, batch);
-        //userDao.addForumSubscription(creator, parentGroup, name, batch);
         List<String> tags = forumEntity.getTags();
         if (tags != null) {
             for (String tag : tags) {

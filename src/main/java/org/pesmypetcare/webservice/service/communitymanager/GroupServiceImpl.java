@@ -86,7 +86,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void subscribe(String token, String group, String username) throws DatabaseAccessException,
+    public void subscribe(String token, String group) throws DatabaseAccessException,
         DocumentException {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);
@@ -96,7 +96,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void unsubscribe(String token, String group, String username)
+    public void unsubscribe(String token, String group)
         throws DatabaseAccessException, DocumentException {
         if (!groupDao.groupNameInUse(group)) {
             throw new DocumentException(INVALID_NAME_CODE, NAME_DOES_NOT_EXISTS);

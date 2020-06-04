@@ -158,7 +158,7 @@ class GroupServiceTest {
                 doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).subscribe(anyString(), any(UserToken.class));
 
-                service.subscribe(token, groupName, username);
+                service.subscribe(token, groupName);
                 verify(dao).subscribe(same(groupName), eq(userToken));
             }
 
@@ -167,7 +167,7 @@ class GroupServiceTest {
                 doReturn(userToken).when((GroupServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(dao).unsubscribe(anyString(), any(UserToken.class));
 
-                service.unsubscribe(token, groupName, username);
+                service.unsubscribe(token, groupName);
                 verify(dao).unsubscribe(same(groupName), eq(userToken));
             }
 
@@ -221,13 +221,13 @@ class GroupServiceTest {
 
             @Test
             public void subscribeShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
-                assertThrows(DocumentException.class, () -> service.subscribe(token, groupName, username),
+                assertThrows(DocumentException.class, () -> service.subscribe(token, groupName),
                     "Should throw an exception when the group already exists.");
             }
 
             @Test
             public void unsubscribeShouldThrowDocumentExceptionWhenGroupAlreadyExists() {
-                assertThrows(DocumentException.class, () -> service.unsubscribe(token, groupName, username),
+                assertThrows(DocumentException.class, () -> service.unsubscribe(token, groupName),
                     "Should throw an exception when the group already exists.");
             }
         }

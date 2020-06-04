@@ -52,11 +52,11 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public void uploadPetImage(String owner, ImageEntity image) throws DatabaseAccessException, DocumentException {
+    public void uploadPetImage(String ownerId, ImageEntity image) throws DatabaseAccessException, DocumentException {
         String imageName = image.getImgName();
         String path = image.getUid() + "/pets/" + imageName;
         String name = imageName.substring(0, imageName.indexOf('-'));
-        petDao.updateSimpleField(owner, name, "profileImageLocation", path);
+        petDao.updateSimpleField(ownerId, name, "profileImageLocation", path);
         storageBucket.create(path, image.getImg());
     }
 
@@ -102,9 +102,9 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public Map<String, String> downloadAllPetImages(String owner) throws DatabaseAccessException, DocumentException {
+    public Map<String, String> downloadAllPetImages(String ownerId) throws DatabaseAccessException, DocumentException {
         Map<String, String> result = new HashMap<>();
-        List<Map<String, Object>> pets = petDao.getAllPetsData(owner);
+        List<Map<String, Object>> pets = petDao.getAllPetsData(ownerId);
         for (Map<String, Object> pet : pets) {
             PetEntity petEntity = (PetEntity) pet.get("body");
             String path = petEntity.getProfileImageLocation();

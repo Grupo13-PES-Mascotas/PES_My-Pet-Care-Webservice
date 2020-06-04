@@ -122,16 +122,16 @@ public class StorageRestController {
     /**
      * Downloads all pet profile pictures from user storage.
      *
-     * @param user The user's username
+     * @param token The user's access token
      * @return A map with the pets names and the their profile pictures as a byte array
      * @throws DatabaseAccessException When an error occurs when accessing the database
      * @throws DocumentException When the pet does not exist
      */
-    @GetMapping("/image/{user}/pets")
+    @GetMapping("/image/allpets")
     @ResponseBody
-    public Map<String, String> downloadAllPetsImages(@PathVariable String user)
+    public Map<String, String> downloadAllPetsImages(@RequestHeader String token)
         throws DatabaseAccessException, DocumentException {
-        return storage.getAllPetImages(user);
+        return storage.getAllPetImages(token);
     }
 
     /**
