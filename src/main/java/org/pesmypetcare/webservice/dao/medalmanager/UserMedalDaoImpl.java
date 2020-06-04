@@ -79,12 +79,12 @@ public class UserMedalDaoImpl implements UserMedalDao {
     @Override
     public Object getField(String userId, String name, String field) throws DatabaseAccessException,
         DocumentException {
-        String medalPath = Path.ofDocument(Collections.userMedals, getUserId(userId), name);
+        String medalPath = Path.ofDocument(Collections.userMedals, userId, name);
         return dbDoc.getDocumentField(medalPath, field);
     }
 
     @Override
-    public void createAllUserMedals(String username, WriteBatch batch) throws DatabaseAccessException, DocumentException {
+    public void createAllUserMedals(String username, WriteBatch batch) throws DatabaseAccessException {
         path = Path.ofCollection(Collections.medals);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
         UserMedalEntity userMedal;
@@ -113,18 +113,6 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private void initializeWithCollectionPath(String userId) {
         batch = dbCol.batch();
         path = Path.ofCollection(Collections.userMedals, userId);
-    }
-
-    /**
-     * Returns the id of a user specifying its username.
-     * @param username Name of the user
-     * @return The user's id
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     */
-    private String getUserId(String username) throws DatabaseAccessException, DocumentException {
-        String usernamePath = Path.ofDocument(Collections.used_usernames, username);
-        return dbDoc.getStringFromDocument(usernamePath, "user");
     }
 
 }

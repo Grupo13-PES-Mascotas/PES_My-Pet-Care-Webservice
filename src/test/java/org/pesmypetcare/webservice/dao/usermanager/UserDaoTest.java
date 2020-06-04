@@ -154,7 +154,7 @@ class UserDaoTest {
         lenient().when(documentAdapter
             .createDocumentWithId(eq(Path.ofCollection(Collections.users)), eq(uid), same(userEntity), same(batch)))
             .thenReturn(userRef);
-        willDoNothing().given(medalDao).createAllUserMedals(eq(username), same(batch));
+        willDoNothing().given(medalDao).createAllUserMedals(eq(uid), same(batch));
         willDoNothing().given(documentAdapter).commitBatch(same(batch));
         mockUpdateDisplayName();
 

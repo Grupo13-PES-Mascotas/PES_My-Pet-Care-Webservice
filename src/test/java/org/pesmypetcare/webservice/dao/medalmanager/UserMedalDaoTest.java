@@ -103,7 +103,6 @@ public class UserMedalDaoTest {
     @Test
     public void shouldReturnUserMedalFromDatabaseWhenRequested() throws DatabaseAccessException,
         DocumentException {
-        given(dbDoc.getStringFromDocument(anyString(), anyString())).willReturn(OWNER_ID);
         given(dbDoc.getDocumentField(anyString(), anyString())).willReturn(VALUE);
 
         Object userMedalValue = userMedalDao.getField(OWNER, USER_MEDAL_NAME, FIELD);

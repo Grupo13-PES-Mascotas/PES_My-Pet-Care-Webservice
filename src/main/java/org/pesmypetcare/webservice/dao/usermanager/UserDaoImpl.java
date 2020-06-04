@@ -85,7 +85,7 @@ public class UserDaoImpl implements UserDao {
             userEntity.setPassword(encodedPassword);
             documentAdapter
                 .createDocumentWithId(Path.ofCollection(Collections.users), uid, userEntity, batch);
-            medalDao.createAllUserMedals(username, batch);
+            medalDao.createAllUserMedals(uid, batch);
             documentAdapter.commitBatch(batch);
             updateDisplayName(uid, username);
         } else {
