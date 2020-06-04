@@ -239,7 +239,7 @@ class ForumServiceTest {
             }
 
             @Test
-            public void unbanMessage() throws DatabaseAccessException, DocumentException {
+            public void unbanMessage() throws DatabaseAccessException, DocumentException, InvalidOperationException {
                 doReturn(userToken).when((ForumServiceImpl) service).makeUserToken(anyString());
                 willDoNothing().given(forumDao).unbanMessage(any(UserToken.class), anyString(), anyString(), anyString(), anyString());
 
