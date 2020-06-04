@@ -228,8 +228,8 @@ public class ForumDaoImpl implements ForumDao {
         String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
         String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
         String path = Path.ofDocument(Collections.users, uid);
-        Long BanCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
-        documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD, BanCounter - 1);
+        Long bannedMessagesCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
+        documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD, bannedMessagesCounter - 1);
         documentAdapter.commitBatch(batch);
     }
 
