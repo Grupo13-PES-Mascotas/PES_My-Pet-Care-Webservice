@@ -63,7 +63,7 @@ public class UserMedalDaoTest {
         medal = new Medal();
         medal.setDescription("You have to walk a lot!");
         medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
-        medal.setMedalIconPath(new byte[] {10, 55, 67, 89, 103, 116});
+        medal.setMedalIcon(new byte[] {10, 55, 67, 89, 103, 116});
         userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>(), medal);
         userMedalList = new ArrayList<>();
         Map<String, UserMedalEntity> auxMap = new HashMap<>();

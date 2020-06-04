@@ -12,7 +12,7 @@ public class Medal {
     private String name;
     private List<Double> levels;
     private String description;
-    private byte[] medalIconPath;
+    private byte[] medalIcon;
 
     public Medal() { }
 
@@ -20,6 +20,10 @@ public class Medal {
         this.name = medal.getName();
         this.levels = medal.getLevels();
         this.description = medal.getDescription();
-        this.medalIconPath = medal.getMedalIcon().toBytes();
+        if (medal.getMedalIcon() != null) {
+            this.medalIcon = medal.getMedalIcon().toBytes();
+        } else {
+            medalIcon = null;
+        }
     }
 }

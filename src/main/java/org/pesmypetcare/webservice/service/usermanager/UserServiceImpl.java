@@ -26,10 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(String token, UserEntity userEntity)
+    public void createUser(String uid, UserEntity userEntity)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        userToken = makeUserToken(token);
-        userDao.createUser(userToken, userEntity);
+        userDao.createUser(uid, userEntity);
     }
 
     @Override

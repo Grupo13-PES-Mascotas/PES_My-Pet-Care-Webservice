@@ -147,7 +147,6 @@ class UserDaoTest {
 
     @Test
     public void shouldCreateUserOnDatabase() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        given(userToken.getUid()).willReturn(uid);
         given(documentAdapter.documentExists(eq(Path.ofDocument(Collections.used_usernames, username))))
             .willReturn(false);
         given(documentAdapter.batch()).willReturn(batch);
@@ -159,7 +158,7 @@ class UserDaoTest {
         willDoNothing().given(documentAdapter).commitBatch(same(batch));
         mockUpdateDisplayName();
 
-        dao.createUser(userToken, userEntity);
+        dao.createUser(uid, userEntity);
         verifySaveUsername();
         userEntity.setPassword(encodedPassword);
         verify(updateRequest).setDisplayName(same(username));

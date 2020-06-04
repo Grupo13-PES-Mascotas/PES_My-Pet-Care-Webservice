@@ -5,6 +5,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -111,4 +112,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Creates the http response for the BadCredentialsException class.
+     * @param ex The exception from which to create the response
+     * @return The response entity created from the exception
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
+        ErrorBody errorBody = new ErrorBody("bad-credentials", ex);
+        ex.printStackTrace();
+        return new ResponseEntity<>(errorBody, HttpStatus.UNAUTHORIZED);
+    }
 }

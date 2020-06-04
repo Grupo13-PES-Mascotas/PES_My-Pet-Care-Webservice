@@ -75,19 +75,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(UserToken token, UserEntity userEntity)
+    public void createUser(String uid, UserEntity userEntity)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
             WriteBatch batch = documentAdapter.batch();
-            saveUsername(token.getUid(), username, batch);
+            saveUsername(uid, username, batch);
             String encodedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
             userEntity.setPassword(encodedPassword);
             documentAdapter
-                .createDocumentWithId(Path.ofCollection(Collections.users), token.getUid(), userEntity, batch);
+                .createDocumentWithId(Path.ofCollection(Collections.users), uid, userEntity, batch);
             medalDao.createAllUserMedals(username, batch);
             documentAdapter.commitBatch(batch);
-            updateDisplayName(token.getUid(), username);
+            updateDisplayName(uid, username);
         } else {
             throw new DatabaseAccessException(INVALID_USERNAME, USED_USERNAME_MESSAGE);
         }

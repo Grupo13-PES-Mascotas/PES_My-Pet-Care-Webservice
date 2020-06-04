@@ -41,7 +41,6 @@ class UserServiceTest {
     private String username;
     private String newEmail;
     private UserEntity user;
-    private String token;
     private String fcmToken;
 
     @Mock
@@ -54,7 +53,6 @@ class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        token = "some-token";
         username = "user";
         newEmail = "new-user@email.com";
         user = new UserEntity(username, "123456", "user@email");
@@ -63,11 +61,11 @@ class UserServiceTest {
 
     @Test
     public void createUser() throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        doReturn(userToken).when((UserServiceImpl) service).makeUserToken(anyString());
-        willDoNothing().given(userDao).createUser(any(UserToken.class), any(UserEntity.class));
+        willDoNothing().given(userDao).createUser(anyString(), any(UserEntity.class));
 
-        service.createUser(token, user);
-        verify(userDao).createUser(same(userToken), same(user));
+        String uid = "some-uid";
+        service.createUser(uid, user);
+        verify(userDao).createUser(same(uid), same(user));
     }
 
     @Test

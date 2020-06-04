@@ -28,7 +28,7 @@ public class MedalEntity {
         this.name = medal.getName();
         this.levels = medal.getLevels();
         this.description = medal.getDescription();
-        this.medalIcon = Blob.fromBytes(medal.getMedalIconPath());
+        this.medalIcon = Blob.fromBytes(medal.getMedalIcon());
     }
 
     /**

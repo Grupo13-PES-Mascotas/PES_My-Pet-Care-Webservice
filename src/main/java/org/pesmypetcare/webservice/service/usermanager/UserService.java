@@ -16,13 +16,13 @@ public interface UserService {
     /**
      * Creates a user on the data base.
      *
-     * @param token The user's personal access token
+     * @param uid The user's UID
      * @param userEntity The entity that contains the username, password and email for the new user
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      * @throws DocumentException If the creation of the user fails
      */
-    void createUser(String token, UserEntity userEntity)
+    void createUser(String uid, UserEntity userEntity)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException;
 
     /**
