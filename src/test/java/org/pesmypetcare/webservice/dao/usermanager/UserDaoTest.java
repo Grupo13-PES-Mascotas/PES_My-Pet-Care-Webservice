@@ -138,7 +138,8 @@ class UserDaoTest {
 
     @Test
     public void shouldCreateUserOnDatabase()
-        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException {
+        throws DatabaseAccessException, FirebaseAuthException, ExecutionException, InterruptedException,
+        DocumentException {
         given(usedUsernames.document(anyString())).willReturn(usernameRef);
         given(users.document(anyString())).willReturn(userRef);
         given(usernameRef.get()).willReturn(future);

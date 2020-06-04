@@ -76,7 +76,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException, DocumentException {
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
             WriteBatch batch = db.batch();
