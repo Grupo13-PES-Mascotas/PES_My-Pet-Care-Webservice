@@ -39,19 +39,16 @@ class MyPetCareRestControllerTest {
 
     @BeforeAll
     public static void setUp() {
-        jsonUser1 = "{\n"
-            + "  \"username\": \"user1\",\n"
-            + "  \"email\": \"user@mail.com\"\n"
-            + "}";
-        password = "123456";
-        key = "password";
+        jsonUser1 = "{\n" + "  \"uid\": \"QABtiSlbB6NkXFCeDa4abRGSopT2\",\n"
+            + "  \"email\": \"santi.mypetcare@gmail.com\",\n" + "  \"username\": \"Santiago Del Rey\",\n"
+            + "  \"password\": \"123456789$\"\n" + "}";
     }
 
     @Test
     public void signUpShouldReturnStatusCreated() throws Exception {
         mockMvc.perform(post("/signup")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(jsonUser1).param(key, password))
+            .content(jsonUser1))
             .andExpect(status().isCreated());
     }
 

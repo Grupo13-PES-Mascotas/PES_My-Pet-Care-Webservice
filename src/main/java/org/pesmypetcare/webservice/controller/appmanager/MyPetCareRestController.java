@@ -1,6 +1,5 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.User;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
@@ -36,11 +35,9 @@ public class MyPetCareRestController {
      */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody Map<String, Object> user)
+    public void signUp(@RequestBody User user)
         throws DatabaseAccessException, FirebaseAuthException, DocumentException {
-        ObjectMapper mapper = new ObjectMapper();
-        User userData = mapper.convertValue(user.get("user"), User.class);
-        userService.createUser((String) user.get("uid"), new UserEntity(userData));
+        userService.createUser(user.getUid(), new UserEntity(user));
     }
 
     /**
