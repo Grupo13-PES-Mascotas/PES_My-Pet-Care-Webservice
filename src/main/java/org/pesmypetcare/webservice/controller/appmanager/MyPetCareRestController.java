@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class MyPetCareRestController {
      */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException {
+    public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         ObjectMapper mapper = new ObjectMapper();
         UserEntity userEntity = mapper.convertValue(user.get("user"), UserEntity.class);
         userService.createUser((String) user.get("uid"), userEntity);

@@ -16,8 +16,11 @@ import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDaoImpl;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
+import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -58,6 +61,8 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private PetDao petDao;
     @Autowired
+    private UserMedalDao userMedalDao;
+    @Autowired
     private FirestoreCollection collectionAdapter;
     @Autowired
     private FirestoreDocument documentAdapter;
@@ -71,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException, DocumentException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
             WriteBatch batch = db.batch();
@@ -81,6 +86,7 @@ public class UserDaoImpl implements UserDao {
             batch.set(users.document(uid), userEntity);
             try {
                 batch.commit().get();
+                ((UserMedalDaoImpl)userMedalDao).createAllUserMedals(username);
                 updateDisplayName(uid, username);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
