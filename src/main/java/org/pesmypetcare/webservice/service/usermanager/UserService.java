@@ -21,7 +21,9 @@ public interface UserService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
-    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException, DocumentException;
+    void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException;
+
 
     /**
      * Deletes a user from database.

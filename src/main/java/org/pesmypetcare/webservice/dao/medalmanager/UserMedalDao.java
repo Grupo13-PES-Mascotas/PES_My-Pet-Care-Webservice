@@ -5,7 +5,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Oriol Catalán
