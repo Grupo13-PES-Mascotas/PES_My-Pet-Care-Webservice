@@ -5,7 +5,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Oriol Catalán
@@ -41,7 +40,7 @@ public interface UserMedalDao {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException;
 
     /**
@@ -67,5 +66,12 @@ public interface UserMedalDao {
      */
     Object getField(String owner, String name, String field) throws DatabaseAccessException, DocumentException;
 
+    /**
+     * Create all user medals when user is created.
+     * @param username Username of the user.
+     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
+     * @throws DocumentException When the document does not exist
+     */
+    void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException;
 
 }

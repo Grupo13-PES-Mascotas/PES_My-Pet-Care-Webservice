@@ -38,7 +38,9 @@ public class UserMedalEntity {
         this.completedLevelsDate = completedLevelsDate;
         this.levels = medal.getLevels();
         this.description = medal.getDescription();
-        this.medalIcon = Blob.fromBytes(medal.getMedalIconPath());
+        if (medal.getMedalIconPath() != null) {
+            this.medalIcon = Blob.fromBytes(medal.getMedalIconPath());
+        }
     }
 
     /**

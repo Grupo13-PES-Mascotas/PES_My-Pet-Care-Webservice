@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -51,18 +49,16 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException {
         initializeWithCollectionPath(owner);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
-        List<Map<String, UserMedalEntity>> externalList = new ArrayList<>();
+        List<UserMedalEntity> medalList = new ArrayList<>();
 
         for (DocumentSnapshot medalDocument : medalsDocuments) {
-            Map<String, UserMedalEntity> internalList = new HashMap<>();
-            internalList.put("body", medalDocument.toObject(UserMedalEntity.class));
-            externalList.add(internalList);
+            medalList.add(medalDocument.toObject(UserMedalEntity.class));
         }
-        return externalList;
+        return medalList;
     }
 
     @Override
@@ -80,12 +76,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
         return dbDoc.getDocumentField(medalPath, field);
     }
 
-    /**
-     * Create all user medals when user is created.
-     * @param username Username of the user.
-     * @throws DatabaseAccessException When the retrieval is interrupted or the execution fails
-     * @throws DocumentException When the document does not exist
-     */
+    @Override
     public void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException {
         path = Path.ofCollection(Collections.medals);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);

@@ -31,7 +31,7 @@ public class UserMedalServiceImpl implements UserMedalService {
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException {
         return userMedalDao.getAllUserMedalsData(owner);
     }

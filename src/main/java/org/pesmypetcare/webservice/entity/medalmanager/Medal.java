@@ -20,6 +20,8 @@ public class Medal {
         this.name = medal.getName();
         this.levels = medal.getLevels();
         this.description = medal.getDescription();
-        this.medalIconPath = medal.getMedalIcon().toBytes();
+        if (medal.getMedalIcon() != null) {
+            this.medalIconPath = medal.getMedalIcon().toBytes();
+        }
     }
 }

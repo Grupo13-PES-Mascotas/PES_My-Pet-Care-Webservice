@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import org.pesmypetcare.webservice.entity.usermanager.User;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,8 @@ public class MyPetCareRestController {
      */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody User user) throws DatabaseAccessException, FirebaseAuthException {
+    public void signUp(@RequestBody User user) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException {
         userService.createUser(user.getUid(), new UserEntity(user));
     }
 

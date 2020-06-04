@@ -5,7 +5,6 @@ import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Oriol Catalán
@@ -40,7 +39,7 @@ public interface UserMedalService {
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws DocumentException When the document does not exist
      */
-    List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException;
 
     /**
