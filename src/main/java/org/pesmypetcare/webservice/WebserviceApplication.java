@@ -21,7 +21,7 @@ public class WebserviceApplication {
         SpringApplication.run(WebserviceApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -29,6 +29,6 @@ public class WebserviceApplication {
                 registry.addMapping("/**").allowedOrigins("*");
             }
         };
-    }
+    }*/
 
 }
