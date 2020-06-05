@@ -292,19 +292,19 @@ class ForumDaoTest {
             public void updateTags() throws DatabaseAccessException, DocumentException {
                 mockGetGroupAndForumIds();
                 willDoNothing().given(documentAdapter)
-                    .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
+                    .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any(FieldValue.class));
                 mockAddForumToTag();
 
                 dao.updateTags(groupName, forumName, tags, tags);
                 verify(documentAdapter)
-                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayRemove(tags.toArray())),
-                        same(batch));
+                    .updateDocumentFields(same(batch), eq(forumPath), eq("tags"),
+                        eq(FieldValue.arrayRemove(tags.toArray())));
                 verify(documentAdapter)
-                    .updateDocumentFields(eq(tagPath), eq("forums"), eq(FieldValue.arrayRemove(forumName)),
-                        same(batch));
+                    .updateDocumentFields(same(batch), eq(tagPath), eq("forums"),
+                        eq(FieldValue.arrayRemove(forumName)));
                 verify(documentAdapter)
-                    .updateDocumentFields(eq(forumPath), eq("tags"), eq(FieldValue.arrayUnion(tags.toArray())),
-                        same(batch));
+                    .updateDocumentFields(same(batch), eq(forumPath), eq("tags"),
+                        eq(FieldValue.arrayUnion(tags.toArray())));
                 verifyAddForumToTag(forumName);
             }
 
@@ -371,7 +371,7 @@ class ForumDaoTest {
                         .updateDocumentFields(anyString(), anyString(), anyString(), any(WriteBatch.class));
                     willDoNothing().given(documentAdapter).deleteDocument(anyString(), any(WriteBatch.class));
                     willDoNothing().given(documentAdapter)
-                        .updateDocumentFields(anyString(), anyString(), any(FieldValue.class), any(WriteBatch.class));
+                        .updateDocumentFields(any(WriteBatch.class), anyString(), anyString(), any(FieldValue.class));
                     mockAddForumToTag();
                     given(
                         documentAdapter.createDocumentWithId(anyString(), anyString(), anyMap(), any(WriteBatch.class)))
