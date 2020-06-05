@@ -376,8 +376,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void deleteForumFromTag(String tag, String forum, WriteBatch batch) {
         documentAdapter
-            .updateDocumentFields(Path.ofDocument(Collections.tags, tag), FORUMS_FIELD, FieldValue.arrayRemove(forum),
-                batch);
+            .updateDocumentFields(batch, Path.ofDocument(Collections.tags, tag), FORUMS_FIELD,
+                FieldValue.arrayRemove(forum));
     }
 
     /**
@@ -392,8 +392,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void addNewTags(String groupId, String forumId, String forumName, List<String> newTags, WriteBatch batch)
         throws DatabaseAccessException {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
-            FieldValue.arrayUnion(newTags.toArray()), batch);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
+            FieldValue.arrayUnion(newTags.toArray()));
         for (String tag : newTags) {
             addForumToTag(tag, forumName, batch);
         }
@@ -410,8 +410,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void removeDeletedTags(String groupId, String forumId, String forumName, List<String> deletedTags,
                                    WriteBatch batch) {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
-            FieldValue.arrayRemove(deletedTags.toArray()), batch);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
+            FieldValue.arrayRemove(deletedTags.toArray()));
         for (String tag : deletedTags) {
             deleteForumFromTag(tag, forumName, batch);
         }

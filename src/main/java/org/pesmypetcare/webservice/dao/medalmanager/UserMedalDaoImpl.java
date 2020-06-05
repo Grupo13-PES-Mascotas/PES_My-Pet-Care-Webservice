@@ -64,6 +64,7 @@ public class UserMedalDaoImpl implements UserMedalDao {
     @Override
     public void updateField(String owner, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException {
+        checkField(field);
         initializeWithDocumentPath(owner, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
         batch.commit();
@@ -126,6 +127,16 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private String getUserId(String username) throws DatabaseAccessException, DocumentException {
         String usernamePath = Path.ofDocument(Collections.used_usernames, username);
         return dbDoc.getStringFromDocument(usernamePath, "user");
+    }
+
+    /**
+     * This method check that the field are allowed to update.
+     * @param field The value of the field.
+     */
+    private void checkField(String field) {
+        if (!("progress".equals(field) || "currentLevel".equals(field) || "completedLevelsDate".equals(field))) {
+            throw new IllegalArgumentException("Field not allowed to update.");
+        }
     }
 
 }

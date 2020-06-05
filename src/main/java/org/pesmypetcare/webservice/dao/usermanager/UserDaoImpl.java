@@ -51,6 +51,7 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_FAILED_CODE = "update-failed";
     private static final String FIELD_LIKED_BY = "likedBy";
     private static final String FCM = "FCM";
+    private static final String NOTIFICATIONS_FIELD = "notification-tokens";
     private static final String WRITE_FAILED_CODE = "write-failed";
     private FirebaseAuth myAuth;
     private CollectionReference users;
@@ -493,9 +494,14 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<QuerySnapshot> subscribedGroups = collectionAdapter
             .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
         try {
+            List<String> tokens;
             for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
-                batch.update(group.getReference(), FCM, FieldValue.arrayRemove(currentToken), FCM,
-                    FieldValue.arrayUnion(token));
+                tokens = (List<String>) group.get(NOTIFICATIONS_FIELD);
+                if (tokens != null) {
+                    tokens.remove(currentToken);
+                    tokens.add(token);
+                    batch.update(group.getReference(), NOTIFICATIONS_FIELD, tokens);
+                }
             }
         } catch (InterruptedException e) {
             throw new DatabaseAccessException(WRITE_FAILED_CODE, e.getMessage());

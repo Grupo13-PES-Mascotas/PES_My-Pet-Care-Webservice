@@ -65,8 +65,8 @@ public class UserMedalEntity {
             && !(newValue instanceof String)) {
             throw new IllegalArgumentException("New value must be a String");
         } else if ((field.equals(PROGRESS) || field.equals(CURRENT_LEVEL) || field.equals(LEVELS))
-            && !(newValue instanceof Double)) {
-            throw new IllegalArgumentException("New value must be a Double");
+            && !(newValue instanceof Double || newValue instanceof Integer)) {
+            throw new IllegalArgumentException("New value must be a Double or Integer");
         }
     }
 
