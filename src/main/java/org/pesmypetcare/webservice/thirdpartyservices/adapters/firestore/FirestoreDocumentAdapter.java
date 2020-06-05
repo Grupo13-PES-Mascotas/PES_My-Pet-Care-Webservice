@@ -52,7 +52,6 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
     @NonNull
     @Override
     public DocumentReference getDocumentReference(@NonNull String path) {
-        System.out.println("Document " + path);
         return db.document(path);
     }
 
@@ -226,7 +225,6 @@ public class FirestoreDocumentAdapter implements FirestoreDocument {
 
     @Override
     public void deleteDocument(@NonNull String path, @NonNull WriteBatch batch) {
-        System.out.println("Path delete doc: " + path);
         DocumentReference doc = getDocumentReference(path);
         deleteDocumentCollections(doc, batch);
         batch.delete(doc);

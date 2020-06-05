@@ -59,8 +59,6 @@ public class PetDaoImpl implements PetDao {
     public void deleteByOwnerAndName(String owner, String name) throws DatabaseAccessException, DocumentException {
         initializeWithDocumentPath(owner, name);
         String imageLocation = dbDoc.getStringFromDocument(path, "profileImageLocation");
-        System.out.println("Name " + name);
-        System.out.println("Delete dao " + path);
         dbDoc.deleteDocument(path, batch);
         dbDoc.commitBatch(batch);
         deleteProfileImage(imageLocation);
@@ -224,7 +222,6 @@ public class PetDaoImpl implements PetDao {
      */
     private void initializeWithDocumentPath(String owner, String petName) throws DatabaseAccessException,
         DocumentException {
-        System.out.println("Path " + petName);
         ownerId = getUserId(owner);
         batch = dbCol.batch();
         path = Path.ofDocument(Collections.pets, ownerId, petName);
