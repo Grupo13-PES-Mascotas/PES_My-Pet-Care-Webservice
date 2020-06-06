@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/pet")
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 public class PetRestController {
     @Autowired
     private PetService petService;
