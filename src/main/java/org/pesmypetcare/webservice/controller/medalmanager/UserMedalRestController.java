@@ -28,7 +28,6 @@ public class UserMedalRestController {
     @Autowired
     private UserMedalService userMedalService;
 
-
     /**
      * Gets a medal identified by its name and owner.
      * @param owner Username of the owner of the medal
@@ -53,7 +52,7 @@ public class UserMedalRestController {
      */
     @GetMapping("/{owner}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, UserMedalEntity>> getAllMedalsData(@PathVariable String owner)
+    public List<UserMedalEntity> getAllMedalsData(@PathVariable String owner)
         throws DatabaseAccessException, DocumentException {
         return userMedalService.getAllUserMedalsData(owner);
     }

@@ -219,7 +219,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             if (field == null || field.isEmpty()) {
                 throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
-            query.whereEqualTo(field, value);
+            query = query.whereEqualTo(field, value);
         }
         return query.get();
     }
@@ -242,7 +242,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             if (fieldPath == null || fieldPath.toString().isEmpty()) {
                 throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
-            query.whereEqualTo(fieldPath, value);
+            query = query.whereEqualTo(fieldPath, value);
         }
         return query.get();
     }
@@ -265,7 +265,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             if (field == null || field.isEmpty()) {
                 throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
-            query.whereArrayContains(field, value);
+            query = query.whereArrayContains(field, value);
         }
         return query.get();
     }
@@ -288,7 +288,7 @@ public class FirestoreCollectionAdapter implements FirestoreCollection {
             if (fieldPath == null || fieldPath.toString().isEmpty()) {
                 throw new IllegalArgumentException(INVALID_FIELD_MESSAGE);
             }
-            query.whereArrayContains(fieldPath, value);
+            query = query.whereArrayContains(fieldPath, value);
         }
         return query.get();
     }

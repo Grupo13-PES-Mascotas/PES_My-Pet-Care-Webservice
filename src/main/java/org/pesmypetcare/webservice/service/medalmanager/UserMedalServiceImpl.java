@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Oriol Catalán
@@ -19,13 +18,19 @@ public class UserMedalServiceImpl implements UserMedalService {
     private UserMedalDao userMedalDao;
 
     @Override
+    public void createUserMedal(String owner, String name, UserMedalEntity medal)
+        throws DatabaseAccessException, DocumentException {
+        userMedalDao.createUserMedal(owner, name, medal);
+    }
+
+    @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
         DocumentException {
         return userMedalDao.getUserMedalData(owner, name);
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException {
         return userMedalDao.getAllUserMedalsData(owner);
     }
@@ -41,4 +46,6 @@ public class UserMedalServiceImpl implements UserMedalService {
         DocumentException {
         return userMedalDao.getField(owner, name, field);
     }
+
+
 }

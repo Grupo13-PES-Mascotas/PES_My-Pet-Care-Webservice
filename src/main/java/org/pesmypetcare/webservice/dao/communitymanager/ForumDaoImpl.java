@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -18,6 +19,7 @@ import org.pesmypetcare.webservice.entity.communitymanager.Message;
 import org.pesmypetcare.webservice.entity.communitymanager.MessageEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
+import org.pesmypetcare.webservice.error.InvalidOperationException;
 import org.pesmypetcare.webservice.thirdpartyservices.FirebaseFactory;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
@@ -40,7 +42,11 @@ public class ForumDaoImpl implements ForumDao {
     private static final String FORUMS_FIELD = "forums";
     private static final String FORUM_FIELD = "forum";
     private static final String LIKED_BY_FIELD = "likedBy";
+    private static final String REPORTED_BY_FIELD = "reportedBy";
+    private static final String BANNED_FIELD = "banned";
+    private static final String MESSAGES_BANNED_FIELD = "messagesBanned";
     private static final String GROUP_FIELD = "group";
+    private static final int COUNTER = 3;
     private FirebaseMessaging firebaseMessaging;
     @Autowired
     private GroupDao groupDao;
@@ -171,6 +177,59 @@ public class ForumDaoImpl implements ForumDao {
             storageDao.deleteImageByName(imagePath);
         }
         batch.delete(messageSnapshot.getReference());
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
+    public void reportMessage(String parentGroup, String forumName, String creator, String reporter, String date)
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
+        if (creator.equals(reporter)) {
+            throw new InvalidOperationException("409", "A message creator can't report its message");
+        }
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        WriteBatch batch = documentAdapter.batch();
+        ArrayList<String> messages = (ArrayList<String>) messageSnapshot.get(REPORTED_BY_FIELD);
+        if (messages == null) {
+            messages = new ArrayList<>();
+            messages.add(reporter);
+            batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, messages);
+        } else {
+            if (messages.contains(reporter)) {
+                throw new InvalidOperationException("409", "This user already reported the message");
+            }
+            batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, FieldValue.arrayUnion(reporter));
+            if (messages.size() == COUNTER) {
+                batch.update(messageSnapshot.getReference(), BANNED_FIELD, true);
+                String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
+                String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
+                String path = Path.ofDocument(Collections.users, uid);
+                Long bannnedMessagesCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
+                if (bannnedMessagesCounter == null) {
+                    bannnedMessagesCounter = 0L;
+                }
+                documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD,
+                    bannnedMessagesCounter + 1);
+            }
+        }
+        documentAdapter.commitBatch(batch);
+    }
+
+    @Override
+    public void unbanMessage(String parentGroup, String forumName, String creator, String date)
+        throws DatabaseAccessException, DocumentException, InvalidOperationException {
+        DocumentSnapshot messageSnapshot = getForumMessage(parentGroup, forumName, creator, date);
+        Boolean isMessageBanned = messageSnapshot.getBoolean(BANNED_FIELD);
+        if (isMessageBanned == null || !isMessageBanned) {
+            throw new InvalidOperationException("409", "The message wasn't banned");
+        }
+        WriteBatch batch = documentAdapter.batch();
+        batch.update(messageSnapshot.getReference(), REPORTED_BY_FIELD, new ArrayList<String>());
+        batch.update(messageSnapshot.getReference(), BANNED_FIELD, false);
+        String usernamePath = Path.ofDocument(Collections.used_usernames, creator);
+        String uid = documentAdapter.getStringFromDocument(usernamePath, "user");
+        String path = Path.ofDocument(Collections.users, uid);
+        Long bannedMessagesCounter = (Long) documentAdapter.getDocumentField(path, MESSAGES_BANNED_FIELD);
+        documentAdapter.updateDocumentFields(batch, path, MESSAGES_BANNED_FIELD, bannedMessagesCounter - 1);
         documentAdapter.commitBatch(batch);
     }
 
@@ -317,8 +376,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void deleteForumFromTag(String tag, String forum, WriteBatch batch) {
         documentAdapter
-            .updateDocumentFields(Path.ofDocument(Collections.tags, tag), FORUMS_FIELD, FieldValue.arrayRemove(forum),
-                batch);
+            .updateDocumentFields(batch, Path.ofDocument(Collections.tags, tag), FORUMS_FIELD,
+                FieldValue.arrayRemove(forum));
     }
 
     /**
@@ -333,8 +392,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void addNewTags(String groupId, String forumId, String forumName, List<String> newTags, WriteBatch batch)
         throws DatabaseAccessException {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
-            FieldValue.arrayUnion(newTags.toArray()), batch);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
+            FieldValue.arrayUnion(newTags.toArray()));
         for (String tag : newTags) {
             addForumToTag(tag, forumName, batch);
         }
@@ -351,8 +410,8 @@ public class ForumDaoImpl implements ForumDao {
      */
     private void removeDeletedTags(String groupId, String forumId, String forumName, List<String> deletedTags,
                                    WriteBatch batch) {
-        documentAdapter.updateDocumentFields(Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
-            FieldValue.arrayRemove(deletedTags.toArray()), batch);
+        documentAdapter.updateDocumentFields(batch, Path.ofDocument(Collections.forums, groupId, forumId), TAGS_FIELD,
+            FieldValue.arrayRemove(deletedTags.toArray()));
         for (String tag : deletedTags) {
             deleteForumFromTag(tag, forumName, batch);
         }
@@ -422,9 +481,13 @@ public class ForumDaoImpl implements ForumDao {
         String groupId = groupDao.getGroupId(parentGroup);
         String forumId = getForumId(parentGroup, forumName);
         try {
-            return collectionAdapter
-                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator", creator,
-                    "publicationDate", date).get().getDocuments().get(0);
+            List<QueryDocumentSnapshot> messagesQuery = collectionAdapter
+                .getDocumentsWhereEqualTo(Path.ofCollection(Collections.messages, groupId, forumId), "creator",
+                    creator, "publicationDate", date).get().getDocuments();
+            if (messagesQuery.size() == 0) {
+                throw new DatabaseAccessException("404", "Message Not Found");
+            }
+            return messagesQuery.get(0);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             throw new DatabaseAccessException("retrieval-failed", "Failure when retrieving the message");

@@ -13,6 +13,15 @@ import java.util.Map;
 public interface MedalDao {
 
     /**
+     * Creates a medal on the data base.
+     * @param name Name of the medal
+     * @param medal The medal entity that contains the attributes of the pet
+     * @throws DatabaseAccessException If an error occurs when accessing the database
+     * @throws DocumentException When the document does not exist
+     */
+    void createMedal(String name, MedalEntity medal) throws DatabaseAccessException, DocumentException;
+
+    /**
      * Gets a medal identified by its name.
      * @param name Name of the medal
      * @return The MedalEntity corresponding to the medal data

@@ -1,9 +1,10 @@
 package org.pesmypetcare.webservice.controller.appmanager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.FirebaseAuthException;
+import org.pesmypetcare.webservice.entity.usermanager.User;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
+import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.service.usermanager.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,16 +28,15 @@ public class MyPetCareRestController {
 
     /**
      * Given a username, an email and a password creates the user on the data base.
-     * @param user The request body that contains the username, password and email for the new account
+     * @param user The request body that contains the uid, the username, password and email for the new account
      * @throws DatabaseAccessException If an error occurs when accessing the database
      * @throws FirebaseAuthException If an error occurs when retrieving the data
      */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody Map<String, Object> user) throws DatabaseAccessException, FirebaseAuthException {
-        ObjectMapper mapper = new ObjectMapper();
-        UserEntity userEntity = mapper.convertValue(user.get("user"), UserEntity.class);
-        userService.createUser((String) user.get("uid"), userEntity);
+    public void signUp(@RequestBody User user) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException {
+        userService.createUser(user.getUid(), new UserEntity(user));
     }
 
     /**

@@ -16,6 +16,7 @@ import com.google.firebase.auth.UserRecord;
 import org.pesmypetcare.webservice.builders.Collections;
 import org.pesmypetcare.webservice.builders.Path;
 import org.pesmypetcare.webservice.dao.appmanager.StorageDao;
+import org.pesmypetcare.webservice.dao.medalmanager.UserMedalDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDao;
 import org.pesmypetcare.webservice.dao.petmanager.PetDaoImpl;
 import org.pesmypetcare.webservice.entity.usermanager.UserEntity;
@@ -50,6 +51,7 @@ public class UserDaoImpl implements UserDao {
     private static final String UPDATE_FAILED_CODE = "update-failed";
     private static final String FIELD_LIKED_BY = "likedBy";
     private static final String FCM = "FCM";
+    private static final String NOTIFICATIONS_FIELD = "notification-tokens";
     private static final String WRITE_FAILED_CODE = "write-failed";
     private FirebaseAuth myAuth;
     private CollectionReference users;
@@ -57,6 +59,8 @@ public class UserDaoImpl implements UserDao {
     private Firestore db;
     @Autowired
     private PetDao petDao;
+    @Autowired
+    private UserMedalDao userMedalDao;
     @Autowired
     private FirestoreCollection collectionAdapter;
     @Autowired
@@ -71,7 +75,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException {
+    public void createUser(String uid, UserEntity userEntity) throws DatabaseAccessException, FirebaseAuthException,
+        DocumentException {
         String username = userEntity.getUsername();
         if (!existsUsername(username)) {
             WriteBatch batch = db.batch();
@@ -81,6 +86,7 @@ public class UserDaoImpl implements UserDao {
             batch.set(users.document(uid), userEntity);
             try {
                 batch.commit().get();
+                userMedalDao.createAllUserMedals(username);
                 updateDisplayName(uid, username);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -488,9 +494,14 @@ public class UserDaoImpl implements UserDao {
         ApiFuture<QuerySnapshot> subscribedGroups = collectionAdapter
             .getDocumentsWhereArrayContains(Path.ofCollection(Collections.groups), "notification-tokens", currentToken);
         try {
+            List<String> tokens;
             for (QueryDocumentSnapshot group : subscribedGroups.get().getDocuments()) {
-                batch.update(group.getReference(), FCM, FieldValue.arrayRemove(currentToken), FCM,
-                    FieldValue.arrayUnion(token));
+                tokens = (List<String>) group.get(NOTIFICATIONS_FIELD);
+                if (tokens != null) {
+                    tokens.remove(currentToken);
+                    tokens.add(token);
+                    batch.update(group.getReference(), NOTIFICATIONS_FIELD, tokens);
+                }
             }
         } catch (InterruptedException e) {
             throw new DatabaseAccessException(WRITE_FAILED_CODE, e.getMessage());

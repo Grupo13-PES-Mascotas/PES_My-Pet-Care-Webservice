@@ -45,6 +45,7 @@ class ForumRestControllerTest {
     private String myToken;
     private String creationDate;
     private String creator;
+    private String reporter;
     private String json;
     private String parentGroup;
     private ForumEntity forumEntity;
@@ -64,6 +65,7 @@ class ForumRestControllerTest {
         mapper = new ObjectMapper();
         forumEntity = new ForumEntity();
         creator = "John Doe";
+        reporter = "Manolo Doe";
         forumName = "Huskies";
         creationDate = "2020-05-02T13:07:25";
         forumEntity.setCreator(creator);
@@ -131,10 +133,29 @@ class ForumRestControllerTest {
 
     @Test
     public void deleteMessage() throws Exception {
-        willDoNothing().given(service).createForum(anyString(), any(ForumEntity.class));
+        willDoNothing().given(service).deleteMessage(anyString(), anyString(), anyString(), anyString(), anyString());
         mockMvc.perform(
-            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken).param("creator", creator)
-                .param("date", creationDate)).andExpect(status().isNoContent());
+            delete(BASE_URL + parentGroup + "/" + forumName).header("token", myToken)
+                .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void reportMessage() throws Exception {
+        willDoNothing().given(service).reportMessage(anyString(), anyString(), anyString(), anyString(), anyString(),
+            anyString());
+        mockMvc.perform(
+            put(BASE_URL + parentGroup + "/" + forumName + "/report_message").header("token", myToken)
+                .param("creator", creator).param("date", creationDate).param("reporter", reporter))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void unbanMessage() throws Exception {
+        willDoNothing().given(service).unbanMessage(anyString(), anyString(), anyString(), anyString(),
+            anyString());
+        mockMvc.perform(
+            put(BASE_URL + parentGroup + "/" + forumName + "/unban_message").header("token", myToken)
+                .param("creator", creator).param("date", creationDate)).andExpect(status().isNoContent());
     }
 
     @Test

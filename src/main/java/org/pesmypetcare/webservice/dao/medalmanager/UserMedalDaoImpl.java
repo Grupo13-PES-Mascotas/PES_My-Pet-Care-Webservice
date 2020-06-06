@@ -1,6 +1,8 @@
 package org.pesmypetcare.webservice.dao.medalmanager;
 
 
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
+import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.WriteBatch;
@@ -14,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -34,6 +34,14 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private FirestoreDocument dbDoc;
 
     @Override
+    public void createUserMedal(String owner, String name, UserMedalEntity medal) throws DatabaseAccessException,
+        DocumentException {
+        initializeWithCollectionPath(owner);
+        dbDoc.createDocumentWithId(path, name, medal, batch);
+        dbDoc.commitBatch(batch);
+    }
+
+    @Override
     public UserMedalEntity getUserMedalData(String owner, String name) throws DatabaseAccessException,
         DocumentException {
         initializeWithDocumentPath(owner, name);
@@ -41,23 +49,22 @@ public class UserMedalDaoImpl implements UserMedalDao {
     }
 
     @Override
-    public List<Map<String, UserMedalEntity>> getAllUserMedalsData(String owner) throws DatabaseAccessException,
+    public List<UserMedalEntity> getAllUserMedalsData(String owner) throws DatabaseAccessException,
         DocumentException {
         initializeWithCollectionPath(owner);
         List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
-        List<Map<String, UserMedalEntity>> externalList = new ArrayList<>();
+        List<UserMedalEntity> medalList = new ArrayList<>();
 
         for (DocumentSnapshot medalDocument : medalsDocuments) {
-            Map<String, UserMedalEntity> internalList = new HashMap<>();
-            internalList.put("body", medalDocument.toObject(UserMedalEntity.class));
-            externalList.add(internalList);
+            medalList.add(medalDocument.toObject(UserMedalEntity.class));
         }
-        return externalList;
+        return medalList;
     }
 
     @Override
     public void updateField(String owner, String name, String field, Object value)
         throws DatabaseAccessException, DocumentException {
+        checkField(field);
         initializeWithDocumentPath(owner, name);
         dbDoc.updateDocumentFields(batch, path, field, value);
         batch.commit();
@@ -68,6 +75,19 @@ public class UserMedalDaoImpl implements UserMedalDao {
         DocumentException {
         String medalPath = Path.ofDocument(Collections.userMedals, getUserId(owner), name);
         return dbDoc.getDocumentField(medalPath, field);
+    }
+
+    @Override
+    public void createAllUserMedals(String username) throws DatabaseAccessException, DocumentException {
+        path = Path.ofCollection(Collections.medals);
+        List<DocumentSnapshot> medalsDocuments = dbCol.listAllCollectionDocumentSnapshots(path);
+        UserMedalEntity userMedal;
+        for (DocumentSnapshot medalDocument : medalsDocuments) {
+            MedalEntity medal = medalDocument.toObject(MedalEntity.class);
+            userMedal = new UserMedalEntity(medal.getName(), 0., 0.,
+                new ArrayList<>(), new Medal(medal));
+            createUserMedal(username, medal.getName(), userMedal);
+        }
     }
 
     /**
@@ -107,6 +127,16 @@ public class UserMedalDaoImpl implements UserMedalDao {
     private String getUserId(String username) throws DatabaseAccessException, DocumentException {
         String usernamePath = Path.ofDocument(Collections.used_usernames, username);
         return dbDoc.getStringFromDocument(usernamePath, "user");
+    }
+
+    /**
+     * This method check that the field are allowed to update.
+     * @param field The value of the field.
+     */
+    private void checkField(String field) {
+        if (!("progress".equals(field) || "currentLevel".equals(field) || "completedLevelsDate".equals(field))) {
+            throw new IllegalArgumentException("Field not allowed to update.");
+        }
     }
 
 }

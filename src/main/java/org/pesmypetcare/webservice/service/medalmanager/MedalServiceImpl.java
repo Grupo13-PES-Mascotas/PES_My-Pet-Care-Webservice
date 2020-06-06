@@ -19,6 +19,11 @@ public class MedalServiceImpl implements MedalService {
     private MedalDao medalDao;
 
     @Override
+    public void createMedal(String name, MedalEntity medal) throws DatabaseAccessException, DocumentException {
+        medalDao.createMedal(name, medal);
+    }
+
+    @Override
     public MedalEntity getMedalData(String name) throws DatabaseAccessException, DocumentException {
         return medalDao.getMedalData(name);
     }

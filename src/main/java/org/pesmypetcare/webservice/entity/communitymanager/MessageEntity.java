@@ -16,9 +16,10 @@ public class MessageEntity {
     private String creator;
     private String publicationDate;
     private String text;
-    private Blob image;
     private boolean banned;
+    private List<String> reportedBy;
     private List<String> likedBy;
+    private Blob image;
 
     public MessageEntity() { }
 
@@ -28,9 +29,11 @@ public class MessageEntity {
      */
     public MessageEntity(Message message) {
         this.creator = message.getCreator();
-        this.text = message.getText();
-        this.likedBy = new ArrayList<>();
         this.publicationDate = UTCLocalConverter.getCurrentUTC();
+        this.text = message.getText();
+        this.banned = false;
+        this.reportedBy = new ArrayList<>();
+        this.likedBy = new ArrayList<>();
         this.image = decodeImage(message.getEncodedImage());
     }
 

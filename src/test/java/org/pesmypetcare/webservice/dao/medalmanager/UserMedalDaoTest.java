@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
 import org.pesmypetcare.webservice.entity.medalmanager.UserMedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
@@ -15,9 +16,8 @@ import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.Firesto
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -40,8 +40,9 @@ public class UserMedalDaoTest {
     private static final Double VALUE = 2.0;
 
     private static UserMedalEntity userMedalEntity;
-    private static List<Map<String, UserMedalEntity>> userMedalList;
+    private static List<UserMedalEntity> userMedalList;
     private static List<DocumentSnapshot> snapshotList;
+    private static Medal medal;
 
 
     @Mock
@@ -58,13 +59,15 @@ public class UserMedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>());
+        medal = new Medal();
+        medal.setDescription("You have to walk a lot!");
+        medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
+        medal.setMedalIconPath(new byte[] {10, 55, 67, 89, 103, 116});
+        userMedalEntity = new UserMedalEntity("Walker", 1.0, 2.0, new ArrayList<>(), medal);
         userMedalList = new ArrayList<>();
-        Map<String, UserMedalEntity> auxMap = new HashMap<>();
-        auxMap.put("body", userMedalEntity);
-        userMedalList.add(auxMap);
-        userMedalList.add(auxMap);
-        userMedalList.add(auxMap);
+        userMedalList.add(userMedalEntity);
+        userMedalList.add(userMedalEntity);
+        userMedalList.add(userMedalEntity);
         snapshotList = new ArrayList<>();
         snapshotList.add(documentSnapshot);
         snapshotList.add(documentSnapshot);
@@ -91,7 +94,7 @@ public class UserMedalDaoTest {
         given(dbCol.batch()).willReturn(batch);
         given(dbCol.listAllCollectionDocumentSnapshots(anyString())).willReturn(snapshotList);
 
-        List<Map<String, UserMedalEntity>> list = userMedalDao.getAllUserMedalsData(OWNER);
+        List<UserMedalEntity> list = userMedalDao.getAllUserMedalsData(OWNER);
 
         assertEquals(userMedalList, list, "Should return a List containing all userMedals Data");
     }

@@ -8,16 +8,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.pesmypetcare.webservice.entity.medalmanager.Medal;
 import org.pesmypetcare.webservice.entity.medalmanager.MedalEntity;
 import org.pesmypetcare.webservice.error.DatabaseAccessException;
 import org.pesmypetcare.webservice.error.DocumentException;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreCollection;
 import org.pesmypetcare.webservice.thirdpartyservices.adapters.firestore.FirestoreDocument;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -33,6 +37,7 @@ public class MedalDaoTest {
     private static final String FIELD = "description";
     private static final String VALUE = "You have to walk a lot of kilometers!";
 
+    private static Medal medal;
     private static MedalEntity medalEntity;
     private static List<Map<String, MedalEntity>> medalList;
     private static List<DocumentSnapshot> snapshotList;
@@ -50,15 +55,17 @@ public class MedalDaoTest {
 
     @BeforeEach
     public void setUp() {
-        medalEntity = new MedalEntity("Walker", new ArrayList<>(), "You have to walk a lot!");
+        medal = new Medal();
+        medal.setName("Walker");
+        medal.setDescription("You have to walk a lot!");
+        medal.setLevels(new ArrayList<>(Arrays.asList(5., 10., 25., 50., 100.)));
+        medal.setMedalIconPath(new byte[] {10, 55, 67, 89, 103, 116});
         medalList = new ArrayList<>();
         Map<String, MedalEntity> auxMap = new HashMap<>();
         auxMap.put("body", medalEntity);
         medalList.add(auxMap);
         medalList.add(auxMap);
-        medalList.add(auxMap);
         snapshotList = new ArrayList<>();
-        snapshotList.add(documentSnapshot);
         snapshotList.add(documentSnapshot);
         snapshotList.add(documentSnapshot);
     }
