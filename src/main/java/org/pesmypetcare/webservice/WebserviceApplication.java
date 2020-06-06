@@ -26,8 +26,7 @@ public class WebserviceApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200", "https://localhost:4200",
-                    "https://my-pet-care-web.herokuapp.com", "http://my-pet-care-web.herokuapp.com");
+                registry.addMapping("/**").allowedOrigins("*");
             }
         };
     }
