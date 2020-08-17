@@ -42,7 +42,7 @@ dependencies {
     }
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.4'
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.3.3'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.5.0'
 }
 
 test {
